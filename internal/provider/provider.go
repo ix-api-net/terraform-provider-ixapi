@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
+	"gitlab.com/ix-api/ix-api-terraform-provider/internal/resources"
 )
 
 // Configuration
@@ -104,7 +105,9 @@ func New(version string) func() *schema.Provider {
 				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{},
-			ResourcesMap:   map[string]*schema.Resource{},
+			ResourcesMap: map[string]*schema.Resource{
+				"account": resources.NewAccountResource(),
+			},
 		}
 
 		p.ConfigureContextFunc = configure(p)

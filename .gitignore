@@ -2,3 +2,5 @@
 *.swp
 
 ix-api-terraform-provider
+
+bin/
