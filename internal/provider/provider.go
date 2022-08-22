@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -24,12 +24,16 @@ func init() {
 }
 
 // configure initializes the API client and loads the credentials
-func configure(p *schema.Provider) func(
-	context.Context,
-	*schema.ResourceData,
-) (any, diag.Diagnostics) {
-	// Get API credentials and create client
-	return nil, nil
+func configure(p *schema.Provider) schema.ConfigureContextFunc {
+	return func(
+		ctx context.Context,
+		res *schema.ResourceData,
+	) (any, diag.Diagnostics) {
+		// Get API credentials and create client
+
+		// ...
+		return nil, nil
+	}
 }
 
 // New creates a new provider function
@@ -40,7 +44,7 @@ func New(version string) func() *schema.Provider {
 			ResourcesMap:   map[string]*schema.Resource{},
 		}
 
-		p.ConfigureContextFunc = configure(version, p)
+		p.ConfigureContextFunc = configure(p)
 
 		return p
 	}
