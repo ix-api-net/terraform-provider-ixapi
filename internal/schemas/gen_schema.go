@@ -2547,6 +2547,9 @@ var RoleSchema = map[string]*schema.Schema{
 	"required_fields": &schema.Schema{
 		Type:     schema.TypeList,
 		Required: true,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
 	},
 
 	"id": &schema.Schema{

@@ -20,10 +20,10 @@ func NewMetroAreasDataSource() *schema.Resource {
 		ReadContext: metroAreasRead,
 
 		Schema: map[string]*schema.Schema{
-			"all": &schema.Schema{
-				Type:     schema.ListType,
+			"metro_areas": &schema.Schema{
+				Type:     schema.TypeList,
 				Computed: true,
-				Elem: &schemas.Resource{
+				Elem: &schema.Resource{
 					Schema: schemas.MetroAreaSchema,
 				},
 			},
@@ -42,8 +42,9 @@ func metroAreasRead(
 		return diag.FromErr(err)
 	}
 
-	res.Set("all", schema.FlattenMetroAreas(metroAreas))
+	res.Set("metro_areas", schemas.FlattenMetroAreas(metroAreas))
 
 	// Assign pseudoID
 	res.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+	return nil
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"gitlab.com/ix-api/ix-api-terraform-provider/internal/datasources"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/resources"
 )
@@ -104,9 +105,13 @@ func New(version string) func() *schema.Provider {
 					Description: "Legacy auth: api secret",
 				},
 			},
-			DataSourcesMap: map[string]*schema.Resource{},
+			DataSourcesMap: map[string]*schema.Resource{
+				"ix_api_metro_areas": datasources.NewMetroAreasDataSource(),
+				"ix_api_metro_area":  datasources.NewMetroAreaDataSource(),
+				"ix_api_role":        datasources.NewRoleDataSource(),
+			},
 			ResourcesMap: map[string]*schema.Resource{
-				"account": resources.NewAccountResource(),
+				"ix_api_account": resources.NewAccountResource(),
 			},
 		}
 

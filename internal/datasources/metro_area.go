@@ -18,18 +18,22 @@ func NewMetroAreaDataSource() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"un_locode": &schema.Schema{
-				Type:     schema.StringType,
+				Type:     schema.TypeString,
 				Optional: true,
 			},
 			"iata_code": &schema.Schema{
-				Type:     schema.StringType,
+				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"id": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"metro_area": &schema.Schema{
-				Type:     schema.ListType,
+				Type:     schema.TypeList,
 				MaxItems: 1,
 				Computed: true,
-				Elem: &schemas.Resource{
+				Elem: &schema.Resource{
 					Schema: schemas.MetroAreaSchema,
 				},
 			},
@@ -84,7 +88,10 @@ func metroAreaRead(
 	}
 
 	res.SetId(found.ID)
+	res.Set("id", found.ID)
 	res.Set("metro_area", []interface{}{
 		schemas.FlattenMetroArea(found),
 	})
+
+	return nil
 }
