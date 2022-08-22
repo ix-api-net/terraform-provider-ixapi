@@ -813,17 +813,19 @@ var MetroAreaSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "The name of the metro area. Likely the same as the IATA code. "},
 
-	"facilities": &schema.Schema{
-		Type:     schema.TypeList,
-		Optional: true,
-		Computed: true,
-	},
+	/*
+		"facilities": &schema.Schema{
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+		},
 
-	"metro_area_networks": &schema.Schema{
-		Type:     schema.TypeList,
-		Optional: true,
-		Computed: true,
-	},
+		"metro_area_networks": &schema.Schema{
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+		},
+	*/
 }
 
 // MetroAreaNetworkSchema is the terraform schema for the model
