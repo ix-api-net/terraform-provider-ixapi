@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
 )
 
 // NewMetroAreaDataSource creates a new metro area datasource.
@@ -20,10 +19,12 @@ func NewMetroAreaDataSource() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"un_locode": &schema.Schema{
 				Type:     schema.TypeString,
+				Computed: true,
 				Optional: true,
 			},
 			"iata_code": &schema.Schema{
 				Type:     schema.TypeString,
+				Computed: true,
 				Optional: true,
 			},
 			"id": &schema.Schema{
@@ -31,14 +32,10 @@ func NewMetroAreaDataSource() *schema.Resource {
 				Computed: true,
 				Optional: true,
 			},
-			"metro_area": &schema.Schema{
-				Type:     schema.TypeList,
-				MaxItems: 1,
+			"display_name": &schema.Schema{
+				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: schemas.MetroAreaSchema,
-				},
 			},
 		},
 	}
@@ -92,9 +89,9 @@ func metroAreaRead(
 
 	res.SetId(found.ID)
 	res.Set("id", found.ID)
-	res.Set("metro_area", []interface{}{
-		schemas.FlattenMetroArea(found),
-	})
+	res.Set("un_locode", found.UnLocode)
+	res.Set("iata_code", found.IataCode)
+	res.Set("display_name", found.DisplayName)
 
 	return nil
 }

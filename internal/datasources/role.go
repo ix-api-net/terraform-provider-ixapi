@@ -28,6 +28,14 @@ func NewRoleDataSource() *schema.Resource {
 				Computed: true,
 				Optional: true,
 			},
+			"required_fields": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"role": &schema.Schema{
 				Type:     schema.TypeList,
 				MaxItems: 1,
@@ -72,6 +80,7 @@ func roleRead(
 	res.Set("role", []interface{}{
 		schemas.FlattenRole(found),
 	})
+	res.Set("required_fields", found.RequiredFields)
 
 	return nil
 }

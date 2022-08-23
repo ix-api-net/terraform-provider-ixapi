@@ -2,6 +2,7 @@ package resources
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -125,7 +126,12 @@ func contactRead(
 	api := meta.(*ixapi.Client)
 
 	// Fetch contact
+	var notFoundErr *ixapi.NotFoundError
 	contact, err := api.ContactsRead(ctx, res.Id())
+	if err != nil && errors.As(err, &notFoundErr) {
+		res.SetId("")
+		return nil
+	}
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -273,6 +279,22 @@ func contactDelete(
 	meta any,
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
+
+	// Delete role assignments
+	assignments, err := api.RoleAssignmentsList(ctx)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	for _, assignment := range assignments {
+		if assignment.Contact != res.Id() {
+			continue
+		}
+		if _, err := api.RoleAssignmentsDestroy(ctx, assignment.ID); err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
 	if _, err := api.ContactsDestroy(ctx, res.Id()); err != nil {
 		return diag.FromErr(err)
 	}

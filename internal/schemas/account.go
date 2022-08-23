@@ -73,6 +73,34 @@ func FlattenBillingInformation(billing *ixapi.BillingInformation) []interface{} 
 	return []interface{}{b}
 }
 
+// FlattenAccount makes a flat account
+func FlattenAccount(acc *ixapi.Account) map[string]interface{} {
+	res := map[string]interface{}{}
+	res["managing_account"] = acc.ManagingAccount
+	res["name"] = acc.Name
+	if acc.LegalName != nil {
+		res["legal_name"] = *acc.LegalName
+	}
+	if acc.BillingInformation != nil {
+		res["billing_information"] = FlattenBillingInformation(acc.BillingInformation)
+	}
+	if acc.ExternalRef != nil {
+		res["external_ref"] = *acc.ExternalRef
+	}
+	if acc.Discoverable != nil {
+		res["discoverable"] = *acc.Discoverable
+	}
+	if acc.Address != nil {
+		res["address"] = FlattenAddress(acc.Address)
+	}
+
+	res["id"] = acc.ID
+	res["state"] = acc.State
+	res["metro_area_network_presence"] = []interface{}{}
+
+	return res
+}
+
 // AccountRequestFromResourceData builds an account create request
 func AccountRequestFromResourceData(
 	r *schema.ResourceData,
@@ -150,6 +178,9 @@ func AccountSetResourceData(acc *ixapi.Account, res *schema.ResourceData) {
 	if acc.Discoverable != nil {
 		res.Set("discoverable", *acc.Discoverable)
 	}
+
+	res.Set("metro_area_network_presence", []interface{}{})
+
 	res.Set("address", FlattenAddress(acc.Address))
 	res.Set("state", acc.State)
 	res.Set("id", acc.ID)
