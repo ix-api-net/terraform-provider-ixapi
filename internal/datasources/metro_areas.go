@@ -23,6 +23,7 @@ func NewMetroAreasDataSource() *schema.Resource {
 			"metro_areas": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: schemas.MetroAreaSchema,
 				},

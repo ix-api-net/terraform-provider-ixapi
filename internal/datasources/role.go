@@ -2,6 +2,7 @@ package datasources
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -25,11 +26,13 @@ func NewRoleDataSource() *schema.Resource {
 			"id": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
+				Optional: true,
 			},
 			"role": &schema.Schema{
 				Type:     schema.TypeList,
 				MaxItems: 1,
 				Computed: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: schemas.RoleSchema,
 				},
@@ -46,7 +49,7 @@ func roleRead(
 	api := meta.(*ixapi.Client)
 
 	// Get all roles and filter by name
-	name := res.Get("name")
+	name := strings.ToLower(res.Get("name").(string))
 
 	roles, err := api.RolesList(ctx)
 	if err != nil {
@@ -55,7 +58,7 @@ func roleRead(
 
 	var found *ixapi.Role
 	for _, role := range roles {
-		if role.Name == name {
+		if strings.ToLower(role.Name) == name {
 			found = role
 			break
 		}

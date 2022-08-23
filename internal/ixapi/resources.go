@@ -7673,7 +7673,7 @@ func (c *Client) RoleAssignmentsCreate(
 // RoleAssignmentsRead Get a role assignment for a contact.
 func (c *Client) RoleAssignmentsRead(
 	ctx context.Context,
-
+	id string,
 ) (*RoleAssignment, error) {
 
 	params := ""
@@ -7681,7 +7681,7 @@ func (c *Client) RoleAssignmentsRead(
 		params = "?" + params
 	}
 
-	url := c.resourceURL("/role-assignments/{assignment_id}" + params)
+	url := c.resourceURL("/role-assignments/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -7767,7 +7767,7 @@ func (c *Client) RoleAssignmentsRead(
 // this will yield an `UnableToFulfill` error.
 func (c *Client) RoleAssignmentsDestroy(
 	ctx context.Context,
-
+	id string,
 ) (*RoleAssignment, error) {
 
 	params := ""
@@ -7775,7 +7775,7 @@ func (c *Client) RoleAssignmentsDestroy(
 		params = "?" + params
 	}
 
-	url := c.resourceURL("/role-assignments/{assignment_id}" + params)
+	url := c.resourceURL("/role-assignments/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodDelete, url, nil)

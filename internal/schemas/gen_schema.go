@@ -2418,11 +2418,13 @@ var AccountSchema = map[string]*schema.Schema{
 		Computed: true,
 	},
 
-	"status": &schema.Schema{
-		Type:     schema.TypeList,
-		Optional: true,
-		Computed: true,
-	},
+	/*
+		"status": &schema.Schema{
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+		},
+	*/
 
 	"id": &schema.Schema{
 		Type:     schema.TypeString,
@@ -2531,6 +2533,33 @@ var ContactSchema = map[string]*schema.Schema{
 		Description: "The email of the legal company entity. "},
 
 	"id": &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+		Computed: true,
+	},
+
+	"assigned_roles": &schema.Schema{
+		Type:     schema.TypeList,
+		Optional: true,
+		Computed: true,
+		Elem: &schema.Resource{
+			Schema: RoleAssignSchema,
+		},
+	},
+}
+
+// RoleAssignSchema use the role assign schema
+var RoleAssignSchema = map[string]*schema.Schema{
+	"name": &schema.Schema{
+		Type:        schema.TypeString,
+		Required:    true,
+		Description: "The name of the role. "},
+	"id": &schema.Schema{
+		Type:        schema.TypeString,
+		Optional:    true,
+		Computed:    true,
+		Description: "The id of the role. "},
+	"assignment": &schema.Schema{
 		Type:     schema.TypeString,
 		Optional: true,
 		Computed: true,

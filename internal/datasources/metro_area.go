@@ -2,6 +2,7 @@ package datasources
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -28,11 +29,13 @@ func NewMetroAreaDataSource() *schema.Resource {
 			"id": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
+				Optional: true,
 			},
 			"metro_area": &schema.Schema{
 				Type:     schema.TypeList,
 				MaxItems: 1,
 				Computed: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: schemas.MetroAreaSchema,
 				},
@@ -55,11 +58,11 @@ func metroAreaRead(
 	)
 	val, ok := res.GetOk("un_locode")
 	if ok {
-		unLoc = val.(string)
+		unLoc = strings.ToLower(val.(string))
 	}
 	val, ok = res.GetOk("iata_code")
 	if ok {
-		iata = val.(string)
+		iata = strings.ToLower(val.(string))
 	}
 
 	if unLoc == "" && iata == "" {
@@ -74,11 +77,11 @@ func metroAreaRead(
 	// Filter metro areas
 	var found *ixapi.MetroArea
 	for _, met := range metroAreas {
-		if unLoc != "" && met.UnLocode == unLoc {
+		if unLoc != "" && strings.ToLower(met.UnLocode) == unLoc {
 			found = met
 			break
 		}
-		if iata != "" && met.IataCode == iata {
+		if iata != "" && strings.ToLower(met.IataCode) == iata {
 			found = met
 			break
 		}

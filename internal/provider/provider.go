@@ -106,12 +106,14 @@ func New(version string) func() *schema.Provider {
 				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
-				"ix_api_metro_areas": datasources.NewMetroAreasDataSource(),
-				"ix_api_metro_area":  datasources.NewMetroAreaDataSource(),
-				"ix_api_role":        datasources.NewRoleDataSource(),
+				"ixapi_metro_areas": datasources.NewMetroAreasDataSource(),
+				"ixapi_metro_area":  datasources.NewMetroAreaDataSource(),
+				"ixapi_role":        datasources.NewRoleDataSource(),
+				"ixapi_contacts":    datasources.NewContactsDataSource(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"ix_api_account": resources.NewAccountResource(),
+				"ixapi_contact": resources.NewContactResource(),
+				"ixapi_account": resources.NewAccountResource(),
 			},
 		}
 
