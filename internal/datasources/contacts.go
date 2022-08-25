@@ -33,7 +33,7 @@ func NewContactsDataSource() *schema.Resource {
 				Computed: true,
 				Optional: true,
 				Elem: &schema.Resource{
-					Schema: schemas.ContactSchema,
+					Schema: schemas.ContactSchema(),
 				},
 			},
 		},

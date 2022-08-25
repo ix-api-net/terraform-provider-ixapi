@@ -37,7 +37,7 @@ func NewAccountsDataSource() *schema.Resource {
 				Computed: true,
 				Optional: true,
 				Elem: &schema.Resource{
-					Schema: schemas.AccountSchema,
+					Schema: schemas.AccountSchema(),
 				},
 			},
 		},

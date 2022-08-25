@@ -25,7 +25,7 @@ func NewMetroAreasDataSource() *schema.Resource {
 				Computed: true,
 				Optional: true,
 				Elem: &schema.Resource{
-					Schema: schemas.MetroAreaSchema,
+					Schema: schemas.MetroAreaSchema(),
 				},
 			},
 		},

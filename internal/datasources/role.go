@@ -42,7 +42,7 @@ func NewRoleDataSource() *schema.Resource {
 				Computed: true,
 				Optional: true,
 				Elem: &schema.Resource{
-					Schema: schemas.RoleSchema,
+					Schema: schemas.RoleSchema(),
 				},
 			},
 		},

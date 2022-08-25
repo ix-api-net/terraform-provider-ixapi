@@ -23,7 +23,7 @@ func NewContactResource() *schema.Resource {
 		UpdateContext: contactUpdate,
 		DeleteContext: contactDelete,
 
-		Schema: schemas.ContactSchema,
+		Schema: schemas.ContactSchema(),
 	}
 }
 

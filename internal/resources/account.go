@@ -25,7 +25,7 @@ func NewAccountResource() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: schemas.AccountSchema,
+		Schema: schemas.AccountSchema(),
 	}
 }
 
