@@ -5,25 +5,30 @@ import (
 )
 
 // VLANConfigSchema is the polymorphic vlan config schema
-var VLANConfigSchema = map[string]*schema.Schema{
-	"vlan_type": &schema.Schema{
-		Type:     schema.TypeString,
-		Required: true,
-	},
-	"vlan_config_qinq": &schema.Schema{
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Optional: true,
-		Elem: &schema.Resource{
-			Schema: VLANConfigQinQSchema,
+func VLANConfigSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"vlan_type": &schema.Schema{
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The vlan_type determines if a additional configuration is required: For `port` no configuration is required, `qinq` and `dot1q` require the `vlan_config_qinq` and `vlan_config_dotiq` to be set",
 		},
-	},
-	"vlan_config_dot1q": &schema.Schema{
-		Type:     schema.TypeList,
-		MaxItems: 1,
-		Optional: true,
-		Elem: &schema.Resource{
-			Schema: VLANConfigDot1QSchema,
+		"vlan_config_qinq": &schema.Schema{
+			Type:        schema.TypeList,
+			MaxItems:    1,
+			Optional:    true,
+			Description: "QinQ vlan configuration",
+			Elem: &schema.Resource{
+				Schema: VLANConfigQinQSchema(),
+			},
 		},
-	},
+		"vlan_config_dot1q": &schema.Schema{
+			Type:        schema.TypeList,
+			MaxItems:    1,
+			Optional:    true,
+			Description: "Dot1Q vlan configuration",
+			Elem: &schema.Resource{
+				Schema: VLANConfigDot1QSchema(),
+			},
+		},
+	}
 }
