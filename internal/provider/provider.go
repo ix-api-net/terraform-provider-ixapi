@@ -40,41 +40,6 @@ func init() {
 	}
 }
 
-// configure initializes the API client and loads the credentials
-func configure(p *schema.Provider) schema.ConfigureContextFunc {
-	return func(
-		ctx context.Context,
-		res *schema.ResourceData,
-	) (any, diag.Diagnostics) {
-		var diags diag.Diagnostics
-
-		// Get API credentials
-		key := res.Get("api_key").(string)
-		secret := res.Get("api_secret").(string)
-		host := res.Get("api").(string)
-
-		if key == "" || secret == "" {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  "IX-API client credentials missing",
-				Detail:   "To access the API, a client key and secret are required",
-			})
-			return nil, diags
-		}
-
-		// Create client and authenticate with legacy strategy
-		client := ixapi.NewClient(host)
-		if err := client.Authenticate(ctx, &ixapi.AuthAPIKeySecret{
-			Key:    key,
-			Secret: secret,
-		}); err != nil {
-			return nil, diag.FromErr(err)
-		}
-
-		return client, nil
-	}
-}
-
 // New creates a new provider function
 func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
@@ -117,10 +82,45 @@ func New(version string) func() *schema.Provider {
 				"ixapi_contact": resources.NewContactResource(),
 				"ixapi_account": resources.NewAccountResource(),
 			},
-		}
 
-		p.ConfigureContextFunc = configure(p)
+			ConfigureContextFunc: configure,
+		}
 
 		return p
 	}
+}
+
+// Configuration
+func configure(
+	ctx context.Context,
+	res *schema.ResourceData,
+) (any, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	// Get API credentials
+	key := res.Get("api_key").(string)
+	secret := res.Get("api_secret").(string)
+	host := res.Get("api").(string)
+
+	if key == "" || secret == "" {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "IX-API client credentials missing",
+			Detail:   "To access the API, a client key and secret are required",
+		})
+		return nil, diags
+	}
+
+	// Create client and authenticate with legacy strategy
+	client := ixapi.NewClient(host)
+	if err := client.Authenticate(ctx, &ixapi.AuthAPIKeySecret{
+		Key:    key,
+		Secret: secret,
+	}); err != nil {
+		return nil, diag.FromErr(err)
+	}
+
+	// Make test request to see if we are authenticated
+
+	return client, nil
 }
