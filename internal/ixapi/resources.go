@@ -6004,6 +6004,10 @@ func (a *AccountsListQuery) RawQuery() string {
 //
 // This includes all accounts the currently authorized account
 // is managing and the current account itself.
+//
+// Also `discoverable` accounts will be included, however
+// sensitive properties, like `address` or `external_ref` will
+// either not be present or redacted.
 func (c *Client) AccountsList(
 	ctx context.Context,
 
@@ -7674,6 +7678,7 @@ func (c *Client) RoleAssignmentsCreate(
 func (c *Client) RoleAssignmentsRead(
 	ctx context.Context,
 	id string,
+
 ) (*RoleAssignment, error) {
 
 	params := ""
@@ -7768,6 +7773,7 @@ func (c *Client) RoleAssignmentsRead(
 func (c *Client) RoleAssignmentsDestroy(
 	ctx context.Context,
 	id string,
+
 ) (*RoleAssignment, error) {
 
 	params := ""
@@ -7984,6 +7990,97 @@ func (c *Client) APIImplementationRead(
 
 		res := &APIImplementation{}
 		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+
+	}
+
+	// Decode error 404
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode // implementations are not reliable
+		return nil, res
+	}
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// APIExtensionsList List provider extensions to the IX-API.
+func (c *Client) APIExtensionsList(
+	ctx context.Context,
+
+) ([]*APIExtensions, error) {
+
+	params := ""
+	if params != "" {
+		params = "?" + params
+	}
+
+	url := c.resourceURL("/extensions" + params)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	// Success
+	if ret.StatusCode <= http.StatusAccepted {
+
+		res := []*APIExtensions{}
+		if err := json.Unmarshal(body, &res); err != nil {
 			return nil, err
 		}
 		return res, nil

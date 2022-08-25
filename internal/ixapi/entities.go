@@ -583,6 +583,14 @@ type Facility struct {
 	// Pops List of pops reachable from the `Facility`.
 	Pops []string `json:"pops,omitempty"`
 
+	// Latitude Latitude of the facility's location.
+	//
+	Latitude *float64 `json:"latitude,omitempty"`
+
+	// Longitude Longitude of the facility's location.
+	//
+	Longitude *float64 `json:"longitude,omitempty"`
+
 	// ID is a id
 	ID string `json:"id,omitempty"`
 }
@@ -1063,12 +1071,16 @@ type CloudNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ID is a id
@@ -1089,18 +1101,23 @@ type CloudNetworkServiceConfig struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1167,21 +1184,26 @@ type CloudNetworkServiceConfigPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1245,21 +1267,26 @@ type CloudNetworkServiceConfigRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// NetworkService The id of the `NetworkService` to configure.
 	NetworkService string `json:"network_service,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1326,21 +1353,26 @@ type CloudNetworkServiceConfigUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1408,12 +1440,16 @@ type Connection struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -1428,18 +1464,23 @@ type Connection struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1560,18 +1601,23 @@ type ConnectionPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1618,18 +1664,23 @@ type ConnectionRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1717,18 +1768,23 @@ type ConnectionUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1785,12 +1841,16 @@ type ExchangeLanNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ID is a id
@@ -1811,18 +1871,23 @@ type ExchangeLanNetworkServiceConfig struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1902,21 +1967,26 @@ type ExchangeLanNetworkServiceConfigPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -1988,21 +2058,26 @@ type ExchangeLanNetworkServiceConfigRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// NetworkService The id of the `NetworkService` to configure.
 	NetworkService string `json:"network_service,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -2082,21 +2157,26 @@ type ExchangeLanNetworkServiceConfigUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -2187,12 +2267,16 @@ type MP2MPNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ID is a id
@@ -2232,18 +2316,23 @@ type MP2MPNetworkServiceConfig struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -2293,6 +2382,8 @@ type MP2MPNetworkServiceConfigPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
@@ -2318,15 +2409,18 @@ type MP2MPNetworkServiceConfigPatch struct {
 	Capacity *int `json:"capacity,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -2373,6 +2467,8 @@ type MP2MPNetworkServiceConfigRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// NetworkService The id of the `NetworkService` to configure.
@@ -2398,15 +2494,18 @@ type MP2MPNetworkServiceConfigRequest struct {
 	Capacity *int `json:"capacity,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -2456,6 +2555,8 @@ type MP2MPNetworkServiceConfigUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
@@ -2481,15 +2582,18 @@ type MP2MPNetworkServiceConfigUpdate struct {
 	Capacity *int `json:"capacity,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -2747,18 +2851,23 @@ type P2MPNetworkServiceConfig struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -2807,12 +2916,16 @@ type P2MPNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ID is a id
@@ -2863,18 +2976,23 @@ type P2MPNetworkServiceConfigPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -2927,6 +3045,8 @@ type P2MPNetworkServiceConfigRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// NetworkService The id of the `NetworkService` to configure.
@@ -2952,15 +3072,18 @@ type P2MPNetworkServiceConfigRequest struct {
 	Capacity *int `json:"capacity,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -3032,18 +3155,23 @@ type P2MPNetworkServiceConfigUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -3103,12 +3231,16 @@ type P2PNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ID is a id
@@ -3129,18 +3261,23 @@ type P2PNetworkServiceConfig struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -3206,21 +3343,26 @@ type P2PNetworkServiceConfigPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -3283,21 +3425,26 @@ type P2PNetworkServiceConfigRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// NetworkService The id of the `NetworkService` to configure.
 	NetworkService string `json:"network_service,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -3363,21 +3510,26 @@ type P2PNetworkServiceConfigUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -3443,18 +3595,23 @@ type Port struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -3518,24 +3675,32 @@ type PortReservation struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// SubscriberSideDemarc In an exchange initiated scenario, this field will
@@ -3576,15 +3741,19 @@ type PortReservation struct {
 // PortReservationPatch PortReservation Update
 type PortReservationPatch struct {
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// SubscriberSideDemarc In an exchange initiated scenario, this field will
@@ -3608,15 +3777,19 @@ type PortReservationPatch struct {
 // PortReservationRequest A PortReservation
 type PortReservationRequest struct {
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// SubscriberSideDemarc In an exchange initiated scenario, this field will
@@ -3643,15 +3816,19 @@ type PortReservationRequest struct {
 // PortReservationUpdate PortReservation Update
 type PortReservationUpdate struct {
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// SubscriberSideDemarc In an exchange initiated scenario, this field will
@@ -3695,18 +3872,23 @@ type RouteServerNetworkFeatureConfig struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -3830,6 +4012,8 @@ type RouteServerNetworkFeatureConfigPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ASN The ASN of the peer.
@@ -3929,18 +4113,23 @@ type RouteServerNetworkFeatureConfigRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
@@ -4061,6 +4250,8 @@ type RouteServerNetworkFeatureConfigUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ASN The ASN of the peer.
@@ -4231,7 +4422,7 @@ type Account struct {
 	Status []*Status `json:"status,omitempty"`
 
 	// ManagingAccount The `id` of a managing account. Can be used for creating
-	// a customer hierachy.
+	// a customer hierachy. *(Sensitive Property)*
 	//
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
@@ -4242,6 +4433,7 @@ type Account struct {
 
 	// LegalName Legal name of the organisation.
 	// Only required when it's different from the account name.
+	// *(Sensitive Property)*
 	//
 	LegalName *string `json:"legal_name,omitempty"`
 
@@ -4249,6 +4441,7 @@ type Account struct {
 	BillingInformation *BillingInformation `json:"billing_information,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Discoverable The account will be included for all members of the
@@ -4274,7 +4467,7 @@ type Account struct {
 // AccountPatch Account Update
 type AccountPatch struct {
 	// ManagingAccount The `id` of a managing account. Can be used for creating
-	// a customer hierachy.
+	// a customer hierachy. *(Sensitive Property)*
 	//
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
@@ -4285,6 +4478,7 @@ type AccountPatch struct {
 
 	// LegalName Legal name of the organisation.
 	// Only required when it's different from the account name.
+	// *(Sensitive Property)*
 	//
 	LegalName *string `json:"legal_name,omitempty"`
 
@@ -4292,6 +4486,7 @@ type AccountPatch struct {
 	BillingInformation *BillingInformation `json:"billing_information,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Discoverable The account will be included for all members of the
@@ -4314,7 +4509,7 @@ type AccountPatch struct {
 // AccountRequest Account Request
 type AccountRequest struct {
 	// ManagingAccount The `id` of a managing account. Can be used for creating
-	// a customer hierachy.
+	// a customer hierachy. *(Sensitive Property)*
 	//
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
@@ -4325,6 +4520,7 @@ type AccountRequest struct {
 
 	// LegalName Legal name of the organisation.
 	// Only required when it's different from the account name.
+	// *(Sensitive Property)*
 	//
 	LegalName *string `json:"legal_name,omitempty"`
 
@@ -4332,6 +4528,7 @@ type AccountRequest struct {
 	BillingInformation *BillingInformation `json:"billing_information,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Discoverable The account will be included for all members of the
@@ -4354,7 +4551,7 @@ type AccountRequest struct {
 // AccountUpdate Account Update
 type AccountUpdate struct {
 	// ManagingAccount The `id` of a managing account. Can be used for creating
-	// a customer hierachy.
+	// a customer hierachy. *(Sensitive Property)*
 	//
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
@@ -4365,6 +4562,7 @@ type AccountUpdate struct {
 
 	// LegalName Legal name of the organisation.
 	// Only required when it's different from the account name.
+	// *(Sensitive Property)*
 	//
 	LegalName *string `json:"legal_name,omitempty"`
 
@@ -4372,6 +4570,7 @@ type AccountUpdate struct {
 	BillingInformation *BillingInformation `json:"billing_information,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Discoverable The account will be included for all members of the
@@ -4391,7 +4590,7 @@ type AccountUpdate struct {
 	Address *Address `json:"address,omitempty"`
 }
 
-// Address a postal address
+// Address A postal address. *(Sensitive Property)*
 type Address struct {
 	// Country ISO 3166-1 alpha-2 country code, for example DE
 	Country string `json:"country,omitempty"`
@@ -4414,7 +4613,7 @@ type Address struct {
 
 // BillingInformation Optional information required for issuing invoices.
 // Only accounts with `billing_information` present can be used
-// as a `billing_account`.
+// as a `billing_account`. *(Sensitive Property)*
 type BillingInformation struct {
 	// Name Name of the organisation receiving invoices.
 	//
@@ -4443,6 +4642,8 @@ type Contact struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Name A name of a person or an organisation
@@ -4473,6 +4674,8 @@ type ContactPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Name A name of a person or an organisation
@@ -4500,6 +4703,8 @@ type ContactRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Name A name of a person or an organisation
@@ -4527,6 +4732,8 @@ type ContactUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Name A name of a person or an organisation
@@ -4660,17 +4867,49 @@ type Status struct {
 	//
 	Severity int `json:"severity,omitempty"`
 
-	// Tag is a tag
+	// Tag A machine readable message identifier.
+	//
 	Tag string `json:"tag,omitempty"`
 
-	// Message is a message
+	// Message A human readable message, describing the problem
+	// and may contain hints for resolution.
+	//
 	Message string `json:"message,omitempty"`
 
-	// Attrs is a attrs
+	// Attrs Optional machine readable key value pairs
+	// supplementing the message.
+	//
+	// A custom, detailed or localized error messagen can
+	// be presented to the user, derived from the `tag` and `attrs`.
+	//
 	Attrs map[string]interface{} `json:"attrs,omitempty"`
 
-	// Timestamp is a timestamp
+	// Timestamp The time and date when the event occured.
 	Timestamp time.Time `json:"timestamp,omitempty"`
+}
+
+// APIExtensions Implementation specific API extensions
+type APIExtensions struct {
+	// Name Name of the extension.
+	//
+	Name string `json:"name,omitempty"`
+
+	// Publisher Publisher of the extension.
+	//
+	Publisher string `json:"publisher,omitempty"`
+
+	// DocumentationURL URL of the documentation homepage of the extension.
+	//
+	DocumentationURL string `json:"documentation_url,omitempty"`
+
+	// BaseURL Extension endpoints are available under this base url.
+	//
+	BaseURL string `json:"base_url,omitempty"`
+
+	// SpecURL URL of the extensions schema specifications.
+	// The schema format schould be OpenAPI v3.
+	//
+	SpecURL string `json:"spec_url,omitempty"`
 }
 
 // APIHealth Health Status Response
@@ -4764,6 +5003,8 @@ type IPAddress struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Version The version of the internet protocol.
@@ -4807,6 +5048,8 @@ type IPAddressPatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Version The version of the internet protocol.
@@ -4847,6 +5090,8 @@ type IPAddressRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Version The version of the internet protocol.
@@ -4887,6 +5132,8 @@ type IPAddressUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Version The version of the internet protocol.
@@ -4927,6 +5174,8 @@ type MacAddress struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Address Unicast MAC address, formatted hexadecimal values with colons.
@@ -4957,6 +5206,8 @@ type MacAddressRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Address Unicast MAC address, formatted hexadecimal values with colons.
@@ -5055,6 +5306,8 @@ type AllowMemberJoiningRule struct {
 	Type string `json:"type,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5093,6 +5346,8 @@ type AllowMemberJoiningRulePatch struct {
 	Type string `json:"type,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5125,6 +5380,8 @@ type AllowMemberJoiningRuleRequest struct {
 	Type string `json:"type,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5160,6 +5417,8 @@ type AllowMemberJoiningRuleUpdate struct {
 	Type string `json:"type,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5223,12 +5482,16 @@ type CloudNetworkService struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5243,18 +5506,23 @@ type CloudNetworkService struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// CloudKey is a cloud_key
@@ -5313,18 +5581,23 @@ type CloudNetworkServicePatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// CloudKey is a cloud_key
@@ -5360,18 +5633,23 @@ type CloudNetworkServiceRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// CloudKey is a cloud_key
@@ -5407,18 +5685,23 @@ type CloudNetworkServiceUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// CloudKey is a cloud_key
@@ -5440,6 +5723,8 @@ type DenyMemberJoiningRule struct {
 	Type string `json:"type,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5470,6 +5755,8 @@ type DenyMemberJoiningRulePatch struct {
 	Type string `json:"type,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5494,6 +5781,8 @@ type DenyMemberJoiningRuleRequest struct {
 	Type string `json:"type,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5521,6 +5810,8 @@ type DenyMemberJoiningRuleUpdate struct {
 	Type string `json:"type,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5572,6 +5863,8 @@ type ExchangeLanNetworkService struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// Name Exchange-dependent service name, will be shown on the invoice.
@@ -5669,12 +5962,16 @@ type MP2MPNetworkService struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -5689,18 +5986,23 @@ type MP2MPNetworkService struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// Public A public mp2mp network service can be joined
@@ -5757,18 +6059,23 @@ type MP2MPNetworkServicePatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// Public A public mp2mp network service can be joined
@@ -5819,18 +6126,23 @@ type MP2MPNetworkServiceRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// Public A public mp2mp network service can be joined
@@ -5881,18 +6193,23 @@ type MP2MPNetworkServiceUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// Public A public mp2mp network service can be joined
@@ -6207,12 +6524,16 @@ type P2MPNetworkService struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -6227,18 +6548,23 @@ type P2MPNetworkService struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// DisplayName Name of the point to multi-point virtual circuit.
@@ -6295,18 +6621,23 @@ type P2MPNetworkServicePatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// DisplayName Name of the point to multi-point virtual circuit.
@@ -6357,18 +6688,23 @@ type P2MPNetworkServiceRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// DisplayName Name of the point to multi-point virtual circuit.
@@ -6419,18 +6755,23 @@ type P2MPNetworkServiceUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// DisplayName Name of the point to multi-point virtual circuit.
@@ -6502,12 +6843,16 @@ type P2PNetworkService struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	//
+	// *(Sensitive Property)*
 	ChargedUntil *Date `json:"charged_until,omitempty"`
 
 	// CurrentBillingStartDate Your obligation to pay for the service will start on this date.
 	//
 	// However, this date may change after an upgrade and not reflect
 	// the inital start date of the service.
+	//
+	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
@@ -6522,18 +6867,23 @@ type P2PNetworkService struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// DisplayName Name of the point to point virtual circuit.
@@ -6579,18 +6929,23 @@ type P2PNetworkServicePatch struct {
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
 	// DisplayName Name of the point to point virtual circuit.
@@ -6632,18 +6987,23 @@ type P2PNetworkServiceRequest struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// DisplayName Name of the point to point virtual circuit.
@@ -6685,18 +7045,23 @@ type P2PNetworkServiceUpdate struct {
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
 	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
 	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
 	// DisplayName Name of the point to point virtual circuit.

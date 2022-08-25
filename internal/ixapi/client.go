@@ -2,76 +2,11 @@ package ixapi
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 )
 
 // Errors
-
-// APIError is a generic api error
-type APIError struct {
-	ProblemResponse
-}
-
-// NotFoundError indicates that a resource was not found
-type NotFoundError struct {
-	ProblemResponse
-}
-
-// AuthenticationError indicates that the authentication
-// was not successful.
-type AuthenticationError struct {
-	ProblemResponse
-}
-
-// ValidationError indicates that the validation of user data
-// failed. The Properties attribute should contain
-// a list of property names and reasons.
-type ValidationError struct {
-	ProblemResponse
-	Properties []ValidationErrorProp `json:"properties"`
-}
-
-// ValidationErrorProp A failed validation
-type ValidationErrorProp struct {
-	// Name is a name
-	Name string `json:"name,omitempty"`
-
-	// Reason is a reason
-	Reason json.RawMessage `json:"reason,omitempty"`
-}
-
-func collectReasons(res map[string]interface{}) string {
-	reasons := "{ "
-	for k, v := range res {
-		reason := v.(string)
-		reasons += fmt.Sprintf("%s: %s", k, reason)
-	}
-	reasons += " }"
-	return reasons
-}
-
-// Error implements the error interface
-func (e ValidationError) Error() string {
-	props := ""
-	plen := len(e.Properties) - 1
-	for i, prop := range e.Properties {
-		props += fmt.Sprintf("%s: %s", prop.Name, prop.Reason)
-		if i < plen {
-			props += ", "
-		}
-	}
-	return fmt.Sprintf("%s %s",
-		e.Title, props)
-}
-
-// PermissionError indicates that insufficient rights were
-// given, when trying to access a resource.
-type PermissionError struct {
-	ProblemResponse
-}
 
 // Authentication Strategies
 
