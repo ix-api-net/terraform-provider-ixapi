@@ -2986,7 +2986,6 @@ func EventSchema() map[string]*schema.Schema {
 			Computed: true,
 		},
 
-		"payload": nil,
 		"timestamp": &schema.Schema{
 			Type:     schema.TypeString,
 			Optional: true,
@@ -3019,7 +3018,6 @@ func StatusSchema() map[string]*schema.Schema {
 			Description: "A human readable message, describing the problem and may contain hints for resolution. ",
 		},
 
-		"attrs": nil,
 		"timestamp": &schema.Schema{
 			Type:        schema.TypeString,
 			Optional:    true,
@@ -3121,9 +3119,6 @@ func APIHealthSchema() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "A human-friendly description of the service.",
 		},
-
-		"checks": nil,
-		"links":  nil,
 	}
 }
 

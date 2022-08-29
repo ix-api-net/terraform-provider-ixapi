@@ -2,6 +2,29 @@ package schemas
 
 import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
+func boolFromOption(b []bool) bool {
+	if len(b) > 0 {
+		return b[0]
+	}
+	return false
+}
+
+// DataSourceQuery creates a string data source schema
+// used for querying.
+// We assume string as the type, as this is the case for
+// almost every query property.
+func DataSourceQuery(required ...bool) *schema.Schema {
+	s := &schema.Schema{
+		Type: schema.TypeString,
+	}
+	if boolFromOption(required) {
+		s.Required = true
+	} else {
+		s.Optional = true
+	}
+	return s
+}
+
 // IntoDataSourceSchema will mark all properties as optional
 // except if it is marked as required - when it is required for
 // filtering or lookup.
@@ -34,4 +57,20 @@ func IntoDataSourceSchema(
 		}
 	}
 	return s
+}
+
+// IntoDataSourceResultsSchema makes a new result schema for a
+// to be used in a data source returning a list of results.
+func IntoDataSourceResultsSchema(
+	s map[string]*schema.Schema,
+) *schema.Schema {
+	IntoDataSourceSchema(s)
+	return &schema.Schema{
+		Type:     schema.TypeList,
+		Computed: true,
+		Optional: true,
+		Elem: &schema.Resource{
+			Schema: s,
+		},
+	}
 }

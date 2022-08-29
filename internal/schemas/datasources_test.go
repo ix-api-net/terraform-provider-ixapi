@@ -48,5 +48,4 @@ func TestIntoDataSourceSchema(t *testing.T) {
 	if s["prop_c"].Elem.(*schema.Resource).Schema["prop_b"].Required == false {
 		t.Error("prop_c.prop_b should be required")
 	}
-
 }

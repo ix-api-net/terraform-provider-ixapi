@@ -4,6 +4,37 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// ResourceSetter is an interface, which resource data
+// and flatable resource data implements.
+type ResourceSetter interface {
+	Set(key string, value interface{}) error
+}
+
+// FlatResource implements the resource setter and can be
+// used to retrieve flattened resource data by applying
+// the model specific ...SetResourceData function.
+type FlatResource struct {
+	res map[string]interface{}
+}
+
+// NewFlatResource creates a new flat resouce
+func NewFlatResource() *FlatResource {
+	return &FlatResource{
+		res: make(map[string]interface{}),
+	}
+}
+
+// Set implements the ResourceSetter interface
+func (r *FlatResource) Set(key string, value interface{}) error {
+	r.res[key] = value
+	return nil
+}
+
+// Flatten returns the flattened resource
+func (r *FlatResource) Flatten() map[string]interface{} {
+	return r.res
+}
+
 // ResourceData extends the terraform resource data with
 // additional typed getters.
 type ResourceData struct {
