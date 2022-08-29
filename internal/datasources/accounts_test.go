@@ -3,27 +3,25 @@ package datasources
 import (
 	"testing"
 
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
+	"gitlab.com/ix-api/ix-api-terraform-provider/internal/testdata"
 )
 
 func TestAccountSetResourceData(t *testing.T) {
 	accountDataSource := NewAccountDataSource()
 	res := accountDataSource.TestResourceData()
 
-	ref := "ref"
-	account := &ixapi.Account{
-		Name:        "my account",
-		ExternalRef: &ref,
+	account := testdata.NewAccount()
+	if err := schemas.SetResourceData(account, res); err != nil {
+		t.Fatal(err)
 	}
-	schemas.AccountSetResourceData(account, res)
 
 	val, ok := res.GetOk("name")
-	if !ok || val.(string) != "my account" {
+	if !ok || val.(string) != "account name" {
 		t.Error("unexpected name:", val)
 	}
 	val, ok = res.GetOk("external_ref")
-	if !ok || val.(string) != "ref" {
+	if !ok || val.(string) != "ext ref" {
 		t.Error("unexpected external ref:", val)
 	}
 }

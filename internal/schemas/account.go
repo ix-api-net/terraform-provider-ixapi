@@ -131,11 +131,13 @@ func AccountPatchFromResourceData(
 }
 
 // AccountSetResourceData sets the resource data for an account
-func AccountSetResourceData(acc *ixapi.Account, res ResourceSetter) {
+func AccountSetResourceData(acc *ixapi.Account, res ResourceSetter) error {
 	if acc.ManagingAccount != nil {
 		res.Set("managing_account", *acc.ManagingAccount)
 	}
-	res.Set("name", acc.Name)
+	if err := res.Set("name", acc.Name); err != nil {
+		return err
+	}
 
 	if acc.LegalName != nil {
 		res.Set("legal_name", *acc.LegalName)
@@ -146,7 +148,6 @@ func AccountSetResourceData(acc *ixapi.Account, res ResourceSetter) {
 	if acc.Discoverable != nil {
 		res.Set("discoverable", *acc.Discoverable)
 	}
-
 	if acc.MetroAreaNetworkPresence != nil {
 		res.Set("metro_area_network_presence", acc.MetroAreaNetworkPresence)
 	}
@@ -155,6 +156,7 @@ func AccountSetResourceData(acc *ixapi.Account, res ResourceSetter) {
 	res.Set("address", FlattenAddress(acc.Address))
 	res.Set("state", acc.State)
 	res.Set("id", acc.ID)
+	return nil
 }
 
 // FlattenAccount makes a flat account

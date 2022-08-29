@@ -1,0 +1,100 @@
+package schemas
+
+import (
+	"reflect"
+	"strings"
+	"time"
+)
+
+// flattenStructValue will invoke SetResourceData on a struct
+func flattenStructValue(structValue any) ([]interface{}, error) {
+	res := NewFlatResource()
+	if err := SetResourceData(structValue, res); err != nil {
+		return nil, err
+	}
+	return []interface{}{res.Flatten()}, nil
+}
+
+func flattenSliceValue(slice []interface{}) ([]interface{}, error) {
+	if slice == nil {
+		return []interface{}{}, nil
+	}
+	flatSlice := make([]interface{}, 0, len(slice))
+	for _, val := range slice {
+		mValue := reflect.Indirect(reflect.ValueOf(val))
+		if mValue.Kind() == reflect.Struct {
+			res := NewFlatResource()
+			if err := SetResourceData(mValue.Interface(), res); err != nil {
+				return nil, err
+			}
+			flatSlice = append(flatSlice, res.Flatten())
+		} else {
+			flatSlice = append(flatSlice, mValue.Interface())
+		}
+	}
+	return flatSlice, nil
+}
+
+// SetResourceData uses reflection to set the resource data
+// from an IX-API model.
+func SetResourceData(model any, res ResourceSetter) error {
+	mValue := reflect.Indirect(reflect.ValueOf(model))
+	mType := mValue.Type()
+
+	for i := 0; i < mValue.NumField(); i++ {
+		field := mType.Field(i)
+		val := mValue.Field(i)
+		valType := reflect.Indirect(val).Kind()
+		valT := val.Type()
+
+		if valType == reflect.Invalid {
+			// Value is NIL, so we skip it
+			continue
+		}
+
+		// Get prop name from json property name
+		propName := strings.Split(field.Tag.Get("json"), ",")[0]
+
+		if valT.PkgPath() == "time" && valT.Name() == "Time" {
+			res.Set(propName, val.Interface().(time.Time).Format(time.RFC3339))
+			continue
+		}
+
+		if valType == reflect.Struct {
+			// We flatten this struct using set resource data
+			propValue, err := flattenStructValue(val.Interface())
+			if err != nil {
+				return err
+			}
+			if err := res.Set(propName, propValue); err != nil {
+				return err
+			}
+		} else if valType == reflect.Slice {
+			sLen := val.Len()
+			sVal := make([]interface{}, sLen)
+			for i := 0; i < sLen; i++ {
+				sVal[i] = val.Index(i).Interface()
+			}
+			propValue, err := flattenSliceValue(sVal)
+			if err != nil {
+				return err
+			}
+			if err := res.Set(propName, propValue); err != nil {
+				return err
+			}
+		} else if valType == reflect.Map {
+			// For now skip map attrs as they are not reflected in the schema.
+			continue
+		} else {
+			propValue := val.Interface()
+			if val.Kind() == reflect.Pointer {
+				propValue = reflect.Indirect(val).Interface()
+			}
+			if err := res.Set(propName, propValue); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
