@@ -122,3 +122,131 @@ func contactsRead(
 
 	return nil
 }
+
+// NewContactDataSource creates a data source for a contact
+// referenced by ID or external ref
+func NewContactDataSource() *schema.Resource {
+	return &schema.Resource{
+		Description: "Use the `contact` data source to fetch a single contact.",
+		ReadContext: contactRead,
+		Schema: schemas.Combine(
+			schemas.IntoDataSourceSchema(schemas.ContactSchema()),
+			map[string]*schema.Schema{
+				"role_id": &schema.Schema{
+					Type:        schema.TypeString,
+					Description: "query contact by role id, only with consuming_account",
+					Optional:    true,
+				},
+				"role": &schema.Schema{
+					Type:        schema.TypeString,
+					Description: "query contact by role name, only with consuming_account",
+					Optional:    true,
+				},
+			},
+		),
+	}
+}
+
+// Retrieve a single contact.
+func contactRead(
+	ctx context.Context,
+	res *schema.ResourceData,
+	meta any,
+) diag.Diagnostics {
+	api := meta.(*ixapi.Client)
+
+	// Filters
+	id, hasID := res.GetOk("id")
+	externalRef, hasExternalRef := res.GetOk("external_ref")
+	consumingAccount, hasConsumingAccount := res.GetOk("consuming_account")
+	roleID, hasRoleID := res.GetOk("role_id")
+	roleName, hasRoleName := res.GetOk("role")
+
+	// Query
+	qry := &ixapi.ContactsListQuery{}
+	if hasID {
+		qry.ID = []string{id.(string)}
+	}
+	if hasExternalRef {
+		qry.ExternalRef = externalRef.(string)
+	}
+	if hasConsumingAccount {
+		qry.ConsumingAccount = consumingAccount.(string)
+	}
+
+	var queryRole *ixapi.Role
+	if hasRoleID {
+		result, err := api.RolesRead(ctx, roleID.(string))
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		queryRole = result
+	} else if hasRoleName {
+		results, err := api.RolesList(ctx, &ixapi.RolesListQuery{
+			Name: roleName.(string),
+		})
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		filtered := make([]*ixapi.Role, 0, len(results))
+		for _, role := range results {
+			if role.Name != roleName.(string) {
+				continue
+			}
+			filtered = append(filtered, role)
+		}
+		if len(filtered) == 0 {
+			return diag.Errorf("a role with the name %s could not be found",
+				roleName.(string))
+		}
+		if len(filtered) > 1 {
+			return diag.Errorf("multiple roles were returned for %s",
+				roleName.(string))
+		}
+		queryRole = filtered[0]
+	}
+
+	results, err := api.ContactsList(ctx, qry)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	// Further filter roles
+	filtered := make([]*ixapi.Contact, 0, len(results))
+	for _, contact := range results {
+		if hasID && contact.ID != id.(string) {
+			continue
+		}
+
+		if queryRole != nil {
+			// Check role assignments
+			assignments, err := api.RoleAssignmentsList(ctx, &ixapi.RoleAssignmentsListQuery{
+				Contact: contact.ID,
+				Role:    queryRole.ID,
+			})
+			if err != nil {
+				return diag.FromErr(err)
+			}
+			if len(assignments) == 0 {
+				continue // no match
+			}
+		}
+
+		filtered = append(filtered, contact)
+	}
+
+	if len(filtered) == 0 {
+		return diag.Errorf("no matching contact could be found")
+	}
+	if len(filtered) > 1 {
+		return diag.Errorf("multiple contacts were returned")
+	}
+
+	if err := schemas.SetResourceData(filtered[0], res); err != nil {
+		return diag.FromErr(err)
+	}
+
+	res.SetId(filtered[0].ID)
+
+	return nil
+}
