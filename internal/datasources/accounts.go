@@ -2,9 +2,7 @@ package datasources
 
 import (
 	"context"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -86,7 +84,7 @@ func accountsRead(
 	}
 
 	res.Set("accounts", state)
-	res.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+	res.SetId(schemas.Timestamp())
 
 	return nil
 }
@@ -109,20 +107,13 @@ func accountRead(
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
 
-	var name, ref string
-
 	// Filters
-	val, ok := res.GetOk("name")
-	if ok {
-		name = val.(string)
-	}
-	val, ok = res.GetOk("external_ref")
-	if ok {
-		ref = val.(string)
-	}
+	name, hasName := res.GetOk("name")
+	ref, hasRef := res.GetOk("external_ref")
+	id, hasID := res.GetOk("id")
 
-	if name == "" && ref == "" {
-		return diag.Errorf("at least name or external_ref is required")
+	if !hasName && !hasRef && !hasID {
+		return diag.Errorf("at least `id`, `name` or `external_ref` are required")
 	}
 
 	// Get all acccounts and filter locally
@@ -133,10 +124,13 @@ func accountRead(
 
 	filtered := make([]*ixapi.Account, 0, len(accounts))
 	for _, acc := range accounts {
-		if name != "" && strings.ToLower(acc.Name) != strings.ToLower(name) {
+		if hasID && acc.ID != id.(string) {
 			continue
 		}
-		if ref != "" && (acc.ExternalRef == nil || (acc.ExternalRef != nil && *acc.ExternalRef != ref)) {
+		if hasName && strings.ToLower(acc.Name) != strings.ToLower(name.(string)) {
+			continue
+		}
+		if hasRef && (acc.ExternalRef == nil || (acc.ExternalRef != nil && *acc.ExternalRef != ref.(string))) {
 			continue
 		}
 		filtered = append(filtered, acc)
@@ -151,7 +145,9 @@ func accountRead(
 
 	account := filtered[0]
 
-	schemas.SetResourceData(account, res)
+	if err := schemas.SetResourceData(account, res); err != nil {
+		return diag.FromErr(err)
+	}
 	res.SetId(account.ID)
 
 	return nil
