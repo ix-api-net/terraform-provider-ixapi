@@ -1,6 +1,9 @@
 package schemas
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -121,4 +124,9 @@ func (res Resource) GetResource(key string) Resource {
 	}
 	sres := Resource(resVals[0].(map[string]interface{})) // first embedded
 	return sres
+}
+
+// Timestamp returns the current unix timestamp
+func Timestamp() string {
+	return strconv.FormatInt(time.Now().Unix(), 10)
 }
