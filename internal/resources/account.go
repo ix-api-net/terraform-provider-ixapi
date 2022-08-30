@@ -31,6 +31,85 @@ func NewAccountResource() *schema.Resource {
 
 // Operations
 
+// addressFromResource decodes embedded address infos
+func addressFromResource(res schemas.Resource) *ixapi.Address {
+	if res == nil {
+		return nil
+	}
+	return &ixapi.Address{
+		Country:             res.GetString("country"),
+		Locality:            res.GetString("locality"),
+		Region:              res.GetStringOpt("region"),
+		PostalCode:          res.GetString("postal_code"),
+		StreetAddress:       res.GetString("street_address"),
+		PostOfficeBoxNumber: res.GetStringOpt("post_office_box_number"),
+	}
+}
+
+// billingInformationFromResource decodes billing information
+// from an embedded resource
+func billingInformationFromResource(res schemas.Resource) *ixapi.BillingInformation {
+	if res == nil {
+		return nil
+	}
+	address := addressFromResource(res.GetResource("address"))
+	return &ixapi.BillingInformation{
+		Name:      res.GetString("name"),
+		VatNumber: res.GetStringOpt("vat_number"),
+		Address:   address,
+	}
+}
+
+// accountRequestFromResourceData builds an account create request
+func accountRequestFromResourceData(
+	r *schema.ResourceData,
+) *ixapi.AccountRequest {
+	res := schemas.ResourceData{ResourceData: r}
+	req := &ixapi.AccountRequest{
+		ManagingAccount: res.GetStringOpt("managing_account"),
+		Name:            res.GetString("name"),
+		LegalName:       res.GetStringOpt("legal_name"),
+		BillingInformation: billingInformationFromResource(
+			res.GetResource("billing_information")),
+		ExternalRef:  res.GetStringOpt("external_ref"),
+		Discoverable: res.GetBoolOpt("discoverable"),
+		Address: addressFromResource(
+			res.GetResource("address")),
+	}
+	return req
+}
+
+// accountPatchFromResourceData makes a new Patch payload
+func accountPatchFromResourceData(
+	r *schema.ResourceData,
+) *ixapi.AccountPatch {
+	res := schemas.ResourceData{ResourceData: r}
+	req := &ixapi.AccountPatch{}
+	if res.HasChange("managing_account") {
+		req.ManagingAccount = res.GetStringOpt("managing_account")
+	}
+	if res.HasChange("name") {
+		req.Name = res.GetStringOpt("name")
+	}
+	if res.HasChange("legal_name") {
+		req.LegalName = res.GetStringOpt("legal_name")
+	}
+	if res.HasChange("billing_information") {
+		req.BillingInformation = billingInformationFromResource(
+			res.GetResource("billing_information"))
+	}
+	if res.HasChange("external_ref") {
+		req.ExternalRef = res.GetStringOpt("external_ref")
+	}
+	if res.HasChange("discoverable") {
+		req.Discoverable = res.GetBoolOpt("discoverable")
+	}
+	if res.HasChange("address") {
+		req.Address = addressFromResource(res.GetResource("address"))
+	}
+	return req
+}
+
 // accountCreate creates a new account
 func accountCreate(
 	ctx context.Context,
@@ -40,10 +119,7 @@ func accountCreate(
 	api := meta.(*ixapi.Client)
 
 	// Make request from terraform state
-	req, diags := schemas.AccountRequestFromResourceData(res)
-	if diags != nil {
-		return diags
-	}
+	req := accountRequestFromResourceData(res)
 
 	// Call api, set ID and fetch account
 	acc, err := api.AccountsCreate(ctx, req)
@@ -75,7 +151,7 @@ func accountRead(
 	}
 
 	// Update resource
-	schemas.AccountSetResourceData(acc, res)
+	schemas.SetResourceData(acc, res)
 
 	return nil
 }
@@ -88,11 +164,7 @@ func accountUpdate(
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
 
-	patch, diags := schemas.AccountPatchFromResourceData(res)
-	if diags != nil {
-		return diags
-	}
-
+	patch := accountPatchFromResourceData(res)
 	_, err := api.AccountsPatch(ctx, res.Id(), patch)
 	if err != nil {
 		return diag.FromErr(err)

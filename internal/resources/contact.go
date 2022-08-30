@@ -23,8 +23,73 @@ func NewContactResource() *schema.Resource {
 		UpdateContext: contactUpdate,
 		DeleteContext: contactDelete,
 
-		Schema: schemas.ContactSchema(),
+		Schema: schemas.Combine(
+			schemas.ContactSchema(),
+			map[string]*schema.Schema{
+				"assigned_roles": &schema.Schema{
+					Description: "Assign roles to this contact identified by the role name",
+					Type:        schema.TypeList,
+					Required:    true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"name": &schema.Schema{
+								Type:     schema.TypeString,
+								Required: true,
+							},
+							"id": &schema.Schema{
+								Type:     schema.TypeString,
+								Optional: true,
+								Computed: true,
+							},
+							"assignment": &schema.Schema{
+								Type:     schema.TypeString,
+								Optional: true,
+								Computed: true,
+							},
+						},
+					},
+				},
+			},
+		),
 	}
+}
+
+// Requests
+
+// contactRequestFromResourceData makes a new structured request
+func contactRequestFromResourceData(r *schema.ResourceData) *ixapi.ContactRequest {
+	res := schemas.ResourceData{ResourceData: r}
+	req := &ixapi.ContactRequest{
+		ManagingAccount:  res.GetString("managing_account"),
+		ConsumingAccount: res.GetString("consuming_account"),
+		ExternalRef:      res.GetStringOpt("external_ref"),
+		Name:             res.GetStringOpt("name"),
+		Telephone:        res.GetStringOpt("telephone"),
+		Email:            res.GetStringOpt("email"),
+	}
+	return req
+}
+
+// contactPatchFromResourceData creates a contact update
+func contactPatchFromResourceData(r *schema.ResourceData) *ixapi.ContactPatch {
+	res := schemas.ResourceData{ResourceData: r}
+	patch := &ixapi.ContactPatch{}
+	if res.HasChange("managing_account") {
+		patch.ManagingAccount = res.GetStringOpt("managing_account")
+	}
+	if res.HasChange("consuming_account") {
+		patch.ConsumingAccount = res.GetStringOpt("consuming_account")
+	}
+	if res.HasChange("name") {
+		patch.Name = res.GetStringOpt("name")
+	}
+	if res.HasChange("telephone") {
+		patch.Telephone = res.GetStringOpt("telephone")
+	}
+	if res.HasChange("email") {
+		patch.Email = res.GetStringOpt("email")
+	}
+	return patch
 }
 
 // Operations
@@ -91,7 +156,7 @@ func contactCreate(
 	}
 
 	// Create contact and try to assign role
-	req := schemas.ContactRequestFromResourceData(res)
+	req := contactRequestFromResourceData(res)
 	contact, err := api.ContactsCreate(ctx, req)
 	if err != nil {
 		return diag.FromErr(err)
@@ -137,7 +202,7 @@ func contactRead(
 	}
 
 	// Set resource data
-	schemas.ContactSetResourceData(contact, res)
+	schemas.SetResourceData(contact, res)
 
 	// Get assigned roles
 	roles, err := api.RolesList(ctx)
@@ -225,7 +290,7 @@ func contactUpdate(
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
 
-	req := schemas.ContactPatchFromResourceData(res)
+	req := contactPatchFromResourceData(res)
 	_, err := api.ContactsPatch(ctx, res.Id(), req)
 	if err != nil {
 		return diag.FromErr(err)

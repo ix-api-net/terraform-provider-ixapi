@@ -78,7 +78,11 @@ func accountsRead(
 
 	state := make([]interface{}, len(filtered))
 	for i, acc := range filtered {
-		state[i] = schemas.FlattenAccount(acc)
+		flat, err := schemas.FlattenModel(acc)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		state[i] = flat
 	}
 
 	res.Set("accounts", state)
@@ -147,7 +151,7 @@ func accountRead(
 
 	account := filtered[0]
 
-	schemas.AccountSetResourceData(account, res)
+	schemas.SetResourceData(account, res)
 	res.SetId(account.ID)
 
 	return nil

@@ -98,3 +98,12 @@ func SetResourceData(model any, res ResourceSetter) error {
 
 	return nil
 }
+
+// FlattenModel will make a flat model
+func FlattenModel(model any) (map[string]interface{}, error) {
+	res := NewFlatResource()
+	if err := SetResourceData(model, res); err != nil {
+		return nil, err
+	}
+	return res.Flatten(), nil
+}

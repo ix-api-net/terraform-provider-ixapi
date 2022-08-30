@@ -20,22 +20,11 @@ func NewContactsDataSource() *schema.Resource {
 		ReadContext: contactsRead,
 
 		Schema: map[string]*schema.Schema{
-			"managing_account": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"consuming_account": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"contacts": &schema.Schema{
-				Type:     schema.TypeList,
-				Computed: true,
-				Optional: true,
-				Elem: &schema.Resource{
-					Schema: schemas.ContactSchema(),
-				},
-			},
+			"managing_account":  schemas.DataSourceQuery(),
+			"consuming_account": schemas.DataSourceQuery(),
+			"contacts": schemas.IntoDataSourceResultsSchema(
+				schemas.ContactSchema(),
+			),
 		},
 	}
 }
@@ -96,9 +85,12 @@ func contactsRead(
 	// Make state
 	state := make([]interface{}, len(filtered))
 	for i, contact := range filtered {
-		c := schemas.FlattenContact(contact)
+		c, err := schemas.FlattenModel(contact)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 
-		// Get roles for contact
+		// Get roles for contact and flatten assigned roles
 		assigned := []interface{}{}
 		for _, a := range assignments {
 			if a.Contact != contact.ID {

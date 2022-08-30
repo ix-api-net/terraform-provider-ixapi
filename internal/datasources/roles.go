@@ -18,37 +18,11 @@ func NewRoleDataSource() *schema.Resource {
 
 		ReadContext: roleRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-			},
-			"required_fields": &schema.Schema{
-				Type:     schema.TypeList,
-				Computed: true,
-				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"role": &schema.Schema{
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Computed: true,
-				Optional: true,
-				Elem: &schema.Resource{
-					Schema: schemas.RoleSchema(),
-				},
-			},
-		},
+		Schema: schemas.IntoDataSourceSchema(schemas.RoleSchema()),
 	}
 }
 
+// Retrieve a single role
 func roleRead(
 	ctx context.Context,
 	res *schema.ResourceData,
@@ -75,12 +49,9 @@ func roleRead(
 		return diag.Errorf("a role matching the name could not be found")
 	}
 
-	res.SetId(found.ID)
-	res.Set("id", found.ID)
-	res.Set("role", []interface{}{
-		schemas.FlattenRole(found),
-	})
-	res.Set("required_fields", found.RequiredFields)
+	if err := schemas.SetResourceData(found, res); err != nil {
+		return diag.FromErr(err)
+	}
 
 	return nil
 }
