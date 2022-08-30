@@ -107,3 +107,20 @@ func FlattenModel(model any) (map[string]interface{}, error) {
 	}
 	return res.Flatten(), nil
 }
+
+// FlattenModels will create a list of flat models
+func FlattenModels(models any) ([]interface{}, error) {
+	val := reflect.ValueOf(models)
+	length := val.Len()
+	flat := make([]interface{}, length)
+	for i := 0; i < length; i++ {
+		item := val.Index(i)
+		flatItem, err := FlattenModel(item.Interface())
+		if err != nil {
+			return nil, err
+		}
+		flat[i] = flatItem
+	}
+
+	return flat, nil
+}

@@ -39,7 +39,11 @@ func metroAreasRead(
 		return diag.FromErr(err)
 	}
 
-	res.Set("metro_areas", schemas.FlattenMetroAreas(metroAreas))
+	flatMetroAreas, err := schemas.FlattenModels(metroAreas)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	res.Set("metro_areas", flatMetroAreas)
 
 	// Assign pseudoID
 	res.SetId(strconv.FormatInt(time.Now().Unix(), 10))
