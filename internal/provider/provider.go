@@ -73,6 +73,7 @@ func New(version string) func() *schema.Provider {
 			DataSourcesMap: map[string]*schema.Resource{
 				"ixapi_metro_areas": datasources.NewMetroAreasDataSource(),
 				"ixapi_metro_area":  datasources.NewMetroAreaDataSource(),
+				"ixapi_roles":       datasources.NewRolesDataSource(),
 				"ixapi_role":        datasources.NewRoleDataSource(),
 				"ixapi_contacts":    datasources.NewContactsDataSource(),
 				"ixapi_contact":     datasources.NewContactDataSource(),

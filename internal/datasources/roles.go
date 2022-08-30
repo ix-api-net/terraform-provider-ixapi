@@ -11,6 +11,52 @@ import (
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
 )
 
+// NewRolesDataSource creates a data source for querying roles
+func NewRolesDataSource() *schema.Resource {
+	return &schema.Resource{
+		Description: "Use the data source to query IX-API roles",
+		Schema: map[string]*schema.Schema{
+			"contact": schemas.DataSourceQuery(),
+			"roles": schemas.IntoDataSourceResultsSchema(
+				schemas.RoleSchema()),
+		},
+		ReadContext: rolesRead,
+	}
+}
+
+// fetch all roles matching the query
+func rolesRead(
+	ctx context.Context,
+	res *schema.ResourceData,
+	meta any,
+) diag.Diagnostics {
+	api := meta.(*ixapi.Client)
+
+	// Filters
+	contact, hasContact := res.GetOk("contact")
+
+	qry := &ixapi.RolesListQuery{}
+	if hasContact {
+		qry.Contact = contact.(string)
+	}
+	results, err := api.RolesList(ctx, qry)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	roles, err := schemas.FlattenModels(results)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := res.Set("roles", roles); err != nil {
+		return diag.FromErr(err)
+	}
+	res.SetId(schemas.Timestamp())
+
+	return nil
+}
+
 // NewRoleDataSource creates a new role data source schema
 func NewRoleDataSource() *schema.Resource {
 	return &schema.Resource{
