@@ -74,3 +74,14 @@ func IntoDataSourceResultsSchema(
 		},
 	}
 }
+
+// DataSourceID creates a schema mapping for combination
+// with a required ID parameter
+func DataSourceID() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"id": &schema.Schema{
+			Type:     schema.TypeString,
+			Required: true,
+		},
+	}
+}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"gitlab.com/ix-api/ix-api-terraform-provider/internal/filter"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
 )
@@ -25,6 +26,7 @@ func NewPopsDataSource() *schema.Resource {
 	}
 }
 
+// Fetch all pops
 func popsRead(
 	ctx context.Context,
 	res *schema.ResourceData,
@@ -43,10 +45,10 @@ func popsRead(
 
 	filtered := make([]*ixapi.PointOfPresence, 0, len(pops))
 	for _, pop := range pops {
-		if hasFacility && pop.Facility != facility.(string) {
+		if filter.String(pop.Facility, faciltiy, hasFacility) {
 			continue
 		}
-		if hasMetroAreaNetwork && pop.MetroAreaNetwork != metroAreaNetwork.(string) {
+		if filter.String(pop.MetroAreaNetwork, metroAreaNetwork, hasMetroAreaNetwork) {
 			continue
 		}
 		filtered = append(filtered, pop)
@@ -74,12 +76,7 @@ func NewPopDataSource() *schema.Resource {
 		ReadContext: popRead,
 		Schema: schemas.Combine(
 			schemas.IntoDataSourceSchema(schemas.PointOfPresenceSchema()),
-			map[string]*schema.Schema{
-				"id": &schema.Schema{
-					Type:     schema.TypeString,
-					Required: true,
-				},
-			},
+			schemas.DataSourceID(),
 		),
 	}
 }
