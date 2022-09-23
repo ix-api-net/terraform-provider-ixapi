@@ -44,13 +44,13 @@ func fetchMetroAreaNetworks(
 
 	filtered := make([]*ixapi.MetroAreaNetwork, 0, len(all))
 	for _, man := range all {
-		if filter.String(man.Name, name, hasName) {
+		if filter.Missing(man.Name, name, hasName) {
 			continue
 		}
-		if filter.String(man.MetroArea, metroArea, hasMetroArea) {
+		if filter.Missing(man.MetroArea, metroArea, hasMetroArea) {
 			continue
 		}
-		if filter.String(man.ServiceProvider, serviceProvider, hasServiceProvider) {
+		if filter.Missing(man.ServiceProvider, serviceProvider, hasServiceProvider) {
 			continue
 		}
 		filtered = append(filtered, man)

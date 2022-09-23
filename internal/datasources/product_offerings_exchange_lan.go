@@ -20,7 +20,7 @@ func NewProductOfferingsExchangeLan() *schema.Resource {
 			"service_metro_area_network":  schemas.DataSourceQuery(),
 			"handover_metro_area_network": schemas.DataSourceQuery(),
 			"handover_metro_area":         schemas.DataSourceQuery(),
-			"product_offering": schemas.IntoDataSourceResultsSchema(
+			"product_offerings": schemas.IntoDataSourceResultsSchema(
 				schemas.ExchangeLanNetworkProductOfferingSchema(),
 			),
 		},

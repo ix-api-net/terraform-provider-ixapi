@@ -45,10 +45,10 @@ func popsRead(
 
 	filtered := make([]*ixapi.PointOfPresence, 0, len(pops))
 	for _, pop := range pops {
-		if filter.String(pop.Facility, faciltiy, hasFacility) {
+		if filter.Missing(pop.Facility, facility, hasFacility) {
 			continue
 		}
-		if filter.String(pop.MetroAreaNetwork, metroAreaNetwork, hasMetroAreaNetwork) {
+		if filter.Missing(pop.MetroAreaNetwork, metroAreaNetwork, hasMetroAreaNetwork) {
 			continue
 		}
 		filtered = append(filtered, pop)
