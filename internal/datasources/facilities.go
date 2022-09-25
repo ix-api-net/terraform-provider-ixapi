@@ -28,11 +28,8 @@ func NewFacilitiesDataSource() *schema.Resource {
 				"Filter by postal code of the facilitie's address"),
 			"organisation_name": schemas.DataSourceQuery(
 				"Filter by name of the organisation operating the facility"),
-			"peeringdb_facility_id": &schema.Schema{
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Filter by peeringdb id",
-			},
+			"peeringdb_facility_id": schemas.DataSourceQueryInt(
+				"Filter byu peeringdb id"),
 			"facilities": schemas.IntoDataSourceResultsSchema(
 				schemas.FacilitySchema(),
 			),

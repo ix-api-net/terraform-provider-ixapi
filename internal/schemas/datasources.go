@@ -22,6 +22,16 @@ func DataSourceQuery(description string) *schema.Schema {
 	return s
 }
 
+// DataSourceQueryInt creates an integer data source query schema.
+func DataSourceQueryInt(description string) *schema.Schema {
+	s := &schema.Schema{
+		Type:        schema.TypeInt,
+		Optional:    true,
+		Description: description,
+	}
+	return s
+}
+
 // IntoDataSourceSchema will mark all properties as optional
 // except if it is marked as required - when it is required for
 // filtering or lookup.
