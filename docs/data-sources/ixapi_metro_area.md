@@ -17,9 +17,11 @@ Use the `metro_area` datasource to retrieve a metro area by un_locode or iata_co
 
 ### Optional
 
-- `display_name` (String)
-- `iata_code` (String)
-- `un_locode` (String)
+- `display_name` (String) The name of the metro area. Likely the same as the IATA code.
+- `facilities` (List of String)
+- `iata_code` (String) The three letter IATA airport code for identiying the metro area.
+- `metro_area_networks` (List of String)
+- `un_locode` (String) The UN/LOCODE for identifying the metro area.
 
 ### Read-Only
 

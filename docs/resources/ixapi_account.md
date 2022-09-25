@@ -29,6 +29,7 @@ An IX-API account
 - `managing_account` (String) The `id` of a managing account. Can be used for creating a customer hierachy. *(Sensitive Property)*
 - `metro_area_network_presence` (List of String)
 - `state` (String)
+- `status` (Block List) (see [below for nested schema](#nestedblock--status))
 
 ### Read-Only
 
@@ -50,12 +51,9 @@ Optional:
 <a id="nestedblock--billing_information"></a>
 ### Nested Schema for `billing_information`
 
-Required:
-
-- `address` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--billing_information--address))
-
 Optional:
 
+- `address` (Block List, Max: 1) (see [below for nested schema](#nestedblock--billing_information--address))
 - `name` (String) Name of the organisation receiving invoices.
 - `vat_number` (String) Value-added tax number, required for european reverse charge system.
 
@@ -70,5 +68,17 @@ Optional:
 - `postal_code` (String) A postal code. For example, 9404
 - `region` (String) The region. For example, CA
 - `street_address` (String) The street address. For example, 1600 Amphitheatre Pkwy.
+
+
+
+<a id="nestedblock--status"></a>
+### Nested Schema for `status`
+
+Optional:
+
+- `message` (String) A human readable message, describing the problem and may contain hints for resolution.
+- `severity` (Number) We are using syslog severity levels: 0 = Emergency, 1 = Alert, 2 = Critical, 3 = Error, 4 = Warning, 5 = Notice, 6 = Informational, 7 = Debug.
+- `tag` (String) A machine readable message identifier.
+- `timestamp` (String) The time and date when the event occured.
 
 

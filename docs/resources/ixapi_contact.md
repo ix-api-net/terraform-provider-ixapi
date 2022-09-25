@@ -17,12 +17,12 @@ A contact for an account
 
 ### Required
 
+- `assigned_roles` (Block List, Min: 1) Assign roles to this contact identified by the role name (see [below for nested schema](#nestedblock--assigned_roles))
 - `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
 - `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
 
 ### Optional
 
-- `assigned_roles` (Block List) (see [below for nested schema](#nestedblock--assigned_roles))
 - `email` (String) The email of the legal company entity.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
 - `name` (String) A name of a person or an organisation
@@ -37,11 +37,14 @@ A contact for an account
 
 Required:
 
-- `name` (String) The name of the role.
+- `name` (String)
 
 Optional:
 
 - `assignment` (String)
-- `id` (String) The id of the role.
+
+Read-Only:
+
+- `id` (String) The ID of this resource.
 
 

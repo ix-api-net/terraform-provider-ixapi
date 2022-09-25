@@ -18,9 +18,9 @@ Use the `accounts` data source to find accounts
 ### Optional
 
 - `accounts` (Block List) (see [below for nested schema](#nestedblock--accounts))
-- `external_ref` (String)
-- `managing_account` (String)
-- `name` (String)
+- `external_ref` (String) Filter by external reference
+- `managing_account` (String) Filter by managing 'parent' account
+- `name` (String) Filter by account name
 
 ### Read-Only
 
@@ -29,20 +29,18 @@ Use the `accounts` data source to find accounts
 <a id="nestedblock--accounts"></a>
 ### Nested Schema for `accounts`
 
-Required:
-
-- `address` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--accounts--address))
-- `name` (String) Name of the account, how it gets represented in e.g. a "customers list".
-
 Optional:
 
+- `address` (Block List, Max: 1) (see [below for nested schema](#nestedblock--accounts--address))
 - `billing_information` (Block List, Max: 1) (see [below for nested schema](#nestedblock--accounts--billing_information))
 - `discoverable` (Boolean) The account will be included for all members of the ix in the list of accounts.  Only `id`, `name` and `present_in_metro_area_networks` are provided to other members.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
 - `legal_name` (String) Legal name of the organisation. Only required when it's different from the account name. *(Sensitive Property)*
 - `managing_account` (String) The `id` of a managing account. Can be used for creating a customer hierachy. *(Sensitive Property)*
 - `metro_area_network_presence` (List of String)
+- `name` (String) Name of the account, how it gets represented in e.g. a "customers list".
 - `state` (String)
+- `status` (Block List) (see [below for nested schema](#nestedblock--accounts--status))
 
 Read-Only:
 
@@ -64,12 +62,9 @@ Optional:
 <a id="nestedblock--accounts--billing_information"></a>
 ### Nested Schema for `accounts.billing_information`
 
-Required:
-
-- `address` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--accounts--billing_information--address))
-
 Optional:
 
+- `address` (Block List, Max: 1) (see [below for nested schema](#nestedblock--accounts--billing_information--address))
 - `name` (String) Name of the organisation receiving invoices.
 - `vat_number` (String) Value-added tax number, required for european reverse charge system.
 
@@ -84,5 +79,17 @@ Optional:
 - `postal_code` (String) A postal code. For example, 9404
 - `region` (String) The region. For example, CA
 - `street_address` (String) The street address. For example, 1600 Amphitheatre Pkwy.
+
+
+
+<a id="nestedblock--accounts--status"></a>
+### Nested Schema for `accounts.status`
+
+Optional:
+
+- `message` (String) A human readable message, describing the problem and may contain hints for resolution.
+- `severity` (Number) We are using syslog severity levels: 0 = Emergency, 1 = Alert, 2 = Critical, 3 = Error, 4 = Warning, 5 = Notice, 6 = Informational, 7 = Debug.
+- `tag` (String) A machine readable message identifier.
+- `timestamp` (String) The time and date when the event occured.
 
 

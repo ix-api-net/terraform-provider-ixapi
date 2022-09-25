@@ -29,7 +29,9 @@ Use the metro_areas datasource to retrieve all metro areas
 Optional:
 
 - `display_name` (String) The name of the metro area. Likely the same as the IATA code.
+- `facilities` (List of String)
 - `iata_code` (String) The three letter IATA airport code for identiying the metro area.
+- `metro_area_networks` (List of String)
 - `un_locode` (String) The UN/LOCODE for identifying the metro area.
 
 Read-Only:
