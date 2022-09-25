@@ -92,8 +92,14 @@ func New(version string) func() *schema.Provider {
 				"ixapi_pops":                datasources.NewPopsDataSource(),
 				"ixapi_pop":                 datasources.NewPopDataSource(),
 
+				"ixapi_network_features_routes_server": datasources.NewNetworkFeaturesRouteServerDataSource(),
+				"ixapi_network_feature_route_server":   datasources.NewNetworkFeatureRouteServerDataSource(),
+
 				"ixapi_network_services_exchange_lan": datasources.NewNetworkServicesExchangeLanDataSource(),
 				"ixapi_network_service_exchange_lan":  datasources.NewNetworkServiceExchangeLanDataSource(),
+
+				"ixapi_product_offerings_exchange_lan": datasources.NewProductOfferingsExchangeLanDataSource(),
+				"ixapi_product_offering_exchange_lan":  datasources.NewProductOfferingExchangeLanDataSource(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"ixapi_contact": resources.NewContactResource(),

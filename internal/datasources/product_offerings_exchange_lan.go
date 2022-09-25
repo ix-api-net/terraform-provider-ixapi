@@ -11,9 +11,9 @@ import (
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
 )
 
-// NewProductOfferingsExchangeLan creates a new data source
+// NewProductOfferingsExchangeLanDataSource creates a new data source
 // for querying a list of exchange lan product offerings
-func NewProductOfferingsExchangeLan() *schema.Resource {
+func NewProductOfferingsExchangeLanDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the data source to get a list of exchange lan product offerings",
 		ReadContext: exchangeLanProductOfferingsRead,
@@ -111,9 +111,9 @@ func exchangeLanProductOfferingsRead(
 	return nil
 }
 
-// NewProductOfferingExchangeLan creates a new data source for
+// NewProductOfferingExchangeLanDataSource creates a new data source for
 // retrieving an exchange lan product offering.
-func NewProductOfferingExchangeLan() *schema.Resource {
+func NewProductOfferingExchangeLanDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the data source to get an exchange lan product offering",
 		ReadContext: exchangeLanProductOfferingsRead,
