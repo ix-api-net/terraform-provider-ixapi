@@ -110,6 +110,7 @@ func devicesRead(
 func NewDeviceDataSource() *schema.Resource {
 	deviceSchema := schemas.IntoDataSourceSchema(schemas.DeviceSchema())
 	deviceSchema["id"].Optional = false
+	deviceSchema["id"].Computed = false
 	deviceSchema["id"].Required = true
 	return &schema.Resource{
 		Description: "Use the device data source to reference a single device by ID",
