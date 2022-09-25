@@ -13,14 +13,11 @@ func boolFromOption(b []bool) bool {
 // used for querying.
 // We assume string as the type, as this is the case for
 // almost every query property.
-func DataSourceQuery(required ...bool) *schema.Schema {
+func DataSourceQuery(description string) *schema.Schema {
 	s := &schema.Schema{
-		Type: schema.TypeString,
-	}
-	if boolFromOption(required) {
-		s.Required = true
-	} else {
-		s.Optional = true
+		Type:        schema.TypeString,
+		Optional:    true,
+		Description: description,
 	}
 	return s
 }

@@ -16,7 +16,8 @@ func NewRolesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the data source to query IX-API roles",
 		Schema: map[string]*schema.Schema{
-			"contact": schemas.DataSourceQuery(),
+			"contact": schemas.DataSourceQuery(
+				"Filter by id of the contact to retrieve assigned roles"),
 			"roles": schemas.IntoDataSourceResultsSchema(
 				schemas.RoleSchema()),
 		},

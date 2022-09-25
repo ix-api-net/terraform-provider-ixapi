@@ -16,15 +16,22 @@ func NewFacilitiesDataSource() *schema.Resource {
 		Description: "Use the data source to fetch a list of facilities",
 		ReadContext: facilitiesRead,
 		Schema: map[string]*schema.Schema{
-			"metro_area":         schemas.DataSourceQuery(),
-			"metro_area_network": schemas.DataSourceQuery(),
-			"address_country":    schemas.DataSourceQuery(),
-			"address_locality":   schemas.DataSourceQuery(),
-			"postal_code":        schemas.DataSourceQuery(),
-			"organisation_name":  schemas.DataSourceQuery(),
+			"metro_area": schemas.DataSourceQuery(
+				"Filter facilities by metro area ID"),
+			"metro_area_network": schemas.DataSourceQuery(
+				"Filter by metro are network ID"),
+			"address_country": schemas.DataSourceQuery(
+				"Filter by country of the facilitie's address"),
+			"address_locality": schemas.DataSourceQuery(
+				"Filter by locality ('city') of the facilitie's address"),
+			"postal_code": schemas.DataSourceQuery(
+				"Filter by postal code of the facilitie's address"),
+			"organisation_name": schemas.DataSourceQuery(
+				"Filter by name of the organisation operating the facility"),
 			"peeringdb_facility_id": &schema.Schema{
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Filter by peeringdb id",
 			},
 			"facilities": schemas.IntoDataSourceResultsSchema(
 				schemas.FacilitySchema(),

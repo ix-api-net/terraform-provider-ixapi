@@ -17,7 +17,8 @@ func NewNetworkServicesExchangeLanDataSource() *schema.Resource {
 		Description: "Get network services of type: exchange lan",
 		ReadContext: networkServicesExchangeLanRead,
 		Schema: map[string]*schema.Schema{
-			"metro_area_network": schemas.DataSourceQuery(),
+			"metro_area_network": schemas.DataSourceQuery(
+				"Filter by metro area network id, see related data source"),
 			"network_services": schemas.IntoDataSourceResultsSchema(
 				schemas.ExchangeLanNetworkServiceSchema()),
 		},

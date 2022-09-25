@@ -17,8 +17,10 @@ func NewPopsDataSource() *schema.Resource {
 		Description: "Use the `pops` data source to find available points of presence",
 		ReadContext: popsRead,
 		Schema: map[string]*schema.Schema{
-			"faciltiy":           schemas.DataSourceQuery(),
-			"metro_area_network": schemas.DataSourceQuery(),
+			"faciltiy": schemas.DataSourceQuery(
+				"Filter by facility id, see facilities data source"),
+			"metro_area_network": schemas.DataSourceQuery(
+				"Filter by metro area network id, see related data source"),
 			"pops": schemas.IntoDataSourceResultsSchema(
 				schemas.PointOfPresenceSchema(),
 			),

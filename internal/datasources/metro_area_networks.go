@@ -17,9 +17,12 @@ func NewMetroAreaNetworksDataSource() *schema.Resource {
 		Description: "Retrieve a list of metro area networks filtered by name, metro area or service provider",
 		ReadContext: metroAreaNetworksRead,
 		Schema: map[string]*schema.Schema{
-			"name":             schemas.DataSourceQuery(),
-			"metro_area":       schemas.DataSourceQuery(),
-			"service_provider": schemas.DataSourceQuery(),
+			"name": schemas.DataSourceQuery(
+				"Filter metro area network by name, e.g. FRA"),
+			"metro_area": schemas.DataSourceQuery(
+				"Filter by metro area id, see metro area data source"),
+			"service_provider": schemas.DataSourceQuery(
+				"Filter by service provider operating the network"),
 			"metro_area_networks": schemas.IntoDataSourceResultsSchema(
 				schemas.MetroAreaNetworkSchema()),
 		},

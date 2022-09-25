@@ -20,8 +20,10 @@ func NewContactsDataSource() *schema.Resource {
 		ReadContext: contactsRead,
 
 		Schema: map[string]*schema.Schema{
-			"managing_account":  schemas.DataSourceQuery(),
-			"consuming_account": schemas.DataSourceQuery(),
+			"managing_account": schemas.DataSourceQuery(
+				"Filter by account managing the contact"),
+			"consuming_account": schemas.DataSourceQuery(
+				"Filter by account the contacts are associated with"),
 			"contacts": schemas.IntoDataSourceResultsSchema(
 				schemas.ContactSchema(),
 			),

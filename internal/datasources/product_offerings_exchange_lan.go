@@ -18,12 +18,18 @@ func NewProductOfferingsExchangeLan() *schema.Resource {
 		Description: "Use the data source to get a list of exchange lan product offerings",
 		ReadContext: exchangeLanProductOfferingsRead,
 		Schema: map[string]*schema.Schema{
-			"name":                        schemas.DataSourceQuery(),
-			"service_provider":            schemas.DataSourceQuery(),
-			"service_metro_area":          schemas.DataSourceQuery(),
-			"service_metro_area_network":  schemas.DataSourceQuery(),
-			"handover_metro_area_network": schemas.DataSourceQuery(),
-			"handover_metro_area":         schemas.DataSourceQuery(),
+			"name": schemas.DataSourceQuery(
+				"Filter by name of the product offering"),
+			"service_provider": schemas.DataSourceQuery(
+				"Filter by service provider name"),
+			"service_metro_area": schemas.DataSourceQuery(
+				"Filter by metro area id, see releated data source. The service metro area is where the service is delived to the customer."),
+			"service_metro_area_network": schemas.DataSourceQuery(
+				"Filter by metro area network id, see related data source. The service is directly accessible through this metro area network"),
+			"handover_metro_area": schemas.DataSourceQuery(
+				"Filter by metro area id, see related data source. The service will be accessed from this metro area"),
+			"handover_metro_area_network": schemas.DataSourceQuery(
+				"Filter by metro area network id, see related data source. The service will be accessed through the handover metro area network."),
 			"product_offerings": schemas.IntoDataSourceResultsSchema(
 				schemas.ExchangeLanNetworkProductOfferingSchema(),
 			),

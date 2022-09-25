@@ -18,9 +18,9 @@ func NewAccountsDataSource() *schema.Resource {
 		ReadContext: accountsRead,
 
 		Schema: map[string]*schema.Schema{
-			"managing_account": schemas.DataSourceQuery(),
-			"name":             schemas.DataSourceQuery(),
-			"external_ref":     schemas.DataSourceQuery(),
+			"managing_account": schemas.DataSourceQuery("Filter by managing 'parent' account"),
+			"name":             schemas.DataSourceQuery("Filter by account name"),
+			"external_ref":     schemas.DataSourceQuery("Filter by external reference"),
 			"accounts": schemas.IntoDataSourceResultsSchema(
 				schemas.AccountSchema(),
 			),

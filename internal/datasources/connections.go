@@ -16,11 +16,16 @@ func NewConnectionsDataSource() *schema.Resource {
 		Description: "Use the `connections` data source find available connections",
 		ReadContext: connectionsRead,
 		Schema: map[string]*schema.Schema{
-			"managing_account":   schemas.DataSourceQuery(),
-			"consuming_account":  schemas.DataSourceQuery(),
-			"metro_area_network": schemas.DataSourceQuery(),
-			"name":               schemas.DataSourceQuery(),
-			"pop":                schemas.DataSourceQuery(),
+			"managing_account": schemas.DataSourceQuery(
+				"Filter by account managing the connection"),
+			"consuming_account": schemas.DataSourceQuery(
+				"Filter by account using the connection, e.g. the customer"),
+			"metro_area_network": schemas.DataSourceQuery(
+				"Filter by metro area network ID, see metro area network data source"),
+			"name": schemas.DataSourceQuery(
+				"Filter by connection name"),
+			"pop": schemas.DataSourceQuery(
+				"Filter by PoP ID, see point of presence data source"),
 			"connections": schemas.IntoDataSourceResultsSchema(
 				schemas.ConnectionSchema(),
 			),
