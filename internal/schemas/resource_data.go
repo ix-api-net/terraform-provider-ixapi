@@ -130,3 +130,14 @@ func (res Resource) GetResource(key string) Resource {
 func Timestamp() string {
 	return strconv.FormatInt(time.Now().Unix(), 10)
 }
+
+// MustStringListFromAny will convert an interface to a list of strings,
+// interface must be any -> []any -> []string
+func MustStringListFromAny(in any) []string {
+	list := in.([]any)
+	result := make([]string, len(list))
+	for i, elem := range list {
+		result[i] = elem.(string)
+	}
+	return result
+}

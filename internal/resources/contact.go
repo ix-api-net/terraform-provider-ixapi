@@ -25,7 +25,7 @@ func NewContactResource() *schema.Resource {
 		Schema: schemas.Combine(
 			schemas.ContactSchema(),
 			map[string]*schema.Schema{
-				"assigned_roles": {
+				"roles": {
 					Type:     schema.TypeList,
 					Required: true,
 					Elem: &schema.Schema{
@@ -176,7 +176,7 @@ func contactCreate(
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
 
-	assignedRoles := res.Get("assigned_roles").([]string)
+	assignedRoles := schemas.MustStringListFromAny(res.Get("roles"))
 
 	// Create contact and try to assign role
 	req := contactRequestFromResourceData(res)
@@ -285,17 +285,17 @@ func contactUpdate(
 	}
 
 	// Update role assignments
-	if res.HasChange("assigned_roles") {
+	if res.HasChange("roles") {
 
 		roles, err := api.RolesList(ctx)
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		prev, next := res.GetChange("assigned_roles")
+		prev, next := res.GetChange("roles")
 		deletes, creates := diffRoleAssignments(
 			roles,
-			prev.([]string),
-			next.([]string))
+			schemas.MustStringListFromAny(prev),
+			schemas.MustStringListFromAny(next))
 		err = deleteRoleAssignments(ctx, api, contactID, deletes)
 		if err != nil {
 			return diag.FromErr(err)

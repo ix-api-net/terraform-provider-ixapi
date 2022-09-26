@@ -89,6 +89,8 @@ func New(version string) func() *schema.Provider {
 				"ixapi_metro_area_network":  datasources.NewMetroAreaNetworkDataSource(),
 				"ixapi_roles":               datasources.NewRolesDataSource(),
 				"ixapi_role":                datasources.NewRoleDataSource(),
+				"ixapi_role_assignments":    datasources.NewRoleAssignmentsDataSource(),
+				"ixapi_role_assignment":     datasources.NewRoleAssignmentDataSource(),
 				"ixapi_pops":                datasources.NewPopsDataSource(),
 				"ixapi_pop":                 datasources.NewPopDataSource(),
 

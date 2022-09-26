@@ -17,7 +17,7 @@ func NewRoleAssignmentDataSource() *schema.Resource {
 		Description: "Use the `ixapi_role_assignment` data source to retrieve an assignment between a contact and a role. Assignments can be used in configs.",
 		ReadContext: roleAssignmentRead,
 		Schema: map[string]*schema.Schema{
-			"role_name": &schema.Schema{
+			"role": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name (e.g. `noc`) of a role the contact is assigned to. ",
@@ -123,8 +123,8 @@ func NewRoleAssignmentsDataSource() *schema.Resource {
 		ReadContext: roleAssignmentsRead,
 		Schema: map[string]*schema.Schema{
 			"contact":   schemas.DataSourceQuery("Filter by contact ID"),
-			"role":      schemas.DataSourceQuery("Filter by role ID"),
 			"role_name": schemas.DataSourceQuery("Filter by role name"),
+			"role":      schemas.DataSourceQuery("Filter by role ID"),
 			"role_assignments": schemas.IntoDataSourceResultsSchema(
 				schemas.RoleAssignmentSchema()),
 		},
