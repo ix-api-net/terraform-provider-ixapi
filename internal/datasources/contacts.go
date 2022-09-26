@@ -40,7 +40,7 @@ func contactsRead(
 	consumingAccount, hasConsumingAccount := res.GetOk("consuming_account")
 
 	// Fetch contacts
-	contacts, err := api.ContactsList(ctx, qry)
+	contacts, err := api.ContactsList(ctx)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -139,7 +139,7 @@ func roleAssignmentsRead(
 	api := meta.(*ixapi.Client)
 
 	// Filters
-	contact, hasContact := res.GetOk("contact")
+	contactID, hasContact := res.GetOk("contact")
 	role, hasRole := res.GetOk("role")
 	roleName, hasRoleName := res.GetOk("role_name")
 
@@ -151,7 +151,7 @@ func roleAssignmentsRead(
 	if hasRoleName {
 		r, err := fetchRoleByName(ctx, api, roleName.(string))
 		if err != nil {
-			return err
+			return diag.FromErr(err)
 		}
 		roleID = r.ID
 		hasRole = true
@@ -159,7 +159,7 @@ func roleAssignmentsRead(
 
 	results, err := api.RoleAssignmentsList(ctx)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
 	filtered := make([]*ixapi.RoleAssignment, 0, len(results))
@@ -167,7 +167,7 @@ func roleAssignmentsRead(
 		if hasRole && assignment.Role != roleID {
 			continue
 		}
-		if hasContact && assignment.Contact != contactID {
+		if hasContact && assignment.Contact != contactID.(string) {
 			continue
 		}
 		filtered = append(filtered, assignment)
