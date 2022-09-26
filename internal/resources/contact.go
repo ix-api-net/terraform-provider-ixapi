@@ -3,7 +3,6 @@ package resources
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -110,7 +109,7 @@ func createRoleAssignments(
 		return nil, err
 	}
 	assignments := []*ixapi.RoleAssignment{}
-	for _, name := range assignedRoles {
+	for _, name := range roleNames {
 		r := lookupRoleByName(name, roles)
 		if r == nil {
 			continue // Skip this role
@@ -146,12 +145,12 @@ func deleteRoleAssignments(
 		return err
 	}
 
-	for _, assignment := range assignements {
+	for _, assignment := range assignments {
 		if assignment.Contact != contact {
 			continue
 		}
 		for _, roleName := range roleNames {
-			r := lookupRoleByName(roleName)
+			r := lookupRoleByName(roleName, roles)
 			if r == nil {
 				continue // skip unknown role
 			}
@@ -160,7 +159,7 @@ func deleteRoleAssignments(
 			}
 
 			// Delete role assignment
-			_, err := api.RoleAssignmentDestroy(ctx, assignment.ID)
+			_, err := api.RoleAssignmentsDestroy(ctx, assignment.ID)
 			if err != nil {
 				return err
 			}
@@ -177,8 +176,7 @@ func contactCreate(
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
 
-	// Lookup role IDs for assignment
-	assignedRoles := res.GetOk("assigned_roles").([]any)
+	assignedRoles := res.Get("assigned_roles").([]string)
 
 	// Create contact and try to assign role
 	req := contactRequestFromResourceData(res)
@@ -188,19 +186,19 @@ func contactCreate(
 	}
 
 	// Try to assign roles
-	for _, role := range assignedRoleIDs {
-		_, err := api.RoleAssignmentsCreate(ctx, &ixapi.RoleAssignmentRequest{
-			Role:    role.ID,
-			Contact: contact.ID,
-		})
+	_, err = createRoleAssignments(ctx, api, contact.ID, assignedRoles)
+	if err != nil {
+		// Rollback
+		diags := diag.FromErr(err)
+		err := deleteRoleAssignments(ctx, api, contact.ID, assignedRoles)
 		if err != nil {
-			diags := diag.FromErr(err)
-			// Rollback and return error
-			if _, err := api.ContactsDestroy(ctx, contact.ID); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-			}
-			return diags
+			diags = append(diags, diag.FromErr(err)...)
 		}
+		_, err = api.ContactsDestroy(ctx, contact.ID)
+		if err != nil {
+			diags = append(diags, diag.FromErr(err)...)
+		}
+		return diags
 	}
 	res.SetId(contact.ID)
 	return contactRead(ctx, res, meta)
@@ -226,80 +224,48 @@ func contactRead(
 	}
 
 	// Set resource data
-	schemas.SetResourceData(contact, res)
-
-	// Get assigned roles
-	roles, err := api.RolesList(ctx)
-	if err != nil {
+	if err := schemas.SetResourceData(contact, res); err != nil {
 		return diag.FromErr(err)
 	}
-	assignments, err := api.RoleAssignmentsList(ctx)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	assignedRoles := []interface{}{}
-	for _, assignment := range assignments {
-		if assignment.Contact != contact.ID {
-			continue
-		}
-
-		role := lookupRoleByID(assignment.Role, roles)
-		if role == nil {
-			return diag.Errorf("role not found in assignment")
-		}
-		assignedRoles = append(assignedRoles, role.Name)
-	}
-
-	res.Set("assigned_roles", assignedRoles)
 	res.SetId(res.Id())
 	return nil
 }
 
 func diffRoleAssignments(
 	roles []*ixapi.Role,
-	prev []interface{},
-	next []interface{},
-) ([]string, []string, error) {
+	prev []string,
+	next []string,
+) ([]string, []string) {
 	deletes := []string{}
 	creates := []string{}
-
 	// Get deletions
 	for _, p := range prev {
-		aCur := p.(map[string]interface{})
 		found := false
 		for _, n := range next {
-			aNext := n.(map[string]interface{})
-			if aNext["assignment"] == aCur["assignment"] {
+			if p == n {
 				found = true
 				break
 			}
 		}
 		if !found {
-			deletes = append(deletes, aCur["assignment"].(string))
+			deletes = append(deletes, p)
 		}
 	}
-
 	// Get Creates
 	for _, n := range next {
-		a := n.(map[string]interface{})
-
-		var aID string
-		val, ok := a["assignment"]
-		if ok {
-			aID = val.(string)
+		found := false
+		for _, p := range prev {
+			if p == n {
+				found = true
+				break
+			}
 		}
-		if aID != "" {
+		if found {
 			continue
 		}
-		role := lookupRole(roles, a)
-		if role == nil {
-			return nil, nil, fmt.Errorf(
-				"role not found for assignment: %v", a)
-		}
-		creates = append(creates, role.ID)
+		creates = append(creates, n)
 	}
-	return deletes, creates, nil
+	return deletes, creates
 }
 
 // Update
@@ -309,6 +275,8 @@ func contactUpdate(
 	meta any,
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
+
+	contactID := res.Get("id").(string)
 
 	req := contactPatchFromResourceData(res)
 	_, err := api.ContactsPatch(ctx, res.Id(), req)
@@ -324,36 +292,20 @@ func contactUpdate(
 			return diag.FromErr(err)
 		}
 		prev, next := res.GetChange("assigned_roles")
-		if _, ok := prev.([]interface{}); !ok {
-			prev = []interface{}{}
-		}
-		if _, ok := next.([]interface{}); !ok {
-			next = []interface{}{}
-		}
-		deletes, creates, err := diffRoleAssignments(
+		deletes, creates := diffRoleAssignments(
 			roles,
-			prev.([]interface{}),
-			next.([]interface{}))
+			prev.([]string),
+			next.([]string))
+		err = deleteRoleAssignments(ctx, api, contactID, deletes)
 		if err != nil {
 			return diag.FromErr(err)
 		}
-
-		for _, del := range deletes {
-			if _, err := api.RoleAssignmentsDestroy(ctx, del); err != nil {
-				return diag.FromErr(err)
-			}
-		}
-
-		for _, roleID := range creates {
-			if _, err := api.RoleAssignmentsCreate(ctx, &ixapi.RoleAssignmentRequest{
-				Contact: res.Id(),
-				Role:    roleID,
-			}); err != nil {
-				return diag.FromErr(err)
-			}
+		_, err = createRoleAssignments(ctx, api, contactID, creates)
+		if err != nil {
+			return diag.FromErr(err)
 		}
 	}
-
+	// Refresh contact
 	return contactRead(ctx, res, meta)
 }
 
