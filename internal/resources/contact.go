@@ -26,32 +26,35 @@ func NewContactResource() *schema.Resource {
 		Schema: schemas.Combine(
 			schemas.ContactSchema(),
 			map[string]*schema.Schema{
-				"assigned_roles": &schema.Schema{
-					Description: "Assign roles to this contact identified by the role name",
-					Type:        schema.TypeList,
-					Required:    true,
-					Elem: &schema.Resource{
-						Schema: map[string]*schema.Schema{
-							"name": &schema.Schema{
-								Type:     schema.TypeString,
-								Required: true,
-							},
-							"id": &schema.Schema{
-								Type:     schema.TypeString,
-								Optional: true,
-								Computed: true,
-							},
-							"assignment": &schema.Schema{
-								Type:     schema.TypeString,
-								Optional: true,
-								Computed: true,
-							},
-						},
+				"assigned_roles": {
+					Type:     schema.TypeList,
+					Required: true,
+					Elem: &schema.Schema{
+						Type: schema.TypeString,
 					},
 				},
 			},
 		),
 	}
+}
+
+// helper
+func lookupRoleByName(name string, roles []*ixapi.Role) *ixapi.Role {
+	for _, r := range roles {
+		if strings.ToLower(r.Name) == strings.ToLower(name) {
+			return r
+		}
+	}
+	return nil
+}
+
+func lookupRoleByID(id string, roles []*ixapi.Role) *ixapi.Role {
+	for _, r := range roles {
+		if r.ID == id {
+			return r
+		}
+	}
+	return nil
 }
 
 // Requests
@@ -94,35 +97,73 @@ func contactPatchFromResourceData(r *schema.ResourceData) *ixapi.ContactPatch {
 
 // Operations
 
-func lookupRole(roles []*ixapi.Role, assignment map[string]interface{}) *ixapi.Role {
-	var (
-		id   string
-		name string
-	)
-	val, ok := assignment["id"]
-	if ok {
-		id = val.(string)
+// Create role assignments by Name
+func createRoleAssignments(
+	ctx context.Context,
+	api *ixapi.Client,
+	contact string,
+	roleNames []string,
+) ([]*ixapi.RoleAssignment, error) {
+	// Get roles for assignment
+	roles, err := api.RolesList(ctx)
+	if err != nil {
+		return nil, err
 	}
-	val, ok = assignment["name"]
-	if ok {
-		name = strings.ToLower(val.(string))
-	}
-
-	for _, role := range roles {
-		if id != "" && role.ID == id {
-			return role
+	assignments := []*ixapi.RoleAssignment{}
+	for _, name := range assignedRoles {
+		r := lookupRoleByName(name, roles)
+		if r == nil {
+			continue // Skip this role
 		}
-		if name != "" && strings.ToLower(role.Name) == name {
-			return role
+		// Create role assignment
+		assignment, err := api.RoleAssignmentsCreate(ctx, &ixapi.RoleAssignmentRequest{
+			Role:    r.ID,
+			Contact: contact,
+		})
+		if err != nil {
+			return nil, err
 		}
+		assignments = append(assignments, assignment)
 	}
-	return nil
+	return assignments, nil
 }
 
-func getRoleByID(roles []*ixapi.Role, id string) *ixapi.Role {
-	for _, r := range roles {
-		if r.ID == id {
-			return r
+// Delete role assignments
+func deleteRoleAssignments(
+	ctx context.Context,
+	api *ixapi.Client,
+	contact string,
+	roleNames []string,
+) error {
+	// Get roles for assignment
+	roles, err := api.RolesList(ctx)
+	if err != nil {
+		return err
+	}
+
+	assignments, err := api.RoleAssignmentsList(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, assignment := range assignements {
+		if assignment.Contact != contact {
+			continue
+		}
+		for _, roleName := range roleNames {
+			r := lookupRoleByName(roleName)
+			if r == nil {
+				continue // skip unknown role
+			}
+			if assignment.Role != r.ID {
+				continue // skip non match
+			}
+
+			// Delete role assignment
+			_, err := api.RoleAssignmentDestroy(ctx, assignment.ID)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -136,24 +177,8 @@ func contactCreate(
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
 
-	// Get roles for assignment
-	roles, err := api.RolesList(ctx)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	// Lookup roles for assignment
-	val, ok := res.GetOk("assigned_roles")
-	assignRoles := []*ixapi.Role{}
-	if ok {
-		for _, assign := range val.([]interface{}) {
-			role := lookupRole(roles, assign.(map[string]interface{}))
-			if role == nil {
-				return diag.Errorf("can not find role for assignment: %v", assign)
-			}
-			assignRoles = append(assignRoles, role)
-		}
-	}
+	// Lookup role IDs for assignment
+	assignedRoles := res.GetOk("assigned_roles").([]any)
 
 	// Create contact and try to assign role
 	req := contactRequestFromResourceData(res)
@@ -163,7 +188,7 @@ func contactCreate(
 	}
 
 	// Try to assign roles
-	for _, role := range assignRoles {
+	for _, role := range assignedRoleIDs {
 		_, err := api.RoleAssignmentsCreate(ctx, &ixapi.RoleAssignmentRequest{
 			Role:    role.ID,
 			Contact: contact.ID,
@@ -171,13 +196,12 @@ func contactCreate(
 		if err != nil {
 			diags := diag.FromErr(err)
 			// Rollback and return error
-			if _, eerr := api.ContactsDestroy(ctx, contact.ID); eerr != nil {
-				diags = append(diags, diag.FromErr(eerr)...)
+			if _, err := api.ContactsDestroy(ctx, contact.ID); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
 			}
 			return diags
 		}
 	}
-
 	res.SetId(contact.ID)
 	return contactRead(ctx, res, meta)
 }
@@ -220,15 +244,11 @@ func contactRead(
 			continue
 		}
 
-		role := getRoleByID(roles, assignment.Role)
+		role := lookupRoleByID(assignment.Role, roles)
 		if role == nil {
 			return diag.Errorf("role not found in assignment")
 		}
-		assignedRoles = append(assignedRoles, map[string]interface{}{
-			"name":       role.Name,
-			"id":         role.ID,
-			"assignment": assignment.ID,
-		})
+		assignedRoles = append(assignedRoles, role.Name)
 	}
 
 	res.Set("assigned_roles", assignedRoles)
