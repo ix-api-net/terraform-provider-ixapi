@@ -1139,7 +1139,7 @@ type CloudNetworkServiceConfig struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Handover The handover enumerates the connection and is
 	// required for checking diversity constraints.
@@ -1189,7 +1189,7 @@ type CloudNetworkServiceConfigPatch struct {
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
@@ -1308,7 +1308,7 @@ type CloudNetworkServiceConfigRequest struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Handover The handover enumerates the connection and is
 	// required for checking diversity constraints.
@@ -1358,7 +1358,7 @@ type CloudNetworkServiceConfigUpdate struct {
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
@@ -1909,7 +1909,7 @@ type ExchangeLanNetworkServiceConfig struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Capacity The capacity of the service in Mbps. If set to Null,
 	// the maximum capacity will be used, i.e. the virtual circuit is
@@ -1972,7 +1972,7 @@ type ExchangeLanNetworkServiceConfigPatch struct {
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
@@ -2099,7 +2099,7 @@ type ExchangeLanNetworkServiceConfigRequest struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Capacity The capacity of the service in Mbps. If set to Null,
 	// the maximum capacity will be used, i.e. the virtual circuit is
@@ -2162,7 +2162,7 @@ type ExchangeLanNetworkServiceConfigUpdate struct {
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
@@ -2354,7 +2354,7 @@ type MP2MPNetworkServiceConfig struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Macs is a macs
 	Macs []string `json:"macs,omitempty"`
@@ -2387,7 +2387,7 @@ type MP2MPNetworkServiceConfigPatch struct {
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -2527,7 +2527,7 @@ type MP2MPNetworkServiceConfigRequest struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Macs is a macs
 	Macs []string `json:"macs,omitempty"`
@@ -2560,7 +2560,7 @@ type MP2MPNetworkServiceConfigUpdate struct {
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -2889,7 +2889,7 @@ type P2MPNetworkServiceConfig struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Role A `leaf` can only reach roots and is
 	// isolated from other leafs. A `root` can
@@ -3014,7 +3014,7 @@ type P2MPNetworkServiceConfigPatch struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Role A `leaf` can only reach roots and is
 	// isolated from other leafs. A `root` can
@@ -3105,7 +3105,7 @@ type P2MPNetworkServiceConfigRequest struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Role A `leaf` can only reach roots and is
 	// isolated from other leafs. A `root` can
@@ -3193,7 +3193,7 @@ type P2MPNetworkServiceConfigUpdate struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Role A `leaf` can only reach roots and is
 	// isolated from other leafs. A `root` can
@@ -3299,7 +3299,7 @@ type P2PNetworkServiceConfig struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3348,7 +3348,7 @@ type P2PNetworkServiceConfigPatch struct {
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
@@ -3466,7 +3466,7 @@ type P2PNetworkServiceConfigRequest struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3515,7 +3515,7 @@ type P2PNetworkServiceConfigUpdate struct {
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig *VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
@@ -7162,4 +7162,28 @@ type RouteServerNetworkFeature struct {
 // PolymorphicType implements the polymorphic interface
 func (r RouteServerNetworkFeature) PolymorphicType() string {
 	return RouteServerNetworkFeatureType
+}
+
+// PortStatistics Port Statistics
+type PortStatistics struct {
+	// Aggregates Aggregated statistics for a connection or service configuration
+	//
+	// For the **property name** the aggregate interval as a
+	// string representation is used. For example: `5m`, `1d`, `30d`,
+	// `1y`.
+	//
+	// If a window is defined via the `start` and `end` query parameter,
+	// the **property name** will be `custom`.
+	//
+	// The available intervals can differ by implementation.
+	//
+	Aggregates map[string]interface{} `json:"aggregates,omitempty"`
+
+	// LightLevelsTx A list of light levels in **dBm** for each channel.
+	//
+	LightLevelsTx []float64 `json:"light_levels_tx,omitempty"`
+
+	// LightLevelsRx A list of light levels in **dBm** for each channel.
+	//
+	LightLevelsRx []float64 `json:"light_levels_rx,omitempty"`
 }
