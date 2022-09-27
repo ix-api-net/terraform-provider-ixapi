@@ -4389,7 +4389,7 @@ func (c *Client) NetworkServiceConfigsList(
 // NetworkServiceConfigsCreate Create a `network-service-config`.
 func (c *Client) NetworkServiceConfigsCreate(
 	ctx context.Context,
-	req *NetworkServiceConfigRequest,
+	req NetworkServiceConfigRequest,
 
 ) (NetworkServiceConfig, error) {
 
@@ -4658,7 +4658,7 @@ func (c *Client) NetworkServiceConfigsRead(
 // NetworkServiceConfigsUpdate Update an exisiting `network-service-config`
 func (c *Client) NetworkServiceConfigsUpdate(
 	ctx context.Context,
-	id string, req *NetworkServiceConfigUpdate,
+	id string, req NetworkServiceConfigUpdate,
 
 ) (NetworkServiceConfig, error) {
 
@@ -4795,7 +4795,7 @@ func (c *Client) NetworkServiceConfigsUpdate(
 // NetworkServiceConfigsPatch Update parts of an exisiting `network-service-config`.
 func (c *Client) NetworkServiceConfigsPatch(
 	ctx context.Context,
-	id string, req *NetworkServiceConfigPatch,
+	id string, req NetworkServiceConfigPatch,
 
 ) (NetworkServiceConfig, error) {
 
@@ -5404,7 +5404,7 @@ func (c *Client) NetworkFeatureConfigsList(
 // defined in the `NetworkFeature`s collection.
 func (c *Client) NetworkFeatureConfigsCreate(
 	ctx context.Context,
-	req *NetworkFeatureConfigRequest,
+	req NetworkFeatureConfigRequest,
 
 ) (NetworkFeatureConfig, error) {
 
@@ -5617,7 +5617,7 @@ func (c *Client) NetworkFeatureConfigsRead(
 // NetworkFeatureConfigsUpdate Update a network feature configuration
 func (c *Client) NetworkFeatureConfigsUpdate(
 	ctx context.Context,
-	id string, req *NetworkFeatureConfigUpdate,
+	id string, req NetworkFeatureConfigUpdate,
 
 ) (NetworkFeatureConfig, error) {
 
@@ -5726,7 +5726,7 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 // NetworkFeatureConfigsPatch Update parts of a network feature configuration
 func (c *Client) NetworkFeatureConfigsPatch(
 	ctx context.Context,
-	id string, req *NetworkFeatureConfigPatch,
+	id string, req NetworkFeatureConfigPatch,
 
 ) (NetworkFeatureConfig, error) {
 
@@ -9399,7 +9399,7 @@ func (c *Client) NetworkServicesList(
 // NetworkServicesCreate Create a new network service
 func (c *Client) NetworkServicesCreate(
 	ctx context.Context,
-	req *NetworkServiceRequest,
+	req NetworkServiceRequest,
 
 ) (NetworkService, error) {
 
@@ -9668,7 +9668,7 @@ func (c *Client) NetworkServicesRead(
 // NetworkServicesUpdate Update a network service
 func (c *Client) NetworkServicesUpdate(
 	ctx context.Context,
-	id string, req *NetworkServiceUpdate,
+	id string, req NetworkServiceUpdate,
 
 ) (NetworkService, error) {
 
@@ -9805,7 +9805,7 @@ func (c *Client) NetworkServicesUpdate(
 // NetworkServicesPatch Partially update a network service
 func (c *Client) NetworkServicesPatch(
 	ctx context.Context,
-	id string, req *NetworkServicePatch,
+	id string, req NetworkServicePatch,
 
 ) (NetworkService, error) {
 

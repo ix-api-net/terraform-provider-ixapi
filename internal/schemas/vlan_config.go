@@ -10,25 +10,39 @@ func VLANConfigSchema() map[string]*schema.Schema {
 		"vlan_type": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
-			Description: "The vlan_type determines if a additional configuration is required: For `port` no configuration is required, `qinq` and `dot1q` require the `vlan_config_qinq` and `vlan_config_dotiq` to be set",
+			Description: "The vlan_type determines if a additional configuration is required: For `port` no configuration is required, `qinq` and `dot1q` require the config specific fields to be set.",
 		},
-		"vlan_config_qinq": &schema.Schema{
-			Type:        schema.TypeList,
-			MaxItems:    1,
+
+		"outer_vlan": &schema.Schema{
+			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "QinQ vlan configuration",
-			Elem: &schema.Resource{
-				Schema: VLANConfigQinQSchema(),
-			},
+			Computed:    true,
+			Description: "ID of ther outer VLAN. If not present, the IXP will select a valid ID. Only required for vlan type QinQ.",
 		},
-		"vlan_config_dot1q": &schema.Schema{
-			Type:        schema.TypeList,
-			MaxItems:    1,
+		"outer_vlan_ethertype": &schema.Schema{
+			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "Dot1Q vlan configuration",
-			Elem: &schema.Resource{
-				Schema: VLANConfigDot1QSchema(),
-			},
+			Computed:    true,
+			Description: "Outer vlan ether type, defaults to: 0x8100. Only used with type QinQ.",
+		},
+		"inner_vlan": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "ID of the inner VLan. Only required with QinQ vlan type.",
+		},
+
+		"vlan": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "A VLAN tag. If not present, the IXP will auto-select a valid vlan-id. Only used with VLAN type Dot1Q.",
+		},
+		"vlan_ethertype": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "VLAN ether type, defaults to: 0x8100. Only used with type Dot1Q.",
 		},
 	}
 }

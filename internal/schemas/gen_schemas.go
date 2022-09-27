@@ -4235,3 +4235,243 @@ func RouteServerNetworkFeatureSchema() map[string]*schema.Schema {
 		},
 	}
 }
+
+// AggregateSchema is the terraform schema for the model
+func AggregateSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{}
+}
+
+// AggregateStatisticsSchema is the terraform schema for the model
+func AggregateStatisticsSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"title": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Title of the aggregated statistics. ",
+		},
+
+		"start": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Start of the traffic aggregation.",
+		},
+
+		"end": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "End of the traffic aggregation.",
+		},
+
+		"accuracy": &schema.Schema{
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Computed:    true,
+			Description: "The accuracy is the ratio of *total aggregated samples* to *expected samples*.  The expected number of samples is the size of the window of the aggregate, divided by the aggregation resolution.  For example: A window of `24 h` with an aggregation resolution of `5 m` would yield `288` samples.  If only `275` samples are available for aggregation, the accuracy would be `0.95`. ",
+		},
+
+		"created_at": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Timestamp when the statistics were created.",
+		},
+
+		"next_update_at": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Next update of the statistical data. This may not correspond to the aggregate interval.",
+		},
+
+		"average_pps_in": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Average number of inbound **packets per second**. ",
+		},
+
+		"average_pps_out": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Average number outbound **packets per second**. ",
+		},
+
+		"average_ops_in": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Average inbound **octets per second**. ",
+		},
+
+		"average_ops_out": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Average outbound **octets per second**. ",
+		},
+
+		"average_eps_in": &schema.Schema{
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Computed:    true,
+			Description: "Average **errors per second** inbound. ",
+		},
+
+		"average_eps_out": &schema.Schema{
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Computed:    true,
+			Description: "Averages **errors per second** outbound. ",
+		},
+
+		"average_dps_in": &schema.Schema{
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Computed:    true,
+			Description: "Average **discards per second** inbound. ",
+		},
+
+		"average_dps_out": &schema.Schema{
+			Type:        schema.TypeFloat,
+			Optional:    true,
+			Computed:    true,
+			Description: "Averages **discards per second** outbound. ",
+		},
+
+		"percentile95_pps_out": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "95th percentile of outbound **packets per second**. ",
+		},
+
+		"percentile95_pps_in": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "95th percentile of the inbound **octets per second**. ",
+		},
+
+		"percentile95_ops_out": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "95th percentile of outbound **octets per second**. ",
+		},
+
+		"maximum_pps_in": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Peak inbound **packets per second** during the interval. ",
+		},
+
+		"maximum_pps_out": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Peak outbound **packets per second** during the interval. ",
+		},
+
+		"maximum_ops_in": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Peak inbound **octets per second** during the interval. ",
+		},
+
+		"maximum_ops_out": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Peak outbound **octets per second** during the interval. ",
+		},
+
+		"maximum_in_at": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Timestamp when the inbound peak occured.",
+		},
+
+		"maximum_out_at": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Timestamp when the outbound peak occured.",
+		},
+	}
+}
+
+// AggregateTimeseriesSchema is the terraform schema for the model
+func AggregateTimeseriesSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"title": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Title of the timeseries. ",
+		},
+
+		"precision": &schema.Schema{
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Precision indicates the sampling rate of the aggregated traffic data in seconds. For example if the data is aggregated over 5 minutes, the precision would be 300. ",
+		},
+
+		"created_at": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Timestamp when the statistics were created.",
+		},
+
+		"next_update_at": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Next update of the statistical data. This may not correspond to the aggregate interval.",
+		},
+
+		"origin_timezone": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "The timezone where the data was collected in tz database format. ",
+		},
+
+		"samples": &schema.Schema{
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeList,
+			}},
+	}
+}
+
+// PortStatisticsSchema is the terraform schema for the model
+func PortStatisticsSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"light_levels_tx": &schema.Schema{
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeFloat,
+			}},
+
+		"light_levels_rx": &schema.Schema{
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeFloat,
+			}},
+	}
+}

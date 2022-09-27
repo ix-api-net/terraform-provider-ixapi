@@ -62,6 +62,21 @@ func (res *ResourceData) GetStringOpt(key string) *string {
 	return &ret
 }
 
+// GetInt retrieves an integer from the resource
+func (res *ResourceData) GetInt(key string) int {
+	return res.Get(key).(int)
+}
+
+// GetIntOpt retrievs an optional integer from the resource
+func (res *ResourceData) GetIntOpt(key string) *int {
+	val, ok := res.GetOk(key)
+	if !ok {
+		return nil
+	}
+	v := val.(int)
+	return &v
+}
+
 // GetBool retrievs a boolean
 func (res *ResourceData) GetBool(key string) bool {
 	return res.Get(key).(bool)
@@ -75,6 +90,24 @@ func (res *ResourceData) GetBoolOpt(key string) *bool {
 	}
 	ret := val.(bool)
 	return &ret
+}
+
+// GetStringList gets list of strings from the resource data
+func (res *ResourceData) GetStringList(key string) []string {
+	val, ok := res.GetOk(key)
+	if !ok {
+		return nil
+	}
+	return MustStringListFromAny(val)
+}
+
+// GetIntList gets a list of integers from resource data
+func (res *ResourceData) GetIntList(key string) []int {
+	val, ok := res.GetOk(key)
+	if !ok {
+		return nil
+	}
+	return MustIntListFromAny(val)
 }
 
 // GetResource retrievs an embedded resource
@@ -112,6 +145,37 @@ func (res Resource) GetStringOpt(key string) *string {
 	return &sval
 }
 
+// GetStringOptDefault returns a string pointer to an optional string
+func (res Resource) GetStringOptDefault(key string, def string) *string {
+	var s string
+	val, ok := res[key]
+	if !ok {
+		s = def
+	} else {
+		s = val.(string)
+	}
+	return &s
+}
+
+// GetIntOpt returns an optional integer if present
+func (res Resource) GetIntOpt(key string) *int {
+	val, ok := res[key]
+	if !ok {
+		return nil
+	}
+	ival := val.(int)
+	return &ival
+}
+
+// GetInt get an integer if present
+func (res Resource) GetInt(key string) int {
+	val, ok := res[key]
+	if !ok {
+		return 0
+	}
+	return val.(int)
+}
+
 // GetResource retrievs an embedded embedded resource
 func (res Resource) GetResource(key string) Resource {
 	val, ok := res[key]
@@ -138,6 +202,17 @@ func MustStringListFromAny(in any) []string {
 	result := make([]string, len(list))
 	for i, elem := range list {
 		result[i] = elem.(string)
+	}
+	return result
+}
+
+// MustIntListFromAny will convert an interface to a list of ints,
+// interface must be any -> []any -> []int
+func MustIntListFromAny(in any) []int {
+	list := in.([]any)
+	result := make([]int, len(list))
+	for i, elem := range list {
+		result[i] = elem.(int)
 	}
 	return result
 }

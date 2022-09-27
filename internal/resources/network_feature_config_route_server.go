@@ -20,7 +20,7 @@ func NewNetworkFeatureConfigRouteServerResource() *schema.Resource {
 		ReadContext:   crud.Read(nfcRouteServerRead),
 		DeleteContext: crud.Delete(nfcRouteServerDelete),
 
-		Schema: schemas.RouteServerNetworkServiceConfigSchema(),
+		Schema: schemas.RouteServerNetworkFeatureConfigSchema(),
 	}
 }
 
