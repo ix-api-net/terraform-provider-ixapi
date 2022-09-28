@@ -110,6 +110,8 @@ func New(version string) func() *schema.Provider {
 				"ixapi_product_offering_p2p_vc":        datasources.NewProductOfferingP2PVCDataSource(),
 				"ixapi_product_offerings_p2mp_vc":      datasources.NewProductOfferingsP2MPVCDataSource(),
 				"ixapi_product_offering_p2mp_vc":       datasources.NewProductOfferingP2MPVCDataSource(),
+				"ixapi_product_offerings_mp2mp_vc":     datasources.NewProductOfferingsMP2MPVCDataSource(),
+				"ixapi_product_offering_mp2mp_vc":      datasources.NewProductOfferingMP2MPVCDataSource(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"ixapi_contact": resources.NewContactResource(),
