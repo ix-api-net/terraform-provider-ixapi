@@ -32,6 +32,16 @@ func DataSourceQueryInt(description string) *schema.Schema {
 	return s
 }
 
+// DataSourceQueryBool creates a boolean data source query schema.
+func DataSourceQueryBool(description string) *schema.Schema {
+	s := &schema.Schema{
+		Type:        schema.TypeBool,
+		Optional:    true,
+		Description: description,
+	}
+	return s
+}
+
 // IntoDataSourceSchema will mark all properties as optional
 // except if it is marked as required - when it is required for
 // filtering or lookup.

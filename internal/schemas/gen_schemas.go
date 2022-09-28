@@ -1720,7 +1720,7 @@ func ExchangeLanNetworkServiceConfigSchema() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			}},
 
-		"connection": &schema.Schema{
+		"service_connection": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The id of the connection to use for this `NetworkServiceConfig`.",

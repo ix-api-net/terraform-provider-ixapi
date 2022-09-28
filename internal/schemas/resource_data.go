@@ -62,6 +62,22 @@ func (res *ResourceData) GetStringOpt(key string) *string {
 	return &ret
 }
 
+// GetTimeOpt get an optional timestamp:
+func (res *ResourceData) GetTimeOpt(key string) (*time.Time, error) {
+	val, ok := res.GetOk(key)
+	if !ok {
+		return nil, nil
+	}
+	sval := val.(string)
+
+	// Parse time
+	t, err := time.Parse(time.RFC3339, sval)
+	if err != nil {
+		return nil, err
+	}
+	return &t, nil
+}
+
 // GetInt retrieves an integer from the resource
 func (res *ResourceData) GetInt(key string) int {
 	return res.Get(key).(int)
