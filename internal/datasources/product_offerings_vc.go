@@ -35,10 +35,11 @@ func productOfferingsVCSchema(
 }
 
 func productOfferingsVCQuery(
+	t string,
 	res *schema.ResourceData,
 ) *ixapi.ProductOfferingsListQuery {
 	qry := &ixapi.ProductOfferingsListQuery{
-		Type: ixapi.P2PNetworkProductOfferingType,
+		Type: t,
 	}
 
 	name, hasName := res.GetOk("name")

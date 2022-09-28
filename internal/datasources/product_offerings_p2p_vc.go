@@ -49,7 +49,7 @@ func productOfferingsP2PVCRead(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) error {
-	qry := productOfferingsVCQuery(res)
+	qry := productOfferingsVCQuery(ixapi.P2PNetworkProductOfferingType, res)
 	offerings, err := fetchProductOfferingsP2PVC(ctx, api, qry)
 	if err != nil {
 		return err
@@ -98,7 +98,7 @@ func productOfferingP2PCVRead(
 		}
 		offering = po
 	} else {
-		qry := productOfferingsVCQuery(res)
+		qry := productOfferingsVCQuery(ixapi.P2PNetworkProductOfferingType, res)
 		offerings, err := fetchProductOfferingsP2PVC(ctx, api, qry)
 		if err != nil {
 			return err

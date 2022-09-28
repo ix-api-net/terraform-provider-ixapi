@@ -49,7 +49,7 @@ func productOfferingsP2MPVCRead(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) error {
-	qry := productOfferingsVCQuery(res)
+	qry := productOfferingsVCQuery(ixapi.P2MPNetworkProductOfferingType, res)
 	offerings, err := fetchProductOfferingsP2MPVC(ctx, api, qry)
 	if err != nil {
 		return err
@@ -98,7 +98,7 @@ func productOfferingP2MPCVRead(
 		}
 		offering = po
 	} else {
-		qry := productOfferingsVCQuery(res)
+		qry := productOfferingsVCQuery(ixapi.P2MPNetworkProductOfferingType, res)
 		offerings, err := fetchProductOfferingsP2MPVC(ctx, api, qry)
 		if err != nil {
 			return err
