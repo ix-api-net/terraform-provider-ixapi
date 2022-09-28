@@ -13,15 +13,13 @@ import (
 // NewNetworkServicesExchangeLanDataSource creates a data source for
 // querying network services of type exchange lan.
 func NewNetworkServicesExchangeLanDataSource() *schema.Resource {
+	s := networkServiceQuerySchema(schemas.ExchangeLanNetworkServiceSchema())
+	s["metro_area_network"] = schemas.DataSourceQuery(
+		"Filter by metro area network id, see related data source")
 	return &schema.Resource{
 		Description: "Get network services of type: exchange lan",
 		ReadContext: networkServicesExchangeLanRead,
-		Schema: map[string]*schema.Schema{
-			"metro_area_network": schemas.DataSourceQuery(
-				"Filter by metro area network id, see related data source"),
-			"network_services": schemas.IntoDataSourceResultsSchema(
-				schemas.ExchangeLanNetworkServiceSchema()),
-		},
+		Schema:      s,
 	}
 }
 
@@ -36,9 +34,8 @@ func networkServicesExchangeLanRead(
 	// Filters
 	metroAreaNetwork, hasMetroAreaNetwork := res.GetOk("metro_area_network")
 
-	services, err := api.NetworkServicesList(ctx, &ixapi.NetworkServicesListQuery{
-		Type: "exchange_lan",
-	})
+	qry := networkServiceQuery(ixapi.ExchangeLanNetworkServiceType, res)
+	services, err := api.NetworkServicesList(ctx, qry)
 	if err != nil {
 		return diag.FromErr(err)
 	}
