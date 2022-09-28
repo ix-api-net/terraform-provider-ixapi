@@ -25,6 +25,8 @@ func NewProductOfferingsConnectionDataSource() *schema.Resource {
 				"Filter by handover metro area network ID, see related data source."),
 			"handover_pop": schemas.DataSourceQuery(
 				"Filter by ID of the point of presence, where the physical port will be present."),
+			"physical_port_speed": schemas.DataSourceQueryInt(
+				"Filter by physical port speed"),
 			"service_provider": schemas.DataSourceQuery(
 				"Filter by service provider name"),
 			"downgrade_allowed": schemas.DataSourceQueryBool(
@@ -48,6 +50,7 @@ func productOfferingsConnectionQuery(
 	serviceProvider, hasServiceProvider := res.GetOk("service_provider")
 	downgradeAllowed, hasDowngradeAllowed := res.GetOk("downgrade_allowed")
 	upgradeAllowed, hasUpgradeAllowed := res.GetOk("upgrade_allowed")
+	physicalPortSpeed, hasPhysicalPortSpeed := res.GetOk("physical_port_speed")
 
 	// Query
 	qry := &ixapi.ProductOfferingsListQuery{
@@ -82,7 +85,9 @@ func productOfferingsConnectionQuery(
 		} else {
 			qry.UpgradeAllowed = "false"
 		}
-
+	}
+	if hasPhysicalPortSpeed {
+		qry.PhysicalPortSpeed = physicalPortSpeed.(int)
 	}
 
 	return qry
