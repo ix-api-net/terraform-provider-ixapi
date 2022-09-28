@@ -84,7 +84,7 @@ func New(version string) func() *schema.Provider {
 				"ixapi_ips":                 datasources.NewIPsDataSource(),
 				"ixapi_ip":                  datasources.NewIPDataSource(),
 				"ixapi_macs":                datasources.NewMacsDataSource(),
-				"ixapi_mac":                 datasource.NewMacDataSource(),
+				"ixapi_mac":                 datasources.NewMacDataSource(),
 				"ixapi_metro_areas":         datasources.NewMetroAreasDataSource(),
 				"ixapi_metro_area":          datasources.NewMetroAreaDataSource(),
 				"ixapi_metro_area_networks": datasources.NewMetroAreaNetworksDataSource(),
@@ -102,10 +102,14 @@ func New(version string) func() *schema.Provider {
 				"ixapi_network_services_exchange_lan": datasources.NewNetworkServicesExchangeLanDataSource(),
 				"ixapi_network_service_exchange_lan":  datasources.NewNetworkServiceExchangeLanDataSource(),
 
-				"ixapi_product_offerings_exchange_lan": datasources.NewProductOfferingsExchangeLanDataSource(),
-				"ixapi_product_offering_exchange_lan":  datasources.NewProductOfferingExchangeLanDataSource(),
 				"ixapi_product_offerings_connection":   datasources.NewProductOfferingsConnectionDataSource(),
 				"ixapi_product_offering_connection":    datasources.NewProductOfferingConnectionDataSource(),
+				"ixapi_product_offerings_exchange_lan": datasources.NewProductOfferingsExchangeLanDataSource(),
+				"ixapi_product_offering_exchange_lan":  datasources.NewProductOfferingExchangeLanDataSource(),
+				"ixapi_product_offerings_p2p_vc":       datasources.NewProductOfferingsP2PVCDataSource(),
+				"ixapi_product_offering_p2p_vc":        datasources.NewProductOfferingP2PVCDataSource(),
+				"ixapi_product_offerings_p2mp_vc":      datasources.NewProductOfferingsP2MPVCDataSource(),
+				"ixapi_product_offering_p2mp_vc":       datasources.NewProductOfferingP2MPVCDataSource(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"ixapi_contact": resources.NewContactResource(),
@@ -114,10 +118,8 @@ func New(version string) func() *schema.Provider {
 
 				"ixapi_network_service_config_exchange_lan": resources.NewNetworkServiceConfigExchangeLanResource(),
 			},
-
 			ConfigureContextFunc: configure,
 		}
-
 		return p
 	}
 }
