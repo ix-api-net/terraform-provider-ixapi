@@ -103,6 +103,14 @@ func New(version string) func() *schema.Provider {
 
 				"ixapi_network_services_exchange_lan": datasources.NewNetworkServicesExchangeLanDataSource(),
 				"ixapi_network_service_exchange_lan":  datasources.NewNetworkServiceExchangeLanDataSource(),
+				"ixapi_network_services_p2p_vc":       datasources.NewNetworkServicesP2PDataSource(),
+				"ixapi_network_service_p2p_vc":        datasources.NewNetworkServiceP2PDataSource(),
+				"ixapi_network_services_p2mp_vc":      datasources.NewNetworkServicesP2MPDataSource(),
+				"ixapi_network_service_p2mp_vc":       datasources.NewNetworkServiceP2MPDataSource(),
+				"ixapi_network_services_mp2mp_vc":     datasources.NewNetworkServicesMP2MPDataSource(),
+				"ixapi_network_service_mp2mp_vc":      datasources.NewNetworkServiceMP2MPDataSource(),
+				"ixapi_network_services_cloud_vc":     datasources.NewNetworkServicesCloudDataSource(),
+				"ixapi_network_service_cloud_vc":      datasources.NewNetworkServiceCloudDataSource(),
 
 				"ixapi_product_offerings_connection":   datasources.NewProductOfferingsConnectionDataSource(),
 				"ixapi_product_offering_connection":    datasources.NewProductOfferingConnectionDataSource(),
