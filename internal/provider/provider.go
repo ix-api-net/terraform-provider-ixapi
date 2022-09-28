@@ -83,6 +83,8 @@ func New(version string) func() *schema.Provider {
 				"ixapi_facility":            datasources.NewFacilityDataSource(),
 				"ixapi_ips":                 datasources.NewIPsDataSource(),
 				"ixapi_ip":                  datasources.NewIPDataSource(),
+				"ixapi_macs":                datasources.NewMacsDataSource(),
+				"ixapi_mac":                 datasource.NewMacDataSource(),
 				"ixapi_metro_areas":         datasources.NewMetroAreasDataSource(),
 				"ixapi_metro_area":          datasources.NewMetroAreaDataSource(),
 				"ixapi_metro_area_networks": datasources.NewMetroAreaNetworksDataSource(),
@@ -102,10 +104,15 @@ func New(version string) func() *schema.Provider {
 
 				"ixapi_product_offerings_exchange_lan": datasources.NewProductOfferingsExchangeLanDataSource(),
 				"ixapi_product_offering_exchange_lan":  datasources.NewProductOfferingExchangeLanDataSource(),
+				"ixapi_product_offerings_connection":   datasources.NewProductOfferingsConnectionDataSource(),
+				"ixapi_product_offering_connection":    datasources.NewProductOfferingConnectionDataSource(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"ixapi_contact": resources.NewContactResource(),
 				"ixapi_account": resources.NewAccountResource(),
+				"ixapi_mac":     resources.NewMACResource(),
+
+				"ixapi_network_service_config_exchange_lan": resources.NewNetworkServiceConfigExchangeLanResource(),
 			},
 
 			ConfigureContextFunc: configure,

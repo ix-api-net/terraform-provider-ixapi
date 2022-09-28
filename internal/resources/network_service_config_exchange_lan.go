@@ -89,7 +89,7 @@ func nscExchangeLanRequestFromResourceData(
 		PurchaseOrder:    res.GetStringOpt("purchase_order"),
 		ContractRef:      res.GetStringOpt("contract_ref"),
 		RoleAssignments:  res.GetStringList("role_assignments"),
-		Connection:       res.GetString("connection"),
+		Connection:       res.GetString("service_connection"),
 		VLANConfig:       vlanConfig,
 		Capacity:         res.GetIntOpt("capacity"),
 		ASNs:             res.GetIntList("asns"),
@@ -133,8 +133,8 @@ func nscExchangeLanPatchFromResourceData(
 	if res.HasChange("role_assignments") {
 		patch.RoleAssignments = res.GetStringList("role_assignments")
 	}
-	if res.HasChange("connection") {
-		patch.Connection = res.GetStringOpt("connection")
+	if res.HasChange("service_connection") {
+		patch.Connection = res.GetStringOpt("service_connection")
 	}
 	if res.HasChange("capacity") {
 		patch.Capacity = res.GetIntOpt("capacity")

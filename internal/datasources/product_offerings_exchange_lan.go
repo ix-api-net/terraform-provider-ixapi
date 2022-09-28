@@ -54,7 +54,7 @@ func fetchExchangeLanProductOfferings(
 
 	// Query
 	qry := &ixapi.ProductOfferingsListQuery{
-		Type: "exchange_lan",
+		Type: ixapi.ExchangeLanNetworkProductOfferingType,
 	}
 	if hasServiceProvider {
 		qry.ServiceProvider = serviceProvider.(string)
