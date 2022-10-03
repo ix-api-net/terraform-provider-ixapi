@@ -43,9 +43,14 @@ func SetResourceData(model any, res ResourceSetter) error {
 
 	for i := 0; i < mValue.NumField(); i++ {
 		field := mType.Field(i)
+		fType := field.Type
 		val := mValue.Field(i)
 		valType := reflect.Indirect(val).Kind()
 		valT := val.Type()
+
+		if !field.IsExported() {
+			continue
+		}
 
 		if valType == reflect.Invalid {
 			// Value is NIL, so we skip it
@@ -55,6 +60,13 @@ func SetResourceData(model any, res ResourceSetter) error {
 		// Get prop name from json property name
 		propName := strings.Split(field.Tag.Get("json"), ",")[0]
 
+		if field.Name == "Type" {
+			continue // Exclude polymorphic type
+		}
+		if fType.String() == "*time.Time" {
+			res.Set(propName, val.Interface().(*time.Time).Format(time.RFC3339))
+			continue
+		}
 		if valT.PkgPath() == "time" && valT.Name() == "Time" {
 			res.Set(propName, val.Interface().(time.Time).Format(time.RFC3339))
 			continue

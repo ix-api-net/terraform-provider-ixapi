@@ -116,7 +116,7 @@ func exchangeLanProductOfferingsRead(
 func NewProductOfferingExchangeLanDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the data source to get an exchange lan product offering",
-		ReadContext: exchangeLanProductOfferingsRead,
+		ReadContext: exchangeLanProductOfferingRead,
 		Schema: schemas.IntoDataSourceSchema(
 			schemas.ExchangeLanNetworkProductOfferingSchema()),
 	}
@@ -151,7 +151,8 @@ func exchangeLanProductOfferingRead(
 			return diag.Errorf("No exchange lan network product offering did match")
 		}
 		if len(offerings) > 1 {
-			return diag.Errorf("The query did not return an unique exchange lan product offering")
+			return diag.Errorf(
+				"The query did not return an unique exchange lan product offering")
 		}
 		offering = offerings[0]
 	}
