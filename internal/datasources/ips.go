@@ -30,6 +30,8 @@ func NewIPsDataSource() *schema.Resource {
 				"Filter by ID of the network feature"),
 			"network_feature_config": schemas.DataSourceQuery(
 				"Filter by ID of the network feature config"),
+			"version": schemas.DataSourceQueryInt(
+				"Filter by IP address version (4 or 6)"),
 			"ips": schemas.IntoDataSourceResultsSchema(
 				schemas.IPAddressSchema()),
 		},
@@ -87,7 +89,18 @@ func ipsRead(
 		return diag.FromErr(err)
 	}
 
-	ips, err := schemas.FlattenModels(result)
+	// Custom filter
+	version, hasVersion := res.GetOk("version")
+
+	filtered := make([]*ixapi.IPAddress, 0, len(result))
+	for _, ip := range result {
+		if hasVersion && ip.Version != version.(int) {
+			continue
+		}
+		filtered = append(filtered, ip)
+	}
+
+	ips, err := schemas.FlattenModels(filtered)
 	if err != nil {
 		return diag.FromErr(err)
 	}

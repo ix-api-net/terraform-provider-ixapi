@@ -104,7 +104,9 @@ func nscExchangeLanPatchFromResourceData(
 	r *schema.ResourceData,
 ) (*ixapi.ExchangeLanNetworkServiceConfigPatch, error) {
 	res := schemas.ResourceData{ResourceData: r}
-	patch := &ixapi.ExchangeLanNetworkServiceConfigPatch{}
+	patch := &ixapi.ExchangeLanNetworkServiceConfigPatch{
+		Type: ixapi.ExchangeLanNetworkServiceConfigType,
+	}
 	if res.HasChange("vlan_config") {
 		vlanConfig, err := vlanConfigFromResourceData(r)
 		if err != nil {
@@ -170,7 +172,7 @@ func nscExchangeLanCreate(
 	if !ok {
 		return fmt.Errorf(
 			"API did not return an exchange lan network service config, but: %s",
-			elnsc.PolymorphicType())
+			nsc.PolymorphicType())
 	}
 	res.SetId(elnsc.ID)
 	return nscExchangeLanRead(ctx, res, api)
