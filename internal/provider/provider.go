@@ -131,6 +131,8 @@ func New(version string) func() *schema.Provider {
 				"ixapi_mac":     resources.NewMACResource(),
 
 				"ixapi_network_service_config_exchange_lan": resources.NewNetworkServiceConfigExchangeLanResource(),
+
+				"ixapi_network_feature_config_route_server": resources.NewNetworkFeatureConfigRouteServerResource(),
 			},
 			ConfigureContextFunc: configure,
 		}
