@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"strings"
 	"time"
+
+	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
 )
 
 // flattenStructValue will invoke SetResourceData on a struct
@@ -51,17 +53,32 @@ func SetResourceData(model any, res ResourceSetter) error {
 		if !field.IsExported() {
 			continue
 		}
-
 		if valType == reflect.Invalid {
 			// Value is NIL, so we skip it
 			continue
 		}
 
 		// Get prop name from json property name
-		propName := strings.Split(field.Tag.Get("json"), ",")[0]
+		propName := field.Tag.Get("tf")
+		if propName == "-" {
+			continue // skip field
+		}
+		if propName == "" {
+			propName = strings.Split(field.Tag.Get("json"), ",")[0]
+		}
+
+		// Rewrite reserved prop names
+		if propName == "connection" {
+			propName = "service_connection"
+		}
 
 		if field.Name == "Type" {
 			continue // Exclude polymorphic type
+		}
+
+		if fType.String() == "*ixapi.Date" {
+			res.Set(propName, val.Interface().(*ixapi.Date).String())
+			continue
 		}
 		if fType.String() == "*time.Time" {
 			res.Set(propName, val.Interface().(*time.Time).Format(time.RFC3339))
@@ -99,7 +116,17 @@ func SetResourceData(model any, res ResourceSetter) error {
 			continue
 		} else {
 			propValue := val.Interface()
-			if val.Kind() == reflect.Pointer {
+			if propValue == nil {
+				continue
+			}
+			// Assume struct on interface??
+			if val.Kind() == reflect.Interface {
+				var err error
+				propValue, err = flattenStructValue(propValue)
+				if err != nil {
+					return err
+				}
+			} else if val.Kind() == reflect.Pointer {
 				propValue = reflect.Indirect(val).Interface()
 			}
 			if err := res.Set(propName, propValue); err != nil {

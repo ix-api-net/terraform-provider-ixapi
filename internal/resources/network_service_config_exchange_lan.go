@@ -45,7 +45,7 @@ func vlanConfigFromResourceData(r *schema.ResourceData) (ixapi.VLANConfig, error
 		vlan := c.GetIntOpt("vlan")
 		ethertype := c.GetStringOptDefault("vlan_ethertype", "0x8100")
 		cfg := &ixapi.VLANConfigDot1Q{
-			VLANType:      "dotq1",
+			VLANType:      "dot1q",
 			VLAN:          vlan,
 			VLANEthertype: ethertype,
 		}

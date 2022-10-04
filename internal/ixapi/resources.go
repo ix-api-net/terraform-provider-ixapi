@@ -4440,6 +4440,10 @@ func (c *Client) NetworkServiceConfigsCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+			vc := VLANConfigDot1Q{}
+			json.Unmarshal(res.VLANConfigRaw, &vc)
+			res.VLANConfig = vc
+
 			return res, nil
 
 		case P2PNetworkServiceConfigType:

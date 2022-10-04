@@ -170,6 +170,9 @@ func (res Resource) GetStringOptDefault(key string, def string) *string {
 	} else {
 		s = val.(string)
 	}
+	if s == "" {
+		s = def
+	}
 	return &s
 }
 
@@ -180,6 +183,9 @@ func (res Resource) GetIntOpt(key string) *int {
 		return nil
 	}
 	ival := val.(int)
+	if ival == 0 {
+		return nil // bad hack
+	}
 	return &ival
 }
 

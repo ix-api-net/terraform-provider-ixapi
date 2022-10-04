@@ -1,6 +1,7 @@
 package ixapi
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -1909,7 +1910,9 @@ type ExchangeLanNetworkServiceConfig struct {
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	// VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
+	VLANConfig    VLANConfig      `tf:"vlan_config"`
 
 	// Capacity The capacity of the service in Mbps. If set to Null,
 	// the maximum capacity will be used, i.e. the virtual circuit is
@@ -4362,6 +4365,16 @@ type VLANConfigPort struct {
 // PolymorphicType implements the polymorphic interface
 func (v VLANConfigPort) PolymorphicType() string {
 	return VLANConfigPortType
+}
+
+type VLANConfigRaw struct{}
+
+func (v VLANConfigRaw) PolymorphicType() string {
+	return "raw"
+}
+
+func (v VLANConfigRaw) UnmarshalJSON(data []byte) error {
+	return nil
 }
 
 // VLANConfigQinQ A QinQ vlan configuration
