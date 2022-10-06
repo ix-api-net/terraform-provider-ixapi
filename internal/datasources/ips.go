@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"gitlab.com/ix-api/ix-api-terraform-provider/internal/crud"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
 )
@@ -14,7 +15,7 @@ import (
 func NewIPsDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Get IP addresses associated with a network service (config) or network feature (config) with this data source",
-		ReadContext: ipsRead,
+		ReadContext: crud.Read(ipsRead),
 		Schema: map[string]*schema.Schema{
 			"managing_account": schemas.DataSourceQuery(
 				"Filter by account managing the service or config"),
@@ -32,6 +33,7 @@ func NewIPsDataSource() *schema.Resource {
 				"Filter by ID of the network feature config"),
 			"version": schemas.DataSourceQueryInt(
 				"Filter by IP address version (4 or 6)"),
+
 			"ips": schemas.IntoDataSourceResultsSchema(
 				schemas.IPAddressSchema()),
 		},
@@ -75,23 +77,20 @@ func ipsQuery(res *schema.ResourceData) *ixapi.IPsListQuery {
 	return qry
 }
 
-// Fetch ip addresses
-func ipsRead(
+// Retrieve IPs
+func fetchIPs(
 	ctx context.Context,
 	res *schema.ResourceData,
-	meta any,
-) diag.Diagnostics {
-	api := meta.(*ixapi.Client)
-
+	api *ixapi.Client,
+) ([]*ixapi.IPAddress, error) {
 	qry := ipsQuery(res)
 	result, err := api.IPsList(ctx, qry)
 	if err != nil {
-		return diag.FromErr(err)
+		return nil, err
 	}
 
 	// Custom filter
 	version, hasVersion := res.GetOk("version")
-
 	filtered := make([]*ixapi.IPAddress, 0, len(result))
 	for _, ip := range result {
 		if hasVersion && ip.Version != version.(int) {
@@ -100,27 +99,38 @@ func ipsRead(
 		filtered = append(filtered, ip)
 	}
 
-	ips, err := schemas.FlattenModels(filtered)
+	return filtered, nil
+}
+
+// Fetch ip addresses
+func ipsRead(
+	ctx context.Context,
+	res *schema.ResourceData,
+	api *ixapi.Client,
+) error {
+	results, err := fetchIPs(ctx, res, api)
 	if err != nil {
-		return diag.FromErr(err)
+		return err
+	}
+
+	ips, err := schemas.FlattenModels(results)
+	if err != nil {
+		return err
 	}
 
 	if err := res.Set("ips", ips); err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 	res.SetId(schemas.Timestamp())
-
 	return nil
 }
 
 // NewIPDataSource creates a data source to retrieve a single IP
 // address identified by ID.
 func NewIPDataSource() *schema.Resource {
-	ipSchema := schemas.IntoDataSourceSchema(
-		schemas.IPAddressSchema())
-	ipSchema["id"].Optional = false
-	ipSchema["id"].Computed = false
-	ipSchema["id"].Required = true
+	ipSchema := schemas.Combine(
+		schemas.IntoDataSourceSchema(schemas.IPAddressSchema()),
+	)
 
 	return &schema.Resource{
 		Description: "Use the ixapi_ip data source to retrieve a single ip address, identified by ID",
