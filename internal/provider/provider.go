@@ -134,7 +134,7 @@ func New(version string) func() *schema.Provider {
 
 				"ixapi_network_feature_config_route_server": resources.NewNetworkFeatureConfigRouteServerResource(),
 
-				"ixapi_network_service_config_ip_allocation": resources.NewNetworkServiceConfigIPAddressAllocationResource(),
+				"ixapi_ip_allocation_network_service_config": resources.NewIPAllocationNetworkServiceConfigResource(),
 			},
 			ConfigureContextFunc: configure,
 		}
