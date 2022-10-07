@@ -10,9 +10,9 @@ import (
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
 )
 
-// NewNetworkServiceConfigIPAddressAllocationResource creates a resource
+// NewIPAllocationNetworkServiceConfigResource creates a resource
 // for managing allocated IP addresses.
-func NewNetworkServiceConfigIPAddressAllocationResource() *schema.Resource {
+func NewIPAllocationNetworkServiceConfigResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use this resource to reference IP addresses allocated by a referanced network service. The managed IP addresses will be updated with the fqdn provided.",
 		CreateContext: crud.Create(ipAllocationCreate),
@@ -39,7 +39,7 @@ func NewNetworkServiceConfigIPAddressAllocationResource() *schema.Resource {
 			},
 			"timeout": {
 				Description: "Timeout for awaiting the allocation",
-				Default:     300,
+				Default:     600,
 				Optional:    true,
 				Type:        schema.TypeInt,
 			},
@@ -95,7 +95,6 @@ func maybeSetFQDN(
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -125,7 +124,7 @@ func ipAllocationCreate(
 			ips = result
 			break
 		}
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(time.Second)
 	}
 
 	// Set the FQDN for each IP address

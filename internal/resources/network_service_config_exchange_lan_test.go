@@ -48,5 +48,11 @@ func TestSetResourceDataPolymorphicVLAN(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	t.Log(data)
+	// Check embedded VLAN config
+	v := data.Get("vlan_config").([]any)
+	vlc := v[0].(map[string]any)
+
+	if vlc["vlan_type"].(string) != "dot1q" {
+		t.Log("unexpected vlan config:", vlc)
+	}
 }
