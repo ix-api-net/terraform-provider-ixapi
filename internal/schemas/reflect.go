@@ -69,7 +69,7 @@ func SetResourceData(model any, res ResourceSetter) error {
 
 		// Rewrite reserved prop names
 		if propName == "connection" {
-			propName = "service_connection"
+			propName = "network_connection"
 		}
 
 		if field.Name == "Type" {
