@@ -1387,7 +1387,7 @@ func CloudNetworkServiceConfigSchema() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			}},
 
-		"connection": &schema.Schema{
+		"network_connection": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The id of the connection to use for this `NetworkServiceConfig`.",
@@ -1720,7 +1720,7 @@ func ExchangeLanNetworkServiceConfigSchema() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			}},
 
-		"service_connection": &schema.Schema{
+		"network_connection": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The id of the connection to use for this `NetworkServiceConfig`.",
@@ -1917,7 +1917,7 @@ func MP2MPNetworkServiceConfigSchema() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			}},
 
-		"connection": &schema.Schema{
+		"network_connection": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The id of the connection to use for this `NetworkServiceConfig`.",
@@ -2061,7 +2061,7 @@ func P2MPNetworkServiceConfigSchema() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			}},
 
-		"connection": &schema.Schema{
+		"network_connection": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The id of the connection to use for this `NetworkServiceConfig`.",
@@ -2190,7 +2190,7 @@ func P2PNetworkServiceConfigSchema() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			}},
 
-		"connection": &schema.Schema{
+		"network_connection": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The id of the connection to use for this `NetworkServiceConfig`.",
@@ -2339,7 +2339,7 @@ func PortSchema() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			}},
 
-		"connection": &schema.Schema{
+		"network_connection": &schema.Schema{
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -2439,7 +2439,7 @@ func PortReservationSchema() map[string]*schema.Schema {
 			Description: "An optional identifier of a cross connect.",
 		},
 
-		"connection": &schema.Schema{
+		"network_connection": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The `Port` will become part of this connection.",
