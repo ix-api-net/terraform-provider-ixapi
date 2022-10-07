@@ -22,6 +22,10 @@ func NewContactResource() *schema.Resource {
 		UpdateContext: contactUpdate,
 		DeleteContext: contactDelete,
 
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: schemas.Combine(
 			schemas.ContactSchema(),
 			map[string]*schema.Schema{

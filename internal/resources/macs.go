@@ -21,6 +21,10 @@ func NewMACResource() *schema.Resource {
 		ReadContext:   crud.Read(macRead),
 		DeleteContext: crud.Delete(macDelete),
 
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: schemas.MacAddressSchema(),
 	}
 }

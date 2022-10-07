@@ -20,6 +20,10 @@ func NewIPAllocationNetworkServiceConfigResource() *schema.Resource {
 		ReadContext:   crud.Read(ipAllocationRead),
 		DeleteContext: crud.Delete(ipAllocationDelete),
 
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"fqdn": {
 				Description: "Set the fqdn of the allocated IP addresses",
