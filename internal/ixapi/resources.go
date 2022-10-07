@@ -1678,6 +1678,7 @@ func (c *Client) ProductOfferingsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case ExchangeLanNetworkProductOfferingType:
@@ -1685,6 +1686,7 @@ func (c *Client) ProductOfferingsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case P2PNetworkProductOfferingType:
@@ -1692,6 +1694,7 @@ func (c *Client) ProductOfferingsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case MP2MPNetworkProductOfferingType:
@@ -1699,6 +1702,7 @@ func (c *Client) ProductOfferingsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case P2MPNetworkProductOfferingType:
@@ -1706,6 +1710,7 @@ func (c *Client) ProductOfferingsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case CloudNetworkProductOfferingType:
@@ -1713,6 +1718,7 @@ func (c *Client) ProductOfferingsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			}
@@ -1818,6 +1824,7 @@ func (c *Client) ProductOfferingsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case ExchangeLanNetworkProductOfferingType:
@@ -1825,6 +1832,7 @@ func (c *Client) ProductOfferingsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2PNetworkProductOfferingType:
@@ -1832,6 +1840,7 @@ func (c *Client) ProductOfferingsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case MP2MPNetworkProductOfferingType:
@@ -1839,6 +1848,7 @@ func (c *Client) ProductOfferingsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2MPNetworkProductOfferingType:
@@ -1846,6 +1856,7 @@ func (c *Client) ProductOfferingsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case CloudNetworkProductOfferingType:
@@ -1853,6 +1864,7 @@ func (c *Client) ProductOfferingsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -4302,6 +4314,13 @@ func (c *Client) NetworkServiceConfigsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
+				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+				if err != nil {
+					return nil, err
+				}
+				rval.VLANConfig = vlanConfig
+
 				res = append(res, rval)
 
 			case P2PNetworkServiceConfigType:
@@ -4309,6 +4328,13 @@ func (c *Client) NetworkServiceConfigsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
+				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+				if err != nil {
+					return nil, err
+				}
+				rval.VLANConfig = vlanConfig
+
 				res = append(res, rval)
 
 			case P2MPNetworkServiceConfigType:
@@ -4316,6 +4342,13 @@ func (c *Client) NetworkServiceConfigsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
+				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+				if err != nil {
+					return nil, err
+				}
+				rval.VLANConfig = vlanConfig
+
 				res = append(res, rval)
 
 			case MP2MPNetworkServiceConfigType:
@@ -4323,6 +4356,13 @@ func (c *Client) NetworkServiceConfigsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
+				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+				if err != nil {
+					return nil, err
+				}
+				rval.VLANConfig = vlanConfig
+
 				res = append(res, rval)
 
 			case CloudNetworkServiceConfigType:
@@ -4330,6 +4370,13 @@ func (c *Client) NetworkServiceConfigsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
+				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+				if err != nil {
+					return nil, err
+				}
+				rval.VLANConfig = vlanConfig
+
 				res = append(res, rval)
 
 			}
@@ -4440,9 +4487,12 @@ func (c *Client) NetworkServiceConfigsCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
-			vc := VLANConfigDot1Q{}
-			json.Unmarshal(res.VLANConfigRaw, &vc)
-			res.VLANConfig = vc
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
 
 			return res, nil
 
@@ -4451,6 +4501,13 @@ func (c *Client) NetworkServiceConfigsCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2MPNetworkServiceConfigType:
@@ -4458,6 +4515,13 @@ func (c *Client) NetworkServiceConfigsCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case MP2MPNetworkServiceConfigType:
@@ -4465,6 +4529,13 @@ func (c *Client) NetworkServiceConfigsCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case CloudNetworkServiceConfigType:
@@ -4472,6 +4543,13 @@ func (c *Client) NetworkServiceConfigsCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		}
@@ -4576,6 +4654,13 @@ func (c *Client) NetworkServiceConfigsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2PNetworkServiceConfigType:
@@ -4583,6 +4668,13 @@ func (c *Client) NetworkServiceConfigsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2MPNetworkServiceConfigType:
@@ -4590,6 +4682,13 @@ func (c *Client) NetworkServiceConfigsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case MP2MPNetworkServiceConfigType:
@@ -4597,6 +4696,13 @@ func (c *Client) NetworkServiceConfigsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case CloudNetworkServiceConfigType:
@@ -4604,6 +4710,13 @@ func (c *Client) NetworkServiceConfigsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		}
@@ -4713,6 +4826,13 @@ func (c *Client) NetworkServiceConfigsUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2PNetworkServiceConfigType:
@@ -4720,6 +4840,13 @@ func (c *Client) NetworkServiceConfigsUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2MPNetworkServiceConfigType:
@@ -4727,6 +4854,13 @@ func (c *Client) NetworkServiceConfigsUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case MP2MPNetworkServiceConfigType:
@@ -4734,6 +4868,13 @@ func (c *Client) NetworkServiceConfigsUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case CloudNetworkServiceConfigType:
@@ -4741,6 +4882,13 @@ func (c *Client) NetworkServiceConfigsUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		}
@@ -4850,6 +4998,13 @@ func (c *Client) NetworkServiceConfigsPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2PNetworkServiceConfigType:
@@ -4857,6 +5012,13 @@ func (c *Client) NetworkServiceConfigsPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2MPNetworkServiceConfigType:
@@ -4864,6 +5026,13 @@ func (c *Client) NetworkServiceConfigsPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case MP2MPNetworkServiceConfigType:
@@ -4871,6 +5040,13 @@ func (c *Client) NetworkServiceConfigsPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case CloudNetworkServiceConfigType:
@@ -4878,6 +5054,13 @@ func (c *Client) NetworkServiceConfigsPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		}
@@ -4992,6 +5175,13 @@ func (c *Client) NetworkServiceConfigsDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2PNetworkServiceConfigType:
@@ -4999,6 +5189,13 @@ func (c *Client) NetworkServiceConfigsDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case P2MPNetworkServiceConfigType:
@@ -5006,6 +5203,13 @@ func (c *Client) NetworkServiceConfigsDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case MP2MPNetworkServiceConfigType:
@@ -5013,6 +5217,13 @@ func (c *Client) NetworkServiceConfigsDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		case CloudNetworkServiceConfigType:
@@ -5020,6 +5231,13 @@ func (c *Client) NetworkServiceConfigsDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
+			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			res.VLANConfig = vlanConfig
+
 			return res, nil
 
 		}
@@ -5348,6 +5566,7 @@ func (c *Client) NetworkFeatureConfigsList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			}
@@ -5459,6 +5678,7 @@ func (c *Client) NetworkFeatureConfigsCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -5563,6 +5783,7 @@ func (c *Client) NetworkFeatureConfigsRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -5672,6 +5893,7 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -5781,6 +6003,7 @@ func (c *Client) NetworkFeatureConfigsPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -5890,6 +6113,7 @@ func (c *Client) NetworkFeatureConfigsDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -9316,6 +9540,7 @@ func (c *Client) NetworkServicesList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case P2PNetworkServiceType:
@@ -9323,6 +9548,7 @@ func (c *Client) NetworkServicesList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case P2MPNetworkServiceType:
@@ -9330,6 +9556,7 @@ func (c *Client) NetworkServicesList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case MP2MPNetworkServiceType:
@@ -9337,6 +9564,7 @@ func (c *Client) NetworkServicesList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case CloudNetworkServiceType:
@@ -9344,6 +9572,7 @@ func (c *Client) NetworkServicesList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			}
@@ -9454,6 +9683,7 @@ func (c *Client) NetworkServicesCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2PNetworkServiceType:
@@ -9461,6 +9691,7 @@ func (c *Client) NetworkServicesCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2MPNetworkServiceType:
@@ -9468,6 +9699,7 @@ func (c *Client) NetworkServicesCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case MP2MPNetworkServiceType:
@@ -9475,6 +9707,7 @@ func (c *Client) NetworkServicesCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case CloudNetworkServiceType:
@@ -9482,6 +9715,7 @@ func (c *Client) NetworkServicesCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -9586,6 +9820,7 @@ func (c *Client) NetworkServicesRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2PNetworkServiceType:
@@ -9593,6 +9828,7 @@ func (c *Client) NetworkServicesRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2MPNetworkServiceType:
@@ -9600,6 +9836,7 @@ func (c *Client) NetworkServicesRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case MP2MPNetworkServiceType:
@@ -9607,6 +9844,7 @@ func (c *Client) NetworkServicesRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case CloudNetworkServiceType:
@@ -9614,6 +9852,7 @@ func (c *Client) NetworkServicesRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -9723,6 +9962,7 @@ func (c *Client) NetworkServicesUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2PNetworkServiceType:
@@ -9730,6 +9970,7 @@ func (c *Client) NetworkServicesUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2MPNetworkServiceType:
@@ -9737,6 +9978,7 @@ func (c *Client) NetworkServicesUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case MP2MPNetworkServiceType:
@@ -9744,6 +9986,7 @@ func (c *Client) NetworkServicesUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case CloudNetworkServiceType:
@@ -9751,6 +9994,7 @@ func (c *Client) NetworkServicesUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -9860,6 +10104,7 @@ func (c *Client) NetworkServicesPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2PNetworkServiceType:
@@ -9867,6 +10112,7 @@ func (c *Client) NetworkServicesPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2MPNetworkServiceType:
@@ -9874,6 +10120,7 @@ func (c *Client) NetworkServicesPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case MP2MPNetworkServiceType:
@@ -9881,6 +10128,7 @@ func (c *Client) NetworkServicesPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case CloudNetworkServiceType:
@@ -9888,6 +10136,7 @@ func (c *Client) NetworkServicesPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -10015,6 +10264,7 @@ func (c *Client) NetworkServicesDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2PNetworkServiceType:
@@ -10022,6 +10272,7 @@ func (c *Client) NetworkServicesDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case P2MPNetworkServiceType:
@@ -10029,6 +10280,7 @@ func (c *Client) NetworkServicesDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case MP2MPNetworkServiceType:
@@ -10036,6 +10288,7 @@ func (c *Client) NetworkServicesDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case CloudNetworkServiceType:
@@ -10043,6 +10296,7 @@ func (c *Client) NetworkServicesDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -10638,6 +10892,7 @@ func (c *Client) NetworkFeaturesList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			}
@@ -10743,6 +10998,7 @@ func (c *Client) NetworkFeaturesRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -10882,6 +11138,7 @@ func (c *Client) MemberJoiningRulesList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			case DenyMemberJoiningRuleType:
@@ -10889,6 +11146,7 @@ func (c *Client) MemberJoiningRulesList(
 				if err := json.Unmarshal(msg, rval); err != nil {
 					return nil, err
 				}
+
 				res = append(res, rval)
 
 			}
@@ -10999,6 +11257,7 @@ func (c *Client) MemberJoiningRulesCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case DenyMemberJoiningRuleType:
@@ -11006,6 +11265,7 @@ func (c *Client) MemberJoiningRulesCreate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -11110,6 +11370,7 @@ func (c *Client) MemberJoiningRulesRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case DenyMemberJoiningRuleType:
@@ -11117,6 +11378,7 @@ func (c *Client) MemberJoiningRulesRead(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -11226,6 +11488,7 @@ func (c *Client) MemberJoiningRulesUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case DenyMemberJoiningRuleType:
@@ -11233,6 +11496,7 @@ func (c *Client) MemberJoiningRulesUpdate(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -11342,6 +11606,7 @@ func (c *Client) MemberJoiningRulesPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case DenyMemberJoiningRuleType:
@@ -11349,6 +11614,7 @@ func (c *Client) MemberJoiningRulesPatch(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}
@@ -11453,6 +11719,7 @@ func (c *Client) MemberJoiningRulesDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		case DenyMemberJoiningRuleType:
@@ -11460,6 +11727,7 @@ func (c *Client) MemberJoiningRulesDestroy(
 			if err := json.Unmarshal(body, res); err != nil {
 				return nil, err
 			}
+
 			return res, nil
 
 		}

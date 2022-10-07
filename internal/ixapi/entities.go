@@ -1139,8 +1139,10 @@ type CloudNetworkServiceConfig struct {
 	//
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	// VLANConfig is a polymorphic vlan configuration
+	VLANConfig VLANConfig `tf:"vlan_config" json:"-"`
+	// VLANConfigRaw contains the vlan config response data
+	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
 
 	// Handover The handover enumerates the connection and is
 	// required for checking diversity constraints.
@@ -1909,10 +1911,10 @@ type ExchangeLanNetworkServiceConfig struct {
 	//
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
-	// VLANConfig is a vlan_config
-	// VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	// VLANConfig is a polymorphic vlan configuration
+	VLANConfig VLANConfig `tf:"vlan_config" json:"-"`
+	// VLANConfigRaw contains the vlan config response data
 	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
-	VLANConfig    VLANConfig      `tf:"vlan_config"`
 
 	// Capacity The capacity of the service in Mbps. If set to Null,
 	// the maximum capacity will be used, i.e. the virtual circuit is
@@ -2356,8 +2358,10 @@ type MP2MPNetworkServiceConfig struct {
 	//
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	// VLANConfig is a polymorphic vlan configuration
+	VLANConfig VLANConfig `tf:"vlan_config" json:"-"`
+	// VLANConfigRaw contains the vlan config response data
+	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
 
 	// Macs is a macs
 	Macs []string `json:"macs,omitempty"`
@@ -2891,8 +2895,10 @@ type P2MPNetworkServiceConfig struct {
 	//
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	// VLANConfig is a polymorphic vlan configuration
+	VLANConfig VLANConfig `tf:"vlan_config" json:"-"`
+	// VLANConfigRaw contains the vlan config response data
+	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
 
 	// Role A `leaf` can only reach roots and is
 	// isolated from other leafs. A `root` can
@@ -3301,8 +3307,10 @@ type P2PNetworkServiceConfig struct {
 	//
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	// VLANConfig is a polymorphic vlan configuration
+	VLANConfig VLANConfig `tf:"vlan_config" json:"-"`
+	// VLANConfigRaw contains the vlan config response data
+	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -4365,16 +4373,6 @@ type VLANConfigPort struct {
 // PolymorphicType implements the polymorphic interface
 func (v VLANConfigPort) PolymorphicType() string {
 	return VLANConfigPortType
-}
-
-type VLANConfigRaw struct{}
-
-func (v VLANConfigRaw) PolymorphicType() string {
-	return "raw"
-}
-
-func (v VLANConfigRaw) UnmarshalJSON(data []byte) error {
-	return nil
 }
 
 // VLANConfigQinQ A QinQ vlan configuration
