@@ -55,7 +55,5 @@ install: build
 	cp bin/${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 test:
-	go test ./pkg/...
+	go test ./internal/...
 
-testacc:
-	TF_ACC=1 go test ./pkg/... -v $(TESTARGS) -timeout 120m
