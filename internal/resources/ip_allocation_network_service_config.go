@@ -43,7 +43,7 @@ func NewIPAllocationNetworkServiceConfigResource() *schema.Resource {
 			},
 			"timeout": {
 				Description: "Timeout for awaiting the allocation",
-				Default:     600,
+				Default:     900,
 				Optional:    true,
 				Type:        schema.TypeInt,
 			},
@@ -92,6 +92,12 @@ func maybeSetFQDN(
 		return nil // nothing to do here
 	}
 	fqdn := fqdnOpt.(string)
+
+	// Check if current FQDN matches
+	if ip.FQDN != nil && *ip.FQDN == fqdn {
+		return nil // We skip this
+	}
+
 	patch := &ixapi.IPAddressPatch{
 		FQDN: &fqdn,
 	}
