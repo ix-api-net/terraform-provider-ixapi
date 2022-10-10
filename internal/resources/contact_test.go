@@ -52,3 +52,40 @@ func TestContactCreate(t *testing.T) {
 		t.Error("unexpected ID assigned to contact:", res.Id())
 	}
 }
+
+func TestContactDelete(t *testing.T) {
+	resource := NewContactResource()
+	res := resource.Data(nil)
+	res.SetId("2342")
+
+	contact := testdata.NewContact()
+	assignment := testdata.NewRoleAssignment()
+	assignments := []*ixapi.RoleAssignment{assignment}
+	raReqs := 0
+	cReqs := 0
+	api := ixapi.NewTestClient(map[string]any{
+		"/contacts": ixapi.TestResponseFunc(func(body []byte) (any, error) {
+			cReqs++
+			return contact, nil
+		}),
+		"/contacts/2342": contact,
+		"/role-assignments": ixapi.TestResponseFunc(func(body []byte) (any, error) {
+			if raReqs == 1 {
+				// Delete success
+				return nil, nil
+			}
+			raReqs++
+			return assignments, nil
+		}),
+		"/role-assignments/1111": assignment,
+	})
+
+	diags := contactDelete(context.Background(), res, api)
+	if diags != nil {
+		t.Fatal(diags)
+	}
+
+	if res.Id() != "" {
+		t.Error("id should be none")
+	}
+}
