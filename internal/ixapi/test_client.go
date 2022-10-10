@@ -3,6 +3,7 @@ package ixapi
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -56,6 +57,7 @@ func (t *MockResponseTransport) RoundTrip(req *http.Request) (*http.Response, er
 	var data any
 	resHandler, ok := t.responses[req.URL.Path]
 	if !ok {
+		fmt.Println("[WARNING] no handler for resource:", req.URL.Path, "(404)")
 		return NewNotFoundResponse(req), nil
 	}
 

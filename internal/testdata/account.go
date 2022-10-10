@@ -6,11 +6,6 @@ import (
 	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
 )
 
-// NewOptString creates an optional string with a value
-func NewOptString(val string) *string {
-	return &val
-}
-
 // NewAddress creates a new test address
 func NewAddress() *ixapi.Address {
 	return &ixapi.Address{
