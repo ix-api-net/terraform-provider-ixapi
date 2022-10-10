@@ -74,3 +74,53 @@ func TestAccountCreate(t *testing.T) {
 		t.Error("unexpected result:", res)
 	}
 }
+
+func TestAccountUpdate(t *testing.T) {
+	resource := NewAccountResource()
+	res := resource.Data(nil)
+	res.SetId("23")
+
+	// TODO: I do not know how to trigger HasChange()
+
+	// Testclient with data for AccountCreate and Read
+	acc := testdata.NewAccount() // ID: 23
+	api := ixapi.NewTestClient(map[string]any{
+		"/accounts/23": (ixapi.TestResponseFunc)(func(body []byte) (any, error) {
+			return acc, nil
+		}),
+	})
+
+	ctx := context.Background()
+	diags := accountUpdate(ctx, res, api)
+	if diags != nil {
+		t.Fatal(diags)
+	}
+}
+
+func TestAccountDelete(t *testing.T) {
+	resource := NewAccountResource()
+	res := resource.Data(nil)
+	res.SetId("23")
+
+	// Testclient with data for AccountCreate and Read
+	acc := testdata.NewAccount() // ID: 23
+	reqs := 0
+	api := ixapi.NewTestClient(map[string]any{
+		"/accounts/23": (ixapi.TestResponseFunc)(func(body []byte) (any, error) {
+			if reqs == 1 {
+				return nil, nil // NotFound
+			}
+			reqs++
+			return acc, nil
+		}),
+	})
+
+	ctx := context.Background()
+	diags := accountDelete(ctx, res, api)
+	if diags != nil {
+		t.Fatal(diags)
+	}
+	if res.Id() != "" {
+		t.Error("id of resource should be unset but is:", res.Id())
+	}
+}

@@ -74,6 +74,9 @@ func (t *MockResponseTransport) RoundTrip(req *http.Request) (*http.Response, er
 	} else {
 		data = resHandler
 	}
+	if data == nil {
+		return NewNotFoundResponse(req), nil
+	}
 
 	body, _ := json.Marshal(data)
 
