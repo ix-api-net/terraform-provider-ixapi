@@ -47,6 +47,7 @@ func NewStatus() []*ixapi.Status {
 // NewAccount creates a new test account
 func NewAccount() *ixapi.Account {
 	return &ixapi.Account{
+		ID:                       "23",
 		Name:                     "account name",
 		State:                    NewOptString("production"),
 		Status:                   NewStatus(),

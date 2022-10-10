@@ -3,9 +3,9 @@ package ixapi
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
+	"testing"
 )
 
 // bodyReader helper
@@ -53,7 +53,6 @@ func NewMockResponseTransport(responses map[string]any) *MockResponseTransport {
 // RoundTrip implements the transports RoundTripper interface
 // and creates responses for requests
 func (t *MockResponseTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	fmt.Println(req)
 	var data any
 	resHandler, ok := t.responses[req.URL.Path]
 	if !ok {
@@ -105,4 +104,12 @@ func NewNotFoundResponse(req *http.Request) *http.Response {
 		ContentLength: int64(len(errorBody)),
 	}
 	return res
+}
+
+// AssertBodyContains is a test helper for checking
+// if a byte subslice exists.
+func AssertBodyContains(t *testing.T, body []byte, content string) {
+	if !bytes.Contains(body, []byte(content)) {
+		t.Error("missing `", content, "` in body")
+	}
 }
