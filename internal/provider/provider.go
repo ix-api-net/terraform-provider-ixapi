@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -53,7 +54,7 @@ func New(version string) func() *schema.Provider {
 				},
 				"api": &schema.Schema{
 					Type:        schema.TypeString,
-					Required:    true,
+					Optional:    true,
 					Description: "API host, e.g. https://ixapi.myixp.example.com",
 					DefaultFunc: schema.EnvDefaultFunc(EnvAPIHost, nil),
 				},
@@ -150,16 +151,37 @@ func configure(
 	var diags diag.Diagnostics
 
 	// Get API credentials
-	key := res.Get("api_key").(string)
-	secret := res.Get("api_secret").(string)
-	host := res.Get("api").(string)
+	host := os.Getenv(EnvAPIHost)
+	hostCfg, hasHostCfg := res.GetOk("api")
+	if hasHostCfg {
+		host = hostCfg.(string)
+	}
+	if err := checkEnvConfig("api", host, EnvAPIHost); err != nil {
+		// return nil, diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+	}
 
-	if key == "" || secret == "" {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "IX-API client credentials missing",
-			Detail:   "To access the API, a client key and secret are required",
-		})
+	key := os.Getenv(EnvAPIKey)
+	keyCfg, hasKeyCfg := res.GetOk("api_key")
+	if hasKeyCfg {
+		key = keyCfg.(string)
+	}
+	if err := checkEnvConfig("api_key", key, EnvAPIKey); err != nil {
+		// return nil, diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+	}
+
+	secret := os.Getenv(EnvAPISecret)
+	secretCfg, hasSecretCfg := res.GetOk("api_secret")
+	if hasSecretCfg {
+		secret = secretCfg.(string)
+	}
+	if err := checkEnvConfig("api_secret", secret, EnvAPISecret); err != nil {
+		// return nil, diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+	}
+
+	if diags.HasError() {
 		return nil, diags
 	}
 
@@ -173,6 +195,31 @@ func configure(
 	}
 
 	// Make test request to see if we are authenticated
+	if err := checkAuthenticated(ctx, client); err != nil {
+		return nil, diag.FromErr(err)
+	}
 
 	return client, nil
+}
+
+// Check if the config value is not an empty string.
+// If that case make a hint, that the env can be used
+// to set a valid value for the provider.
+func checkEnvConfig(key, value, env string) error {
+	if value == "" {
+		return fmt.Errorf("`%s` is not configured, you can set using the `%s` environment variable", key, env)
+	}
+	return nil
+}
+
+// Make an API request to a common endpoint and check
+// if the response is permission denied.
+func checkAuthenticated(
+	ctx context.Context,
+	api *ixapi.Client,
+) error {
+	_, err := api.AccountsList(ctx, &ixapi.AccountsListQuery{
+		ExternalRef: "check-authenticated-no-response-required",
+	})
+	return err
 }
