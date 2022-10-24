@@ -75,6 +75,7 @@ func accountRequestFromResourceData(
 		Discoverable: res.GetBoolOpt("discoverable"),
 		Address: addressFromResource(
 			res.GetResource("address")),
+		MetroAreaNetworkPresence: res.GetStringList("metro_area_network_presence"),
 	}
 	return req
 }
@@ -106,6 +107,9 @@ func accountPatchFromResourceData(
 	}
 	if res.HasChange("address") {
 		req.Address = addressFromResource(res.GetResource("address"))
+	}
+	if res.HasChange("metro_area_network_presence") {
+		req.MetroAreaNetworkPresence = res.GetStringList("metro_area_network_presence")
 	}
 	return req
 }
