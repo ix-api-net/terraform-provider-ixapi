@@ -157,7 +157,6 @@ func configure(
 		host = hostCfg.(string)
 	}
 	if err := checkEnvConfig("api", host, EnvAPIHost); err != nil {
-		// return nil, diag.FromErr(err)
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
@@ -167,7 +166,6 @@ func configure(
 		key = keyCfg.(string)
 	}
 	if err := checkEnvConfig("api_key", key, EnvAPIKey); err != nil {
-		// return nil, diag.FromErr(err)
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
@@ -177,7 +175,6 @@ func configure(
 		secret = secretCfg.(string)
 	}
 	if err := checkEnvConfig("api_secret", secret, EnvAPISecret); err != nil {
-		// return nil, diag.FromErr(err)
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
