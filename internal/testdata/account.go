@@ -3,7 +3,7 @@ package testdata
 import (
 	"time"
 
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
 )
 
 // NewAddress creates a new test address

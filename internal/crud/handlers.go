@@ -5,7 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
 )
 
 // HandlerFunc implements the IX-API interaction

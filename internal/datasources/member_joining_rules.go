@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/crud"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/crud"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/schemas"
 )
 
 func memberJoiningRuleDataSourceSchema() map[string]*schema.Schema {

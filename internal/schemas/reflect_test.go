@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/testdata"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/testdata"
 )
 
 func TestSetResourceData(t *testing.T) {

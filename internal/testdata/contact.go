@@ -1,6 +1,6 @@
 package testdata
 
-import "gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
+import "github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
 
 // NewContact builds an IX-API contact with test data
 func NewContact() *ixapi.Contact {

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
 )
 
 func TestCreate(t *testing.T) {

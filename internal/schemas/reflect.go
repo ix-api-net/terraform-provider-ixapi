@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
 )
 
 // flattenStructValue will invoke SetResourceData on a struct

@@ -5,8 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/schemas"
 )
 
 // NewNetworkServicesMP2MPDataSource creates a data source for

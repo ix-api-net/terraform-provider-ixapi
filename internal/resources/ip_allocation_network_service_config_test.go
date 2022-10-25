@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
 )
 
 func TestMaybeSetFQDN(t *testing.T) {

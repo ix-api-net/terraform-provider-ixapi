@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/provider"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/provider"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )

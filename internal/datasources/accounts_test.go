@@ -3,8 +3,8 @@ package datasources
 import (
 	"testing"
 
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/schemas"
-	"gitlab.com/ix-api/ix-api-terraform-provider/internal/testdata"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/schemas"
+	"github.com/ix-api-net/terraform-provider-ix-api/internal/testdata"
 )
 
 func TestAccountSetResourceData(t *testing.T) {
