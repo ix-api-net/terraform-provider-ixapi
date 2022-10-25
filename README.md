@@ -1,5 +1,5 @@
 
-**This repository is work in progress and is not released yet.**
+**This repository is work in progress and not an official release.**
 
 # IX-API Terraform Provider
 
@@ -10,5 +10,44 @@ for configuring and provisisioning IXP services.
 ## Requirements
  * Terraform >= 1.0
  * Go >= 1.17
+
+
+## Configure the provider
+
+```hcl
+provider "ixapi" {
+    api = "http://localhost:8000/api/v2"
+    api_key = "my_api_key"
+    # api_secret = "" # Use $IX_API_SECRET environment variable
+}
+```
+
+You can also use the environment variables:
+
+ * `$IX_API_HOST`
+ * `$IX_API_KEY`
+ * `$IX_API_SECRET`
+
+
+
+## Development
+
+For development, you need to add the development build
+of the terraform provider. You can do so, by adding
+the following snippet to you `~/.terraformrc`:
+
+```hcl
+provider_installation {
+    dev_overrides {
+        "ix-api.net/ix-api/ix-api" = "/<full_path_to>/go/src/github.com/ix-api-net/terraform-provider-ix-api/bin"
+    }
+
+    direct {}
+}
+```
+
+Use a `ix-api-sandbox-v2` as local API server.
+
+
 
 

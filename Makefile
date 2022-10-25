@@ -36,8 +36,8 @@ ifneq ($(VENDOR), false)
   CFLAGS += -mod=vendor
 endif
 
-LDFLAGS := -X gitlab.com/ix-api/ix-api-terraform-provider/internal/provider.Version=$(VERSION) \
-		   -X gitlab.com/ix-api/ix-api-terraform-provider/internal/provider.Build=$(BUILD)
+LDFLAGS := -X github.com/ix-api-net/terraform-provider-ix-api/internal/provider.Version=$(VERSION) \
+		   -X github.com/ix-api-net/terraform-provider-ix-api/internal/provider.Build=$(BUILD)
 LDFLAGS_STATIC := $(LDFLAGS) -extldflags "-static"
 
 

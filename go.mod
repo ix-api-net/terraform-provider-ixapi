@@ -1,4 +1,4 @@
-module gitlab.com/ix-api/ix-api-terraform-provider
+module github.com/ix-api-net/terraform-provider-ix-api
 
 go 1.19
 
