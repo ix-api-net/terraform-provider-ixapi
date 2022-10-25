@@ -23,6 +23,11 @@ func NewNetworkFeaturesRouteServerDataSource() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeString,
 			},
+			"required": &schema.Schema{
+				Description: "Filter for required network features",
+				Optional:    true,
+				Type:        schema.TypeBool,
+			},
 			"network_features": schemas.IntoDataSourceResultsSchema(
 				schemas.RouteServerNetworkFeatureSchema()),
 		},
@@ -49,6 +54,9 @@ func networkFeaturesRouteServerRead(
 	api := meta.(*ixapi.Client)
 	qry := networkFeatureRouteServerQuery(res)
 	results, err := api.NetworkFeaturesList(ctx, qry)
+
+	required, hasRequired := res.GetOk("required")
+
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -58,6 +66,10 @@ func networkFeaturesRouteServerRead(
 		if !ok {
 			continue // Should not happen on well behaved servers
 		}
+		if hasRequired && rsnf.Required != required.(bool) {
+			continue
+		}
+
 		features = append(features, rsnf)
 	}
 
