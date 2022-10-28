@@ -69,6 +69,9 @@ type Polymorphic interface {
 // Response is an IX-API general response
 type Response interface{}
 
+// SchemaVersion is the version of the ix-api schema
+const SchemaVersion = "2.4.1"
+
 // AuthToken AuthToken
 type AuthToken struct {
 	// AccessToken is a access_token
@@ -260,6 +263,155 @@ func (c CloudNetworkProductOffering) PolymorphicType() string {
 	return CloudNetworkProductOfferingType
 }
 
+// CloudNetworkProductOfferingPatch Cloud Network Product Offering
+type CloudNetworkProductOfferingPatch struct {
+	// Type is a type
+	Type string `json:"type,omitempty"`
+
+	// ID is a id
+	ID *string `json:"id,omitempty"`
+
+	// Name Name of the product
+	Name *string `json:"name,omitempty"`
+
+	// DisplayName is a display_name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// ExchangeLogo An URI referencing the logo of the internet exchange.
+	//
+	ExchangeLogo *string `json:"exchange_logo,omitempty"`
+
+	// ServiceProviderLogo An URI referencing the logo of the service provider.
+	//
+	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
+
+	// ProductLogo An URI referencing a logo for the product offered.
+	//
+	ProductLogo *string `json:"product_logo,omitempty"`
+
+	// ResourceType The resource type refers to an ix-api resource.
+	//
+	ResourceType *string `json:"resource_type,omitempty"`
+
+	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
+	// through the handover metro area network.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
+
+	// HandoverMetroArea Id of the `MetroArea`. The network service will be
+	// accessed from this metro area.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
+
+	// PhysicalPortSpeed If the service is dependent on the speed of
+	// the physical port this field denotes the speed.
+	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
+
+	// ServiceProvider The name of the provider providing the service.
+	//
+	ServiceProvider *string `json:"service_provider,omitempty"`
+
+	// DowngradeAllowed Indicates if the service can be migrated to
+	// a lower bandwidth.
+	DowngradeAllowed *bool `json:"downgrade_allowed,omitempty"`
+
+	// UpgradeAllowed Indicates if the service can be migrated to
+	// a higher bandwidth.
+	UpgradeAllowed *bool `json:"upgrade_allowed,omitempty"`
+
+	// OrderableNotBefore This product offering becomes available for ordering after
+	// this point in time.
+	OrderableNotBefore *time.Time `json:"orderable_not_before,omitempty"`
+
+	// OrderableNotAfter This product offering will become unavailable for ordering after
+	// this point in time.
+	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
+
+	// ContractTerms The contract terms informally describe the contract period and
+	// renewals.
+	//
+	ContractTerms *string `json:"contract_terms,omitempty"`
+
+	// NoticePeriod The notice period informally states constraints
+	// which define when the client needs to inform the
+	// IXP in order to prevent renewal of the contract.
+	//
+	NoticePeriod *string `json:"notice_period,omitempty"`
+
+	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
+	ProviderVLANs *string `json:"provider_vlans,omitempty"`
+
+	// ServiceMetroAreaNetwork Id of the `MetroAreaNetwork`.
+	// The service is directly provided on the metro area network.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area_network` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
+
+	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
+	// in this metro area.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
+
+	// BandwidthMin When configuring access to the network service, at least
+	// this `capacity` must be provided.
+	BandwidthMin *int `json:"bandwidth_min,omitempty"`
+
+	// BandwidthMax When not `null`, this value enforces a mandatory
+	// rate limit for all network service configs.
+	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+
+	// ServiceProviderRegion The service provider offers the network service for a
+	// specific region.
+	//
+	ServiceProviderRegion *string `json:"service_provider_region,omitempty"`
+
+	// ServiceProviderPop The datacenter description of the partner NNI to the service provider.
+	//
+	ServiceProviderPop *string `json:"service_provider_pop,omitempty"`
+
+	// ServiceProviderWorkflow When the workflow is `provider_first` the subscriber creates
+	// a circuit with the cloud provider and provides a `cloud_key` for filtering
+	// the product-offerings.
+	//
+	// If the workflow is `exchange_first` the IX will create
+	// the cloud circuit on the provider side.
+	//
+	ServiceProviderWorkflow *string `json:"service_provider_workflow,omitempty"`
+
+	// DeliveryMethod The exchange delivers the service over a `shared` or `dedicated` NNI.
+	DeliveryMethod *string `json:"delivery_method,omitempty"`
+
+	// Diversity The service can be delivered over multiple handovers from
+	// the exchange to the `service_provider`.
+	// The `diversity` denotes the number of handovers between the
+	// exchange and the service provider. A value of two signals a
+	// redundant service.
+	//
+	// Only one network service configuration for each `handover` and
+	// `cloud_vlan` can be created.
+	Diversity *int `json:"diversity,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (c CloudNetworkProductOfferingPatch) PolymorphicType() string {
+	return CloudNetworkProductOfferingPatchType
+}
+
 // ConnectionProductOffering Connection Product Offering
 type ConnectionProductOffering struct {
 	// Type is a type
@@ -370,6 +522,118 @@ type ConnectionProductOffering struct {
 // PolymorphicType implements the polymorphic interface
 func (c ConnectionProductOffering) PolymorphicType() string {
 	return ConnectionProductOfferingType
+}
+
+// ConnectionProductOfferingPatch Conncetion Product Offering
+type ConnectionProductOfferingPatch struct {
+	// Type is a type
+	Type string `json:"type,omitempty"`
+
+	// ID is a id
+	ID *string `json:"id,omitempty"`
+
+	// Name Name of the product
+	Name *string `json:"name,omitempty"`
+
+	// DisplayName is a display_name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// ExchangeLogo An URI referencing the logo of the internet exchange.
+	//
+	ExchangeLogo *string `json:"exchange_logo,omitempty"`
+
+	// ServiceProviderLogo An URI referencing the logo of the service provider.
+	//
+	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
+
+	// ProductLogo An URI referencing a logo for the product offered.
+	//
+	ProductLogo *string `json:"product_logo,omitempty"`
+
+	// ResourceType The resource type refers to an ix-api resource.
+	//
+	ResourceType *string `json:"resource_type,omitempty"`
+
+	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
+	// through the handover metro area network.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
+
+	// HandoverMetroArea Id of the `MetroArea`. The network service will be
+	// accessed from this metro area.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
+
+	// PhysicalPortSpeed If the service is dependent on the speed of
+	// the physical port this field denotes the speed.
+	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
+
+	// ServiceProvider The name of the provider providing the service.
+	//
+	ServiceProvider *string `json:"service_provider,omitempty"`
+
+	// DowngradeAllowed Indicates if the service can be migrated to
+	// a lower bandwidth.
+	DowngradeAllowed *bool `json:"downgrade_allowed,omitempty"`
+
+	// UpgradeAllowed Indicates if the service can be migrated to
+	// a higher bandwidth.
+	UpgradeAllowed *bool `json:"upgrade_allowed,omitempty"`
+
+	// OrderableNotBefore This product offering becomes available for ordering after
+	// this point in time.
+	OrderableNotBefore *time.Time `json:"orderable_not_before,omitempty"`
+
+	// OrderableNotAfter This product offering will become unavailable for ordering after
+	// this point in time.
+	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
+
+	// ContractTerms The contract terms informally describe the contract period and
+	// renewals.
+	//
+	ContractTerms *string `json:"contract_terms,omitempty"`
+
+	// NoticePeriod The notice period informally states constraints
+	// which define when the client needs to inform the
+	// IXP in order to prevent renewal of the contract.
+	//
+	NoticePeriod *string `json:"notice_period,omitempty"`
+
+	// CrossConnectInitiator A cross connect can be initiated by either the
+	// exchange or the subscriber.
+	//
+	// This property affects which side has to provide
+	// a LOA and demarc information.
+	CrossConnectInitiator *string `json:"cross_connect_initiator,omitempty"`
+
+	// HandoverPop The ID of the point of presence (see `/pops`), where
+	// the physical port will be present.
+	//
+	HandoverPop *string `json:"handover_pop,omitempty"`
+
+	// MaximumPortQuantity The maximum amount of ports which can be aggregated
+	// in the connection. `null` means no limit.
+	MaximumPortQuantity *int `json:"maximum_port_quantity,omitempty"`
+
+	// RequiredContactRoles The connection will require at least one of each of the
+	// specified roles assigned to contacts.
+	//
+	// The role assignments are associated with the connection
+	// through the `role_assignments` list property.
+	RequiredContactRoles []string `json:"required_contact_roles,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (c ConnectionProductOfferingPatch) PolymorphicType() string {
+	return ConnectionProductOfferingPatchType
 }
 
 // Device Device
@@ -546,6 +810,127 @@ func (e ExchangeLanNetworkProductOffering) PolymorphicType() string {
 	return ExchangeLanNetworkProductOfferingType
 }
 
+// ExchangeLanNetworkProductOfferingPatch Exchange Lan Network Product Offering
+type ExchangeLanNetworkProductOfferingPatch struct {
+	// Type is a type
+	Type string `json:"type,omitempty"`
+
+	// ID is a id
+	ID *string `json:"id,omitempty"`
+
+	// Name Name of the product
+	Name *string `json:"name,omitempty"`
+
+	// DisplayName is a display_name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// ExchangeLogo An URI referencing the logo of the internet exchange.
+	//
+	ExchangeLogo *string `json:"exchange_logo,omitempty"`
+
+	// ServiceProviderLogo An URI referencing the logo of the service provider.
+	//
+	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
+
+	// ProductLogo An URI referencing a logo for the product offered.
+	//
+	ProductLogo *string `json:"product_logo,omitempty"`
+
+	// ResourceType The resource type refers to an ix-api resource.
+	//
+	ResourceType *string `json:"resource_type,omitempty"`
+
+	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
+	// through the handover metro area network.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
+
+	// HandoverMetroArea Id of the `MetroArea`. The network service will be
+	// accessed from this metro area.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
+
+	// PhysicalPortSpeed If the service is dependent on the speed of
+	// the physical port this field denotes the speed.
+	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
+
+	// ServiceProvider The name of the provider providing the service.
+	//
+	ServiceProvider *string `json:"service_provider,omitempty"`
+
+	// DowngradeAllowed Indicates if the service can be migrated to
+	// a lower bandwidth.
+	DowngradeAllowed *bool `json:"downgrade_allowed,omitempty"`
+
+	// UpgradeAllowed Indicates if the service can be migrated to
+	// a higher bandwidth.
+	UpgradeAllowed *bool `json:"upgrade_allowed,omitempty"`
+
+	// OrderableNotBefore This product offering becomes available for ordering after
+	// this point in time.
+	OrderableNotBefore *time.Time `json:"orderable_not_before,omitempty"`
+
+	// OrderableNotAfter This product offering will become unavailable for ordering after
+	// this point in time.
+	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
+
+	// ContractTerms The contract terms informally describe the contract period and
+	// renewals.
+	//
+	ContractTerms *string `json:"contract_terms,omitempty"`
+
+	// NoticePeriod The notice period informally states constraints
+	// which define when the client needs to inform the
+	// IXP in order to prevent renewal of the contract.
+	//
+	NoticePeriod *string `json:"notice_period,omitempty"`
+
+	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
+	ProviderVLANs *string `json:"provider_vlans,omitempty"`
+
+	// ServiceMetroAreaNetwork Id of the `MetroAreaNetwork`.
+	// The service is directly provided on the metro area network.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area_network` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
+
+	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
+	// in this metro area.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
+
+	// BandwidthMin When configuring access to the network service, at least
+	// this `capacity` must be provided.
+	BandwidthMin *int `json:"bandwidth_min,omitempty"`
+
+	// BandwidthMax When not `null`, this value enforces a mandatory
+	// rate limit for all network service configs.
+	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+
+	// ExchangeLanNetworkService The id of the exchange lan network service.
+	ExchangeLanNetworkService *string `json:"exchange_lan_network_service,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (e ExchangeLanNetworkProductOfferingPatch) PolymorphicType() string {
+	return ExchangeLanNetworkProductOfferingPatchType
+}
+
 // Facility Facility
 type Facility struct {
 	// Name Name of the Datacenter as called by the operator
@@ -714,6 +1099,124 @@ func (m MP2MPNetworkProductOffering) PolymorphicType() string {
 	return MP2MPNetworkProductOfferingType
 }
 
+// MP2MPNetworkProductOfferingPatch MP2MP Network Product Offering
+type MP2MPNetworkProductOfferingPatch struct {
+	// Type is a type
+	Type string `json:"type,omitempty"`
+
+	// ID is a id
+	ID *string `json:"id,omitempty"`
+
+	// Name Name of the product
+	Name *string `json:"name,omitempty"`
+
+	// DisplayName is a display_name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// ExchangeLogo An URI referencing the logo of the internet exchange.
+	//
+	ExchangeLogo *string `json:"exchange_logo,omitempty"`
+
+	// ServiceProviderLogo An URI referencing the logo of the service provider.
+	//
+	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
+
+	// ProductLogo An URI referencing a logo for the product offered.
+	//
+	ProductLogo *string `json:"product_logo,omitempty"`
+
+	// ResourceType The resource type refers to an ix-api resource.
+	//
+	ResourceType *string `json:"resource_type,omitempty"`
+
+	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
+	// through the handover metro area network.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
+
+	// HandoverMetroArea Id of the `MetroArea`. The network service will be
+	// accessed from this metro area.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
+
+	// PhysicalPortSpeed If the service is dependent on the speed of
+	// the physical port this field denotes the speed.
+	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
+
+	// ServiceProvider The name of the provider providing the service.
+	//
+	ServiceProvider *string `json:"service_provider,omitempty"`
+
+	// DowngradeAllowed Indicates if the service can be migrated to
+	// a lower bandwidth.
+	DowngradeAllowed *bool `json:"downgrade_allowed,omitempty"`
+
+	// UpgradeAllowed Indicates if the service can be migrated to
+	// a higher bandwidth.
+	UpgradeAllowed *bool `json:"upgrade_allowed,omitempty"`
+
+	// OrderableNotBefore This product offering becomes available for ordering after
+	// this point in time.
+	OrderableNotBefore *time.Time `json:"orderable_not_before,omitempty"`
+
+	// OrderableNotAfter This product offering will become unavailable for ordering after
+	// this point in time.
+	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
+
+	// ContractTerms The contract terms informally describe the contract period and
+	// renewals.
+	//
+	ContractTerms *string `json:"contract_terms,omitempty"`
+
+	// NoticePeriod The notice period informally states constraints
+	// which define when the client needs to inform the
+	// IXP in order to prevent renewal of the contract.
+	//
+	NoticePeriod *string `json:"notice_period,omitempty"`
+
+	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
+	ProviderVLANs *string `json:"provider_vlans,omitempty"`
+
+	// ServiceMetroAreaNetwork Id of the `MetroAreaNetwork`.
+	// The service is directly provided on the metro area network.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area_network` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
+
+	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
+	// in this metro area.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
+
+	// BandwidthMin When configuring access to the network service, at least
+	// this `capacity` must be provided.
+	BandwidthMin *int `json:"bandwidth_min,omitempty"`
+
+	// BandwidthMax When not `null`, this value enforces a mandatory
+	// rate limit for all network service configs.
+	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (m MP2MPNetworkProductOfferingPatch) PolymorphicType() string {
+	return MP2MPNetworkProductOfferingPatchType
+}
+
 // MetroArea MetroArea
 type MetroArea struct {
 	// ID is a id
@@ -879,6 +1382,124 @@ func (p P2MPNetworkProductOffering) PolymorphicType() string {
 	return P2MPNetworkProductOfferingType
 }
 
+// P2MPNetworkProductOfferingPatch P2MP Network Product Offering
+type P2MPNetworkProductOfferingPatch struct {
+	// Type is a type
+	Type string `json:"type,omitempty"`
+
+	// ID is a id
+	ID *string `json:"id,omitempty"`
+
+	// Name Name of the product
+	Name *string `json:"name,omitempty"`
+
+	// DisplayName is a display_name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// ExchangeLogo An URI referencing the logo of the internet exchange.
+	//
+	ExchangeLogo *string `json:"exchange_logo,omitempty"`
+
+	// ServiceProviderLogo An URI referencing the logo of the service provider.
+	//
+	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
+
+	// ProductLogo An URI referencing a logo for the product offered.
+	//
+	ProductLogo *string `json:"product_logo,omitempty"`
+
+	// ResourceType The resource type refers to an ix-api resource.
+	//
+	ResourceType *string `json:"resource_type,omitempty"`
+
+	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
+	// through the handover metro area network.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
+
+	// HandoverMetroArea Id of the `MetroArea`. The network service will be
+	// accessed from this metro area.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
+
+	// PhysicalPortSpeed If the service is dependent on the speed of
+	// the physical port this field denotes the speed.
+	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
+
+	// ServiceProvider The name of the provider providing the service.
+	//
+	ServiceProvider *string `json:"service_provider,omitempty"`
+
+	// DowngradeAllowed Indicates if the service can be migrated to
+	// a lower bandwidth.
+	DowngradeAllowed *bool `json:"downgrade_allowed,omitempty"`
+
+	// UpgradeAllowed Indicates if the service can be migrated to
+	// a higher bandwidth.
+	UpgradeAllowed *bool `json:"upgrade_allowed,omitempty"`
+
+	// OrderableNotBefore This product offering becomes available for ordering after
+	// this point in time.
+	OrderableNotBefore *time.Time `json:"orderable_not_before,omitempty"`
+
+	// OrderableNotAfter This product offering will become unavailable for ordering after
+	// this point in time.
+	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
+
+	// ContractTerms The contract terms informally describe the contract period and
+	// renewals.
+	//
+	ContractTerms *string `json:"contract_terms,omitempty"`
+
+	// NoticePeriod The notice period informally states constraints
+	// which define when the client needs to inform the
+	// IXP in order to prevent renewal of the contract.
+	//
+	NoticePeriod *string `json:"notice_period,omitempty"`
+
+	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
+	ProviderVLANs *string `json:"provider_vlans,omitempty"`
+
+	// ServiceMetroAreaNetwork Id of the `MetroAreaNetwork`.
+	// The service is directly provided on the metro area network.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area_network` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
+
+	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
+	// in this metro area.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
+
+	// BandwidthMin When configuring access to the network service, at least
+	// this `capacity` must be provided.
+	BandwidthMin *int `json:"bandwidth_min,omitempty"`
+
+	// BandwidthMax When not `null`, this value enforces a mandatory
+	// rate limit for all network service configs.
+	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (p P2MPNetworkProductOfferingPatch) PolymorphicType() string {
+	return P2MPNetworkProductOfferingPatchType
+}
+
 // P2PNetworkProductOffering P2P Network Product Offering
 type P2PNetworkProductOffering struct {
 	// Type is a type
@@ -997,6 +1618,124 @@ func (p P2PNetworkProductOffering) PolymorphicType() string {
 	return P2PNetworkProductOfferingType
 }
 
+// P2PNetworkProductOfferingPatch P2P Network Product Offering
+type P2PNetworkProductOfferingPatch struct {
+	// Type is a type
+	Type string `json:"type,omitempty"`
+
+	// ID is a id
+	ID *string `json:"id,omitempty"`
+
+	// Name Name of the product
+	Name *string `json:"name,omitempty"`
+
+	// DisplayName is a display_name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// ExchangeLogo An URI referencing the logo of the internet exchange.
+	//
+	ExchangeLogo *string `json:"exchange_logo,omitempty"`
+
+	// ServiceProviderLogo An URI referencing the logo of the service provider.
+	//
+	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
+
+	// ProductLogo An URI referencing a logo for the product offered.
+	//
+	ProductLogo *string `json:"product_logo,omitempty"`
+
+	// ResourceType The resource type refers to an ix-api resource.
+	//
+	ResourceType *string `json:"resource_type,omitempty"`
+
+	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
+	// through the handover metro area network.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
+
+	// HandoverMetroArea Id of the `MetroArea`. The network service will be
+	// accessed from this metro area.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	//
+	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
+
+	// PhysicalPortSpeed If the service is dependent on the speed of
+	// the physical port this field denotes the speed.
+	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
+
+	// ServiceProvider The name of the provider providing the service.
+	//
+	ServiceProvider *string `json:"service_provider,omitempty"`
+
+	// DowngradeAllowed Indicates if the service can be migrated to
+	// a lower bandwidth.
+	DowngradeAllowed *bool `json:"downgrade_allowed,omitempty"`
+
+	// UpgradeAllowed Indicates if the service can be migrated to
+	// a higher bandwidth.
+	UpgradeAllowed *bool `json:"upgrade_allowed,omitempty"`
+
+	// OrderableNotBefore This product offering becomes available for ordering after
+	// this point in time.
+	OrderableNotBefore *time.Time `json:"orderable_not_before,omitempty"`
+
+	// OrderableNotAfter This product offering will become unavailable for ordering after
+	// this point in time.
+	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
+
+	// ContractTerms The contract terms informally describe the contract period and
+	// renewals.
+	//
+	ContractTerms *string `json:"contract_terms,omitempty"`
+
+	// NoticePeriod The notice period informally states constraints
+	// which define when the client needs to inform the
+	// IXP in order to prevent renewal of the contract.
+	//
+	NoticePeriod *string `json:"notice_period,omitempty"`
+
+	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
+	ProviderVLANs *string `json:"provider_vlans,omitempty"`
+
+	// ServiceMetroAreaNetwork Id of the `MetroAreaNetwork`.
+	// The service is directly provided on the metro area network.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area_network` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
+
+	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
+	// in this metro area.
+	//
+	// In case of a `p2p_vc`, the `service_metro_area` refers
+	// to the B-side of the point-to-point connection.
+	// The B-side is the accepting party.
+	//
+	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
+
+	// BandwidthMin When configuring access to the network service, at least
+	// this `capacity` must be provided.
+	BandwidthMin *int `json:"bandwidth_min,omitempty"`
+
+	// BandwidthMax When not `null`, this value enforces a mandatory
+	// rate limit for all network service configs.
+	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (p P2PNetworkProductOfferingPatch) PolymorphicType() string {
+	return P2PNetworkProductOfferingPatchType
+}
+
 // PointOfPresence Point Of Presence
 type PointOfPresence struct {
 	// Name is a name
@@ -1047,6 +1786,39 @@ const P2MPNetworkProductOfferingType = "p2mp_vc"
 
 // CloudNetworkProductOfferingType is a polymorphic type value for CloudNetworkProductOffering
 const CloudNetworkProductOfferingType = "cloud_vc"
+
+// ProductOfferingPatch Polymorphic Product Offering
+type ProductOfferingPatch interface {
+	Polymorphic
+}
+
+// PolymorphicProductOfferingPatch is a polymorphic base
+type PolymorphicProductOfferingPatch struct {
+	Type string `json:"type"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (p PolymorphicProductOfferingPatch) PolymorphicType() string {
+	return p.Type
+}
+
+// ConnectionProductOfferingPatchType is a polymorphic type value for ConnectionProductOfferingPatch
+const ConnectionProductOfferingPatchType = "connection"
+
+// ExchangeLanNetworkProductOfferingPatchType is a polymorphic type value for ExchangeLanNetworkProductOfferingPatch
+const ExchangeLanNetworkProductOfferingPatchType = "exchange_lan"
+
+// P2PNetworkProductOfferingPatchType is a polymorphic type value for P2PNetworkProductOfferingPatch
+const P2PNetworkProductOfferingPatchType = "p2p_vc"
+
+// MP2MPNetworkProductOfferingPatchType is a polymorphic type value for MP2MPNetworkProductOfferingPatch
+const MP2MPNetworkProductOfferingPatchType = "mp2mp_vc"
+
+// P2MPNetworkProductOfferingPatchType is a polymorphic type value for P2MPNetworkProductOfferingPatch
+const P2MPNetworkProductOfferingPatchType = "p2mp_vc"
+
+// CloudNetworkProductOfferingPatchType is a polymorphic type value for CloudNetworkProductOfferingPatch
+const CloudNetworkProductOfferingPatchType = "cloud_vc"
 
 // CloudNetworkServiceConfig Cloud Network Service Config
 type CloudNetworkServiceConfig struct {
