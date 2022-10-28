@@ -10,6 +10,9 @@ import (
 //   openapi specs. DO NOT EDIT.
 //
 
+// SchemaVersion is the version of the IX-API schema
+const SchemaVersion = "2.4.1"
+
 // CancellationPolicySchema is the terraform schema for the model
 func CancellationPolicySchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
