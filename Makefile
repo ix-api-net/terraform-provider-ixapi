@@ -9,7 +9,7 @@ VENDOR := false
 
 HOSTNAME=ix-api.net
 NAMESPACE=ix-api
-NAME=ix-api
+NAME=ixapi
 BINARY=terraform-provider-${NAME}
 RELEASE_VERSION=0.1.0
 
@@ -40,6 +40,9 @@ LDFLAGS := -s -w -X main.version=$(VERSION) -X main.commit=$(BUILD)
 
 default: install
 
+docs:
+	go generate ./...
+
 build:
 	CGO_ENABLED=0 go build $(CFLAGS) -o ./bin/$(BINARY) -ldflags '$(LDFLAGS)' $(PROVIDER)
 	
@@ -47,10 +50,13 @@ build:
 	cp bin/${BINARY} bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 
-install: build
+all: docs build
+
+install: all
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	cp bin/${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 test:
 	go test ./internal/...
 
+.PHONY: docs

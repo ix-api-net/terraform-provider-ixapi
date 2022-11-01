@@ -3,8 +3,8 @@ package provider
 import (
 	"testing"
 
-	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
-	"github.com/ix-api-net/terraform-provider-ix-api/internal/schemas"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
 
 func TestProvider(t *testing.T) {

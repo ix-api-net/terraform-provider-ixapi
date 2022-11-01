@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/ix-api-net/terraform-provider-ix-api/internal/ixapi"
-	"github.com/ix-api-net/terraform-provider-ix-api/internal/schemas"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
 
 // NewNetworkFeaturesRouteServerDataSource creates a data source for
