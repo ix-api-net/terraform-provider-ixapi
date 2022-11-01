@@ -40,7 +40,7 @@ the following snippet to you `~/.terraformrc`:
 ```hcl
 provider_installation {
     dev_overrides {
-        "ix-api.net/ix-api/ix-api" = "/<full_path_to>/go/src/github.com/ix-api-net/terraform-provider-ixapi/bin"
+        "ix-api.net/ix-api/ixapi" = "/<full_path_to>/go/src/github.com/ix-api-net/terraform-provider-ixapi/bin"
     }
 
     direct {}
