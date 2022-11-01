@@ -11,7 +11,7 @@ HOSTNAME=ix-api.net
 NAMESPACE=ix-api
 NAME=ix-api
 BINARY=terraform-provider-${NAME}
-VERSION=0.1.0
+RELEASE_VERSION=0.1.0
 
 # OS Detection
 UNAME=$(shell uname)
@@ -25,7 +25,7 @@ endif
 BUILD := $(shell git rev-parse --short HEAD)
 VERSION := $(shell git tag --points-at HEAD)
 ifeq ($(VERSION),)
-  VERSION=0.0.1
+  VERSION=$(RELEASE_VERSION)
 endif
 
 
@@ -36,10 +36,7 @@ ifneq ($(VENDOR), false)
   CFLAGS += -mod=vendor
 endif
 
-LDFLAGS := -X github.com/ix-api-net/terraform-provider-ix-api/internal/provider.Version=$(VERSION) \
-		   -X github.com/ix-api-net/terraform-provider-ix-api/internal/provider.Build=$(BUILD)
-LDFLAGS_STATIC := $(LDFLAGS) -extldflags "-static"
-
+LDFLAGS := -s -w -X main.version=$(VERSION) -X main.commit=$(BUILD)
 
 default: install
 
