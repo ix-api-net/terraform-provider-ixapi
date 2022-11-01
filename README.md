@@ -14,6 +14,7 @@ for configuring and provisisioning IXP services.
 
 ## Configure the provider
 
+
 ```hcl
 provider "ixapi" {
     api = "http://localhost:8000/api/v2"
@@ -39,10 +40,22 @@ the following snippet to you `~/.terraformrc`:
 ```hcl
 provider_installation {
     dev_overrides {
-        "ix-api.net/ix-api/ix-api" = "/<full_path_to>/go/src/github.com/ix-api-net/terraform-provider-ix-api/bin"
+        "ix-api.net/ix-api/ix-api" = "/<full_path_to>/go/src/github.com/ix-api-net/terraform-provider-ixapi/bin"
     }
 
     direct {}
+}
+```
+
+And then in the terraform file use:
+
+```hcl
+terraform {
+    required_providers {
+        ixapi = {
+            source = "ix-api.net/ix-api/ixapi"
+        }
+    }
 }
 ```
 
