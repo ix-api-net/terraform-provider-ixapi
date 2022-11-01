@@ -14,7 +14,7 @@ import (
 // for registering mac addresses
 func NewMACResource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `ixapi_mac` resource to register a mac address",
+		Description: "Use the `ixapi_mac` resource to register a mac address. *Attention:* MAC addresses can only be created and destroyed. To change a MAC-Address, you have to create a new resource.",
 
 		CreateContext: crud.Create(macCreate),
 		UpdateContext: crud.Update(macUpdate),

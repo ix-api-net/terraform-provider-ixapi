@@ -14,7 +14,7 @@ import (
 // NewAccountResource creates a new account resource
 func NewAccountResource() *schema.Resource {
 	return &schema.Resource{
-		Description: "An IX-API account",
+		Description: "Use the `ixapi_account` resource to manage an account.",
 
 		CreateContext: accountCreate,
 		ReadContext:   accountRead,

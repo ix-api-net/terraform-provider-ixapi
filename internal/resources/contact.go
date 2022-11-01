@@ -15,7 +15,7 @@ import (
 // NewContactResource creates a new resource schema
 func NewContactResource() *schema.Resource {
 	return &schema.Resource{
-		Description: "A contact for an account",
+		Description: "This resource manages a `contact` for an `ixapi_account`. Roles assigned to the account can be specified as an array of role-names. Use the `ixapi_role_assignment` datasource to reference a specific role assignement.",
 
 		CreateContext: contactCreate,
 		ReadContext:   contactRead,
