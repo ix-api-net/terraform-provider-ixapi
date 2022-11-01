@@ -4,3 +4,4 @@
 ix-api-terraform-provider
 
 bin/
+dist/

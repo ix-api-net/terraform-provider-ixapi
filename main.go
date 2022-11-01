@@ -12,6 +12,7 @@ import (
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 var (
 	version string = "dev"
+	commit  string = "head"
 )
 
 // Flags
@@ -33,7 +34,7 @@ func main() {
 
 	opts := &plugin.ServeOpts{
 		Debug:        debug,
-		ProviderAddr: "ix-api.net/ix-api/ix-api", // for now
+		ProviderAddr: "registry.terraform.io/ix-api-net/terraform-provider-ix-api",
 		ProviderFunc: provider.New(version),
 	}
 

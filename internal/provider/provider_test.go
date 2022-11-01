@@ -8,9 +8,9 @@ import (
 )
 
 func TestProvider(t *testing.T) {
-	p := New("test")
-	if p == nil {
-		t.Fatal("could not create provider instance")
+	p := New("dev")
+	if err := p().InternalValidate(); err != nil {
+		t.Fatal(err)
 	}
 }
 
