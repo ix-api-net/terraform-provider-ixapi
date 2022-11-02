@@ -3,12 +3,12 @@
 page_title: "ixapi_mac Resource - terraform-provider-ixapi"
 subcategory: ""
 description: |-
-  Use the ixapi_mac resource to register a mac address
+  Use the ixapi_mac resource to register a mac address. Attention: MAC addresses can only be created and destroyed. To change a MAC-Address, you have to create a new resource.
 ---
 
 # ixapi_mac (Resource)
 
-Use the `ixapi_mac` resource to register a mac address
+Use the `ixapi_mac` resource to register a mac address. *Attention:* MAC addresses can only be created and destroyed. To change a MAC-Address, you have to create a new resource.
 
 
 
