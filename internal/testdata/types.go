@@ -9,3 +9,8 @@ func NewOptString(val string) *string {
 func NewOptBool(val bool) *bool {
 	return &val
 }
+
+// NewOptInt creates an optional integer with a value
+func NewOptInt(val int) *int {
+	return &val
+}
