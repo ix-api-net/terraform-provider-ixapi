@@ -69,6 +69,21 @@ func (res *ResourceData) GetStringOpt(key string) *string {
 	return &ret
 }
 
+// GetStringOptDefault gets an optional string
+// but will default if the string is empty
+func (res *ResourceData) GetStringOptDefault(
+	key, fallback string,
+) *string {
+	val := res.GetStringOpt(key)
+	if val == nil {
+		return &fallback
+	}
+	if *val == "" {
+		return &fallback
+	}
+	return val
+}
+
 // GetTimeOpt get an optional timestamp:
 func (res *ResourceData) GetTimeOpt(key string) (*time.Time, error) {
 	val, ok := res.GetOk(key)

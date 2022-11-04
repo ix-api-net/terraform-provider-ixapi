@@ -140,6 +140,9 @@ func New(version string) func() *schema.Provider {
 				"ixapi_network_service_cloud_vc": resources.NewNetworkServiceCloudVCResource(),
 
 				"ixapi_network_service_config_exchange_lan": resources.NewNetworkServiceConfigExchangeLanResource(),
+				"ixapi_network_service_config_p2p_vc":       resources.NewNetworkServiceConfigP2PVCResource(),
+				"ixapi_network_service_config_p2mp_vc":      resources.NewNetworkServiceConfigP2MPVCResource(),
+				"ixapi_network_service_config_mp2mp_vc":     resources.NewNetworkServiceConfigMP2MPVCResource(),
 
 				"ixapi_network_feature_config_route_server": resources.NewNetworkFeatureConfigRouteServerResource(),
 
