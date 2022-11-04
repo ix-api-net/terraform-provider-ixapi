@@ -14,7 +14,7 @@ import (
 // for creating an exchange lan network service configuration.
 func NewNetworkServiceConfigExchangeLanResource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `ixapi_nsc_exchange_lan` resource to provision an access to an exchange lan for a customer.",
+		Description: "Use the `ixapi_network_service_config_exchange_lan` resource to provision an access to an exchange lan for a customer.",
 
 		CreateContext: crud.Create(nscExchangeLanCreate),
 		UpdateContext: crud.Update(nscExchangeLanUpdate),
@@ -80,7 +80,7 @@ func nscExchangeLanRequestFromResourceData(
 
 	res := schemas.ResourceData{ResourceData: r}
 	req := &ixapi.ExchangeLanNetworkServiceConfigRequest{
-		Type:             "exchange_lan",
+		Type:             ixapi.ExchangeLanNetworkServiceConfigType,
 		ManagingAccount:  res.GetString("managing_account"),
 		ConsumingAccount: res.GetString("consuming_account"),
 		BillingAccount:   res.GetString("billing_account"),

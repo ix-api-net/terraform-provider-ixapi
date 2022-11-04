@@ -44,6 +44,13 @@ type ResourceData struct {
 	*schema.ResourceData
 }
 
+// ResourceDataFrom wraps a schema.ResourceData
+func ResourceDataFrom(r *schema.ResourceData) ResourceData {
+	return ResourceData{
+		ResourceData: r,
+	}
+}
+
 // GetString retrievs a string from the resource
 func (res *ResourceData) GetString(key string) string {
 	return res.Get(key).(string)
