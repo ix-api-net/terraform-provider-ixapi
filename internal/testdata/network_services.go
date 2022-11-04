@@ -14,3 +14,16 @@ func NewP2PNetworkService() *ixapi.P2PNetworkService {
 		DisplayName:          NewOptString("p2p network service"),
 	}
 }
+
+// NewP2MPNetworkService makes a testing p2mp network service
+func NewP2MPNetworkService() *ixapi.P2MPNetworkService {
+	return &ixapi.P2MPNetworkService{
+		Type:             ixapi.P2MPNetworkServiceType,
+		ManagingAccount:  "managing:123",
+		ConsumingAccount: "consuming:123",
+		BillingAccount:   "billing:123",
+		ProductOffering:  "product:123",
+		Public:           NewOptBool(true),
+		DisplayName:      NewOptString("p2mp network service"),
+	}
+}

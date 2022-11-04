@@ -4,3 +4,8 @@ package testdata
 func NewOptString(val string) *string {
 	return &val
 }
+
+// NewOptBool creates an optional bool with a value
+func NewOptBool(val bool) *bool {
+	return &val
+}
