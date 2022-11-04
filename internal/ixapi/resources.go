@@ -11206,7 +11206,7 @@ func (c *Client) MemberJoiningRulesList(
 // MemberJoiningRulesCreate Create a member joining rule
 func (c *Client) MemberJoiningRulesCreate(
 	ctx context.Context,
-	req *MemberJoiningRuleRequest,
+	req MemberJoiningRuleRequest,
 
 ) (MemberJoiningRule, error) {
 
@@ -11437,7 +11437,7 @@ func (c *Client) MemberJoiningRulesRead(
 // MemberJoiningRulesUpdate Update a joining rule
 func (c *Client) MemberJoiningRulesUpdate(
 	ctx context.Context,
-	id string, req *MemberJoiningRuleUpdate,
+	id string, req MemberJoiningRuleUpdate,
 
 ) (MemberJoiningRule, error) {
 
@@ -11555,7 +11555,7 @@ func (c *Client) MemberJoiningRulesUpdate(
 // MemberJoiningRulesPatch Partially update a joining rule
 func (c *Client) MemberJoiningRulesPatch(
 	ctx context.Context,
-	id string, req *MemberJoiningRulePatch,
+	id string, req MemberJoiningRulePatch,
 
 ) (MemberJoiningRule, error) {
 
