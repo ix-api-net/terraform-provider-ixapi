@@ -10,9 +10,9 @@ import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
 
-// NewMemberJoiningRuleAllow creates a member joining rule
+// NewMemberJoiningRuleAllowResource creates a member joining rule
 // of type 'allow' resource
-func NewMemberJoiningRuleAllow() *schema.Resource {
+func NewMemberJoiningRuleAllowResource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `ixapi_member_joining_rule_allow` to create an explicit grant to join a network service for a `consuming_account`.",
 
@@ -169,9 +169,9 @@ func mjrAllowDelete(
 	return mjrAllowRead(ctx, res, api)
 }
 
-// NewMemberJoiningRuleDeny creates a member joining rule
+// NewMemberJoiningRuleDenyResource creates a member joining rule
 // of type 'allow' resource
-func NewMemberJoiningRuleDeny() *schema.Resource {
+func NewMemberJoiningRuleDenyResource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `ixapi_member_joining_rule_deny` to prevent a `consuming_account` to join a network service.",
 
