@@ -3,12 +3,12 @@
 page_title: "ixapi_network_service_config_exchange_lan Resource - terraform-provider-ixapi"
 subcategory: ""
 description: |-
-  Use the ixapi_nsc_exchange_lan resource to provision an access to an exchange lan for a customer.
+  Use the ixapi_network_service_config_exchange_lan resource to provision an access to an exchange lan for a customer.
 ---
 
 # ixapi_network_service_config_exchange_lan (Resource)
 
-Use the `ixapi_nsc_exchange_lan` resource to provision an access to an exchange lan for a customer.
+Use the `ixapi_network_service_config_exchange_lan` resource to provision an access to an exchange lan for a customer.
 
 
 
