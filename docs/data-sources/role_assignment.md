@@ -17,11 +17,12 @@ Use the `ixapi_role_assignment` data source to retrieve an assignment between a 
 
 ### Required
 
-- `contact` (String) The `id` of a contact the role is assigned to.
 - `role` (String) The name (e.g. `noc`) of a role the contact is assigned to.
 
 ### Optional
 
+- `consuming_account` (String) Query for the role assignment for a role by account
+- `contact` (String) The `id` of a contact the role is assigned to.
 - `id` (String) The `id` of the assignment. Can be used in configs.
 
 

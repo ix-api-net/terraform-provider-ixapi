@@ -25,10 +25,14 @@ func NewRoleAssignmentDataSource() *schema.Resource {
 
 			"contact": &schema.Schema{
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The `id` of a contact the role is assigned to. ",
 			},
-
+			"consuming_account": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Query for the role assignment for a role by account",
+			},
 			"id": &schema.Schema{
 				Type:        schema.TypeString,
 				Description: "The `id` of the assignment. Can be used in configs.",
@@ -60,7 +64,7 @@ func fetchRoleByName(
 	return nil, err
 }
 
-func fetchRoleAssignment(
+func fetchRoleAssignmentByContact(
 	ctx context.Context,
 	api *ixapi.Client,
 	roleID string,
@@ -84,6 +88,41 @@ func fetchRoleAssignment(
 	return nil, err
 }
 
+func fetchRoleAssignmentByAccount(
+	ctx context.Context,
+	api *ixapi.Client,
+	roleID string,
+	accountID string,
+) (*ixapi.RoleAssignment, error) {
+	contacts, err := api.ContactsList(ctx, &ixapi.ContactsListQuery{
+		ConsumingAccount: accountID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	for _, c := range contacts {
+		contactID := c.ID
+		qry := &ixapi.RoleAssignmentsListQuery{
+			Contact: contactID,
+			Role:    roleID,
+		}
+		assignments, err := api.RoleAssignmentsList(ctx, qry)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, a := range assignments {
+			if a.Role == roleID && a.Contact == contactID {
+				return a, nil
+			}
+		}
+	}
+	return nil, fmt.Errorf(
+		"a role assignment for the role (%s) and account (%s) could not be found",
+		roleID,
+		accountID)
+}
+
 // Fetch role assignment
 func roleAssignmentRead(
 	ctx context.Context,
@@ -93,8 +132,9 @@ func roleAssignmentRead(
 	api := meta.(*ixapi.Client)
 
 	// Data
-	roleName := res.Get("role").(string)   // Name
-	contact := res.Get("contact").(string) // ID
+	roleName := res.Get("role").(string) // Name
+	contact, hasContact := res.GetOk("contact")
+	account, hasAccount := res.GetOk("consuming_account")
 
 	role, err := fetchRoleByName(ctx, api, roleName)
 	if err != nil {
@@ -102,7 +142,15 @@ func roleAssignmentRead(
 	}
 
 	// Fetch role assignments
-	assignment, err := fetchRoleAssignment(ctx, api, role.ID, contact)
+	var assignment *ixapi.RoleAssignment
+	if hasContact {
+		assignment, err = fetchRoleAssignmentByContact(ctx, api, role.ID, contact.(string))
+	} else if hasAccount {
+		assignment, err = fetchRoleAssignmentByAccount(ctx, api, role.ID, account.(string))
+	} else {
+		return diag.FromErr(fmt.Errorf(
+			"either `account` or `contact` is required"))
+	}
 	if err != nil {
 		return diag.FromErr(err)
 	}
