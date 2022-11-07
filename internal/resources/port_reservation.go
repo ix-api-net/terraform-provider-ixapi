@@ -50,7 +50,7 @@ func portReservationRead(
 
 // Update a port reservation: Only the external_ref field
 // is updateable. Updates to other fields will result in an error.
-func portReservationCreate(
+func portReservationUpdate(
 	ctx context.Context,
 	res *schema.ResourceData,
 	api *ixapi.Client,
