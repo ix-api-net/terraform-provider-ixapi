@@ -60,7 +60,7 @@ func IntoDataSourceSchema(
 
 		if isRequired {
 			prop.Optional = false
-			prop.Computed = true
+			prop.Computed = false
 			prop.Required = true
 		} else {
 			prop.Required = false

@@ -50,7 +50,7 @@ build:
 	cp bin/${BINARY} bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 
-all: docs build
+all: build docs
 
 install: all
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}

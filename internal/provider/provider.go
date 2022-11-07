@@ -98,6 +98,8 @@ func New(version string) func() *schema.Provider {
 				"ixapi_role_assignment":      datasources.NewRoleAssignmentDataSource(),
 				"ixapi_pops":                 datasources.NewPopsDataSource(),
 				"ixapi_pop":                  datasources.NewPopDataSource(),
+				"ixapi_ports":                datasources.NewPortsDataSource(),
+				"ixapi_port":                 datasources.NewPortDataSource(),
 
 				"ixapi_network_features_route_server": datasources.NewNetworkFeaturesRouteServerDataSource(),
 				"ixapi_network_feature_route_server":  datasources.NewNetworkFeatureRouteServerDataSource(),
