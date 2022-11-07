@@ -100,6 +100,8 @@ func New(version string) func() *schema.Provider {
 				"ixapi_pop":                  datasources.NewPopDataSource(),
 				"ixapi_ports":                datasources.NewPortsDataSource(),
 				"ixapi_port":                 datasources.NewPortDataSource(),
+				"ixapi_port_reservations":    datasources.NewPortReservationsDataSource(),
+				"ixapi_port_reservation":     datasources.NewPortReservationDataSource(),
 
 				"ixapi_network_features_route_server": datasources.NewNetworkFeaturesRouteServerDataSource(),
 				"ixapi_network_feature_route_server":  datasources.NewNetworkFeatureRouteServerDataSource(),
