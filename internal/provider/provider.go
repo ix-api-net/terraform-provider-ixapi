@@ -135,6 +135,8 @@ func New(version string) func() *schema.Provider {
 				"ixapi_account": resources.NewAccountResource(),
 				"ixapi_mac":     resources.NewMACResource(),
 
+				"ixapi_port_reservation": resources.NewPortReservationResource(),
+
 				"ixapi_member_joining_rule_allow": resources.NewMemberJoiningRuleAllowResource(),
 				"ixapi_member_joining_rule_deny":  resources.NewMemberJoiningRuleDenyResource(),
 

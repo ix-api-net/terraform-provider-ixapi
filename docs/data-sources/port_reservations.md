@@ -3,12 +3,12 @@
 page_title: "ixapi_port_reservations Data Source - terraform-provider-ixapi"
 subcategory: ""
 description: |-
-  Use this data source to query for port reservations. Use the ixapi_port_reservation resource to reference and change port reservations of a connection. You can use the ixapi_port_reservation resource to import a port reservation, from a connection by passing a port_index.
+  Use this data source to query for port reservations. Use the ixapi_port_reservation resource to reference and change port reservations of a connection. You can use the ixapi_port_reservation resource to import a port reservation, from a connection by passing a port_num. In most cases you will most likely use the port reservation resource instead of the data source.
 ---
 
 # ixapi_port_reservations (Data Source)
 
-Use this data source to query for port reservations. Use the `ixapi_port_reservation` resource to reference and change port reservations of a connection. You can use the `ixapi_port_reservation` **resource** to import a port reservation, from a connection by passing a `port_index`.
+Use this data source to query for port reservations. Use the `ixapi_port_reservation` resource to reference and change port reservations of a connection. You can use the `ixapi_port_reservation` **resource** to import a port reservation, from a connection by passing a `port_num`. In most cases you will most likely use the port reservation resource instead of the data source.
 
 
 

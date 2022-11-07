@@ -59,7 +59,7 @@ func fetchConnectionPortReservations(
 func portReservationRequestFromResourceData(
 	r *schema.ResourceData,
 ) (*ixapi.PortReservationRequest, error) {
-	res := schemas.ResourceData{ResourceData: r}
+	res := schemas.ResourceDataFrom(r)
 	req := &ixapi.PortReservationRequest{
 		PurchaseOrder:        res.GetStringOpt("purchase_order"),
 		ContractRef:          res.GetStringOpt("contract_ref"),
@@ -69,6 +69,39 @@ func portReservationRequestFromResourceData(
 		CrossConnectID:       res.GetStringOpt("cross_connect_id"),
 		Connection:           res.GetString("connection"),
 	}
+	return req, nil
+}
+
+// Make a port reservation patch from resource data
+func portReservationPatchFromResourceData(
+	r *schema.ResourceData,
+) (*ixapi.PortReservationPatch, error) {
+	res := schemas.ResourceDataFrom(r)
+	req := &ixapi.PortReservationPatch{}
+
+	if res.HasChange("external_ref") {
+		req.ExternalRef = res.GetStringOpt("external_ref")
+	}
+
+	// It feels a bit off, that the following fields are
+	// updateable, but the API specs allow this.
+	// I guess the API will respond with an error in most of the times here.
+	if res.HasChange("purchase_order") {
+		req.PurchaseOrder = res.GetStringOpt("purchase_order")
+	}
+	if res.HasChange("contract_ref") {
+		req.ContractRef = res.GetStringOpt("contract_ref")
+	}
+	if res.HasChange("subscriber_side_demarc") {
+		req.SubscriberSideDemarc = res.GetStringOpt("subscriber_side_demarc")
+	}
+	if res.HasChange("connecting_party") {
+		req.ConnectingParty = res.GetStringOpt("connecting_party")
+	}
+	if res.HasChange("cross_connect_id") {
+		req.CrossConnectID = res.GetStringOpt("cross_connect_id")
+	}
+
 	return req, nil
 }
 
@@ -117,6 +150,18 @@ func portReservationRead(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) error {
+	id := res.Id()
+	reservation, err := api.PortReservationsRead(ctx, id)
+	if err != nil && ixapi.IsErrNotFound(err) {
+		res.SetId("") // Port reservation is gone
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if err := schemas.SetResourceData(reservation, res); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -127,7 +172,25 @@ func portReservationUpdate(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) error {
-	return nil
+	if res.HasChange("port_num") {
+		return fmt.Errorf(
+			"The `port_num` property can not be updated, you need to create a new resource")
+	}
+	if res.HasChange("connection") {
+		return fmt.Errorf(
+			"The `connection` can not be changed, you need to create a new resource")
+	}
+
+	// Make patch from resource data
+	patch, err := portReservationPatchFromResourceData(res)
+	if err != nil {
+		return err
+	}
+	_, err = api.PortReservationsPatch(ctx, res.Id(), patch)
+	if err != nil {
+		return err
+	}
+	return portReservationRead(ctx, res, api)
 }
 
 // Destroy a port reservation
@@ -136,5 +199,9 @@ func portReservationDelete(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) error {
-	return nil
+	_, err := api.PortReservationsDestroy(ctx, res.Id(), nil)
+	if err != nil {
+		return err
+	}
+	return portReservationRead(ctx, res, api)
 }
