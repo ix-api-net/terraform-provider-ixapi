@@ -34,7 +34,7 @@ func NewPortsDataSource() *schema.Resource {
 				"Filter by device"),
 			"speed": schemas.DataSourceQueryInt(
 				"Filter by speed"),
-			"connection": schemas.DataSourceQuery(
+			"network_connection": schemas.DataSourceQuery(
 				"Filter by connection"),
 			"ports": schemas.IntoDataSourceResultsSchema(
 				schemas.PortSchema()),
@@ -53,7 +53,7 @@ func portsQuery(res *schema.ResourceData) *ixapi.PortsListQuery {
 	externalRef, hasExternalRef := res.GetOk("external_ref")
 	device, hasDevice := res.GetOk("device")
 	speed, hasSpeed := res.GetOk("speed")
-	connection, hasConnection := res.GetOk("connection")
+	connection, hasConnection := res.GetOk("network_connection")
 
 	if hasState {
 		qry.State = state.(string)

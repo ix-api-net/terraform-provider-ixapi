@@ -17,8 +17,8 @@ Use this data source to query for port reservations. Use the `ixapi_port_reserva
 
 ### Optional
 
-- `connection` (String) Filter by connection
 - `external_ref` (String) Filter by external ref
+- `network_connection` (String) Filter by connection
 - `port` (String) Filter by port
 - `port_reservations` (Block List) (see [below for nested schema](#nestedblock--port_reservations))
 - `state` (String) Filter by states like `production`, `allocated`, `testing`.

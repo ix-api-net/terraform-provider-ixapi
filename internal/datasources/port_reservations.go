@@ -18,7 +18,7 @@ func NewPortReservationsDataSource() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"state": schemas.DataSourceQuery(
 				"Filter by states like `production`, `allocated`, `testing`."),
-			"connection": schemas.DataSourceQuery(
+			"network_connection": schemas.DataSourceQuery(
 				"Filter by connection"),
 			"port": schemas.DataSourceQuery(
 				"Filter by port"),
@@ -35,7 +35,7 @@ func portReservationsQuery(res *schema.ResourceData) *ixapi.PortReservationsList
 	qry := &ixapi.PortReservationsListQuery{}
 
 	state, hasState := res.GetOk("state")
-	connection, hasConnection := res.GetOk("connection")
+	connection, hasConnection := res.GetOk("network_connection")
 	port, hasPort := res.GetOk("port")
 	externalRef, hasExternalRef := res.GetOk("external_ref")
 

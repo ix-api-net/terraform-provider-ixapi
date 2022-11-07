@@ -17,13 +17,13 @@ Use this data source to query for a set of ports. You can filter by `pop`, `medi
 
 ### Optional
 
-- `connection` (String) Filter by connection
 - `consuming_account` (String) Filter by id of the account using the port
 - `device` (String) Filter by device
 - `external_ref` (String) Filter by external reference
 - `managing_account` (String) Filter by id of account managing the port
 - `media_type` (String) Filter ports by media type
 - `name` (String) Filter by name of the port
+- `network_connection` (String) Filter by connection
 - `pop` (String) Filter by Point Of Presence
 - `ports` (Block List) (see [below for nested schema](#nestedblock--ports))
 - `speed` (Number) Filter by speed

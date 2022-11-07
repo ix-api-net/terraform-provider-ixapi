@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"fmt"
+	"sort"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -38,7 +39,7 @@ func fetchConnectionPortReservations(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) ([]string, error) {
-	connection := res.Get("connection").(string)
+	connection := res.Get("network_connection").(string)
 	for {
 		// Check if the context is still valid
 		if err := ctx.Err(); err != nil {
@@ -49,7 +50,9 @@ func fetchConnectionPortReservations(
 			return nil, err
 		}
 		if len(conn.PortReservations) >= conn.PortQuantity {
-			return conn.PortReservations, nil
+			reservations := conn.PortReservations
+			sort.Strings(reservations) // Ensure determinism
+			return reservations, nil
 		}
 		time.Sleep(30 * time.Second)
 	}
@@ -67,7 +70,7 @@ func portReservationRequestFromResourceData(
 		SubscriberSideDemarc: res.GetStringOpt("subscriber_side_demarc"),
 		ConnectingParty:      res.GetStringOpt("connecting_party"),
 		CrossConnectID:       res.GetStringOpt("cross_connect_id"),
-		Connection:           res.GetString("connection"),
+		Connection:           res.GetString("network_connection"),
 	}
 	return req, nil
 }
@@ -176,9 +179,9 @@ func portReservationUpdate(
 		return fmt.Errorf(
 			"The `port_num` property can not be updated, you need to create a new resource")
 	}
-	if res.HasChange("connection") {
+	if res.HasChange("network_connection") {
 		return fmt.Errorf(
-			"The `connection` can not be changed, you need to create a new resource")
+			"The `network_connection` can not be changed, you need to create a new resource")
 	}
 
 	// Make patch from resource data
