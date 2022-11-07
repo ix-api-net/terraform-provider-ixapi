@@ -13,7 +13,7 @@ import (
 // port reservations.
 func NewPortReservationsDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use this data source to query for port reservations. Use the `ixapi_port_reservation` resource to reference and change port reservations of a connection. You can use the `ixapi_port_reservation` **resource** to import a port reservation, from a connection by passing a `port_index`.",
+		Description: "Use this data source to query for port reservations. Use the `ixapi_port_reservation` resource to reference and change port reservations of a connection. You can use the `ixapi_port_reservation` **resource** to import a port reservation, from a connection by passing a `port_index`. In most cases you will most likely use the port reservation resource instead of the data source.",
 		ReadContext: crud.Read(portReservationsRead),
 		Schema: map[string]*schema.Schema{
 			"state": schemas.DataSourceQuery(
@@ -82,7 +82,7 @@ func portReservationsRead(
 // retrieving a port reservation identified by ID.
 func NewPortReservationDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `ixapi_port_reservation` data source to retrieve a port reservation by ID.",
+		Description: "Use the `ixapi_port_reservation` data source to retrieve a port reservation by ID. In most usecases consider using the `ixapi_port_reservation` resource.",
 		ReadContext: crud.Read(portReservationRead),
 		Schema: schemas.IntoDataSourceSchema(
 			schemas.PortReservationSchema(),
