@@ -50,16 +50,16 @@ locals {
   impl = data.ixapi_role_assignment.impl.id
 }
 
-# Create connection with 4 ports
+# Create connection with 2 ports
 resource "ixapi_connection" "fra1" {
   product_offering = local.product
   managing_account = local.reseller
   consuming_account = local.reseller
   billing_account = local.reseller
   role_assignments = [ local.impl ]
-  subscriber_side_demarcs = [ "patch-20-49-1", "patch-20-49-2" ]
+  subscriber_side_demarcs = [ "f23.20.49.1", "f23.20.49.2" ]
   mode = "lag_lacp"
-  port_quantity = 4
+  port_quantity = 2
 }
 
 output "connection" {
