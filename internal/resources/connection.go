@@ -51,36 +51,51 @@ func connectionPatchFromResourceData(
 ) (*ixapi.ConnectionPatch, error) {
 	res := schemas.ResourceDataFrom(r)
 	req := &ixapi.ConnectionPatch{}
+	hasChange := false
 
 	if res.HasChange("managing_account") {
 		req.ManagingAccount = res.GetStringOpt("managing_account")
+		hasChange = true
 	}
 	if res.HasChange("consuming_account") {
 		req.ConsumingAccount = res.GetStringOpt("consuming_account")
+		hasChange = true
 	}
 	if res.HasChange("billing_account") {
 		req.BillingAccount = res.GetStringOpt("billing_account")
+		hasChange = true
 	}
 	if res.HasChange("external_ref") {
 		req.ExternalRef = res.GetStringOpt("external_ref")
+		hasChange = true
 	}
 	if res.HasChange("contract_ref") {
 		req.ContractRef = res.GetStringOpt("contract_ref")
+		hasChange = true
 	}
 	if res.HasChange("purchase_order") {
 		req.PurchaseOrder = res.GetStringOpt("purchase_order")
+		hasChange = true
 	}
 	if res.HasChange("role_assignments") {
 		req.RoleAssignments = res.GetStringList("role_assignments")
+		hasChange = true
 	}
 	if res.HasChange("mode") {
 		req.Mode = res.GetStringOpt("mode")
+		hasChange = true
 	}
 	if res.HasChange("lacp_timeout") {
 		req.LacpTimeout = res.GetStringOpt("lacp_timeout")
+		hasChange = true
 	}
 	if res.HasChange("product_offering") {
 		req.ProductOffering = res.GetStringOpt("product_offering")
+		hasChange = true
+	}
+
+	if !hasChange {
+		return nil, nil
 	}
 
 	return req, nil
@@ -136,6 +151,11 @@ func connectionUpdate(
 	if err != nil {
 		return err
 	}
+	if patch == nil {
+		// Nothing to do for us here
+		return nil
+	}
+
 	if _, err := api.ConnectionsPatch(ctx, res.Id(), patch); err != nil {
 		return err
 	}

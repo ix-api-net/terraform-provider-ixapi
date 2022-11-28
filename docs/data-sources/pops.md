@@ -24,7 +24,7 @@ data "ixapi_pops" "fac1" {
 
 ### Optional
 
-- `faciltiy` (String) Filter by facility id, see facilities data source
+- `facility` (String) Filter by facility id, see facilities data source
 - `metro_area_network` (String) Filter by metro area network id, see related data source
 - `pops` (Block List) (see [below for nested schema](#nestedblock--pops))
 

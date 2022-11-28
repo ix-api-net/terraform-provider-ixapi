@@ -40,6 +40,7 @@ data "ixapi_metro_area" "fra" {
 - `facilities` (Block List) (see [below for nested schema](#nestedblock--facilities))
 - `metro_area` (String) Filter facilities by metro area ID
 - `metro_area_network` (String) Filter by metro are network ID
+- `name` (String) Filter by name
 - `organisation_name` (String) Filter by name of the organisation operating the facility
 - `peeringdb_facility_id` (Number) Filter byu peeringdb id
 - `postal_code` (String) Filter by postal code of the facilitie's address

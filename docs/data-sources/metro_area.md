@@ -15,7 +15,7 @@ Use the `metro_area` datasource to retrieve a metro area by un_locode or iata_co
 ```terraform
 # Get metro area using IATA code
 data "ixapi_metro_area" "fra" {
-  iata = "FRA"
+  iata_code = "FRA"
 }
 
 # Get the metro area using an UN LOCODE
