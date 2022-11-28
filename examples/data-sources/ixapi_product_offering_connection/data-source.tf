@@ -1,9 +1,26 @@
 
-# For now only trying to resolve an unique product offering
-# by name is supported. If the name is not unique, you
-# may resort to the ID or use the `ixapi_product_offerings_connection`
-# data-source with additional filter criteria.
-data "ixapi_product_offering_connection" "conn" {
-  name = "IXP-Global-Connect-10000 Hamburg DC-19"
+# Get a connection product offering in order to participate
+# in the metro area network fra1 from the 'Multi-Tiered Data DC41'
+# datacenter.
+data "ixapi_metro_area_network" "fra" {
+  name = "fra1"  
+}
+
+data "ixapi_facility" "dc1" {
+  name = "Multi-Tiered Data DC41"
+}
+
+data "ixapi_pop" "dc1_fra1" {
+  facility = data.ixapi_facility.dc1.id
+  metro_area_network = data.ixapi_metro_area_network.fra.id
+}
+
+data "ixapi_product_offering_connection" "dc1_fra" {
+  handover_pop = data.ixapi_pop.dc1_fra1.id
+  cross_connect_initiator = "exchange"
+}
+
+output "product_offering" {
+  value = data.ixapi_product_offering_connection.dc1_fra
 }
 
