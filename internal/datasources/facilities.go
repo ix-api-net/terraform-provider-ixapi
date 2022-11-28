@@ -2,9 +2,11 @@ package datasources
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/crud"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
@@ -14,7 +16,7 @@ import (
 func NewFacilitiesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the data source to fetch a list of facilities",
-		ReadContext: facilitiesRead,
+		ReadContext: crud.Read(facilitiesRead),
 		Schema: map[string]*schema.Schema{
 			"metro_area": schemas.DataSourceQuery(
 				"Filter facilities by metro area ID"),
@@ -30,6 +32,8 @@ func NewFacilitiesDataSource() *schema.Resource {
 				"Filter by name of the organisation operating the facility"),
 			"peeringdb_facility_id": schemas.DataSourceQueryInt(
 				"Filter byu peeringdb id"),
+			"name": schemas.DataSourceQuery(
+				"Filter by name"),
 			"facilities": schemas.IntoDataSourceResultsSchema(
 				schemas.FacilitySchema(),
 			),
@@ -37,15 +41,12 @@ func NewFacilitiesDataSource() *schema.Resource {
 	}
 }
 
-// Operations
-
-func facilitiesRead(
+// Fetch facilities from API
+func fetchFacilities(
 	ctx context.Context,
 	res *schema.ResourceData,
-	meta any,
-) diag.Diagnostics {
-	api := meta.(*ixapi.Client)
-
+	api *ixapi.Client,
+) ([]*ixapi.Facility, error) {
 	// Filters
 	metroArea, hasMetroArea := res.GetOk("metro_area")
 	metroAreaNetwork, hasMetroAreaNetwork := res.GetOk("metro_area_network")
@@ -54,9 +55,14 @@ func facilitiesRead(
 	postalCode, hasPostalCode := res.GetOk("postal_code")
 	organisationName, hasOrganisationName := res.GetOk("organisation_name")
 	pdbFacilityID, hasPdbFacilityID := res.GetOk("peeringdb_facility_id")
+	id, hasID := res.GetOk("id")
+	name, hasName := res.GetOk("name")
 
 	// Query
 	qry := &ixapi.FacilitiesListQuery{}
+	if hasID {
+		qry.ID = []string{id.(string)}
+	}
 	if hasMetroArea {
 		qry.MetroArea = metroArea.(string)
 	}
@@ -76,33 +82,54 @@ func facilitiesRead(
 		qry.OrganisationName = organisationName.(string)
 	}
 
+	// Fetch from API
 	result, err := api.FacilitiesList(ctx, qry)
 	if err != nil {
-		return diag.FromErr(err)
+		return nil, err
 	}
 
 	// Local additional filters
 	filtered := make([]*ixapi.Facility, 0, len(result))
 	for _, fac := range result {
+		// Just to be sure, in case IXPs are incomplete in their
+		// filter implementation, we filter by ID if present.
+		if hasID && fac.ID != id.(string) {
+			continue
+		}
 		if hasPdbFacilityID && fac.PeeringdbFacilityID == nil {
 			continue
 		}
 		if hasPdbFacilityID && *fac.PeeringdbFacilityID != pdbFacilityID.(int) {
 			continue
 		}
+		if hasName && strings.ToLower(fac.Name) != strings.ToLower(name.(string)) {
+			continue
+		}
 		filtered = append(filtered, fac)
 	}
+	return filtered, nil
+}
 
-	facilities, err := schemas.FlattenModels(filtered)
+// Operations
+func facilitiesRead(
+	ctx context.Context,
+	res *schema.ResourceData,
+	api *ixapi.Client,
+) error {
+	result, err := fetchFacilities(ctx, res, api)
 	if err != nil {
-		return diag.FromErr(err)
+		return err
+	}
+
+	facilities, err := schemas.FlattenModels(result)
+	if err != nil {
+		return err
 	}
 
 	if err := res.Set("facilities", facilities); err != nil {
-		return diag.FromErr(err)
+		return err
 	}
 	res.SetId(schemas.Timestamp())
-
 	return nil
 }
 
@@ -111,7 +138,7 @@ func facilitiesRead(
 func NewFacilityDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use this data source to get a specific facility",
-		ReadContext: facilityRead,
+		ReadContext: crud.Read(facilityRead),
 		Schema: schemas.IntoDataSourceSchema(
 			schemas.FacilitySchema(),
 		),
@@ -122,51 +149,25 @@ func NewFacilityDataSource() *schema.Resource {
 func facilityRead(
 	ctx context.Context,
 	res *schema.ResourceData,
-	meta any,
-) diag.Diagnostics {
-	api := meta.(*ixapi.Client)
-
+	api *ixapi.Client,
+) error {
 	// Filters
-	id, hasID := res.GetOk("id")
-	name, hasName := res.GetOk("name")
-	pdbFacilityID, hasPdbFacilityID := res.GetOk("peeringdb_facility_id")
-
-	// Query
-	qry := &ixapi.FacilitiesListQuery{}
-	if hasID {
-		qry.ID = []string{id.(string)}
-	}
-	result, err := api.FacilitiesList(ctx, qry)
+	results, err := fetchFacilities(ctx, res, api)
 	if err != nil {
-		return diag.FromErr(err)
+		return err
+	}
+	if len(results) == 0 {
+		return fmt.Errorf("A facility could not be found")
+	}
+	if len(results) > 1 {
+		return fmt.Errorf("Multiple facilities were returned")
 	}
 
-	// Local additional filters
-	filtered := make([]*ixapi.Facility, 0, len(result))
-	for _, fac := range result {
-		if hasName && fac.Name != name.(string) {
-			continue
-		}
-		if hasPdbFacilityID && fac.PeeringdbFacilityID == nil {
-			continue
-		}
-		if hasPdbFacilityID && *fac.PeeringdbFacilityID != pdbFacilityID.(int) {
-			continue
-		}
-		filtered = append(filtered, fac)
+	facility := results[0]
+	if err := schemas.SetResourceData(facility, res); err != nil {
+		return err
 	}
-
-	if len(filtered) == 0 {
-		return diag.Errorf("a facility could not be found")
-	}
-	if len(filtered) > 1 {
-		return diag.Errorf("multiple facilities were returned")
-	}
-
-	if err := schemas.SetResourceData(filtered[0], res); err != nil {
-		return diag.FromErr(err)
-	}
-	res.SetId(filtered[0].ID)
+	res.SetId(facility.ID)
 
 	return nil
 }

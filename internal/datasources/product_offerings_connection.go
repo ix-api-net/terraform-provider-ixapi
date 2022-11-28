@@ -33,6 +33,8 @@ func NewProductOfferingsConnectionDataSource() *schema.Resource {
 				"Find connection product offerings where downgrade is allowed"),
 			"upgrade_allowed": schemas.DataSourceQueryBool(
 				"Find connection product offerings where upgrade is allowed"),
+			"cross_connect_initiator": schemas.DataSourceQuery(
+				"Filter by cross connect initiator"),
 			"product_offerings": schemas.IntoDataSourceResultsSchema(
 				schemas.ConnectionProductOfferingSchema()),
 		},
@@ -95,18 +97,31 @@ func productOfferingsConnectionQuery(
 
 func fetchProductOfferingsConnection(
 	ctx context.Context,
+	res *schema.ResourceData,
 	api *ixapi.Client,
-	qry *ixapi.ProductOfferingsListQuery,
 ) ([]*ixapi.ConnectionProductOffering, error) {
+	// Query
+	qry := productOfferingsConnectionQuery(res)
 	offerings, err := api.ProductOfferingsList(ctx, qry)
 	if err != nil {
 		return nil, err
 	}
+
+	// Apply additional filters
+	cci, hasCci := res.GetOk("cross_connect_initiator")
+	hop, hasHop := res.GetOk("handover_pop")
+
 	cpos := make([]*ixapi.ConnectionProductOffering, 0, len(offerings))
 	for _, off := range offerings {
 		c, ok := off.(*ixapi.ConnectionProductOffering)
 		if !ok {
 			continue // should not happen on well behaved servers
+		}
+		if hasCci && c.CrossConnectInitiator != cci.(string) {
+			continue
+		}
+		if hasHop && c.HandoverPop != nil && *c.HandoverPop != hop.(string) {
+			continue
 		}
 		cpos = append(cpos, c)
 	}
@@ -119,8 +134,7 @@ func productOfferingsConnectionRead(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) error {
-	qry := productOfferingsConnectionQuery(res)
-	offerings, err := fetchProductOfferingsConnection(ctx, api, qry)
+	offerings, err := fetchProductOfferingsConnection(ctx, res, api)
 	if err != nil {
 		return err
 	}
@@ -139,7 +153,7 @@ func productOfferingsConnectionRead(
 // offering by ID or by name.
 func NewProductOfferingConnectionDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `ixapi_product_offering_connection` data source to select a specific product offering by ID or name",
+		Description: "Use the `ixapi_product_offering_connection` data source to select a specific product offering by ID or a combination of attributes that match an unique product offering.",
 
 		ReadContext: crud.Read(productOfferingConnectionRead),
 
@@ -155,7 +169,6 @@ func productOfferingConnectionRead(
 	api *ixapi.Client,
 ) error {
 	id, hasID := res.GetOk("id")
-	name, hasName := res.GetOk("name")
 	var offering *ixapi.ConnectionProductOffering
 	if hasID && id.(string) != "" {
 		result, err := api.ProductOfferingsRead(ctx, id.(string))
@@ -169,12 +182,8 @@ func productOfferingConnectionRead(
 				result.PolymorphicType())
 		}
 		offering = po
-	} else if hasName && name.(string) != "" {
-		qry := &ixapi.ProductOfferingsListQuery{
-			Type: ixapi.ConnectionProductOfferingType,
-			Name: name.(string),
-		}
-		offerings, err := fetchProductOfferingsConnection(ctx, api, qry)
+	} else {
+		offerings, err := fetchProductOfferingsConnection(ctx, res, api)
 		if err != nil {
 			return err
 		}
@@ -185,9 +194,6 @@ func productOfferingConnectionRead(
 			return fmt.Errorf("The query did not return an unique connection product offering")
 		}
 		offering = offerings[0]
-	} else {
-		return fmt.Errorf(
-			"Insufficient identifiers provided for product offering")
 	}
 
 	if err := schemas.SetResourceData(offering, res); err != nil {
