@@ -1,9 +1,11 @@
-# 1.0.0 (TBA)
+# 0.3.0 (2022-12-06)
 
  * Improved documentation and examples
 
  * Improved filtering for data-sources `ixapi_connection`,
    `ixapi_facility` and `ixapi_pop`
+
+ * Updated schemas and ixapi-client to spec 2.4.2
 
 # 0.2.0 (2022-11-07)
 
