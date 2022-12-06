@@ -11,7 +11,7 @@ import (
 //
 
 // SchemaVersion is the version of the IX-API schema
-const SchemaVersion = "2.4.1"
+const SchemaVersion = "2.4.2"
 
 // CancellationPolicySchema is the terraform schema for the model
 func CancellationPolicySchema() map[string]*schema.Schema {
@@ -195,6 +195,13 @@ func CloudNetworkProductOfferingSchema() map[string]*schema.Schema {
 		},
 
 		"service_provider_pop": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "The datacenter id of the partner NNI to the service provider. It supposed to be used when identifying a location via the cloud provider's APIs. ",
+		},
+
+		"service_provider_pop_name": &schema.Schema{
 			Type:        schema.TypeString,
 			Optional:    true,
 			Computed:    true,
@@ -3279,15 +3286,17 @@ func MacAddressSchema() map[string]*schema.Schema {
 		},
 
 		"valid_not_before": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "When a mac address is assigned to a NSC, and the current datetime is before this value, then the MAC address *cannot* be used on the peering platform.  Afterwards, it is supposed to be available. If the value is `null` or the property does not exist, the mac address is valid from the creation date.",
 		},
 
 		"valid_not_after": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "When a mac address is assigned to an NSC, and the current datetime is before this value, the MAC address *can* be used on the peering platform.  Afterwards, it is supposed to be unassigned from the NSC and cannot any longer be used on the peering platform.  If the value is null or the property does not exist, the MAC address is valid indefinitely. The value may not be in the past.",
 		},
 
 		"id": &schema.Schema{
@@ -3484,16 +3493,17 @@ func CloudNetworkServiceSchema() map[string]*schema.Schema {
 			Description: "An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*",
 		},
 
-		"cloud_key": &schema.Schema{
-			Type:     schema.TypeString,
-			Required: true,
-		},
-
 		"capacity": &schema.Schema{
 			Type:        schema.TypeInt,
 			Optional:    true,
 			Computed:    true,
 			Description: "The capacity of the service in Mbps. When null, the maximum capacity will be used.",
+		},
+
+		"cloud_key": &schema.Schema{
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The cloud key is used to specify to which user or existing circuit of a cloud provider this `network-service` should be provisioned.  For example, for a provider like *AWS*, this would be the *account number* (Example: `123456789876`), or for a provider like Azure, this would be the service key (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)",
 		},
 
 		"state": &schema.Schema{
