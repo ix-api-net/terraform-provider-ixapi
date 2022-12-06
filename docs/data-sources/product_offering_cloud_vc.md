@@ -45,7 +45,8 @@ data "ixapi_product_offering_cloud_vc" "instant_lon1" {
 - `service_metro_area_network` (String) Id of the `MetroAreaNetwork`. The service is directly provided on the metro area network.  In case of a `p2p_vc`, the `service_metro_area_network` refers to the B-side of the point-to-point connection. The B-side is the accepting party.
 - `service_provider` (String) The name of the provider providing the service.
 - `service_provider_logo` (String) An URI referencing the logo of the service provider.
-- `service_provider_pop` (String) The datacenter description of the partner NNI to the service provider.
+- `service_provider_pop` (String) The datacenter id of the partner NNI to the service provider. It supposed to be used when identifying a location via the cloud provider's APIs.
+- `service_provider_pop_name` (String) The datacenter description of the partner NNI to the service provider.
 - `service_provider_region` (String) The service provider offers the network service for a specific region.
 - `service_provider_workflow` (String) When the workflow is `provider_first` the subscriber creates a circuit with the cloud provider and provides a `cloud_key` for filtering the product-offerings.  If the workflow is `exchange_first` the IX will create the cloud circuit on the provider side.
 - `upgrade_allowed` (Boolean) Indicates if the service can be migrated to a higher bandwidth.

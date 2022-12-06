@@ -20,7 +20,7 @@ Get a cloud virtual circuit network service by ID
 - `billing_account` (String) An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*
 - `capacity` (Number) The capacity of the service in Mbps. When null, the maximum capacity will be used.
 - `charged_until` (String) The service continues incurring charges until this date. Typically `≥ decommission_at`.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.  *(Sensitive Property)*
-- `cloud_key` (String)
+- `cloud_key` (String) The cloud key is used to specify to which user or existing circuit of a cloud provider this `network-service` should be provisioned.  For example, for a provider like *AWS*, this would be the *account number* (Example: `123456789876`), or for a provider like Azure, this would be the service key (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)
 - `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
 - `contract_ref` (String) A reference to a contract. If no specific contract is used, a default MAY be chosen by the implementer. *(Sensitive Property)*
 - `current_billing_start_date` (String) Your obligation to pay for the service will start on this date.  However, this date may change after an upgrade and not reflect the inital start date of the service.  *(Sensitive Property)*

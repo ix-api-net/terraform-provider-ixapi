@@ -18,7 +18,7 @@ Use the `ixapi_network_service_cloud_vc` resource to create and manage a point t
 ### Required
 
 - `billing_account` (String) An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*
-- `cloud_key` (String)
+- `cloud_key` (String) The cloud key is used to specify to which user or existing circuit of a cloud provider this `network-service` should be provisioned.  For example, for a provider like *AWS*, this would be the *account number* (Example: `123456789876`), or for a provider like Azure, this would be the service key (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)
 - `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
 - `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
 - `product_offering` (String)

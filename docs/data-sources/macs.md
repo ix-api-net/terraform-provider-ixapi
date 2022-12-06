@@ -45,8 +45,8 @@ Optional:
 - `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
 - `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
-- `valid_not_after` (String)
-- `valid_not_before` (String)
+- `valid_not_after` (String) When a mac address is assigned to an NSC, and the current datetime is before this value, the MAC address *can* be used on the peering platform.  Afterwards, it is supposed to be unassigned from the NSC and cannot any longer be used on the peering platform.  If the value is null or the property does not exist, the MAC address is valid indefinitely. The value may not be in the past.
+- `valid_not_before` (String) When a mac address is assigned to a NSC, and the current datetime is before this value, then the MAC address *cannot* be used on the peering platform.  Afterwards, it is supposed to be available. If the value is `null` or the property does not exist, the mac address is valid from the creation date.
 
 Read-Only:
 
