@@ -70,7 +70,7 @@ type Polymorphic interface {
 type Response interface{}
 
 // SchemaVersion is the version of the ix-api schema
-const SchemaVersion = "2.4.1"
+const SchemaVersion = "2.4.2"
 
 // AuthToken AuthToken
 type AuthToken struct {
@@ -231,9 +231,15 @@ type CloudNetworkProductOffering struct {
 	//
 	ServiceProviderRegion string `json:"service_provider_region,omitempty"`
 
-	// ServiceProviderPop The datacenter description of the partner NNI to the service provider.
+	// ServiceProviderPop The datacenter id of the partner NNI to the service provider.
+	// It supposed to be used when identifying a location via
+	// the cloud provider's APIs.
 	//
 	ServiceProviderPop string `json:"service_provider_pop,omitempty"`
+
+	// ServiceProviderPopName The datacenter description of the partner NNI to the service provider.
+	//
+	ServiceProviderPopName *string `json:"service_provider_pop_name,omitempty"`
 
 	// ServiceProviderWorkflow When the workflow is `provider_first` the subscriber creates
 	// a circuit with the cloud provider and provides a `cloud_key` for filtering
@@ -380,9 +386,15 @@ type CloudNetworkProductOfferingPatch struct {
 	//
 	ServiceProviderRegion *string `json:"service_provider_region,omitempty"`
 
-	// ServiceProviderPop The datacenter description of the partner NNI to the service provider.
+	// ServiceProviderPop The datacenter id of the partner NNI to the service provider.
+	// It supposed to be used when identifying a location via
+	// the cloud provider's APIs.
 	//
 	ServiceProviderPop *string `json:"service_provider_pop,omitempty"`
+
+	// ServiceProviderPopName The datacenter description of the partner NNI to the service provider.
+	//
+	ServiceProviderPopName *string `json:"service_provider_pop_name,omitempty"`
 
 	// ServiceProviderWorkflow When the workflow is `provider_first` the subscriber creates
 	// a circuit with the cloud provider and provides a `cloud_key` for filtering
@@ -5965,10 +5977,23 @@ type MacAddress struct {
 	//
 	Address string `json:"address,omitempty"`
 
-	// ValidNotBefore is a valid_not_before
+	// ValidNotBefore When a mac address is assigned to a NSC, and the current
+	// datetime is before this value, then the MAC address *cannot*
+	// be used on the peering platform.
+	//
+	// Afterwards, it is supposed to be available. If the value is
+	// `null` or the property does not exist, the mac address is
+	// valid from the creation date.
 	ValidNotBefore *time.Time `json:"valid_not_before,omitempty"`
 
-	// ValidNotAfter is a valid_not_after
+	// ValidNotAfter When a mac address is assigned to an NSC, and the current datetime
+	// is before this value, the MAC address *can* be used on the peering platform.
+	//
+	// Afterwards, it is supposed to be unassigned from the NSC and cannot
+	// any longer be used on the peering platform.
+	//
+	// If the value is null or the property does not exist, the MAC address
+	// is valid indefinitely. The value may not be in the past.
 	ValidNotAfter *time.Time `json:"valid_not_after,omitempty"`
 
 	// ID is a id
@@ -5997,10 +6022,23 @@ type MacAddressRequest struct {
 	//
 	Address string `json:"address,omitempty"`
 
-	// ValidNotBefore is a valid_not_before
+	// ValidNotBefore When a mac address is assigned to a NSC, and the current
+	// datetime is before this value, then the MAC address *cannot*
+	// be used on the peering platform.
+	//
+	// Afterwards, it is supposed to be available. If the value is
+	// `null` or the property does not exist, the mac address is
+	// valid from the creation date.
 	ValidNotBefore *time.Time `json:"valid_not_before,omitempty"`
 
-	// ValidNotAfter is a valid_not_after
+	// ValidNotAfter When a mac address is assigned to an NSC, and the current datetime
+	// is before this value, the MAC address *can* be used on the peering platform.
+	//
+	// Afterwards, it is supposed to be unassigned from the NSC and cannot
+	// any longer be used on the peering platform.
+	//
+	// If the value is null or the property does not exist, the MAC address
+	// is valid indefinitely. The value may not be in the past.
 	ValidNotAfter *time.Time `json:"valid_not_after,omitempty"`
 }
 
@@ -6308,9 +6346,6 @@ type CloudNetworkService struct {
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
-	// CloudKey is a cloud_key
-	CloudKey string `json:"cloud_key,omitempty"`
-
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
 	Capacity *int `json:"capacity,omitempty"`
@@ -6337,6 +6372,16 @@ type CloudNetworkService struct {
 	// meaning may vary between different cloud services.
 	//
 	ProviderRef string `json:"provider_ref,omitempty"`
+
+	// CloudKey The cloud key is used to specify to which user or
+	// existing circuit of a cloud provider this `network-service`
+	// should be provisioned.
+	//
+	// For example, for a provider like *AWS*, this would be the
+	// *account number* (Example: `123456789876`), or for a provider
+	// like Azure, this would be the service key
+	// (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)
+	CloudKey string `json:"cloud_key,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -6383,12 +6428,22 @@ type CloudNetworkServicePatch struct {
 	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
 
-	// CloudKey is a cloud_key
-	CloudKey *string `json:"cloud_key,omitempty"`
-
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
 	Capacity *int `json:"capacity,omitempty"`
+
+	// CloudKey The cloud key is used to specify to which user or
+	// existing circuit of a cloud provider this `network-service`
+	// should be provisioned.
+	//
+	// For example, for a provider like *AWS*, this would be the
+	// *account number* (Example: `123456789876`), or for a provider
+	// like Azure, this would be the service key
+	// (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)
+	//
+	// **Please note: *Any update to this field may be rejected if the
+	// service has successfully been provisioned*.**
+	CloudKey *string `json:"cloud_key,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -6435,12 +6490,19 @@ type CloudNetworkServiceRequest struct {
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
-	// CloudKey is a cloud_key
-	CloudKey string `json:"cloud_key,omitempty"`
-
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
 	Capacity *int `json:"capacity,omitempty"`
+
+	// CloudKey The cloud key is used to specify to which user or
+	// existing circuit of a cloud provider this `network-service`
+	// should be provisioned.
+	//
+	// For example, for a provider like *AWS*, this would be the
+	// *account number* (Example: `123456789876`), or for a provider
+	// like Azure, this would be the service key
+	// (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)
+	CloudKey string `json:"cloud_key,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -6487,12 +6549,22 @@ type CloudNetworkServiceUpdate struct {
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
 
-	// CloudKey is a cloud_key
-	CloudKey string `json:"cloud_key,omitempty"`
-
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
 	Capacity *int `json:"capacity,omitempty"`
+
+	// CloudKey The cloud key is used to specify to which user or
+	// existing circuit of a cloud provider this `network-service`
+	// should be provisioned.
+	//
+	// For example, for a provider like *AWS*, this would be the
+	// *account number* (Example: `123456789876`), or for a provider
+	// like Azure, this would be the service key
+	// (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)
+	//
+	// **Please note: *Any update to this field may be rejected if the
+	// service has successfully been provisioned*.**
+	CloudKey string `json:"cloud_key,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface

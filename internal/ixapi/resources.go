@@ -421,7 +421,7 @@ func (c *Client) FacilitiesRead(
 	ctx context.Context,
 	id string,
 
-) ([]*Facility, error) {
+) (*Facility, error) {
 
 	params := ""
 	if params != "" {
@@ -453,8 +453,8 @@ func (c *Client) FacilitiesRead(
 	// Success
 	if ret.StatusCode <= http.StatusAccepted {
 
-		res := []*Facility{}
-		if err := json.Unmarshal(body, &res); err != nil {
+		res := &Facility{}
+		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
 		return res, nil
@@ -6941,42 +6941,14 @@ func (c *Client) RolesList(
 	return nil, res
 }
 
-// RolesReadQuery has all query parameters for RolesRead
-type RolesReadQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
-
-	// Name is a name
-	Name string `json:"name,omitempty"`
-}
-
-// RawQuery creates a query string for RolesReadQuery
-func (r *RolesReadQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(r.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = r.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	return qry.Encode()
-}
-
 // RolesRead Get a single `Role`.
 func (c *Client) RolesRead(
 	ctx context.Context,
 	id string,
-	qry ...*RolesReadQuery,
+
 ) (*Role, error) {
 
 	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
 	if params != "" {
 		params = "?" + params
 	}
@@ -8977,9 +8949,6 @@ type MacsListQuery struct {
 	// Address is a address
 	Address string `json:"address,omitempty"`
 
-	// AssignedAt is a assigned_at
-	AssignedAt string `json:"assigned_at,omitempty"`
-
 	// ValidNotBefore is a valid_not_before
 	ValidNotBefore string `json:"valid_not_before,omitempty"`
 
@@ -9014,10 +8983,6 @@ func (m *MacsListQuery) RawQuery() string {
 	val = m.Address
 	if val != "" {
 		qry.Add("address", val)
-	}
-	val = m.AssignedAt
-	if val != "" {
-		qry.Add("assigned_at", val)
 	}
 	val = m.ValidNotBefore
 	if val != "" {
