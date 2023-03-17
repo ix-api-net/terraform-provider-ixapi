@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -15,6 +14,10 @@ import (
 
 // Configuration
 const (
+	// EnvAPIAuth selectes the authentication workflow.
+	// Choose `oauth2` for client credentials or use the `legacy`
+	// ix-api authentication.
+	EnvAPIAuth = "IX_API_AUTH"
 	// EnvAPIKey environment variable for the API key
 	// used by legacy auth.
 	EnvAPIKey = "IX_API_KEY"
@@ -25,6 +28,19 @@ const (
 	// the host implementing the API including the schema and
 	// version.
 	EnvAPIHost = "IX_API_HOST"
+	// EnvOAuth2TokenURL is the URL of the OAuth2 endpoint
+	EnvOAuth2TokenURL = "IX_API_OAUTH2_TOKEN_URL"
+	// EnvOAuth2Scopes is a comma separated list of scopes.
+	// Defaults to `ix-api`.
+	EnvOAuth2Scopes = "IX_API_OAUTH2_SCOPES"
+
+	// AuthLegacy is using the access token endpoint from the
+	// ix-api schema.
+	AuthLegacy = "legacy"
+
+	// AuthOAuth2 is using the OAuth2 token endpoint with
+	// a client credentials workflow.
+	AuthOAuth2 = "oauth2"
 )
 
 func init() {
@@ -49,26 +65,38 @@ func New(version string) func() *schema.Provider {
 				"auth": &schema.Schema{
 					Type:        schema.TypeString,
 					Optional:    true,
-					Default:     "legacy",
+					DefaultFunc: schema.EnvDefaultFunc(EnvAPIAuth, AuthLegacy),
 					Description: "Authentication schema used to log in to the API",
 				},
 				"api": &schema.Schema{
 					Type:        schema.TypeString,
 					Optional:    true,
 					Description: "API host, e.g. https://ixapi.myixp.example.com",
-					DefaultFunc: schema.EnvDefaultFunc(EnvAPIHost, nil),
+					DefaultFunc: schema.EnvDefaultFunc(EnvAPIHost, ""),
 				},
 				"api_key": &schema.Schema{
 					Type:        schema.TypeString,
 					Optional:    true,
-					DefaultFunc: schema.EnvDefaultFunc(EnvAPIKey, nil),
-					Description: "Legacy auth: api key",
+					DefaultFunc: schema.EnvDefaultFunc(EnvAPIKey, ""),
+					Description: "API key, can be used as OAuth2 client_id",
 				},
 				"api_secret": &schema.Schema{
 					Type:        schema.TypeString,
 					Optional:    true,
-					DefaultFunc: schema.EnvDefaultFunc(EnvAPISecret, nil),
-					Description: "Legacy auth: api secret",
+					DefaultFunc: schema.EnvDefaultFunc(EnvAPISecret, ""),
+					Description: "API secret, can be used as OAuth2 client_secret",
+				},
+				"oauth2_token_url": &schema.Schema{
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc(EnvOAuth2TokenURL, ""),
+					Description: "The URL of the token endpoint.",
+				},
+				"oauth2_scopes": &schema.Schema{
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc(EnvOAuth2Scopes, "ix-api"),
+					Description: "The OAuth2 scopes to request.",
 				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
@@ -169,31 +197,43 @@ func configure(
 	var diags diag.Diagnostics
 
 	// Get API credentials
-	host := os.Getenv(EnvAPIHost)
-	hostCfg, hasHostCfg := res.GetOk("api")
-	if hasHostCfg {
-		host = hostCfg.(string)
-	}
+	host := res.Get("api").(string)
 	if err := checkEnvConfig("api", host, EnvAPIHost); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
-	key := os.Getenv(EnvAPIKey)
-	keyCfg, hasKeyCfg := res.GetOk("api_key")
-	if hasKeyCfg {
-		key = keyCfg.(string)
-	}
+	key := res.Get("api_key").(string)
 	if err := checkEnvConfig("api_key", key, EnvAPIKey); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
-	secret := os.Getenv(EnvAPISecret)
-	secretCfg, hasSecretCfg := res.GetOk("api_secret")
-	if hasSecretCfg {
-		secret = secretCfg.(string)
-	}
+	secret := res.Get("api_secret").(string)
 	if err := checkEnvConfig("api_secret", secret, EnvAPISecret); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
+	}
+
+	var provider ixapi.AuthenticationProvider
+	auth := res.Get("auth").(string)
+	if auth == AuthLegacy {
+		provider = &ixapi.AuthAPIKeySecret{
+			Key:    key,
+			Secret: secret,
+		}
+	} else if auth == AuthOAuth2 {
+		tokenURL := res.Get("oauth2_token_url").(string)
+		if err := checkEnvConfig("oauth2_token_url", tokenURL, EnvOAuth2TokenURL); err != nil {
+			diags = append(diags, diag.FromErr(err)...)
+		}
+		scopes := strings.Split(res.Get("oauth2_scopes").(string), ",")
+		provider = &ixapi.OAuth2ClientCredentials{
+			Key:      key,
+			Secret:   secret,
+			Scopes:   scopes,
+			TokenURL: tokenURL,
+		}
+	} else {
+		diags = append(diag.FromErr(
+			fmt.Errorf("invalid authentication workflow: %s", auth)))
 	}
 
 	if diags.HasError() {
@@ -202,10 +242,7 @@ func configure(
 
 	// Create client and authenticate with legacy strategy
 	client := ixapi.NewClient(host)
-	if err := client.Authenticate(ctx, &ixapi.AuthAPIKeySecret{
-		Key:    key,
-		Secret: secret,
-	}); err != nil {
+	if err := client.Authenticate(ctx, provider); err != nil {
 		return nil, diag.FromErr(err)
 	}
 

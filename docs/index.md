@@ -29,6 +29,8 @@ provider "ixapi" {
 ### Optional
 
 - `api` (String) API host, e.g. https://ixapi.myixp.example.com
-- `api_key` (String) Legacy auth: api key
-- `api_secret` (String) Legacy auth: api secret
-- `auth` (String) Authentication schema used to log in to the API Defaults to `legacy`.
+- `api_key` (String) API key, can be used as OAuth2 client_id
+- `api_secret` (String) API secret, can be used as OAuth2 client_secret
+- `auth` (String) Authentication schema used to log in to the API
+- `oauth2_scopes` (String) The OAuth2 scopes to request.
+- `oauth2_token_url` (String) The URL of the token endpoint.
