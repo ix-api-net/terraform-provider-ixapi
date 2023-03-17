@@ -34,7 +34,8 @@ You can also use the environment variables:
  * `$IX_API_HOST`: The IX-API endpoint in the format: `https://<server>/api/v2`
  * `$IX_API_KEY`: The key provided by the exchange.
  * `$IX_API_SECRET`: Also provided by the exchange.
- * `$IX_API_
+ * `$IX_API_OAUTH2_TOKEN_URL`: The OAuth2 token endpoint.
+ * `$IX_API_OAUTH2_SCOPES`: A comma-separated list of OAuth2 scopes. (Optional)
 
 ### OAuth2
 
@@ -55,6 +56,63 @@ provider "ixapi" {
     oauth2_scopes = "ix-api"  # Optional
 }
 ```
+
+
+## Using The Provider
+
+The following examples illustrate basic usage.
+
+```hcl
+# Querying: Show all facilities in the metro area FRA
+data "ixapi_metro_area" "fra" {
+  iata_code = "FRA"  # Resolve metro area by IATA code
+}
+
+data "ixapi_facilities" "fra" {
+  metro_area = data.ixapi_metro_area.fra.id
+}
+
+output "facilities" {
+  value = data.ixapi_facilities.fra.facilities
+}
+
+data "ixapi_account" "reseller" {
+  external_ref = "demo_reseller"
+}
+```
+
+### Using Resources
+
+Create an account and add a contact.
+
+```hcl
+resource "ixapi_account" "hajnet" {
+  managing_account = data.ixapi_account.reseller.id
+  name = "hajnet"
+  address {
+    country = "DE"
+    locality = "Berlin"
+    postal_code = "11111"
+    street_address = "Straßenweg 11"
+  }
+}
+
+
+locals {
+  reseller_id = data.ixapi_account.reseller.id
+  customer_id = resource.ixapi_account.hajnet.id
+}
+
+resource "ixapi_contact" "hajnet_support" {
+  managing_account = local.reseller_id 
+  consuming_account = local.hajnet_id
+  roles = ["noc", "implementation" ]
+  email = "mail@example.com" 
+  telephone = "+0 42 1234567890"
+}
+
+```
+
 
 
 ## Development
