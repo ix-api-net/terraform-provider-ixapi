@@ -88,7 +88,8 @@ Create an account and add a contact.
 ```hcl
 resource "ixapi_account" "hajnet" {
   managing_account = data.ixapi_account.reseller.id
-  name = "Blåhaj Networks Inc."
+  name = "hajnet"
+  legal_name = "Blåhaj Networks Inc."
   address {
     country = "DE"
     locality = "Berlin"
@@ -109,9 +110,7 @@ resource "ixapi_contact" "hajnet_support" {
   email = "mail@example.com" 
   telephone = "+0 42 1234567890"
 }
-
 ```
-
 
 
 ## Development
