@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 	"strings"
+
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 // Errors
@@ -33,7 +35,34 @@ func (s *AuthAPIKeySecret) authenticate(
 	if err != nil {
 		return err
 	}
-	c.header.Set("Authorization", "Bearer "+auth.AccessToken)
+	c.SetBearer(auth.AccessToken)
+	return nil
+}
+
+// OAuth2ClientCredentials will use OAuth2 for authentication
+type OAuth2ClientCredentials struct {
+	Key      string
+	Secret   string
+	TokenURL string
+	Scopes   []string
+}
+
+// Implement AuthenticationProvider interface
+func (flow *OAuth2ClientCredentials) authenticate(
+	ctx context.Context,
+	c *Client,
+) error {
+	config := &clientcredentials.Config{
+		ClientID:     flow.Key,
+		ClientSecret: flow.Secret,
+		TokenURL:     flow.TokenURL,
+		Scopes:       flow.Scopes,
+	}
+	token, err := config.Token(ctx)
+	if err != nil {
+		return err
+	}
+	c.SetBearer(token.AccessToken)
 	return nil
 }
 
@@ -64,6 +93,12 @@ func (c *Client) resourceURL(res string, params ...string) string {
 		p = strings.ReplaceAll(p, "{id}", params[0])
 	}
 	return p
+}
+
+// SetBearer allows setting the bearer token in the client.
+// This can be used to implement custom authentication.
+func (c *Client) SetBearer(token string) {
+	c.header.Set("Authorization", "Bearer "+token)
 }
 
 // Authenticate using a authentication provider
