@@ -14,6 +14,8 @@ for configuring and provisisioning IXP services.
 
 ## Configure the provider
 
+Simple provider configuration example using
+the `legacy` authentication strategy.
 
 ```hcl
 provider "ixapi" {
@@ -23,12 +25,36 @@ provider "ixapi" {
 }
 ```
 
+### Environment Variables
+
 You can also use the environment variables:
 
- * `$IX_API_HOST`
- * `$IX_API_KEY`
- * `$IX_API_SECRET`
+ * `$IX_API_AUTH`: Choose the authentication strategy. 
+   Defaults to `legacy`. Can be set to `oauth2`.
+ * `$IX_API_HOST`: The IX-API endpoint in the format: `https://<server>/api/v2`
+ * `$IX_API_KEY`: The key provided by the exchange.
+ * `$IX_API_SECRET`: Also provided by the exchange.
+ * `$IX_API_
 
+### OAuth2
+
+In order to use OAuth2 to retrieve an access token, you
+need to provide the `oauth2_token_url` in addition to
+the `api_key` and `api_secret`. Key and secret will be used
+as `client_id` and `client_secret`.
+
+The `auth` strategy must be set to `oauth2`.
+
+```hcl
+provider "ixapi" {
+    auth = "oauth2"
+    api = "http://localhost:8000/api/v2"
+    api_key = "my_api_key"
+    api_secret = "..."
+    oauth2_token_url = "http://localhost:8000/auth/oauth2/token"
+    oauth2_scopes = "ix-api"  # Optional
+}
+```
 
 
 ## Development
