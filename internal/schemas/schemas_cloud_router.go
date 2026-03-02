@@ -189,6 +189,14 @@ func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Name of the outbound routing policy",
 		},
+		"policy_ingress_id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"policy_egress_id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
 		"admin_status": {
 			Type:        schema.TypeString,
 			Optional:    true,

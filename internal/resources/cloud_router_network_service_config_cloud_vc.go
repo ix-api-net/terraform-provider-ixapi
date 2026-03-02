@@ -55,7 +55,7 @@ func cloudRouterConfigCloudVCRequestFromResourceData(
 		Handover:              res.GetIntOpt("handover"),
 		Connection:            nil,
 		PurchaseOrder:         res.GetStringOpt("purchase_order"),
-		NetworkFeatureConfigs: r.Get("network_feature_configs"),
+		NetworkFeatureConfigs: res.GetStringList("network_feature_configs"),
 	}
 	return req, nil
 }

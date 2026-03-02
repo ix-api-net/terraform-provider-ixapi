@@ -55,7 +55,7 @@ func cloudRouterConfigP2PVCRequestFromResourceData(
 		Handover:              nil,
 		Connection:            res.GetStringOpt("nic"),
 		PurchaseOrder:         res.GetStringOpt("purchase_order"),
-		NetworkFeatureConfigs: r.Get("network_feature_configs"),
+		NetworkFeatureConfigs: res.GetStringList("network_feature_configs"),
 	}
 	return req, nil
 }

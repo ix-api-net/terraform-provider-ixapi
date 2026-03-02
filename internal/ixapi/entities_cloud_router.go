@@ -46,13 +46,15 @@ type CloudRouterNetworkServiceConfig struct {
 	VLANConfig            VLANConfig      `tf:"vlan_config" json:"-"`
 	VLANConfigRaw         json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
 	PolicyIngress         *string         `json:"policy_ingress,omitempty"`
-	PolicyEgress          *string     `json:"policy_egress,omitempty"`
+	PolicyEgress          *string         `json:"policy_egress,omitempty"`
+	PolicyIngressID       *string         `json:"policy_ingress_id,omitempty"`
+	PolicyEgressID        *string         `json:"policy_egress_id,omitempty"`
 	AdminStatus           string      `json:"admin_status,omitempty"`
 	BFDEnabled            bool        `json:"bfd,omitempty" tf:"bfd_enabled"`
 	CloudVLAN             *int        `json:"cloud_vlan,omitempty"`
 	Handover              *int        `json:"handover,omitempty"`
 	PurchaseOrder         *string     `json:"purchase_order,omitempty"`
-	NetworkFeatureConfigs interface{} `json:"network_feature_configs,omitempty"`
+	NetworkFeatureConfigs []string    `json:"network_feature_configs,omitempty"`
 	ConnectionID          string      `json:"connection,omitempty" tf:"connection_id"`
 }
 
@@ -77,7 +79,7 @@ type CloudRouterNetworkServiceConfigRequest struct{
 	Handover              *int        `json:"handover,omitempty"`
 	Connection            *string     `json:"connection,omitempty"`
 	PurchaseOrder         *string     `json:"purchase_order,omitempty"`
-	NetworkFeatureConfigs interface{} `json:"network_feature_configs,omitempty"`
+	NetworkFeatureConfigs []string    `json:"network_feature_configs,omitempty"`
 }
 
 type CloudRouterNetworkServiceConfigPatch struct {

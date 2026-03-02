@@ -14,8 +14,12 @@ func NewCloudRouterNetworkServiceConfigsP2PVCDataSource() *schema.Resource {
 		Description: "Use the `cloud_router_network_service_configs_p2p_vc` data source to find Cloud ROUTER NSCs of type p2p_vc",
 		ReadContext: cloudRouterNetworkServiceConfigsP2PVCRead,
 		Schema: map[string]*schema.Schema{
-			"bgp_password": schemas.DataSourceQuery(
-				"Filter by BGP password"),
+			"bgp_password": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				Description: "Filter by BGP password",
+			},
 			"bfd_enabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,

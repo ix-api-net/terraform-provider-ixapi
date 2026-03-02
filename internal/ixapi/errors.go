@@ -10,8 +10,8 @@ import (
 
 var flexibleParsingEnabled bool
 
-func EnableFlexibleParsing() {
-	flexibleParsingEnabled = true
+func SetFlexibleParsing(enabled bool) {
+	flexibleParsingEnabled = enabled
 }
 
 type FlexibleString string

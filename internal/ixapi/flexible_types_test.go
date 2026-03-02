@@ -18,8 +18,8 @@ func TestFlexibleString_UnmarshalJSON_String(t *testing.T) {
 }
 
 func TestFlexibleString_UnmarshalJSON_Array(t *testing.T) {
-	EnableFlexibleParsing()
-	t.Cleanup(func() { flexibleParsingEnabled = false })
+	SetFlexibleParsing(true)
+	t.Cleanup(func() { SetFlexibleParsing(false) })
 	var fs FlexibleString
 	err := json.Unmarshal([]byte(`["error one", "error two", "error three"]`), &fs)
 	if err != nil {
@@ -32,8 +32,8 @@ func TestFlexibleString_UnmarshalJSON_Array(t *testing.T) {
 }
 
 func TestFlexibleString_UnmarshalJSON_MixedArray(t *testing.T) {
-	EnableFlexibleParsing()
-	t.Cleanup(func() { flexibleParsingEnabled = false })
+	SetFlexibleParsing(true)
+	t.Cleanup(func() { SetFlexibleParsing(false) })
 	var fs FlexibleString
 	err := json.Unmarshal([]byte(`["string", 123, true]`), &fs)
 	if err != nil {
@@ -66,8 +66,8 @@ func TestFlexibleTime_UnmarshalJSON_RFC3339(t *testing.T) {
 }
 
 func TestFlexibleTime_UnmarshalJSON_DateOnly(t *testing.T) {
-	EnableFlexibleParsing()
-	t.Cleanup(func() { flexibleParsingEnabled = false })
+	SetFlexibleParsing(true)
+	t.Cleanup(func() { SetFlexibleParsing(false) })
 	var ft FlexibleTime
 	err := json.Unmarshal([]byte(`"2024-08-01"`), &ft)
 	if err != nil {
@@ -150,8 +150,8 @@ func TestProblemResponse_UnmarshalJSON_DetailAsString(t *testing.T) {
 }
 
 func TestProblemResponse_UnmarshalJSON_DetailAsArray(t *testing.T) {
-	EnableFlexibleParsing()
-	t.Cleanup(func() { flexibleParsingEnabled = false })
+	SetFlexibleParsing(true)
+	t.Cleanup(func() { SetFlexibleParsing(false) })
 	jsonData := `{"title":"Error","status":400,"detail":["Error 1","Error 2"]}`
 	var pr ProblemResponse
 	err := json.Unmarshal([]byte(jsonData), &pr)

@@ -280,9 +280,7 @@ func configure(
 
 	cloudRouterEnabled := res.Get("de_cix_cloud_router_extension_enabled").(bool)
 	client.CloudRouterEnabled = cloudRouterEnabled
-	if cloudRouterEnabled {
-		ixapi.EnableFlexibleParsing()
-	}
+	ixapi.SetFlexibleParsing(cloudRouterEnabled)
 
 	return client, nil
 }

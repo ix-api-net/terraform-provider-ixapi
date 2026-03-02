@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"golang.org/x/oauth2/clientcredentials"
@@ -86,17 +87,12 @@ func NewClient(server string) *Client {
 
 // Private resourceURL concatinates the api base with the resource
 func (c *Client) resourceURL(res string, params ...string) string {
-	base := c.APIURL
-	if strings.HasSuffix(base, "/") {
-		base = base[:len(base)-1]
-	}
-
+	base := strings.TrimSuffix(c.APIURL, "/")
 	if strings.HasPrefix(res, "/api/") {
-		if idx := strings.Index(base, "/api/"); idx != -1 {
-			base = base[:idx]
+		if u, err := url.Parse(c.APIURL); err == nil && u.Scheme != "" {
+			base = u.Scheme + "://" + u.Host
 		}
 	}
-
 	p := base + res
 	if len(params) > 0 {
 		p = strings.ReplaceAll(p, "{id}", params[0])
