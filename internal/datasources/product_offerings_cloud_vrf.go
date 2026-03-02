@@ -89,6 +89,9 @@ func productOfferingsCloudVRFRead(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) error {
+	if err := api.RequireCloudRouterExtension(); err != nil {
+		return err
+	}
 	qry := &ixapi.CloudRouterProductOfferingsListQuery{}
 
 	if limit, ok := res.GetOk("limit"); ok {
@@ -143,6 +146,9 @@ func productOfferingCloudVRFRead(
 	res *schema.ResourceData,
 	api *ixapi.Client,
 ) error {
+	if err := api.RequireCloudRouterExtension(); err != nil {
+		return err
+	}
 	id, hasID := res.GetOk("id")
 
 	var offering *ixapi.CloudRouterProductOffering
