@@ -12,6 +12,9 @@ import (
 func vlanConfigFromResourceData(r *schema.ResourceData) (ixapi.VLANConfig, error) {
 	res := schemas.ResourceData{ResourceData: r}
 	c := res.GetResource("vlan_config")
+	if c == nil {
+		return nil, nil
+	}
 	vType := c["vlan_type"].(string)
 
 	if vType == "port" {

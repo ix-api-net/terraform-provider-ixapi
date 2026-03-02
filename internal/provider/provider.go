@@ -98,11 +98,31 @@ func New(version string) func() *schema.Provider {
 					DefaultFunc: schema.EnvDefaultFunc(EnvOAuth2Scopes, "ix-api"),
 					Description: "The OAuth2 scopes to request.",
 				},
+				"de_cix_cloud_router_extension_enabled": &schema.Schema{
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Default:     false,
+					Description: "Enable DE-CIX CloudRouter extension features",
+				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
 				"ixapi_accounts":             datasources.NewAccountsDataSource(),
 				"ixapi_account":              datasources.NewAccountDataSource(),
-				"ixapi_connections":          datasources.NewConnectionsDataSource(),
+				"ixapi_de_cix_cloud_routers":        datasources.NewCloudRoutersDataSource(),
+				"ixapi_de_cix_cloud_router":         datasources.NewCloudRouterDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_configs_cloud_vc": datasources.NewCloudRouterNetworkServiceConfigsCloudVCDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_config_cloud_vc":  datasources.NewCloudRouterNetworkServiceConfigCloudVCDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_configs_p2p_vc":   datasources.NewCloudRouterNetworkServiceConfigsP2PVCDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_config_p2p_vc":    datasources.NewCloudRouterNetworkServiceConfigP2PVCDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_config_prefixes": datasources.NewCloudRouterNetworkServiceConfigPrefixesDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_config_advertised_routes": datasources.NewCloudRouterNetworkServiceConfigAdvertisedRoutesDataSource(),
+				"ixapi_de_cix_cloud_router_bgp_state":                                 datasources.NewCloudRouterBGPStateDataSource(),
+				"ixapi_de_cix_cloud_router_bfd_state":                        datasources.NewCloudRouterBFDStateDataSource(),
+				"ixapi_de_cix_cloud_router_prefix_lists":                     datasources.NewCloudRouterPrefixListsDataSource(),
+				"ixapi_de_cix_cloud_router_prefix_list":                      datasources.NewCloudRouterPrefixListDataSource(),
+				"ixapi_de_cix_cloud_router_policies":                         datasources.NewCloudRouterPoliciesDataSource(),
+				"ixapi_de_cix_cloud_router_policy":                           datasources.NewCloudRouterPolicyDataSource(),
+				"ixapi_connections":                                   datasources.NewConnectionsDataSource(),
 				"ixapi_connection":           datasources.NewConnectionDataSource(),
 				"ixapi_contacts":             datasources.NewContactsDataSource(),
 				"ixapi_contact":              datasources.NewContactDataSource(),
@@ -157,10 +177,17 @@ func New(version string) func() *schema.Provider {
 				"ixapi_product_offering_mp2mp_vc":      datasources.NewProductOfferingMP2MPVCDataSource(),
 				"ixapi_product_offerings_cloud_vc":     datasources.NewProductOfferingsCloudVCDataSource(),
 				"ixapi_product_offering_cloud_vc":      datasources.NewProductOfferingCloudVCDataSource(),
+				"ixapi_product_offerings_cloud_vrf":    datasources.NewProductOfferingsCloudVRFDataSource(),
+				"ixapi_product_offering_cloud_vrf":     datasources.NewProductOfferingCloudVRFDataSource(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"ixapi_contact":          resources.NewContactResource(),
 				"ixapi_account":          resources.NewAccountResource(),
+				"ixapi_de_cix_cloud_router":     resources.NewCloudRouterResource(),
+				"ixapi_de_cix_cloud_router_network_service_config_cloud_vc": resources.NewCloudRouterNetworkServiceConfigCloudVCResource(),
+				"ixapi_de_cix_cloud_router_network_service_config_p2p_vc":   resources.NewCloudRouterNetworkServiceConfigP2PVCResource(),
+				"ixapi_de_cix_cloud_router_prefix_list":            resources.NewCloudRouterPrefixListResource(),
+				"ixapi_de_cix_cloud_router_policy":                 resources.NewCloudRouterPolicyResource(),
 				"ixapi_mac":              resources.NewMACResource(),
 				"ixapi_connection":       resources.NewConnectionResource(),
 				"ixapi_port_reservation": resources.NewPortReservationResource(),
@@ -249,6 +276,12 @@ func configure(
 	// Make test request to see if we are authenticated
 	if err := checkAuthenticated(ctx, client); err != nil {
 		return nil, diag.FromErr(err)
+	}
+
+	cloudRouterEnabled := res.Get("de_cix_cloud_router_extension_enabled").(bool)
+	client.CloudRouterEnabled = cloudRouterEnabled
+	if cloudRouterEnabled {
+		ixapi.EnableFlexibleParsing()
 	}
 
 	return client, nil

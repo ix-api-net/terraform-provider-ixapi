@@ -45,10 +45,9 @@ docs:
 
 build:
 	CGO_ENABLED=0 go build $(CFLAGS) -o ./bin/$(BINARY) -ldflags '$(LDFLAGS)' $(PROVIDER)
-	
-	mkdir -p bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH} 
-	cp bin/${BINARY} bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
+	mkdir -p bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
+	cp bin/${BINARY} bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 all: build docs
 

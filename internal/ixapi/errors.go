@@ -4,7 +4,108 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
+	"time"
 )
+
+var flexibleParsingEnabled bool
+
+func EnableFlexibleParsing() {
+	flexibleParsingEnabled = true
+}
+
+type FlexibleString string
+
+func (fs *FlexibleString) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err == nil {
+		*fs = FlexibleString(str)
+		return nil
+	}
+	if !flexibleParsingEnabled {
+		return fmt.Errorf("detail field must be a string, got: %s", string(data))
+	}
+
+	var arr []interface{}
+	if err := json.Unmarshal(data, &arr); err == nil {
+		parts := make([]string, len(arr))
+		for i, v := range arr {
+			parts[i] = fmt.Sprintf("%v", v)
+		}
+		*fs = FlexibleString(strings.Join(parts, "; "))
+		return nil
+	}
+
+	return fmt.Errorf("detail field must be string or array, got: %s", string(data))
+}
+
+func (fs FlexibleString) String() string {
+	return string(fs)
+}
+
+type FlexibleTime struct {
+	time.Time
+}
+
+func (ft *FlexibleTime) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" || len(data) == 0 {
+		return nil
+	}
+
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+
+	if s == "" {
+		return nil
+	}
+
+	t, err := time.Parse(time.RFC3339, s)
+	if err == nil {
+		ft.Time = t
+		return nil
+	}
+	if !flexibleParsingEnabled {
+		return err
+	}
+
+	t, err = time.Parse("2006-01-02 15:04:05.999999999-07:00", s)
+	if err == nil {
+		ft.Time = t
+		return nil
+	}
+
+	t, err = time.Parse("2006-01-02", s)
+	if err == nil {
+		ft.Time = t
+		return nil
+	}
+
+	return err
+}
+
+func (ft FlexibleTime) MarshalJSON() ([]byte, error) {
+	if ft.Time.IsZero() {
+		return []byte("null"), nil
+	}
+	return []byte(`"` + ft.Time.Format(time.RFC3339) + `"`), nil
+}
+
+func NewFlexibleTime(t *time.Time) *FlexibleTime {
+	if t == nil {
+		return nil
+	}
+	return &FlexibleTime{Time: *t}
+}
+
+func (ft *FlexibleTime) ToTime() *time.Time {
+	if ft == nil || ft.Time.IsZero() {
+		return nil
+	}
+	t := ft.Time
+	return &t
+}
 
 // Errors
 

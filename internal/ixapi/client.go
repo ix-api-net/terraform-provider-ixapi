@@ -2,6 +2,7 @@ package ixapi
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -70,8 +71,9 @@ func (flow *OAuth2ClientCredentials) authenticate(
 type Client struct {
 	http.Client
 
-	APIURL string
-	header http.Header
+	APIURL             string
+	header             http.Header
+	CloudRouterEnabled bool
 }
 
 // NewClient creates a new client instance
@@ -88,6 +90,13 @@ func (c *Client) resourceURL(res string, params ...string) string {
 	if strings.HasSuffix(base, "/") {
 		base = base[:len(base)-1]
 	}
+
+	if strings.HasPrefix(res, "/api/") {
+		if idx := strings.Index(base, "/api/"); idx != -1 {
+			base = base[:idx]
+		}
+	}
+
 	p := base + res
 	if len(params) > 0 {
 		p = strings.ReplaceAll(p, "{id}", params[0])
@@ -107,4 +116,14 @@ func (c *Client) Authenticate(
 	auth AuthenticationProvider,
 ) error {
 	return auth.authenticate(ctx, c)
+}
+
+func (c *Client) RequireCloudRouterExtension() error {
+	if !c.CloudRouterEnabled {
+		return fmt.Errorf(
+			"CloudRouter extension is not enabled. " +
+				"Add 'de_cix_cloud_router_extension_enabled = true' to your provider configuration to use CloudRouter features",
+		)
+	}
+	return nil
 }

@@ -3,6 +3,7 @@ package ixapi
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 )
 
 // decode the polymorphic embedded vlan config from response
@@ -44,4 +45,25 @@ func decodeVLANConfig(data []byte) (VLANConfig, error) {
 	return nil, fmt.Errorf(
 		"unknown vlan config type: %s - do not know how to decode",
 		pCfg.PolymorphicType())
+}
+
+var dateOnlyPattern = regexp.MustCompile(`"(\d{4}-\d{2}-\d{2})"`)
+
+func preprocessDateFields(data []byte) []byte {
+	return dateOnlyPattern.ReplaceAllFunc(data, func(match []byte) []byte {
+		dateStr := string(match[1 : len(match)-1])
+		if len(dateStr) == 10 {
+			return []byte(`"` + dateStr + `T00:00:00Z"`)
+		}
+		return match
+	})
+}
+
+func unmarshalWithDateFix(data []byte, v interface{}) error {
+	processed := preprocessDateFields(data)
+	return json.Unmarshal(processed, v)
+}
+
+func UnmarshalProductOffering(data []byte, v interface{}) error {
+	return unmarshalWithDateFix(data, v)
 }

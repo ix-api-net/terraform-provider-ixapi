@@ -92,12 +92,17 @@ func (res *ResourceData) GetTimeOpt(key string) (*time.Time, error) {
 	}
 	sval := val.(string)
 
-	// Parse time
 	t, err := time.Parse(time.RFC3339, sval)
-	if err != nil {
-		return nil, err
+	if err == nil {
+		return &t, nil
 	}
-	return &t, nil
+
+	t, err = time.Parse("2006-01-02", sval)
+	if err == nil {
+		return &t, nil
+	}
+
+	return nil, err
 }
 
 // GetInt retrieves an integer from the resource

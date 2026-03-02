@@ -80,6 +80,14 @@ func SetResourceData(model any, res ResourceSetter) error {
 			res.Set(propName, val.Interface().(*ixapi.Date).String())
 			continue
 		}
+		if fType.String() == "*ixapi.FlexibleTime" {
+			res.Set(propName, val.Interface().(*ixapi.FlexibleTime).Time.Format(time.RFC3339))
+			continue
+		}
+		if fType.String() == "ixapi.FlexibleTime" {
+			res.Set(propName, val.Interface().(ixapi.FlexibleTime).Time.Format(time.RFC3339))
+			continue
+		}
 		if fType.String() == "*time.Time" {
 			res.Set(propName, val.Interface().(*time.Time).Format(time.RFC3339))
 			continue
@@ -121,10 +129,14 @@ func SetResourceData(model any, res ResourceSetter) error {
 			}
 			// Assume struct on interface??
 			if val.Kind() == reflect.Interface {
-				var err error
-				propValue, err = flattenStructValue(propValue)
-				if err != nil {
-					return err
+				interfaceValue := reflect.ValueOf(propValue)
+				kind := interfaceValue.Kind()
+				if kind == reflect.Struct || kind == reflect.Ptr {
+					var err error
+					propValue, err = flattenStructValue(propValue)
+					if err != nil {
+						return err
+					}
 				}
 			} else if val.Kind() == reflect.Pointer {
 				propValue = reflect.Indirect(val).Interface()
