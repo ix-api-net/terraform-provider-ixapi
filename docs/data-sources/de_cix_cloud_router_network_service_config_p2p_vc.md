@@ -43,7 +43,9 @@ output "config_state" {
 - `network_service` (String) Network service ID to connect to the Cloud ROUTER
 - `nic` (String) Network Interface Card (NIC/Connection) ID to use for this network service config
 - `policy_egress` (String) Name of the outbound routing policy
+- `policy_egress_id` (String)
 - `policy_ingress` (String) Name of the inbound routing policy
+- `policy_ingress_id` (String)
 - `purchase_order` (String) Purchase order reference
 - `state` (String)
 - `status` (Block List) (see [below for nested schema](#nestedblock--status))

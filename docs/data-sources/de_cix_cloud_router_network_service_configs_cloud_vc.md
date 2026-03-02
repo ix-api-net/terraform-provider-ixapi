@@ -28,7 +28,7 @@ output "configs" {
 ### Optional
 
 - `bfd_enabled` (Boolean) Filter by BFD enabled status
-- `bgp_password` (String) Filter by BGP password
+- `bgp_password` (String, Sensitive) Filter by BGP password
 - `cloud_router_network_service_configs` (Block List) (see [below for nested schema](#nestedblock--cloud_router_network_service_configs))
 - `limit` (Number) Limit the number of results
 - `offset` (Number) Offset for pagination
@@ -59,7 +59,9 @@ Optional:
 - `network_feature_configs` (List of String) Network feature configuration IDs
 - `network_service` (String) Network service ID to connect to the Cloud ROUTER
 - `policy_egress` (String) Name of the outbound routing policy
+- `policy_egress_id` (String)
 - `policy_ingress` (String) Name of the inbound routing policy
+- `policy_ingress_id` (String)
 - `purchase_order` (String) Purchase order reference
 - `state` (String)
 - `status` (Block List) (see [below for nested schema](#nestedblock--cloud_router_network_service_configs--status))
