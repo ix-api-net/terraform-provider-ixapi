@@ -7,7 +7,8 @@ terraform {
 }
 
 provider "ixapi" {
-  api = "https://ixapi.example.com"
+  api                                   = "https://ixapi.example.com"
+  de_cix_cloud_router_extension_enabled = true
 }
 
 data "ixapi_account" "customer" {
