@@ -189,6 +189,18 @@ type StaticRoute struct {
 	VRF                  string   `json:"vrf,omitempty"`
 }
 
+type VrfRoute struct {
+	VRF                  string `json:"vrf,omitempty"`
+	ReceivedAt           string `json:"received_at,omitempty"`
+	Prefix               string `json:"prefix,omitempty"`
+	DeviceFQDN           string `json:"device_fqdn,omitempty"`
+	Metric               int    `json:"metric,omitempty"`
+	Protocol             string `json:"protocol,omitempty"`
+	Distance             int    `json:"distance,omitempty"`
+	NextHop              string `json:"next_hop,omitempty"`
+	NetworkServiceConfig string `json:"network_service_config,omitempty"`
+}
+
 type StaticRouteRequest struct {
 	Name                 string   `json:"name"`
 	Prefix               string   `json:"prefix"`

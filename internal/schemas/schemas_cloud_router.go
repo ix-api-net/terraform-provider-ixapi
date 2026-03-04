@@ -490,6 +490,56 @@ func StaticRouteSchema() map[string]*schema.Schema {
 	}
 }
 
+func VrfRouteSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"vrf": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "VRF ID",
+		},
+		"received_at": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Timestamp when the route was received",
+		},
+		"prefix": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Network prefix",
+		},
+		"device_fqdn": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "FQDN of the device reporting this route",
+		},
+		"metric": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Route metric",
+		},
+		"protocol": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Routing protocol",
+		},
+		"distance": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Administrative distance",
+		},
+		"next_hop": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Next hop address",
+		},
+		"network_service_config": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Network service config ID associated with this route",
+		},
+	}
+}
+
 func BGPRouteSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"prefix": {

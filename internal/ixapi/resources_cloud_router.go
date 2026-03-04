@@ -1899,6 +1899,79 @@ func (c *Client) ArpTableList(
 
 // Static Routes
 
+func (c *Client) VrfRoutesList(
+	ctx context.Context,
+	vrfID string,
+) ([]*VrfRoute, error) {
+	params := url.Values{}
+	if vrfID != "" {
+		params.Set("vrf", vrfID)
+	}
+	queryString := ""
+	if len(params) > 0 {
+		queryString = "?" + params.Encode()
+	}
+
+	u := c.resourceURL("/api/v3/decix-vrf-v1/routes" + queryString)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*VrfRoute{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
 func (c *Client) StaticRoutesList(
 	ctx context.Context,
 	vrfID string,
