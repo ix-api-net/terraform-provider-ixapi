@@ -410,6 +410,46 @@ func PolicySchema() map[string]*schema.Schema {
 	}
 }
 
+func StaticRouteSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"id": &schema.Schema{
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+
+		"name": &schema.Schema{
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the static route",
+		},
+
+		"prefix": &schema.Schema{
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "IPv4 prefix in CIDR notation (e.g., 192.168.0.0/24)",
+		},
+
+		"next_hop": &schema.Schema{
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Next hop IPv4 address or 'aggregate'",
+		},
+
+		"network_service_configs": &schema.Schema{
+			Type:        schema.TypeList,
+			Required:    true,
+			Description: "List of network service config IDs this static route is attached to",
+			Elem:        &schema.Schema{Type: schema.TypeString},
+		},
+
+		"vrf": &schema.Schema{
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "VRF ID (derived from network service configs)",
+		},
+	}
+}
+
 func BGPRouteSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"prefix": {

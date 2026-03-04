@@ -169,3 +169,19 @@ type BGPRoute struct {
 	ReceivedAt string   `json:"received_at,omitempty"`
 	ASPath     []string `json:"as_path,omitempty"`
 }
+
+type StaticRoute struct {
+	ID                   string   `json:"id,omitempty"`
+	Name                 string   `json:"name,omitempty"`
+	Prefix               string   `json:"prefix,omitempty"`
+	NextHop              string   `json:"next_hop,omitempty"`
+	NetworkServiceConfigs []string `json:"network_service_configs,omitempty"`
+	VRF                  string   `json:"vrf,omitempty"`
+}
+
+type StaticRouteRequest struct {
+	Name                 string   `json:"name"`
+	Prefix               string   `json:"prefix"`
+	NextHop              string   `json:"next_hop"`
+	NetworkServiceConfigs []string `json:"network_service_configs"`
+}
