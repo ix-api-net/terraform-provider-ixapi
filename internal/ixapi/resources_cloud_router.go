@@ -2271,6 +2271,62 @@ func (c *Client) StaticRoutesDelete(
 	return nil, res
 }
 
+func (c *Client) NetworkServiceConfigReceivedRoutesList(
+	ctx context.Context,
+	nscID string,
+) ([]*BGPRoute, error) {
+	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/received-routes", nscID)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*BGPRoute{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
 func (c *Client) NetworkServiceConfigAdvertisedRoutesList(
 	ctx context.Context,
 	nscID string,
