@@ -163,19 +163,6 @@ type PolicyRequest struct {
 	Entries          []PolicyEntry `json:"entries"`
 }
 
-type BGPPrefix struct {
-	ASPath        string   `json:"as_path,omitempty"`
-	IGPCost       string   `json:"igp_cost,omitempty"`
-	Network       string   `json:"network,omitempty"`
-	Label         string   `json:"label,omitempty"`
-	LocalPref     *int     `json:"local_pref,omitempty"`
-	MED           *int     `json:"med,omitempty"`
-	Nexthop       string   `json:"nexthop,omitempty"`
-	PathID        *string  `json:"path_id,omitempty"`
-	Flags         []string `json:"flags,omitempty"`
-	LastQueriedAt string   `json:"last_queried_at,omitempty"`
-}
-
 type BGPRoute struct {
 	Prefix     string   `json:"prefix,omitempty"`
 	NextHop    string   `json:"next_hop,omitempty"`

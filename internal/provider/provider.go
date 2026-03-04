@@ -114,7 +114,6 @@ func New(version string) func() *schema.Provider {
 				"ixapi_de_cix_cloud_router_network_service_config_cloud_vc":  datasources.NewCloudRouterNetworkServiceConfigCloudVCDataSource(),
 				"ixapi_de_cix_cloud_router_network_service_configs_p2p_vc":   datasources.NewCloudRouterNetworkServiceConfigsP2PVCDataSource(),
 				"ixapi_de_cix_cloud_router_network_service_config_p2p_vc":    datasources.NewCloudRouterNetworkServiceConfigP2PVCDataSource(),
-				"ixapi_de_cix_cloud_router_network_service_config_prefixes": datasources.NewCloudRouterNetworkServiceConfigPrefixesDataSource(),
 				"ixapi_de_cix_cloud_router_network_service_config_advertised_routes": datasources.NewCloudRouterNetworkServiceConfigAdvertisedRoutesDataSource(),
 				"ixapi_de_cix_cloud_router_bgp_state":                                 datasources.NewCloudRouterBGPStateDataSource(),
 				"ixapi_de_cix_cloud_router_bfd_state":                        datasources.NewCloudRouterBFDStateDataSource(),

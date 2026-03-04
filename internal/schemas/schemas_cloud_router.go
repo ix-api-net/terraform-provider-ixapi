@@ -410,62 +410,6 @@ func PolicySchema() map[string]*schema.Schema {
 	}
 }
 
-func BGPPrefixSchema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"as_path": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "AS path",
-		},
-		"igp_cost": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "IGP cost",
-		},
-		"network": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Network prefix in CIDR notation",
-		},
-		"label": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "MPLS label",
-		},
-		"local_pref": {
-			Type:        schema.TypeInt,
-			Computed:    true,
-			Description: "Local preference",
-		},
-		"med": {
-			Type:        schema.TypeInt,
-			Computed:    true,
-			Description: "Multi-Exit Discriminator (MED)",
-		},
-		"nexthop": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Next hop IP address",
-		},
-		"path_id": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "BGP path identifier",
-		},
-		"flags": {
-			Type:        schema.TypeList,
-			Computed:    true,
-			Description: "BGP prefix flags (e.g., used, valid, best, igp)",
-			Elem:        &schema.Schema{Type: schema.TypeString},
-		},
-		"last_queried_at": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Timestamp when prefixes were last queried",
-		},
-	}
-}
-
 func BGPRouteSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"prefix": {
