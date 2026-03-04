@@ -123,6 +123,7 @@ func New(version string) func() *schema.Provider {
 				"ixapi_de_cix_cloud_router_policy":                           datasources.NewCloudRouterPolicyDataSource(),
 				"ixapi_de_cix_cloud_router_static_routes":                    datasources.NewCloudRouterStaticRoutesDataSource(),
 				"ixapi_de_cix_cloud_router_static_route":                     datasources.NewCloudRouterStaticRouteDataSource(),
+				"ixapi_de_cix_cloud_router_arp_table":                        datasources.NewCloudRouterArpTableDataSource(),
 				"ixapi_connections":                                   datasources.NewConnectionsDataSource(),
 				"ixapi_connection":           datasources.NewConnectionDataSource(),
 				"ixapi_contacts":             datasources.NewContactsDataSource(),

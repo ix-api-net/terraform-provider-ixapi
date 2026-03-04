@@ -410,6 +410,46 @@ func PolicySchema() map[string]*schema.Schema {
 	}
 }
 
+func ArpEntrySchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"vrf": &schema.Schema{
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "VRF ID",
+		},
+		"network_service_config": &schema.Schema{
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Network service config ID",
+		},
+		"device_fqdn": &schema.Schema{
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "FQDN of the device reporting this ARP entry",
+		},
+		"ip_address": &schema.Schema{
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "IP address of the ARP entry",
+		},
+		"mac_address": &schema.Schema{
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "MAC address of the ARP entry",
+		},
+		"expiration_time": &schema.Schema{
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Expiration time in seconds",
+		},
+		"received_at": &schema.Schema{
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Timestamp when the ARP entry was received",
+		},
+	}
+}
+
 func StaticRouteSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": &schema.Schema{

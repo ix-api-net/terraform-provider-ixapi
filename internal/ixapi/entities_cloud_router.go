@@ -170,6 +170,16 @@ type BGPRoute struct {
 	ASPath     []string `json:"as_path,omitempty"`
 }
 
+type ArpEntry struct {
+	VRF                  string `json:"vrf,omitempty"`
+	NetworkServiceConfig string `json:"network_service_config,omitempty"`
+	DeviceFQDN           string `json:"device_fqdn,omitempty"`
+	IPAddress            string `json:"ip_address,omitempty"`
+	MACAddress           string `json:"mac_address,omitempty"`
+	ExpirationTime       int    `json:"expiration_time,omitempty"`
+	ReceivedAt           string `json:"received_at,omitempty"`
+}
+
 type StaticRoute struct {
 	ID                   string   `json:"id,omitempty"`
 	Name                 string   `json:"name,omitempty"`
