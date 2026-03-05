@@ -11,21 +11,120 @@ provider "ixapi" {
   de_cix_cloud_router_extension_enabled = true
 }
 
+# ---------------------------------------------------------------------------
+# Account
+# ---------------------------------------------------------------------------
+
 data "ixapi_account" "customer" {
   external_ref = "my_account"
 }
+
+# ---------------------------------------------------------------------------
+# Product offering discovery
+# ---------------------------------------------------------------------------
+
+data "ixapi_de_cix_product_offering_cloud_vrf" "vrf" {
+  name = "Cloud ROUTER Frankfurt"
+}
+
+# ---------------------------------------------------------------------------
+# Prefix lists
+# ---------------------------------------------------------------------------
+
+resource "ixapi_de_cix_cloud_router_prefix_list" "allowed_from_aws" {
+  name              = "allowed-from-aws"
+  managing_account  = data.ixapi_account.customer.id
+  consuming_account = data.ixapi_account.customer.id
+
+  match_list {
+    prefix     = "10.0.0.0/8"
+    min_length = 8
+    max_length = 24
+  }
+  match_list {
+    prefix     = "172.16.0.0/12"
+    min_length = 12
+    max_length = 28
+  }
+}
+
+resource "ixapi_de_cix_cloud_router_prefix_list" "customer_prefixes" {
+  name              = "customer-prefixes"
+  managing_account  = data.ixapi_account.customer.id
+  consuming_account = data.ixapi_account.customer.id
+
+  match_list {
+    prefix = "192.0.2.0/24"
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Routing policies
+# ---------------------------------------------------------------------------
+
+resource "ixapi_de_cix_cloud_router_policy" "aws_ingress" {
+  name              = "aws-ingress-policy"
+  managing_account  = data.ixapi_account.customer.id
+  consuming_account = data.ixapi_account.customer.id
+
+  entries {
+    sequence_number   = 10
+    match_prefix_list = ixapi_de_cix_cloud_router_prefix_list.allowed_from_aws.name
+    action {
+      filter           = "accept"
+      local_preference = 200
+    }
+  }
+  entries {
+    sequence_number = 20
+    action {
+      filter = "reject"
+    }
+  }
+}
+
+resource "ixapi_de_cix_cloud_router_policy" "aws_egress" {
+  name              = "aws-egress-policy"
+  managing_account  = data.ixapi_account.customer.id
+  consuming_account = data.ixapi_account.customer.id
+
+  entries {
+    sequence_number   = 10
+    match_prefix_list = ixapi_de_cix_cloud_router_prefix_list.customer_prefixes.name
+    action {
+      filter = "accept"
+      as_path_prepend {
+        count = 2
+      }
+    }
+  }
+  entries {
+    sequence_number = 20
+    action {
+      filter = "reject"
+    }
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Cloud ROUTER (VRF)
+# ---------------------------------------------------------------------------
 
 resource "ixapi_de_cix_cloud_router" "main" {
   managing_account  = data.ixapi_account.customer.id
   consuming_account = data.ixapi_account.customer.id
   billing_account   = data.ixapi_account.customer.id
-  product_offering  = "1"
+  product_offering  = data.ixapi_de_cix_product_offering_cloud_vrf.vrf.id
   asn               = 65001
   capacity          = 2000
   external_ref      = "production-cloud-router"
 }
 
-resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "aws_directcloud" {
+# ---------------------------------------------------------------------------
+# Network service configs
+# ---------------------------------------------------------------------------
+
+resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "aws" {
   managing_account  = data.ixapi_account.customer.id
   billing_account   = data.ixapi_account.customer.id
   consuming_account = data.ixapi_account.customer.id
@@ -37,8 +136,8 @@ resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "aws_direct
   bgp_password      = var.aws_bgp_password
   admin_status      = "enabled"
   bfd_enabled       = true
-  policy_ingress    = "aws-ingress-policy"
-  policy_egress     = "aws-egress-policy"
+  policy_ingress    = ixapi_de_cix_cloud_router_policy.aws_ingress.name
+  policy_egress     = ixapi_de_cix_cloud_router_policy.aws_egress.name
 
   vlan_config {
     vlan_type = "dot1q"
@@ -46,7 +145,7 @@ resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "aws_direct
   }
 }
 
-resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "azure_directcloud" {
+resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "azure" {
   managing_account  = data.ixapi_account.customer.id
   billing_account   = data.ixapi_account.customer.id
   consuming_account = data.ixapi_account.customer.id
@@ -65,7 +164,7 @@ resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "azure_dire
   }
 }
 
-resource "ixapi_de_cix_cloud_router_network_service_config_p2p_vc" "partner_vpni" {
+resource "ixapi_de_cix_cloud_router_network_service_config_p2p_vc" "partner" {
   managing_account  = data.ixapi_account.customer.id
   billing_account   = data.ixapi_account.customer.id
   consuming_account = data.ixapi_account.customer.id
@@ -84,18 +183,55 @@ resource "ixapi_de_cix_cloud_router_network_service_config_p2p_vc" "partner_vpni
   }
 }
 
-data "ixapi_de_cix_cloud_router_network_service_configs_cloud_vc" "cloud_configs" {
-  depends_on = [
-    ixapi_de_cix_cloud_router_network_service_config_cloud_vc.aws_directcloud,
-    ixapi_de_cix_cloud_router_network_service_config_cloud_vc.azure_directcloud,
+# ---------------------------------------------------------------------------
+# Static routes
+# ---------------------------------------------------------------------------
+
+resource "ixapi_de_cix_cloud_router_static_route" "aggregate" {
+  name   = "default-aggregate"
+  prefix = "0.0.0.0/0"
+  next_hop = "aggregate"
+  network_service_configs = [
+    ixapi_de_cix_cloud_router_network_service_config_cloud_vc.aws.id,
+    ixapi_de_cix_cloud_router_network_service_config_cloud_vc.azure.id,
   ]
 }
 
-data "ixapi_de_cix_cloud_router_network_service_configs_p2p_vc" "p2p_configs" {
-  depends_on = [
-    ixapi_de_cix_cloud_router_network_service_config_p2p_vc.partner_vpni
-  ]
+# ---------------------------------------------------------------------------
+# Operational data sources
+# ---------------------------------------------------------------------------
+
+data "ixapi_de_cix_cloud_router_bgp_state" "aws" {
+  nsc_id = ixapi_de_cix_cloud_router_network_service_config_cloud_vc.aws.id
 }
+
+data "ixapi_de_cix_cloud_router_bfd_state" "aws" {
+  nsc_id = ixapi_de_cix_cloud_router_network_service_config_cloud_vc.aws.id
+}
+
+data "ixapi_de_cix_cloud_router_network_service_config_advertised_routes" "aws" {
+  network_service_config_id = ixapi_de_cix_cloud_router_network_service_config_cloud_vc.aws.id
+}
+
+data "ixapi_de_cix_cloud_router_network_service_config_received_routes" "aws" {
+  network_service_config_id = ixapi_de_cix_cloud_router_network_service_config_cloud_vc.aws.id
+}
+
+data "ixapi_de_cix_cloud_router_static_routes" "vrf" {
+  vrf = ixapi_de_cix_cloud_router.main.id
+}
+
+data "ixapi_de_cix_cloud_router_arp_table" "vrf" {
+  vrf = ixapi_de_cix_cloud_router.main.id
+}
+
+data "ixapi_de_cix_cloud_router_routes" "vrf" {
+  vrf = ixapi_de_cix_cloud_router.main.id
+}
+
+# ---------------------------------------------------------------------------
+# Variables
+# ---------------------------------------------------------------------------
 
 variable "aws_bgp_password" {
   description = "BGP password for AWS DirectCloud connection"
@@ -109,37 +245,46 @@ variable "azure_bgp_password" {
   sensitive   = true
 }
 
-output "cloud_router_id" {
-  description = "The ID of the Cloud ROUTER"
-  value       = ixapi_de_cix_cloud_router.main.id
+# ---------------------------------------------------------------------------
+# Outputs
+# ---------------------------------------------------------------------------
+
+output "cloud_router" {
+  description = "Cloud ROUTER resource"
+  value       = ixapi_de_cix_cloud_router.main
 }
 
-output "cloud_router_asn" {
-  description = "The ASN of the Cloud ROUTER"
-  value       = ixapi_de_cix_cloud_router.main.asn
+output "aws_bgp_state" {
+  description = "BGP session state for the AWS connection"
+  value       = data.ixapi_de_cix_cloud_router_bgp_state.aws.state
 }
 
-output "cloud_router_state" {
-  description = "The state of the Cloud ROUTER"
-  value       = ixapi_de_cix_cloud_router.main.state
+output "aws_bfd_state" {
+  description = "BFD session state for the AWS connection"
+  value       = data.ixapi_de_cix_cloud_router_bfd_state.aws
 }
 
-output "configuration_count" {
-  description = "Total number of Cloud ROUTER configurations"
-  value       = length(data.ixapi_de_cix_cloud_router_network_service_configs_cloud_vc.cloud_configs.cloud_router_network_service_configs) + length(data.ixapi_de_cix_cloud_router_network_service_configs_p2p_vc.p2p_configs.cloud_router_network_service_configs)
+output "aws_advertised_routes" {
+  description = "Routes advertised to AWS"
+  value       = data.ixapi_de_cix_cloud_router_network_service_config_advertised_routes.aws
 }
 
-output "aws_config_id" {
-  description = "AWS DirectCloud configuration ID"
-  value       = ixapi_de_cix_cloud_router_network_service_config_cloud_vc.aws_directcloud.id
+output "aws_received_routes" {
+  description = "Routes received from AWS"
+  value       = data.ixapi_de_cix_cloud_router_network_service_config_received_routes.aws
 }
 
-output "azure_config_id" {
-  description = "Azure DirectCloud configuration ID"
-  value       = ixapi_de_cix_cloud_router_network_service_config_cloud_vc.azure_directcloud.id
+output "vrf_static_routes" {
+  description = "All static routes in the VRF"
+  value       = data.ixapi_de_cix_cloud_router_static_routes.vrf
 }
 
-output "partner_config_id" {
-  description = "Partner Virtual PNI configuration ID"
-  value       = ixapi_de_cix_cloud_router_network_service_config_p2p_vc.partner_vpni.id
+output "vrf_arp_table" {
+  description = "ARP table of the VRF"
+  value       = data.ixapi_de_cix_cloud_router_arp_table.vrf
+}
+
+output "vrf_routing_table" {
+  description = "Full routing table of the VRF"
+  value       = data.ixapi_de_cix_cloud_router_routes.vrf
 }
