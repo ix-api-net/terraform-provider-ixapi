@@ -168,6 +168,23 @@ func cloudRouterConfigCloudVCDelete(
 	}
 
 	id := res.Id()
+
+	policyIngress := res.Get("policy_ingress").(string)
+	policyEgress := res.Get("policy_egress").(string)
+	if policyIngress != "" || policyEgress != "" {
+		empty := ""
+		patch := &ixapi.CloudRouterNetworkServiceConfigPatch{}
+		if policyIngress != "" {
+			patch.PolicyIngress = &empty
+		}
+		if policyEgress != "" {
+			patch.PolicyEgress = &empty
+		}
+		if _, err := api.CloudRouterNetworkServiceConfigsPatch(ctx, id, patch); err != nil {
+			return err
+		}
+	}
+
 	err := api.CloudRouterNetworkServiceConfigsDestroy(ctx, id)
 	if err != nil && !ixapi.IsErrNotFound(err) {
 		return err
