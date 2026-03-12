@@ -144,5 +144,52 @@ terraform {
 Use a `ix-api-sandbox-v2` as local API server.
 
 
+## DE-CIX Cloud ROUTER Extension
 
+The provider includes a DE-CIX-specific extension for managing Cloud ROUTER (VRF) resources.
+This extension is disabled by default and must be explicitly enabled in the provider configuration:
 
+```hcl
+provider "ixapi" {
+  api        = "https://ixapi.example.com/api/v2"
+  api_key    = var.api_key
+  api_secret = var.api_secret
+  de_cix_cloud_router_extension_enabled = true
+}
+```
+
+When `de_cix_cloud_router_extension_enabled` is `false` (the default), any attempt to use a
+`de_cix_*` resource or data source will return an error. This prevents accidental use against
+an IX-API endpoint that does not support the extension.
+
+### Available Resources
+
+| Resource | Description |
+|---|---|
+| `ixapi_de_cix_cloud_router` | Cloud ROUTER (VRF) instance |
+| `ixapi_de_cix_cloud_router_network_service_config_cloud_vc` | BGP peering to a cloud provider (AWS, Azure, …) |
+| `ixapi_de_cix_cloud_router_network_service_config_p2p_vc` | BGP peering over a point-to-point virtual circuit |
+| `ixapi_de_cix_cloud_router_prefix_list` | IP prefix list for use in routing policies |
+| `ixapi_de_cix_cloud_router_policy` | Routing policy (ingress/egress) with prefix-list matching |
+| `ixapi_de_cix_cloud_router_static_route` | Static route attached to one or more network service configs |
+
+### Available Data Sources
+
+| Data Source | Description |
+|---|---|
+| `ixapi_de_cix_cloud_routers` / `_cloud_router` | Query Cloud ROUTER instances |
+| `ixapi_de_cix_cloud_router_network_service_configs_cloud_vc` / `_config_cloud_vc` | Query cloud VC configs |
+| `ixapi_de_cix_cloud_router_network_service_configs_p2p_vc` / `_config_p2p_vc` | Query P2P VC configs |
+| `ixapi_de_cix_cloud_router_prefix_lists` / `_prefix_list` | Query prefix lists |
+| `ixapi_de_cix_cloud_router_policies` / `_policy` | Query routing policies |
+| `ixapi_de_cix_cloud_router_static_routes` / `_static_route` | Query static routes |
+| `ixapi_de_cix_cloud_router_bgp_state` | BGP session state for a network service config |
+| `ixapi_de_cix_cloud_router_bfd_state` | BFD session state for a network service config |
+| `ixapi_de_cix_cloud_router_network_service_config_advertised_routes` | BGP routes advertised to a peer |
+| `ixapi_de_cix_cloud_router_network_service_config_received_routes` | BGP routes received from a peer |
+| `ixapi_de_cix_cloud_router_arp_table` | ARP table for a VRF |
+| `ixapi_de_cix_cloud_router_routes` | Full routing table for a VRF |
+| `ixapi_de_cix_product_offerings_cloud_vrf` / `_offering_cloud_vrf` | Available Cloud ROUTER product offerings |
+
+See [`examples/cloud_router_complete`](examples/cloud_router_complete) for a full example
+covering prefix lists, routing policies, static routes, and operational data sources.
