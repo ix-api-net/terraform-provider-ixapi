@@ -9,7 +9,7 @@ for configuring and provisisioning IXP services.
 
 ## Requirements
  * Terraform >= 1.0
- * Go >= 1.17
+ * Go >= 1.26
 
 
 ## Configure the provider
