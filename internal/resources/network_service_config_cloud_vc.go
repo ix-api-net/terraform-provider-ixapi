@@ -20,7 +20,7 @@ func NewNetworkServiceConfigCloudVCResource() *schema.Resource {
 		ReadContext:   crud.Read(nscCloudVCRead),
 		DeleteContext: crud.Delete(nscCloudVCDelete),
 
-		Schema: schemas.CloudNetworkServiceConfigSchema(),
+		Schema: addConnectionConstraints(schemas.CloudNetworkServiceConfigSchema()),
 
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -47,10 +47,11 @@ func nscCloudVCRequestFromResourceData(
 		PurchaseOrder:    res.GetStringOpt("purchase_order"),
 		ContractRef:      res.GetStringOpt("contract_ref"),
 		RoleAssignments:  res.GetStringList("role_assignments"),
-		Connection:       res.GetString("network_connection"),
+		Connection:       res.GetStringOpt("network_connection"),
+		RoutingFunction:  res.GetStringOpt("routing_function"),
 		VLANConfig:       vlanConfig,
 		Handover:         res.GetInt("handover"),
-		CloudVLAN:        res.GetInt("cloud_vlan"),
+		CloudVLAN:        res.GetIntOpt("cloud_vlan"),
 	}
 	return req, nil
 }
@@ -92,6 +93,9 @@ func nscCloudVCPatchFromResourceData(
 	}
 	if res.HasChange("network_connection") {
 		patch.Connection = res.GetStringOpt("network_connection")
+	}
+	if res.HasChange("routing_function") {
+		patch.RoutingFunction = res.GetStringOpt("routing_function")
 	}
 	if res.HasChange("cloud_vlan") {
 		patch.CloudVLAN = res.GetIntOpt("cloud_vlan")

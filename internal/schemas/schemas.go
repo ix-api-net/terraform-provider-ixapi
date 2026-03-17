@@ -3705,12 +3705,6 @@ Computed: true,
 }
 }
 
-// VLANConfigSchema is the terraform schema for the model
-func VLANConfigSchema() map[string]*schema.Schema{
-return map[string]*schema.Schema{
-}
-}
-
 // AccountSchema is the terraform schema for the model
 func AccountSchema() map[string]*schema.Schema{
 return map[string]*schema.Schema{
@@ -4712,6 +4706,12 @@ Required: true,
   Type: schema.TypeString,
 Required: true,
   Description: "The `id` of the account to which access to the network service should be granted or denied. ",
+},
+
+"id": &schema.Schema{
+  Type: schema.TypeString,
+Computed: true,
+  Description: "The *primary identifier* of the `A rule for members joining a private vlan`.",
 },
 
 "network_service": &schema.Schema{

@@ -8,6 +8,17 @@ import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
 
+// addConnectionConstraints adds ConflictsWith and AtLeastOneOf validation
+// to the network_connection and routing_function fields in a NSC schema.
+// The IX-API requires exactly one of these fields to be provided.
+func addConnectionConstraints(s map[string]*schema.Schema) map[string]*schema.Schema {
+	s["network_connection"].ConflictsWith = []string{"routing_function"}
+	s["network_connection"].AtLeastOneOf = []string{"network_connection", "routing_function"}
+	s["routing_function"].ConflictsWith = []string{"network_connection"}
+	s["routing_function"].AtLeastOneOf = []string{"network_connection", "routing_function"}
+	return s
+}
+
 // Create polymorphic VLanConfig from resource data
 func vlanConfigFromResourceData(r *schema.ResourceData) (ixapi.VLANConfig, error) {
 	res := schemas.ResourceData{ResourceData: r}

@@ -5,8 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"strings"
+	"time"
 )
 
 // This file is generated from the IX-API schema.
@@ -1630,7 +1634,7 @@ PageOffset int `json:"page_offset,omitempty"`
 PageToken string `json:"page_token,omitempty"`
 
 // Type is a type
-Type string `json:"type,omitempty"`
+Type string `json:"type"`
 
 // ResourceType is a resource_type
 ResourceType string `json:"resource_type,omitempty"`
@@ -1866,6 +1870,62 @@ url := c.resourceURL("/product-offerings"+params)
         ptype := tmp.PolymorphicType()
         switch(ptype) {
             
+    case ConnectionProductOfferingType:
+        rval := &ConnectionProductOffering{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case ExchangeLanNetworkProductOfferingType:
+        rval := &ExchangeLanNetworkProductOffering{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case P2PNetworkProductOfferingType:
+        rval := &P2PNetworkProductOffering{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case MP2MPNetworkProductOfferingType:
+        rval := &MP2MPNetworkProductOffering{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case P2MPNetworkProductOfferingType:
+        rval := &P2MPNetworkProductOffering{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case CloudNetworkProductOfferingType:
+        rval := &CloudNetworkProductOffering{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case RoutingFunctionProductOfferingType:
+        rval := &RoutingFunctionProductOffering{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
         }
     }
 
@@ -1967,6 +2027,62 @@ url := c.resourceURL("/product-offerings/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ConnectionProductOfferingType:
+        res := &ConnectionProductOffering{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case ExchangeLanNetworkProductOfferingType:
+        res := &ExchangeLanNetworkProductOffering{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2PNetworkProductOfferingType:
+        res := &P2PNetworkProductOffering{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case MP2MPNetworkProductOfferingType:
+        res := &MP2MPNetworkProductOffering{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2MPNetworkProductOfferingType:
+        res := &P2MPNetworkProductOffering{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case CloudNetworkProductOfferingType:
+        res := &CloudNetworkProductOffering{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case RoutingFunctionProductOfferingType:
+        res := &RoutingFunctionProductOffering{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -4688,7 +4804,7 @@ ConsumingAccount string `json:"consuming_account,omitempty"`
 ExternalRef string `json:"external_ref,omitempty"`
 
 // Type is a type
-Type string `json:"type,omitempty"`
+Type string `json:"type"`
 
 // InnerVLAN is a inner_vlan
 InnerVLAN int `json:"inner_vlan,omitempty"`
@@ -4853,6 +4969,76 @@ url := c.resourceURL("/network-service-configs"+params)
         ptype := tmp.PolymorphicType()
         switch(ptype) {
             
+    case ExchangeLanNetworkServiceConfigType:
+        rval := &ExchangeLanNetworkServiceConfig{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    rval.VLANConfig = vlanConfig
+
+        res = append(res, rval)
+
+    case P2PNetworkServiceConfigType:
+        rval := &P2PNetworkServiceConfig{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    rval.VLANConfig = vlanConfig
+
+        res = append(res, rval)
+
+    case P2MPNetworkServiceConfigType:
+        rval := &P2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    rval.VLANConfig = vlanConfig
+
+        res = append(res, rval)
+
+    case MP2MPNetworkServiceConfigType:
+        rval := &MP2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    rval.VLANConfig = vlanConfig
+
+        res = append(res, rval)
+
+    case CloudNetworkServiceConfigType:
+        rval := &CloudNetworkServiceConfig{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    rval.VLANConfig = vlanConfig
+
+        res = append(res, rval)
+
         }
     }
 
@@ -4960,6 +5146,76 @@ url := c.resourceURL("/network-service-configs"+params)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceConfigType:
+        res := &ExchangeLanNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2PNetworkServiceConfigType:
+        res := &P2PNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2MPNetworkServiceConfigType:
+        res := &P2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case MP2MPNetworkServiceConfigType:
+        res := &MP2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case CloudNetworkServiceConfigType:
+        res := &CloudNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -5060,6 +5316,76 @@ url := c.resourceURL("/network-service-configs/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceConfigType:
+        res := &ExchangeLanNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2PNetworkServiceConfigType:
+        res := &P2PNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2MPNetworkServiceConfigType:
+        res := &P2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case MP2MPNetworkServiceConfigType:
+        res := &MP2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case CloudNetworkServiceConfigType:
+        res := &CloudNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -5169,6 +5495,76 @@ url := c.resourceURL("/network-service-configs/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceConfigType:
+        res := &ExchangeLanNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2PNetworkServiceConfigType:
+        res := &P2PNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2MPNetworkServiceConfigType:
+        res := &P2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case MP2MPNetworkServiceConfigType:
+        res := &MP2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case CloudNetworkServiceConfigType:
+        res := &CloudNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -5275,6 +5671,76 @@ url := c.resourceURL("/network-service-configs/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceConfigType:
+        res := &ExchangeLanNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2PNetworkServiceConfigType:
+        res := &P2PNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2MPNetworkServiceConfigType:
+        res := &P2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case MP2MPNetworkServiceConfigType:
+        res := &MP2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case CloudNetworkServiceConfigType:
+        res := &CloudNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -5386,6 +5852,76 @@ url := c.resourceURL("/network-service-configs/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceConfigType:
+        res := &ExchangeLanNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2PNetworkServiceConfigType:
+        res := &P2PNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case P2MPNetworkServiceConfigType:
+        res := &P2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case MP2MPNetworkServiceConfigType:
+        res := &MP2MPNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
+    case CloudNetworkServiceConfigType:
+        res := &CloudNetworkServiceConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+    vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+    if err != nil {
+        return nil, err
+    }
+    res.VLANConfig = vlanConfig
+
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -5464,11 +6000,11 @@ IPVersion int `json:"ip_version,omitempty"`
 func (n* NetworkServiceConfigsPeerStatisticsReadQuery) RawQuery() string {
 qry := url.Values{}
 val := ""
-val = n.Start
+val = n.Start.Format(time.RFC3339)
 if val != "" {
 qry.Add("start", val)
 }
-val = n.End
+val = n.End.Format(time.RFC3339)
 if val != "" {
 qry.Add("end", val)
 }
@@ -5555,167 +6091,6 @@ url := c.resourceURL("/network-service-configs/{id}/peer-statistics"+params, id)
     if ret.StatusCode <= http.StatusAccepted {
       
     res := []*PeerAggregate{}
-    if err := json.Unmarshal(body, &res); err != nil {
-        return nil, err
-    }
-    return res, nil
-
-    }
-
-    // Decode error 404
-    if ret.StatusCode == http.StatusNotFound {
-        res := &NotFoundError{}
-        if err := json.Unmarshal(body, res); err != nil {
-            return nil, err
-        }
-        res.Status = ret.StatusCode // implementations are not reliable
-        return nil, res
-    }
-
-	// Decode error 403
-	if ret.StatusCode == http.StatusForbidden {
-		res := &AuthenticationError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-        res.Status = ret.StatusCode
-		return nil, res
-	}
-	// Decode error 401
-	if ret.StatusCode == http.StatusUnauthorized {
-		res := &AuthenticationError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-        res.Status = ret.StatusCode
-		return nil, res
-	}
-	// Decode error 400
-	if ret.StatusCode == http.StatusBadRequest {
-		res := &ValidationError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-        res.Status = ret.StatusCode
-		return nil, res
-	}
-
-	// Decode as generic error
-	res := &APIError{}
-	if err := json.Unmarshal(body, res); err != nil {
-		return nil, err
-	}
-    res.Status = ret.StatusCode
-	return nil, res
-}
-// NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery has all query parameters for NetworkServiceConfigsPeerStatisticsTimeseriesRead
-type NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery struct {
-// Start is a start
-Start time.Time `json:"start,omitempty"`
-
-// End is a end
-End time.Time `json:"end,omitempty"`
-
-// Fields is a fields
-Fields string `json:"fields,omitempty"`
-
-// ASN is a asn
-ASN int `json:"asn,omitempty"`
-
-// MacAddress is a mac_address
-MacAddress string `json:"mac_address,omitempty"`
-
-// IPAddress is a ip_address
-IPAddress string `json:"ip_address,omitempty"`
-
-// IPVersion is a ip_version
-IPVersion int `json:"ip_version,omitempty"`
-
-}
-
-// RawQuery creates a query string for NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery
-func (n* NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery) RawQuery() string {
-qry := url.Values{}
-val := ""
-val = n.Start
-if val != "" {
-qry.Add("start", val)
-}
-val = n.End
-if val != "" {
-qry.Add("end", val)
-}
-val = n.Fields
-if val != "" {
-qry.Add("fields", val)
-}
-val = fmt.Sprintf("%v", n.ASN)
-if val != "0" {
-qry.Add("asn", val)
-}
-val = n.MacAddress
-if val != "" {
-qry.Add("mac_address", val)
-}
-val = n.IPAddress
-if val != "" {
-qry.Add("ip_address", val)
-}
-val = fmt.Sprintf("%v", n.IPVersion)
-if val != "0" {
-qry.Add("ip_version", val)
-}
-return qry.Encode()}
-
-
-// NetworkServiceConfigsPeerStatisticsTimeseriesRead **Operation:** `network_service_configs_peer_statistics_timeseries_read`
-// 
-//  **Summary:** Read peer to peer aggregated timeseries.
-// The resolution is defined by the aggregate.
-// 
-// This operation will return a list of timeseries for each peer.
-func (c *Client) NetworkServiceConfigsPeerStatisticsTimeseriesRead(
-    ctx context.Context,
-    id string,
-    qry ...*NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery,
-) ([]*PeerTimeseries, error) {
-    
-    params := ""
-if len(qry) > 0 && qry[0] != nil {
- params = qry[0].RawQuery()
-}
-
-if params != "" {
-  params = "?" + params
-}
-
-url := c.resourceURL("/network-service-configs/{id}/peer-statistics/{aggregate}/timeseries"+params, id)
-
-	hreq, err := http.NewRequestWithContext(
-		ctx, http.MethodGet, url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-
-	// Set request headers
-	for k, v := range c.header {
-		hreq.Header.Set(k, v[0])
-	}
-	ret, err := c.Do(hreq)
-	if err != nil {
-		return nil, err
-	}
-	defer ret.Body.Close()
-	body, err := io.ReadAll(ret.Body)
-	if err != nil {
-		return nil, err
-	}
-
-    // Success
-    if ret.StatusCode <= http.StatusAccepted {
-      
-    res := []*PeerTimeseries{}
     if err := json.Unmarshal(body, &res); err != nil {
         return nil, err
     }
@@ -5928,7 +6303,7 @@ ConsumingAccount string `json:"consuming_account,omitempty"`
 ExternalRef string `json:"external_ref,omitempty"`
 
 // Type is a type
-Type string `json:"type,omitempty"`
+Type string `json:"type"`
 
 // ServiceConfig is a service_config
 ServiceConfig string `json:"service_config,omitempty"`
@@ -6072,6 +6447,14 @@ url := c.resourceURL("/network-feature-configs"+params)
         ptype := tmp.PolymorphicType()
         switch(ptype) {
             
+    case RouteServerNetworkFeatureConfigType:
+        rval := &RouteServerNetworkFeatureConfig{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
         }
     }
 
@@ -6180,6 +6563,14 @@ url := c.resourceURL("/network-feature-configs"+params)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case RouteServerNetworkFeatureConfigType:
+        res := &RouteServerNetworkFeatureConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -6280,6 +6671,14 @@ url := c.resourceURL("/network-feature-configs/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case RouteServerNetworkFeatureConfigType:
+        res := &RouteServerNetworkFeatureConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -6389,6 +6788,14 @@ url := c.resourceURL("/network-feature-configs/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case RouteServerNetworkFeatureConfigType:
+        res := &RouteServerNetworkFeatureConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -6495,6 +6902,14 @@ url := c.resourceURL("/network-feature-configs/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case RouteServerNetworkFeatureConfigType:
+        res := &RouteServerNetworkFeatureConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -6600,6 +7015,14 @@ url := c.resourceURL("/network-feature-configs/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case RouteServerNetworkFeatureConfigType:
+        res := &RouteServerNetworkFeatureConfig{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -10260,7 +10683,7 @@ ConsumingAccount string `json:"consuming_account,omitempty"`
 ExternalRef string `json:"external_ref,omitempty"`
 
 // Type is a type
-Type string `json:"type,omitempty"`
+Type string `json:"type"`
 
 // Pop is a pop
 Pop string `json:"pop,omitempty"`
@@ -10383,6 +10806,46 @@ url := c.resourceURL("/network-services"+params)
         ptype := tmp.PolymorphicType()
         switch(ptype) {
             
+    case ExchangeLanNetworkServiceType:
+        rval := &ExchangeLanNetworkService{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case P2PNetworkServiceType:
+        rval := &P2PNetworkService{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case P2MPNetworkServiceType:
+        rval := &P2MPNetworkService{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case MP2MPNetworkServiceType:
+        rval := &MP2MPNetworkService{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case CloudNetworkServiceType:
+        rval := &CloudNetworkService{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
         }
     }
 
@@ -10490,6 +10953,46 @@ url := c.resourceURL("/network-services"+params)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceType:
+        res := &ExchangeLanNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2PNetworkServiceType:
+        res := &P2PNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2MPNetworkServiceType:
+        res := &P2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case MP2MPNetworkServiceType:
+        res := &MP2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case CloudNetworkServiceType:
+        res := &CloudNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -10590,6 +11093,46 @@ url := c.resourceURL("/network-services/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceType:
+        res := &ExchangeLanNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2PNetworkServiceType:
+        res := &P2PNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2MPNetworkServiceType:
+        res := &P2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case MP2MPNetworkServiceType:
+        res := &MP2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case CloudNetworkServiceType:
+        res := &CloudNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -10699,6 +11242,46 @@ url := c.resourceURL("/network-services/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceType:
+        res := &ExchangeLanNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2PNetworkServiceType:
+        res := &P2PNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2MPNetworkServiceType:
+        res := &P2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case MP2MPNetworkServiceType:
+        res := &MP2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case CloudNetworkServiceType:
+        res := &CloudNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -10805,6 +11388,46 @@ url := c.resourceURL("/network-services/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceType:
+        res := &ExchangeLanNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2PNetworkServiceType:
+        res := &P2PNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2MPNetworkServiceType:
+        res := &P2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case MP2MPNetworkServiceType:
+        res := &MP2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case CloudNetworkServiceType:
+        res := &CloudNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -10929,6 +11552,46 @@ url := c.resourceURL("/network-services/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case ExchangeLanNetworkServiceType:
+        res := &ExchangeLanNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2PNetworkServiceType:
+        res := &P2PNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case P2MPNetworkServiceType:
+        res := &P2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case MP2MPNetworkServiceType:
+        res := &MP2MPNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case CloudNetworkServiceType:
+        res := &CloudNetworkService{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -11596,7 +12259,7 @@ PageOffset int `json:"page_offset,omitempty"`
 PageToken string `json:"page_token,omitempty"`
 
 // Type is a type
-Type string `json:"type,omitempty"`
+Type string `json:"type"`
 
 // Required is a required
 Required string `json:"required,omitempty"`
@@ -11706,6 +12369,14 @@ url := c.resourceURL("/network-features"+params)
         ptype := tmp.PolymorphicType()
         switch(ptype) {
             
+    case RouteServerNetworkFeatureType:
+        rval := &RouteServerNetworkFeature{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
         }
     }
 
@@ -11807,6 +12478,14 @@ url := c.resourceURL("/network-features/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case RouteServerNetworkFeatureType:
+        res := &RouteServerNetworkFeature{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -11984,6 +12663,22 @@ url := c.resourceURL("/member-joining-rules"+params)
         ptype := tmp.PolymorphicType()
         switch(ptype) {
             
+    case AllowMemberJoiningRuleType:
+        rval := &AllowMemberJoiningRule{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
+    case DenyMemberJoiningRuleType:
+        rval := &DenyMemberJoiningRule{}
+        if err := json.Unmarshal(msg, rval); err != nil {
+            return nil, err
+        }
+        
+        res = append(res, rval)
+
         }
     }
 
@@ -12091,6 +12786,22 @@ url := c.resourceURL("/member-joining-rules"+params)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case AllowMemberJoiningRuleType:
+        res := &AllowMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case DenyMemberJoiningRuleType:
+        res := &DenyMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -12191,6 +12902,22 @@ url := c.resourceURL("/member-joining-rules/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case AllowMemberJoiningRuleType:
+        res := &AllowMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case DenyMemberJoiningRuleType:
+        res := &DenyMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -12300,6 +13027,22 @@ url := c.resourceURL("/member-joining-rules/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case AllowMemberJoiningRuleType:
+        res := &AllowMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case DenyMemberJoiningRuleType:
+        res := &DenyMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -12406,6 +13149,22 @@ url := c.resourceURL("/member-joining-rules/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case AllowMemberJoiningRuleType:
+        res := &AllowMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case DenyMemberJoiningRuleType:
+        res := &DenyMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType
@@ -12506,6 +13265,22 @@ url := c.resourceURL("/member-joining-rules/{id}"+params, id)
     ptype := tmp.PolymorphicType()
     switch(ptype) {
         
+    case AllowMemberJoiningRuleType:
+        res := &AllowMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
+    case DenyMemberJoiningRuleType:
+        res := &DenyMemberJoiningRule{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        
+        return res, nil
+
     }
 
     return nil, ErrInvalidPolymorphicType

@@ -18,6 +18,7 @@ func TestSetResourceDataPolymorphicVLAN(t *testing.T) {
 	et := "0x8100"
 
 	decom, _ := ixapi.ParseDate("2022-11-02")
+	conn := "12356"
 	nsc := ixapi.ExchangeLanNetworkServiceConfig{
 		Type:             "exchange_lan",
 		State:            "requested",
@@ -28,7 +29,7 @@ func TestSetResourceDataPolymorphicVLAN(t *testing.T) {
 		ConsumingAccount: "4242",
 		BillingAccount:   "1234",
 		RoleAssignments:  []string{"23", "42"},
-		Connection:       "12356",
+		Connection:       &conn,
 		ASNs:             []int{2084242132},
 		Macs:             []string{"42"},
 		IPs:              []string{},

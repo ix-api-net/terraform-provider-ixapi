@@ -61,7 +61,7 @@ func mjrAllowPatchFromResourceData(
 		req.ManagingAccount = res.GetStringOpt("managing_account")
 	}
 	if res.HasChange("consuming_account") {
-		req.ManagingAccount = res.GetStringOpt("consuming_account")
+		req.ConsumingAccount = res.GetStringOpt("consuming_account")
 	}
 
 	if res.HasChange("external_ref") {
@@ -217,7 +217,7 @@ func mjrDenyPatchFromResourceData(
 		req.ManagingAccount = res.GetStringOpt("managing_account")
 	}
 	if res.HasChange("consuming_account") {
-		req.ManagingAccount = res.GetStringOpt("consuming_account")
+		req.ConsumingAccount = res.GetStringOpt("consuming_account")
 	}
 
 	if res.HasChange("external_ref") {

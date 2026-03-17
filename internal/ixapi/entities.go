@@ -132,6 +132,9 @@ Name string `json:"name,omitempty"`
 
 // CloudNetworkProductOffering Cloud Network Product Offering
 type CloudNetworkProductOffering struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Cloud Network Product Offering`.
 ID string `json:"id,omitempty"`
 
@@ -381,6 +384,9 @@ return CloudNetworkProductOfferingType
 
 // CloudNetworkProductOfferingPatch Cloud Network Product Offering
 type CloudNetworkProductOfferingPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Cloud Network Product Offering`.
 ID *string `json:"id,omitempty"`
 
@@ -630,6 +636,9 @@ return CloudNetworkProductOfferingPatchType
 
 // ConnectionProductOffering Connection Product Offering
 type ConnectionProductOffering struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Connection Product Offering`.
 ID string `json:"id,omitempty"`
 
@@ -791,6 +800,9 @@ return ConnectionProductOfferingType
 
 // ConnectionProductOfferingPatch Conncetion Product Offering
 type ConnectionProductOfferingPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Conncetion Product Offering`.
 ID *string `json:"id,omitempty"`
 
@@ -1012,6 +1024,9 @@ ID string `json:"id,omitempty"`
 
 // ExchangeLanNetworkProductOffering Exchange Lan Network Product Offering
 type ExchangeLanNetworkProductOffering struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Exchange Lan Network Product Offering`.
 ID string `json:"id,omitempty"`
 
@@ -1198,6 +1213,9 @@ return ExchangeLanNetworkProductOfferingType
 
 // ExchangeLanNetworkProductOfferingPatch Exchange Lan Network Product Offering
 type ExchangeLanNetworkProductOfferingPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Exchange Lan Network Product Offering`.
 ID *string `json:"id,omitempty"`
 
@@ -1435,6 +1453,9 @@ Longitude *float64 `json:"longitude,omitempty"`
 
 // MP2MPNetworkProductOffering MP2MP Network Product Offering
 type MP2MPNetworkProductOffering struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `MP2MP Network Product Offering`.
 ID string `json:"id,omitempty"`
 
@@ -1618,6 +1639,9 @@ return MP2MPNetworkProductOfferingType
 
 // MP2MPNetworkProductOfferingPatch MP2MP Network Product Offering
 type MP2MPNetworkProductOfferingPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `MP2MP Network Product Offering`.
 ID *string `json:"id,omitempty"`
 
@@ -1850,6 +1874,9 @@ Pops []string `json:"pops,omitempty"`
 
 // P2MPNetworkProductOffering P2MP Network Product Offering
 type P2MPNetworkProductOffering struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `P2MP Network Product Offering`.
 ID string `json:"id,omitempty"`
 
@@ -2033,6 +2060,9 @@ return P2MPNetworkProductOfferingType
 
 // P2MPNetworkProductOfferingPatch P2MP Network Product Offering
 type P2MPNetworkProductOfferingPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `P2MP Network Product Offering`.
 ID *string `json:"id,omitempty"`
 
@@ -2216,6 +2246,9 @@ return P2MPNetworkProductOfferingPatchType
 
 // P2PNetworkProductOffering P2P Network Product Offering
 type P2PNetworkProductOffering struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `P2P Network Product Offering`.
 ID string `json:"id,omitempty"`
 
@@ -2399,6 +2432,9 @@ return P2PNetworkProductOfferingType
 
 // P2PNetworkProductOfferingPatch P2P Network Product Offering
 type P2PNetworkProductOfferingPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `P2P Network Product Offering`.
 ID *string `json:"id,omitempty"`
 
@@ -2607,21 +2643,80 @@ AvailabilityZone *string `json:"availability_zone,omitempty"`
 }
 
 // ProductOffering Polymorphic Product Offering
-type ProductOffering struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type ProductOffering interface {
+Polymorphic}
 
+// PolymorphicProductOffering is a polymorphic base
+type PolymorphicProductOffering struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (p PolymorphicProductOffering) PolymorphicType() string {
+return p.Type
+}
+
+// ConnectionProductOfferingType is a polymorphic type value for ConnectionProductOffering
+const ConnectionProductOfferingType = "connection"
+
+// ExchangeLanNetworkProductOfferingType is a polymorphic type value for ExchangeLanNetworkProductOffering
+const ExchangeLanNetworkProductOfferingType = "exchange_lan"
+
+// P2PNetworkProductOfferingType is a polymorphic type value for P2PNetworkProductOffering
+const P2PNetworkProductOfferingType = "p2p_vc"
+
+// MP2MPNetworkProductOfferingType is a polymorphic type value for MP2MPNetworkProductOffering
+const MP2MPNetworkProductOfferingType = "mp2mp_vc"
+
+// P2MPNetworkProductOfferingType is a polymorphic type value for P2MPNetworkProductOffering
+const P2MPNetworkProductOfferingType = "p2mp_vc"
+
+// CloudNetworkProductOfferingType is a polymorphic type value for CloudNetworkProductOffering
+const CloudNetworkProductOfferingType = "cloud_vc"
+
+// RoutingFunctionProductOfferingType is a polymorphic type value for RoutingFunctionProductOffering
+const RoutingFunctionProductOfferingType = "routing_function"
 
 // ProductOfferingPatch Polymorphic Product Offering
-type ProductOfferingPatch struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type ProductOfferingPatch interface {
+Polymorphic}
 
+// PolymorphicProductOfferingPatch is a polymorphic base
+type PolymorphicProductOfferingPatch struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (p PolymorphicProductOfferingPatch) PolymorphicType() string {
+return p.Type
+}
+
+// ConnectionProductOfferingPatchType is a polymorphic type value for ConnectionProductOfferingPatch
+const ConnectionProductOfferingPatchType = "connection"
+
+// ExchangeLanNetworkProductOfferingPatchType is a polymorphic type value for ExchangeLanNetworkProductOfferingPatch
+const ExchangeLanNetworkProductOfferingPatchType = "exchange_lan"
+
+// P2PNetworkProductOfferingPatchType is a polymorphic type value for P2PNetworkProductOfferingPatch
+const P2PNetworkProductOfferingPatchType = "p2p_vc"
+
+// MP2MPNetworkProductOfferingPatchType is a polymorphic type value for MP2MPNetworkProductOfferingPatch
+const MP2MPNetworkProductOfferingPatchType = "mp2mp_vc"
+
+// P2MPNetworkProductOfferingPatchType is a polymorphic type value for P2MPNetworkProductOfferingPatch
+const P2MPNetworkProductOfferingPatchType = "p2mp_vc"
+
+// CloudNetworkProductOfferingPatchType is a polymorphic type value for CloudNetworkProductOfferingPatch
+const CloudNetworkProductOfferingPatchType = "cloud_vc"
+
+// RoutingFunctionProductOfferingPatchType is a polymorphic type value for RoutingFunctionProductOfferingPatch
+const RoutingFunctionProductOfferingPatchType = "routing_function"
 
 // RoutingFunctionProductOffering Routing Function Product Offering
 type RoutingFunctionProductOffering struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Routing Function Product Offering`.
 ID string `json:"id,omitempty"`
 
@@ -2766,6 +2861,9 @@ return RoutingFunctionProductOfferingType
 
 // RoutingFunctionProductOfferingPatch Routing Function Product Offering
 type RoutingFunctionProductOfferingPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Routing Function Product Offering`.
 ID *string `json:"id,omitempty"`
 
@@ -2996,6 +3094,9 @@ PeeringType *string `json:"peering_type,omitempty"`
 
 // CloudNetworkServiceConfig Cloud Network Service Config
 type CloudNetworkServiceConfig struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -3171,6 +3272,9 @@ return CloudNetworkServiceConfigType
 
 // CloudNetworkServiceConfigPatch Cloud Network Service Config Update
 type CloudNetworkServiceConfigPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -3307,6 +3411,9 @@ return CloudNetworkServiceConfigPatchType
 
 // CloudNetworkServiceConfigRequest Cloud Network Service Config Request
 type CloudNetworkServiceConfigRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -3446,6 +3553,9 @@ return CloudNetworkServiceConfigRequestType
 
 // CloudNetworkServiceConfigUpdate Cloud Network Service Config Update
 type CloudNetworkServiceConfigUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -4016,6 +4126,9 @@ ProductOffering string `json:"product_offering,omitempty"`
 
 // ExchangeLanNetworkServiceConfig Exchange Lan Network Service Config
 type ExchangeLanNetworkServiceConfig struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -4212,6 +4325,9 @@ return ExchangeLanNetworkServiceConfigType
 
 // ExchangeLanNetworkServiceConfigPatch Exchange Lan Network Service Config Update
 type ExchangeLanNetworkServiceConfigPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -4364,6 +4480,9 @@ return ExchangeLanNetworkServiceConfigPatchType
 
 // ExchangeLanNetworkServiceConfigRequest Exchange Lan Network Service Config Request
 type ExchangeLanNetworkServiceConfigRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -4524,6 +4643,9 @@ return ExchangeLanNetworkServiceConfigRequestType
 
 // ExchangeLanNetworkServiceConfigUpdate Exchange Lan Network Service Config Update
 type ExchangeLanNetworkServiceConfigUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -4742,6 +4864,9 @@ LocalAddressSecondary *string `json:"local_address_secondary,omitempty"`
 
 // MP2MPNetworkServiceConfig MP2MP Network Service Config
 type MP2MPNetworkServiceConfig struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -4917,6 +5042,9 @@ return MP2MPNetworkServiceConfigType
 
 // MP2MPNetworkServiceConfigPatch MP2MP Network Service Config Update
 type MP2MPNetworkServiceConfigPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -5053,6 +5181,9 @@ return MP2MPNetworkServiceConfigPatchType
 
 // MP2MPNetworkServiceConfigRequest MP2MP Network Service Config Request
 type MP2MPNetworkServiceConfigRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -5192,6 +5323,9 @@ return MP2MPNetworkServiceConfigRequestType
 
 // MP2MPNetworkServiceConfigUpdate MP2MP Network Service Config Update
 type MP2MPNetworkServiceConfigUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -5327,63 +5461,194 @@ return MP2MPNetworkServiceConfigUpdateType
 }
 
 // NetworkFeatureConfig Polymorphic Network Feature Config
-type NetworkFeatureConfig struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkFeatureConfig interface {
+Polymorphic}
 
+// PolymorphicNetworkFeatureConfig is a polymorphic base
+type PolymorphicNetworkFeatureConfig struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkFeatureConfig) PolymorphicType() string {
+return n.Type
+}
+
+// RouteServerNetworkFeatureConfigType is a polymorphic type value for RouteServerNetworkFeatureConfig
+const RouteServerNetworkFeatureConfigType = "route_server"
 
 // NetworkFeatureConfigPatch Polymorphic Network Feauture Config Patch
-type NetworkFeatureConfigPatch struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkFeatureConfigPatch interface {
+Polymorphic}
 
+// PolymorphicNetworkFeatureConfigPatch is a polymorphic base
+type PolymorphicNetworkFeatureConfigPatch struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkFeatureConfigPatch) PolymorphicType() string {
+return n.Type
+}
+
+// RouteServerNetworkFeatureConfigPatchType is a polymorphic type value for RouteServerNetworkFeatureConfigPatch
+const RouteServerNetworkFeatureConfigPatchType = "route_server"
 
 // NetworkFeatureConfigRequest Polymorphic Network Feature Config Request
-type NetworkFeatureConfigRequest struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkFeatureConfigRequest interface {
+Polymorphic}
 
+// PolymorphicNetworkFeatureConfigRequest is a polymorphic base
+type PolymorphicNetworkFeatureConfigRequest struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkFeatureConfigRequest) PolymorphicType() string {
+return n.Type
+}
+
+// RouteServerNetworkFeatureConfigRequestType is a polymorphic type value for RouteServerNetworkFeatureConfigRequest
+const RouteServerNetworkFeatureConfigRequestType = "route_server"
 
 // NetworkFeatureConfigUpdate Polymorphic Network Feauture Config Update
-type NetworkFeatureConfigUpdate struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkFeatureConfigUpdate interface {
+Polymorphic}
 
+// PolymorphicNetworkFeatureConfigUpdate is a polymorphic base
+type PolymorphicNetworkFeatureConfigUpdate struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkFeatureConfigUpdate) PolymorphicType() string {
+return n.Type
+}
+
+// RouteServerNetworkFeatureConfigUpdateType is a polymorphic type value for RouteServerNetworkFeatureConfigUpdate
+const RouteServerNetworkFeatureConfigUpdateType = "route_server"
 
 // NetworkServiceConfig Polymorphic Network Service Config
-type NetworkServiceConfig struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkServiceConfig interface {
+Polymorphic}
 
+// PolymorphicNetworkServiceConfig is a polymorphic base
+type PolymorphicNetworkServiceConfig struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkServiceConfig) PolymorphicType() string {
+return n.Type
+}
+
+// ExchangeLanNetworkServiceConfigType is a polymorphic type value for ExchangeLanNetworkServiceConfig
+const ExchangeLanNetworkServiceConfigType = "exchange_lan"
+
+// P2PNetworkServiceConfigType is a polymorphic type value for P2PNetworkServiceConfig
+const P2PNetworkServiceConfigType = "p2p_vc"
+
+// P2MPNetworkServiceConfigType is a polymorphic type value for P2MPNetworkServiceConfig
+const P2MPNetworkServiceConfigType = "p2mp_vc"
+
+// MP2MPNetworkServiceConfigType is a polymorphic type value for MP2MPNetworkServiceConfig
+const MP2MPNetworkServiceConfigType = "mp2mp_vc"
+
+// CloudNetworkServiceConfigType is a polymorphic type value for CloudNetworkServiceConfig
+const CloudNetworkServiceConfigType = "cloud_vc"
 
 // NetworkServiceConfigPatch Polymorphic Network Service Config
-type NetworkServiceConfigPatch struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkServiceConfigPatch interface {
+Polymorphic}
 
+// PolymorphicNetworkServiceConfigPatch is a polymorphic base
+type PolymorphicNetworkServiceConfigPatch struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkServiceConfigPatch) PolymorphicType() string {
+return n.Type
+}
+
+// ExchangeLanNetworkServiceConfigPatchType is a polymorphic type value for ExchangeLanNetworkServiceConfigPatch
+const ExchangeLanNetworkServiceConfigPatchType = "exchange_lan"
+
+// P2PNetworkServiceConfigPatchType is a polymorphic type value for P2PNetworkServiceConfigPatch
+const P2PNetworkServiceConfigPatchType = "p2p_vc"
+
+// P2MPNetworkServiceConfigPatchType is a polymorphic type value for P2MPNetworkServiceConfigPatch
+const P2MPNetworkServiceConfigPatchType = "p2mp_vc"
+
+// MP2MPNetworkServiceConfigPatchType is a polymorphic type value for MP2MPNetworkServiceConfigPatch
+const MP2MPNetworkServiceConfigPatchType = "mp2mp_vc"
+
+// CloudNetworkServiceConfigPatchType is a polymorphic type value for CloudNetworkServiceConfigPatch
+const CloudNetworkServiceConfigPatchType = "cloud_vc"
 
 // NetworkServiceConfigRequest Polymorhic Network Service Config Request
-type NetworkServiceConfigRequest struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkServiceConfigRequest interface {
+Polymorphic}
 
+// PolymorphicNetworkServiceConfigRequest is a polymorphic base
+type PolymorphicNetworkServiceConfigRequest struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkServiceConfigRequest) PolymorphicType() string {
+return n.Type
+}
+
+// ExchangeLanNetworkServiceConfigRequestType is a polymorphic type value for ExchangeLanNetworkServiceConfigRequest
+const ExchangeLanNetworkServiceConfigRequestType = "exchange_lan"
+
+// P2PNetworkServiceConfigRequestType is a polymorphic type value for P2PNetworkServiceConfigRequest
+const P2PNetworkServiceConfigRequestType = "p2p_vc"
+
+// P2MPNetworkServiceConfigRequestType is a polymorphic type value for P2MPNetworkServiceConfigRequest
+const P2MPNetworkServiceConfigRequestType = "p2mp_vc"
+
+// MP2MPNetworkServiceConfigRequestType is a polymorphic type value for MP2MPNetworkServiceConfigRequest
+const MP2MPNetworkServiceConfigRequestType = "mp2mp_vc"
+
+// CloudNetworkServiceConfigRequestType is a polymorphic type value for CloudNetworkServiceConfigRequest
+const CloudNetworkServiceConfigRequestType = "cloud_vc"
 
 // NetworkServiceConfigUpdate Polymorphic Network Service Config
-type NetworkServiceConfigUpdate struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkServiceConfigUpdate interface {
+Polymorphic}
 
+// PolymorphicNetworkServiceConfigUpdate is a polymorphic base
+type PolymorphicNetworkServiceConfigUpdate struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkServiceConfigUpdate) PolymorphicType() string {
+return n.Type
+}
+
+// ExchangeLanNetworkServiceConfigUpdateType is a polymorphic type value for ExchangeLanNetworkServiceConfigUpdate
+const ExchangeLanNetworkServiceConfigUpdateType = "exchange_lan"
+
+// P2PNetworkServiceConfigUpdateType is a polymorphic type value for P2PNetworkServiceConfigUpdate
+const P2PNetworkServiceConfigUpdateType = "p2p_vc"
+
+// P2MPNetworkServiceConfigUpdateType is a polymorphic type value for P2MPNetworkServiceConfigUpdate
+const P2MPNetworkServiceConfigUpdateType = "p2mp_vc"
+
+// MP2MPNetworkServiceConfigUpdateType is a polymorphic type value for MP2MPNetworkServiceConfigUpdate
+const MP2MPNetworkServiceConfigUpdateType = "mp2mp_vc"
+
+// CloudNetworkServiceConfigUpdateType is a polymorphic type value for CloudNetworkServiceConfigUpdate
+const CloudNetworkServiceConfigUpdateType = "cloud_vc"
 
 // P2MPNetworkServiceConfig P2MP Network Service Config
 type P2MPNetworkServiceConfig struct {
+// Type is a type
+Type string `json:"type"`
+
 // Macs A list of MAC address IDs. You may have to register the
 // address using the `macs_create` operation.
 // *(Sensitive Property)*
@@ -5551,6 +5816,9 @@ return P2MPNetworkServiceConfigType
 
 // P2MPNetworkServiceConfigPatch P2MP Network Service Config Update
 type P2MPNetworkServiceConfigPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // Macs A list of MAC address IDs. You may have to register the
 // address using the `macs_create` operation.
 // *(Sensitive Property)*
@@ -5679,6 +5947,9 @@ return P2MPNetworkServiceConfigPatchType
 
 // P2MPNetworkServiceConfigRequest P2MP Network Service Config Request
 type P2MPNetworkServiceConfigRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // Macs A list of MAC address IDs. You may have to register the
 // address using the `macs_create` operation.
 // *(Sensitive Property)*
@@ -5810,6 +6081,9 @@ return P2MPNetworkServiceConfigRequestType
 
 // P2MPNetworkServiceConfigUpdate P2MP Network Service Config Update
 type P2MPNetworkServiceConfigUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // Macs A list of MAC address IDs. You may have to register the
 // address using the `macs_create` operation.
 // *(Sensitive Property)*
@@ -5938,6 +6212,9 @@ return P2MPNetworkServiceConfigUpdateType
 
 // P2PNetworkServiceConfig P2P Network Service Config
 type P2PNetworkServiceConfig struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -6099,6 +6376,9 @@ return P2PNetworkServiceConfigType
 
 // P2PNetworkServiceConfigPatch P2P Network Service Config Update
 type P2PNetworkServiceConfigPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -6221,6 +6501,9 @@ return P2PNetworkServiceConfigPatchType
 
 // P2PNetworkServiceConfigRequest P2P Network Service Config Request
 type P2PNetworkServiceConfigRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -6346,6 +6629,9 @@ return P2PNetworkServiceConfigRequestType
 
 // P2PNetworkServiceConfigUpdate P2P Network Service Config Update
 type P2PNetworkServiceConfigUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -6766,6 +7052,9 @@ CrossConnectID *string `json:"cross_connect_id,omitempty"`
 
 // RouteServerNetworkFeatureConfig Route Server Network Feature Config
 type RouteServerNetworkFeatureConfig struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -6919,6 +7208,9 @@ return RouteServerNetworkFeatureConfigType
 
 // RouteServerNetworkFeatureConfigPatch Route Server Network Feature Config Update
 type RouteServerNetworkFeatureConfigPatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -7020,6 +7312,9 @@ return RouteServerNetworkFeatureConfigPatchType
 
 // RouteServerNetworkFeatureConfigRequest Route Server Network Feature Config Request
 type RouteServerNetworkFeatureConfigRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -7165,6 +7460,9 @@ return RouteServerNetworkFeatureConfigRequestType
 
 // RouteServerNetworkFeatureConfigUpdate Route Server Network Feature Config Update
 type RouteServerNetworkFeatureConfigUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ManagingAccount The `id` of the account responsible for managing the service via
 // the API. A manager can read and update the state of entities.
 // *(Sensitive Property)*
@@ -7284,14 +7582,30 @@ return RouteServerNetworkFeatureConfigUpdateType
 // on the `NetworkServiceConfig` statistics.
 // 
 // *(Sensitive Property)*
-type SharedStatisticsConfig struct {
-// Policy is a policy
-Policy string `json:"policy,omitempty"`
+type SharedStatisticsConfig interface {
+Polymorphic}
 
+// PolymorphicSharedStatisticsConfig is a polymorphic base
+type PolymorphicSharedStatisticsConfig struct {
+Policy string `json:"policy"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (s PolymorphicSharedStatisticsConfig) PolymorphicType() string {
+return s.Policy
+}
+
+// SharedStatisticsConfigAllowType is a polymorphic type value for SharedStatisticsConfigAllow
+const SharedStatisticsConfigAllowType = "allow"
+
+// SharedStatisticsConfigDenyType is a polymorphic type value for SharedStatisticsConfigDeny
+const SharedStatisticsConfigDenyType = "deny"
 
 // SharedStatisticsConfigAllow Shared Statistics Policy: Allow
 type SharedStatisticsConfigAllow struct {
+// Policy is a policy
+Policy string `json:"policy,omitempty"`
+
 // NscAvailableCapacity **DEPRECATION NOTICE**: This field will be removed in
 // favor of choosing a statistics sharing policy.
 // 
@@ -7316,6 +7630,9 @@ return SharedStatisticsConfigAllowType
 
 // SharedStatisticsConfigDeny Shared Statistics Policy: Deny
 type SharedStatisticsConfigDeny struct {
+// Policy is a policy
+Policy string `json:"policy,omitempty"`
+
 // NscAvailableCapacity **DEPRECATION NOTICE**: This field will be removed in
 // favor of choosing a statistics sharing policy.
 // 
@@ -7341,6 +7658,9 @@ return SharedStatisticsConfigDenyType
 
 // VLANConfigDot1Q A Dot1Q vlan configuration
 type VLANConfigDot1Q struct {
+// VLANType is a vlan_type
+VLANType string `json:"vlan_type,omitempty"`
+
 // VLAN A VLAN tag. If `null`, the IXP will auto-select
 // a valid vlan-id.
 // 
@@ -7356,8 +7676,23 @@ func (v VLANConfigDot1Q) PolymorphicType() string {
 return VLANConfigDot1QType
 }
 
+// VLANConfigPort A Port vlan configuration
+type VLANConfigPort struct {
+// VLANType is a vlan_type
+VLANType string `json:"vlan_type,omitempty"`
+
+}
+
+// PolymorphicType implements the polymorphic interface
+func (v VLANConfigPort) PolymorphicType() string {
+return VLANConfigPortType
+}
+
 // VLANConfigQinQ A QinQ vlan configuration
 type VLANConfigQinQ struct {
+// VLANType is a vlan_type
+VLANType string `json:"vlan_type,omitempty"`
+
 // OuterVLAN The outer VLAN id.
 // If `null`, the IXP will auto-select
 // a valid vlan-id.
@@ -7384,11 +7719,27 @@ return VLANConfigQinQType
 // Is is **required** when a `connection` is provided.
 // 
 // *(Sensitive Property)*
-type VLANConfig struct {
-// VLANType is a vlan_type
-VLANType string `json:"vlan_type,omitempty"`
+type VLANConfig interface {
+Polymorphic}
 
+// PolymorphicVLANConfig is a polymorphic base
+type PolymorphicVLANConfig struct {
+VLANType string `json:"vlan_type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (v PolymorphicVLANConfig) PolymorphicType() string {
+return v.VLANType
+}
+
+// VLANConfigDot1QType is a polymorphic type value for VLANConfigDot1Q
+const VLANConfigDot1QType = "dot1q"
+
+// VLANConfigQinQType is a polymorphic type value for VLANConfigQinQ
+const VLANConfigQinQType = "qinq"
+
+// VLANConfigPortType is a polymorphic type value for VLANConfigPort
+const VLANConfigPortType = "port"
 
 // Account Account
 type Account struct {
@@ -8420,6 +8771,9 @@ Reason string `json:"reason,omitempty"`
 
 // AllowMemberJoiningRule A rule for members joining a private vlan
 type AllowMemberJoiningRule struct {
+// Type is a type
+Type string `json:"type"`
+
 // ExternalRef Reference field, free to use for the API user.
 // *(Sensitive Property)*
 // 
@@ -8461,6 +8815,9 @@ return AllowMemberJoiningRuleType
 
 // AllowMemberJoiningRulePatch A vlan member joining rule update
 type AllowMemberJoiningRulePatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ExternalRef Reference field, free to use for the API user.
 // *(Sensitive Property)*
 // 
@@ -8497,6 +8854,9 @@ return AllowMemberJoiningRulePatchType
 
 // AllowMemberJoiningRuleRequest A new vlan member joining rule
 type AllowMemberJoiningRuleRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ExternalRef Reference field, free to use for the API user.
 // *(Sensitive Property)*
 // 
@@ -8538,6 +8898,9 @@ return AllowMemberJoiningRuleRequestType
 
 // AllowMemberJoiningRuleUpdate A vlan member joining rule update
 type AllowMemberJoiningRuleUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ExternalRef Reference field, free to use for the API user.
 // *(Sensitive Property)*
 // 
@@ -8574,6 +8937,9 @@ return AllowMemberJoiningRuleUpdateType
 
 // CloudNetworkService Cloud Network Service
 type CloudNetworkService struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -8714,6 +9080,9 @@ return CloudNetworkServiceType
 
 // CloudNetworkServicePatch Cloud Network Service Update
 type CloudNetworkServicePatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -8781,6 +9150,9 @@ return CloudNetworkServicePatchType
 
 // CloudNetworkServiceRequest Cloud Network Service Request
 type CloudNetworkServiceRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -8845,6 +9217,9 @@ return CloudNetworkServiceRequestType
 
 // CloudNetworkServiceUpdate Cloud Network Service Update
 type CloudNetworkServiceUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -8912,6 +9287,9 @@ return CloudNetworkServiceUpdateType
 
 // DenyMemberJoiningRule A rule for members joining a private vlan
 type DenyMemberJoiningRule struct {
+// Type is a type
+Type string `json:"type"`
+
 // ExternalRef Reference field, free to use for the API user.
 // *(Sensitive Property)*
 // 
@@ -8928,6 +9306,9 @@ ManagingAccount string `json:"managing_account,omitempty"`
 // 
 ConsumingAccount string `json:"consuming_account,omitempty"`
 
+// ID The *primary identifier* of the `A rule for members joining a private vlan`.
+ID string `json:"id,omitempty"`
+
 // NetworkService The `id` of the related `NetworkService`.
 // 
 // 
@@ -8942,6 +9323,9 @@ return DenyMemberJoiningRuleType
 
 // DenyMemberJoiningRulePatch A vlan member joining rule update
 type DenyMemberJoiningRulePatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ExternalRef Reference field, free to use for the API user.
 // *(Sensitive Property)*
 // 
@@ -8958,6 +9342,9 @@ ManagingAccount *string `json:"managing_account,omitempty"`
 // 
 ConsumingAccount *string `json:"consuming_account,omitempty"`
 
+// ID The *primary identifier* of the `A vlan member joining rule update`.
+ID *string `json:"id,omitempty"`
+
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -8967,6 +9354,9 @@ return DenyMemberJoiningRulePatchType
 
 // DenyMemberJoiningRuleRequest A new vlan member joining rule
 type DenyMemberJoiningRuleRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ExternalRef Reference field, free to use for the API user.
 // *(Sensitive Property)*
 // 
@@ -8982,6 +9372,9 @@ ManagingAccount string `json:"managing_account,omitempty"`
 // network service should be granted or denied.
 // 
 ConsumingAccount string `json:"consuming_account,omitempty"`
+
+// ID The *primary identifier* of the `A new vlan member joining rule`.
+ID string `json:"id,omitempty"`
 
 // NetworkService The `id` of the related `NetworkService`.
 // 
@@ -8997,6 +9390,9 @@ return DenyMemberJoiningRuleRequestType
 
 // DenyMemberJoiningRuleUpdate A vlan member joining rule update
 type DenyMemberJoiningRuleUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ExternalRef Reference field, free to use for the API user.
 // *(Sensitive Property)*
 // 
@@ -9013,6 +9409,9 @@ ManagingAccount string `json:"managing_account,omitempty"`
 // 
 ConsumingAccount string `json:"consuming_account,omitempty"`
 
+// ID The *primary identifier* of the `A vlan member joining rule update`.
+ID string `json:"id,omitempty"`
+
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -9022,6 +9421,9 @@ return DenyMemberJoiningRuleUpdateType
 
 // ExchangeLanNetworkService Exchange Lan Network Service
 type ExchangeLanNetworkService struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -9118,6 +9520,9 @@ Mandatory bool `json:"mandatory,omitempty"`
 
 // MP2MPNetworkService MP2MP Network Service
 type MP2MPNetworkService struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -9259,6 +9664,9 @@ return MP2MPNetworkServiceType
 
 // MP2MPNetworkServicePatch MP2MP Network Service Update
 type MP2MPNetworkServicePatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -9340,6 +9748,9 @@ return MP2MPNetworkServicePatchType
 
 // MP2MPNetworkServiceRequest MP2MP Network Service Request
 type MP2MPNetworkServiceRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -9421,6 +9832,9 @@ return MP2MPNetworkServiceRequestType
 
 // MP2MPNetworkServiceUpdate MP2MP Network Service Update
 type MP2MPNetworkServiceUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -9501,46 +9915,130 @@ return MP2MPNetworkServiceUpdateType
 }
 
 // MemberJoiningRule Polymorphic Member Joining Rule
-type MemberJoiningRule struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type MemberJoiningRule interface {
+Polymorphic}
 
+// PolymorphicMemberJoiningRule is a polymorphic base
+type PolymorphicMemberJoiningRule struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (m PolymorphicMemberJoiningRule) PolymorphicType() string {
+return m.Type
+}
+
+// AllowMemberJoiningRuleType is a polymorphic type value for AllowMemberJoiningRule
+const AllowMemberJoiningRuleType = "allow"
+
+// DenyMemberJoiningRuleType is a polymorphic type value for DenyMemberJoiningRule
+const DenyMemberJoiningRuleType = "deny"
 
 // MemberJoiningRulePatch Polymorphic Member Joining Rule Update
-type MemberJoiningRulePatch struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type MemberJoiningRulePatch interface {
+Polymorphic}
 
+// PolymorphicMemberJoiningRulePatch is a polymorphic base
+type PolymorphicMemberJoiningRulePatch struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (m PolymorphicMemberJoiningRulePatch) PolymorphicType() string {
+return m.Type
+}
+
+// AllowMemberJoiningRulePatchType is a polymorphic type value for AllowMemberJoiningRulePatch
+const AllowMemberJoiningRulePatchType = "allow"
+
+// DenyMemberJoiningRulePatchType is a polymorphic type value for DenyMemberJoiningRulePatch
+const DenyMemberJoiningRulePatchType = "deny"
 
 // MemberJoiningRuleRequest Polymorphic Member Joining Rule Request
-type MemberJoiningRuleRequest struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type MemberJoiningRuleRequest interface {
+Polymorphic}
 
+// PolymorphicMemberJoiningRuleRequest is a polymorphic base
+type PolymorphicMemberJoiningRuleRequest struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (m PolymorphicMemberJoiningRuleRequest) PolymorphicType() string {
+return m.Type
+}
+
+// AllowMemberJoiningRuleRequestType is a polymorphic type value for AllowMemberJoiningRuleRequest
+const AllowMemberJoiningRuleRequestType = "allow"
+
+// DenyMemberJoiningRuleRequestType is a polymorphic type value for DenyMemberJoiningRuleRequest
+const DenyMemberJoiningRuleRequestType = "deny"
 
 // MemberJoiningRuleUpdate Polymorphic Member Joining Rule Update
-type MemberJoiningRuleUpdate struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type MemberJoiningRuleUpdate interface {
+Polymorphic}
 
+// PolymorphicMemberJoiningRuleUpdate is a polymorphic base
+type PolymorphicMemberJoiningRuleUpdate struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (m PolymorphicMemberJoiningRuleUpdate) PolymorphicType() string {
+return m.Type
+}
+
+// AllowMemberJoiningRuleUpdateType is a polymorphic type value for AllowMemberJoiningRuleUpdate
+const AllowMemberJoiningRuleUpdateType = "allow"
+
+// DenyMemberJoiningRuleUpdateType is a polymorphic type value for DenyMemberJoiningRuleUpdate
+const DenyMemberJoiningRuleUpdateType = "deny"
 
 // NetworkFeature Polymorphic Network Feature
-type NetworkFeature struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkFeature interface {
+Polymorphic}
 
+// PolymorphicNetworkFeature is a polymorphic base
+type PolymorphicNetworkFeature struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkFeature) PolymorphicType() string {
+return n.Type
+}
+
+// RouteServerNetworkFeatureType is a polymorphic type value for RouteServerNetworkFeature
+const RouteServerNetworkFeatureType = "route_server"
 
 // NetworkService Polymorphic Network Services
-type NetworkService struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkService interface {
+Polymorphic}
 
+// PolymorphicNetworkService is a polymorphic base
+type PolymorphicNetworkService struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkService) PolymorphicType() string {
+return n.Type
+}
+
+// ExchangeLanNetworkServiceType is a polymorphic type value for ExchangeLanNetworkService
+const ExchangeLanNetworkServiceType = "exchange_lan"
+
+// P2PNetworkServiceType is a polymorphic type value for P2PNetworkService
+const P2PNetworkServiceType = "p2p_vc"
+
+// P2MPNetworkServiceType is a polymorphic type value for P2MPNetworkService
+const P2MPNetworkServiceType = "p2mp_vc"
+
+// MP2MPNetworkServiceType is a polymorphic type value for MP2MPNetworkService
+const MP2MPNetworkServiceType = "mp2mp_vc"
+
+// CloudNetworkServiceType is a polymorphic type value for CloudNetworkService
+const CloudNetworkServiceType = "cloud_vc"
 
 // NetworkServiceChangeRequest NetworkServiceChangeRequest
 type NetworkServiceChangeRequest struct {
@@ -9559,35 +10057,102 @@ Capacity *int `json:"capacity,omitempty"`
 }
 
 // NetworkServiceDeleteResponse Polymorphic Network Service Request
-type NetworkServiceDeleteResponse struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkServiceDeleteResponse interface {
+Polymorphic}
 
+// PolymorphicNetworkServiceDeleteResponse is a polymorphic base
+type PolymorphicNetworkServiceDeleteResponse struct {
+Type string `json:"type"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkServiceDeleteResponse) PolymorphicType() string {
+return n.Type
 }
 
 // NetworkServicePatch Polymorphic Network Service Patch
-type NetworkServicePatch struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkServicePatch interface {
+Polymorphic}
 
+// PolymorphicNetworkServicePatch is a polymorphic base
+type PolymorphicNetworkServicePatch struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkServicePatch) PolymorphicType() string {
+return n.Type
+}
+
+// P2PNetworkServicePatchType is a polymorphic type value for P2PNetworkServicePatch
+const P2PNetworkServicePatchType = "p2p_vc"
+
+// P2MPNetworkServicePatchType is a polymorphic type value for P2MPNetworkServicePatch
+const P2MPNetworkServicePatchType = "p2mp_vc"
+
+// MP2MPNetworkServicePatchType is a polymorphic type value for MP2MPNetworkServicePatch
+const MP2MPNetworkServicePatchType = "mp2mp_vc"
+
+// CloudNetworkServicePatchType is a polymorphic type value for CloudNetworkServicePatch
+const CloudNetworkServicePatchType = "cloud_vc"
 
 // NetworkServiceRequest Polymorphic Network Service Request
-type NetworkServiceRequest struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkServiceRequest interface {
+Polymorphic}
 
+// PolymorphicNetworkServiceRequest is a polymorphic base
+type PolymorphicNetworkServiceRequest struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkServiceRequest) PolymorphicType() string {
+return n.Type
+}
+
+// P2PNetworkServiceRequestType is a polymorphic type value for P2PNetworkServiceRequest
+const P2PNetworkServiceRequestType = "p2p_vc"
+
+// P2MPNetworkServiceRequestType is a polymorphic type value for P2MPNetworkServiceRequest
+const P2MPNetworkServiceRequestType = "p2mp_vc"
+
+// MP2MPNetworkServiceRequestType is a polymorphic type value for MP2MPNetworkServiceRequest
+const MP2MPNetworkServiceRequestType = "mp2mp_vc"
+
+// CloudNetworkServiceRequestType is a polymorphic type value for CloudNetworkServiceRequest
+const CloudNetworkServiceRequestType = "cloud_vc"
 
 // NetworkServiceUpdate Polymorphic Network Service Update
-type NetworkServiceUpdate struct {
-// Type is a type
-Type string `json:"type,omitempty"`
+type NetworkServiceUpdate interface {
+Polymorphic}
 
+// PolymorphicNetworkServiceUpdate is a polymorphic base
+type PolymorphicNetworkServiceUpdate struct {
+Type string `json:"type"`
 }
+
+// PolymorphicType implements the polymorphic interface
+func (n PolymorphicNetworkServiceUpdate) PolymorphicType() string {
+return n.Type
+}
+
+// P2PNetworkServiceUpdateType is a polymorphic type value for P2PNetworkServiceUpdate
+const P2PNetworkServiceUpdateType = "p2p_vc"
+
+// P2MPNetworkServiceUpdateType is a polymorphic type value for P2MPNetworkServiceUpdate
+const P2MPNetworkServiceUpdateType = "p2mp_vc"
+
+// MP2MPNetworkServiceUpdateType is a polymorphic type value for MP2MPNetworkServiceUpdate
+const MP2MPNetworkServiceUpdateType = "mp2mp_vc"
+
+// CloudNetworkServiceUpdateType is a polymorphic type value for CloudNetworkServiceUpdate
+const CloudNetworkServiceUpdateType = "cloud_vc"
 
 // P2MPNetworkService P2MP Network Service
 type P2MPNetworkService struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -9715,6 +10280,9 @@ return P2MPNetworkServiceType
 
 // P2MPNetworkServicePatch P2MP Network Service Update
 type P2MPNetworkServicePatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -9787,6 +10355,9 @@ return P2MPNetworkServicePatchType
 
 // P2MPNetworkServiceRequest P2MP Network Service Request
 type P2MPNetworkServiceRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -9859,6 +10430,9 @@ return P2MPNetworkServiceRequestType
 
 // P2MPNetworkServiceUpdate P2MP Network Service Update
 type P2MPNetworkServiceUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -9931,6 +10505,9 @@ return P2MPNetworkServiceUpdateType
 
 // P2PNetworkService P2P Network Service
 type P2PNetworkService struct {
+// Type is a type
+Type string `json:"type"`
+
 // State The state of the object.
 // *(Sensitive Property)*
 State string `json:"state,omitempty"`
@@ -10046,6 +10623,9 @@ return P2PNetworkServiceType
 
 // P2PNetworkServicePatch P2P Network Service Update
 type P2PNetworkServicePatch struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -10112,6 +10692,9 @@ return P2PNetworkServicePatchType
 
 // P2PNetworkServiceRequest P2P Network Service Request
 type P2PNetworkServiceRequest struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -10178,6 +10761,9 @@ return P2PNetworkServiceRequestType
 
 // P2PNetworkServiceUpdate P2P Network Service Update
 type P2PNetworkServiceUpdate struct {
+// Type is a type
+Type string `json:"type"`
+
 // ProductOffering The `id` of the related `ProductOffering`.
 // 
 // 
@@ -10244,6 +10830,9 @@ return P2PNetworkServiceUpdateType
 
 // RouteServerNetworkFeature Route Server Network Feature
 type RouteServerNetworkFeature struct {
+// Type is a type
+Type string `json:"type"`
+
 // ID The *primary identifier* of the `Route Server Network Feature`.
 ID string `json:"id,omitempty"`
 
