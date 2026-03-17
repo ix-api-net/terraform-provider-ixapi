@@ -5,11 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
-	"net/url"
-	"strings"
 )
 
 // This file is generated from the IX-API schema.
@@ -17,25 +14,29 @@ import (
 
 // Errors
 var (
-	// ErrInvalidPolymorphicType is raised when a polymorphic type could
-	// not be resolved.
-	ErrInvalidPolymorphicType = errors.New("unknown polymorphic type")
+    // ErrInvalidPolymorphicType is raised when a polymorphic type could
+    // not be resolved.
+    ErrInvalidPolymorphicType = errors.New("unknown polymorphic type")
 )
 
-// AuthTokenCreate Authenticate an API user identified by `api_key` and
+
+// AuthTokenCreate **Operation:** `auth_token_create`
+// 
+//  **Summary:** Authenticate an API user identified by `api_key` and
 // `api_secret`.
 func (c *Client) AuthTokenCreate(
-	ctx context.Context,
-	req *AuthTokenRequest,
+    ctx context.Context,
+    req *AuthTokenRequest,
 
+    
 ) (*AuthToken, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/auth/token" + params)
+url := c.resourceURL("/auth/token"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -46,7 +47,8 @@ func (c *Client) AuthTokenCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -62,26 +64,26 @@ func (c *Client) AuthTokenCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &AuthToken{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &AuthToken{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -89,7 +91,7 @@ func (c *Client) AuthTokenCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -98,7 +100,7 @@ func (c *Client) AuthTokenCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -107,7 +109,7 @@ func (c *Client) AuthTokenCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -116,25 +118,28 @@ func (c *Client) AuthTokenCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// AuthTokenRefresh Reauthenticate the API user, issue a new `access_token`
+// AuthTokenRefresh **Operation:** `auth_token_refresh`
+// 
+//  **Summary:** Reauthenticate the API user, issue a new `access_token`
 // and `refresh_token` pair by providing the `refresh_token`
 // in the request body.
 func (c *Client) AuthTokenRefresh(
-	ctx context.Context,
-	req *RefreshTokenRequest,
+    ctx context.Context,
+    req *RefreshTokenRequest,
 
+    
 ) (*AuthToken, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/auth/refresh" + params)
+url := c.resourceURL("/auth/refresh"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -145,7 +150,8 @@ func (c *Client) AuthTokenRefresh(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -161,26 +167,26 @@ func (c *Client) AuthTokenRefresh(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &AuthToken{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &AuthToken{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -188,7 +194,7 @@ func (c *Client) AuthTokenRefresh(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -197,7 +203,7 @@ func (c *Client) AuthTokenRefresh(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -206,7 +212,7 @@ func (c *Client) AuthTokenRefresh(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -215,134 +221,158 @@ func (c *Client) AuthTokenRefresh(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // FacilitiesListQuery has all query parameters for FacilitiesList
 type FacilitiesListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// CapabilityMediaType is a capability_media_type
-	CapabilityMediaType string `json:"capability_media_type,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// CapabilitySpeed is a capability_speed
-	CapabilitySpeed int `json:"capability_speed,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// CapabilitySpeedLt is a capability_speed__lt
-	CapabilitySpeedLt int `json:"capability_speed__lt,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// CapabilitySpeedLte is a capability_speed__lte
-	CapabilitySpeedLte int `json:"capability_speed__lte,omitempty"`
+// CapabilitySpeed is a capability_speed
+CapabilitySpeed int `json:"capability_speed,omitempty"`
 
-	// CapabilitySpeedGt is a capability_speed__gt
-	CapabilitySpeedGt int `json:"capability_speed__gt,omitempty"`
+// CapabilitySpeedLt is a capability_speed_lt
+CapabilitySpeedLt int `json:"capability_speed_lt,omitempty"`
 
-	// CapabilitySpeedGte is a capability_speed__gte
-	CapabilitySpeedGte int `json:"capability_speed__gte,omitempty"`
+// CapabilitySpeedLte is a capability_speed_lte
+CapabilitySpeedLte int `json:"capability_speed_lte,omitempty"`
 
-	// OrganisationName is a organisation_name
-	OrganisationName string `json:"organisation_name,omitempty"`
+// CapabilitySpeedGt is a capability_speed_gt
+CapabilitySpeedGt int `json:"capability_speed_gt,omitempty"`
 
-	// MetroArea is a metro_area
-	MetroArea string `json:"metro_area,omitempty"`
+// CapabilitySpeedGte is a capability_speed_gte
+CapabilitySpeedGte int `json:"capability_speed_gte,omitempty"`
 
-	// MetroAreaNetwork is a metro_area_network
-	MetroAreaNetwork string `json:"metro_area_network,omitempty"`
+// CapabilityMediaType is a capability_media_type
+CapabilityMediaType string `json:"capability_media_type,omitempty"`
 
-	// AddressCountry is a address_country
-	AddressCountry string `json:"address_country,omitempty"`
+// OrganisationName is a organisation_name
+OrganisationName string `json:"organisation_name,omitempty"`
 
-	// AddressLocality is a address_locality
-	AddressLocality string `json:"address_locality,omitempty"`
+// MetroArea is a metro_area
+MetroArea string `json:"metro_area,omitempty"`
 
-	// PostalCode is a postal_code
-	PostalCode string `json:"postal_code,omitempty"`
+// MetroAreaNetwork is a metro_area_network
+MetroAreaNetwork string `json:"metro_area_network,omitempty"`
+
+// AddressCountry is a address_country
+AddressCountry string `json:"address_country,omitempty"`
+
+// AddressLocality is a address_locality
+AddressLocality string `json:"address_locality,omitempty"`
+
+// PostalCode is a postal_code
+PostalCode string `json:"postal_code,omitempty"`
+
 }
 
 // RawQuery creates a query string for FacilitiesListQuery
-func (f *FacilitiesListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(f.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = f.CapabilityMediaType
-	if val != "" {
-		qry.Add("capability_media_type", val)
-	}
-	val = fmt.Sprintf("%v", f.CapabilitySpeed)
-	if val != "0" {
-		qry.Add("capability_speed", val)
-	}
-	val = fmt.Sprintf("%v", f.CapabilitySpeedLt)
-	if val != "0" {
-		qry.Add("capability_speed__lt", val)
-	}
-	val = fmt.Sprintf("%v", f.CapabilitySpeedLte)
-	if val != "0" {
-		qry.Add("capability_speed__lte", val)
-	}
-	val = fmt.Sprintf("%v", f.CapabilitySpeedGt)
-	if val != "0" {
-		qry.Add("capability_speed__gt", val)
-	}
-	val = fmt.Sprintf("%v", f.CapabilitySpeedGte)
-	if val != "0" {
-		qry.Add("capability_speed__gte", val)
-	}
-	val = f.OrganisationName
-	if val != "" {
-		qry.Add("organisation_name", val)
-	}
-	val = f.MetroArea
-	if val != "" {
-		qry.Add("metro_area", val)
-	}
-	val = f.MetroAreaNetwork
-	if val != "" {
-		qry.Add("metro_area_network", val)
-	}
-	val = f.AddressCountry
-	if val != "" {
-		qry.Add("address_country", val)
-	}
-	val = f.AddressLocality
-	if val != "" {
-		qry.Add("address_locality", val)
-	}
-	val = f.PostalCode
-	if val != "" {
-		qry.Add("postal_code", val)
-	}
-	return qry.Encode()
+func (f* FacilitiesListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(f.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", f.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", f.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = f.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = fmt.Sprintf("%v", f.CapabilitySpeed)
+if val != "0" {
+qry.Add("capability_speed", val)
+}
+val = fmt.Sprintf("%v", f.CapabilitySpeedLt)
+if val != "0" {
+qry.Add("capability_speed_lt", val)
+}
+val = fmt.Sprintf("%v", f.CapabilitySpeedLte)
+if val != "0" {
+qry.Add("capability_speed_lte", val)
+}
+val = fmt.Sprintf("%v", f.CapabilitySpeedGt)
+if val != "0" {
+qry.Add("capability_speed_gt", val)
+}
+val = fmt.Sprintf("%v", f.CapabilitySpeedGte)
+if val != "0" {
+qry.Add("capability_speed_gte", val)
+}
+val = f.CapabilityMediaType
+if val != "" {
+qry.Add("capability_media_type", val)
+}
+val = f.OrganisationName
+if val != "" {
+qry.Add("organisation_name", val)
+}
+val = f.MetroArea
+if val != "" {
+qry.Add("metro_area", val)
+}
+val = f.MetroAreaNetwork
+if val != "" {
+qry.Add("metro_area_network", val)
+}
+val = f.AddressCountry
+if val != "" {
+qry.Add("address_country", val)
+}
+val = f.AddressLocality
+if val != "" {
+qry.Add("address_locality", val)
+}
+val = f.PostalCode
+if val != "" {
+qry.Add("postal_code", val)
+}
+return qry.Encode()}
 
-// FacilitiesList Get a (filtered) list of `facilities`.
+
+// FacilitiesList **Operation:** `facilities_list`
+// 
+//  **Summary:** Get a (filtered) list of `facilities`.
 func (c *Client) FacilitiesList(
-	ctx context.Context,
-
-	qry ...*FacilitiesListQuery,
+    ctx context.Context,
+    
+    qry ...*FacilitiesListQuery,
 ) ([]*Facility, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/facilities" + params)
+url := c.resourceURL("/facilities"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -358,26 +388,26 @@ func (c *Client) FacilitiesList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*Facility{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*Facility{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -385,7 +415,7 @@ func (c *Client) FacilitiesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -394,7 +424,7 @@ func (c *Client) FacilitiesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -403,7 +433,7 @@ func (c *Client) FacilitiesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -412,29 +442,32 @@ func (c *Client) FacilitiesList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// FacilitiesRead Retrieve a facility by id
+// FacilitiesRead **Operation:** `facilities_read`
+// 
+//  **Summary:** Retrieve a facility by id
 func (c *Client) FacilitiesRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Facility, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/facilities/{id}"+params, id)
+url := c.resourceURL("/facilities/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -450,26 +483,26 @@ func (c *Client) FacilitiesRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Facility{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Facility{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -477,7 +510,7 @@ func (c *Client) FacilitiesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -486,7 +519,7 @@ func (c *Client) FacilitiesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -495,7 +528,7 @@ func (c *Client) FacilitiesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -504,120 +537,144 @@ func (c *Client) FacilitiesRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // DevicesListQuery has all query parameters for DevicesList
 type DevicesListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// Name is a name
-	Name string `json:"name,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// CapabilityMediaType is a capability_media_type
-	CapabilityMediaType string `json:"capability_media_type,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// CapabilitySpeed is a capability_speed
-	CapabilitySpeed int `json:"capability_speed,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// CapabilitySpeedLt is a capability_speed__lt
-	CapabilitySpeedLt int `json:"capability_speed__lt,omitempty"`
+// CapabilitySpeed is a capability_speed
+CapabilitySpeed int `json:"capability_speed,omitempty"`
 
-	// CapabilitySpeedLte is a capability_speed__lte
-	CapabilitySpeedLte int `json:"capability_speed__lte,omitempty"`
+// CapabilitySpeedLt is a capability_speed_lt
+CapabilitySpeedLt int `json:"capability_speed_lt,omitempty"`
 
-	// CapabilitySpeedGt is a capability_speed__gt
-	CapabilitySpeedGt int `json:"capability_speed__gt,omitempty"`
+// CapabilitySpeedLte is a capability_speed_lte
+CapabilitySpeedLte int `json:"capability_speed_lte,omitempty"`
 
-	// CapabilitySpeedGte is a capability_speed__gte
-	CapabilitySpeedGte int `json:"capability_speed__gte,omitempty"`
+// CapabilitySpeedGt is a capability_speed_gt
+CapabilitySpeedGt int `json:"capability_speed_gt,omitempty"`
 
-	// Facility is a facility
-	Facility string `json:"facility,omitempty"`
+// CapabilitySpeedGte is a capability_speed_gte
+CapabilitySpeedGte int `json:"capability_speed_gte,omitempty"`
 
-	// Pop is a pop
-	Pop string `json:"pop,omitempty"`
+// Name is a name
+Name string `json:"name,omitempty"`
 
-	// MetroAreaNetwork is a metro_area_network
-	MetroAreaNetwork string `json:"metro_area_network,omitempty"`
+// CapabilityMediaType is a capability_media_type
+CapabilityMediaType string `json:"capability_media_type,omitempty"`
+
+// Facility is a facility
+Facility string `json:"facility,omitempty"`
+
+// Pop is a pop
+Pop string `json:"pop,omitempty"`
+
+// MetroAreaNetwork is a metro_area_network
+MetroAreaNetwork string `json:"metro_area_network,omitempty"`
+
 }
 
 // RawQuery creates a query string for DevicesListQuery
-func (d *DevicesListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(d.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = d.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	val = d.CapabilityMediaType
-	if val != "" {
-		qry.Add("capability_media_type", val)
-	}
-	val = fmt.Sprintf("%v", d.CapabilitySpeed)
-	if val != "0" {
-		qry.Add("capability_speed", val)
-	}
-	val = fmt.Sprintf("%v", d.CapabilitySpeedLt)
-	if val != "0" {
-		qry.Add("capability_speed__lt", val)
-	}
-	val = fmt.Sprintf("%v", d.CapabilitySpeedLte)
-	if val != "0" {
-		qry.Add("capability_speed__lte", val)
-	}
-	val = fmt.Sprintf("%v", d.CapabilitySpeedGt)
-	if val != "0" {
-		qry.Add("capability_speed__gt", val)
-	}
-	val = fmt.Sprintf("%v", d.CapabilitySpeedGte)
-	if val != "0" {
-		qry.Add("capability_speed__gte", val)
-	}
-	val = d.Facility
-	if val != "" {
-		qry.Add("facility", val)
-	}
-	val = d.Pop
-	if val != "" {
-		qry.Add("pop", val)
-	}
-	val = d.MetroAreaNetwork
-	if val != "" {
-		qry.Add("metro_area_network", val)
-	}
-	return qry.Encode()
+func (d* DevicesListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(d.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", d.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", d.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = d.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = fmt.Sprintf("%v", d.CapabilitySpeed)
+if val != "0" {
+qry.Add("capability_speed", val)
+}
+val = fmt.Sprintf("%v", d.CapabilitySpeedLt)
+if val != "0" {
+qry.Add("capability_speed_lt", val)
+}
+val = fmt.Sprintf("%v", d.CapabilitySpeedLte)
+if val != "0" {
+qry.Add("capability_speed_lte", val)
+}
+val = fmt.Sprintf("%v", d.CapabilitySpeedGt)
+if val != "0" {
+qry.Add("capability_speed_gt", val)
+}
+val = fmt.Sprintf("%v", d.CapabilitySpeedGte)
+if val != "0" {
+qry.Add("capability_speed_gte", val)
+}
+val = d.Name
+if val != "" {
+qry.Add("name", val)
+}
+val = d.CapabilityMediaType
+if val != "" {
+qry.Add("capability_media_type", val)
+}
+val = d.Facility
+if val != "" {
+qry.Add("facility", val)
+}
+val = d.Pop
+if val != "" {
+qry.Add("pop", val)
+}
+val = d.MetroAreaNetwork
+if val != "" {
+qry.Add("metro_area_network", val)
+}
+return qry.Encode()}
 
-// DevicesList List available devices
+
+// DevicesList **Operation:** `devices_list`
+// 
+//  **Summary:** List available devices
 func (c *Client) DevicesList(
-	ctx context.Context,
-
-	qry ...*DevicesListQuery,
+    ctx context.Context,
+    
+    qry ...*DevicesListQuery,
 ) ([]*Device, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/devices" + params)
+url := c.resourceURL("/devices"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -633,26 +690,26 @@ func (c *Client) DevicesList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*Device{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*Device{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -660,7 +717,7 @@ func (c *Client) DevicesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -669,7 +726,7 @@ func (c *Client) DevicesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -678,7 +735,7 @@ func (c *Client) DevicesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -687,29 +744,32 @@ func (c *Client) DevicesList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// DevicesRead Get a specific device identified by id
+// DevicesRead **Operation:** `devices_read`
+// 
+//  **Summary:** Get a specific device identified by id
 func (c *Client) DevicesRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Device, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/devices/{id}"+params, id)
+url := c.resourceURL("/devices/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -725,26 +785,26 @@ func (c *Client) DevicesRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Device{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Device{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -752,7 +812,7 @@ func (c *Client) DevicesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -761,7 +821,7 @@ func (c *Client) DevicesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -770,7 +830,7 @@ func (c *Client) DevicesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -779,106 +839,130 @@ func (c *Client) DevicesRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // PopsListQuery has all query parameters for PopsList
 type PopsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// Facility is a facility
-	Facility string `json:"facility,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// MetroAreaNetwork is a metro_area_network
-	MetroAreaNetwork string `json:"metro_area_network,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// CapabilityMediaType is a capability_media_type
-	CapabilityMediaType string `json:"capability_media_type,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// CapabilitySpeed is a capability_speed
-	CapabilitySpeed int `json:"capability_speed,omitempty"`
+// Facility is a facility
+Facility string `json:"facility,omitempty"`
 
-	// CapabilitySpeedLt is a capability_speed__lt
-	CapabilitySpeedLt int `json:"capability_speed__lt,omitempty"`
+// MetroAreaNetwork is a metro_area_network
+MetroAreaNetwork string `json:"metro_area_network,omitempty"`
 
-	// CapabilitySpeedLte is a capability_speed__lte
-	CapabilitySpeedLte int `json:"capability_speed__lte,omitempty"`
+// CapabilityMediaType is a capability_media_type
+CapabilityMediaType string `json:"capability_media_type,omitempty"`
 
-	// CapabilitySpeedGt is a capability_speed__gt
-	CapabilitySpeedGt int `json:"capability_speed__gt,omitempty"`
+// CapabilitySpeed is a capability_speed
+CapabilitySpeed int `json:"capability_speed,omitempty"`
 
-	// CapabilitySpeedGte is a capability_speed__gte
-	CapabilitySpeedGte int `json:"capability_speed__gte,omitempty"`
+// CapabilitySpeedLt is a capability_speed_lt
+CapabilitySpeedLt int `json:"capability_speed_lt,omitempty"`
+
+// CapabilitySpeedLte is a capability_speed_lte
+CapabilitySpeedLte int `json:"capability_speed_lte,omitempty"`
+
+// CapabilitySpeedGt is a capability_speed_gt
+CapabilitySpeedGt int `json:"capability_speed_gt,omitempty"`
+
+// CapabilitySpeedGte is a capability_speed_gte
+CapabilitySpeedGte int `json:"capability_speed_gte,omitempty"`
+
 }
 
 // RawQuery creates a query string for PopsListQuery
-func (p *PopsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(p.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = p.Facility
-	if val != "" {
-		qry.Add("facility", val)
-	}
-	val = p.MetroAreaNetwork
-	if val != "" {
-		qry.Add("metro_area_network", val)
-	}
-	val = p.CapabilityMediaType
-	if val != "" {
-		qry.Add("capability_media_type", val)
-	}
-	val = fmt.Sprintf("%v", p.CapabilitySpeed)
-	if val != "0" {
-		qry.Add("capability_speed", val)
-	}
-	val = fmt.Sprintf("%v", p.CapabilitySpeedLt)
-	if val != "0" {
-		qry.Add("capability_speed__lt", val)
-	}
-	val = fmt.Sprintf("%v", p.CapabilitySpeedLte)
-	if val != "0" {
-		qry.Add("capability_speed__lte", val)
-	}
-	val = fmt.Sprintf("%v", p.CapabilitySpeedGt)
-	if val != "0" {
-		qry.Add("capability_speed__gt", val)
-	}
-	val = fmt.Sprintf("%v", p.CapabilitySpeedGte)
-	if val != "0" {
-		qry.Add("capability_speed__gte", val)
-	}
-	return qry.Encode()
+func (p* PopsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(p.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", p.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", p.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = p.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = p.Facility
+if val != "" {
+qry.Add("facility", val)
+}
+val = p.MetroAreaNetwork
+if val != "" {
+qry.Add("metro_area_network", val)
+}
+val = p.CapabilityMediaType
+if val != "" {
+qry.Add("capability_media_type", val)
+}
+val = fmt.Sprintf("%v", p.CapabilitySpeed)
+if val != "0" {
+qry.Add("capability_speed", val)
+}
+val = fmt.Sprintf("%v", p.CapabilitySpeedLt)
+if val != "0" {
+qry.Add("capability_speed_lt", val)
+}
+val = fmt.Sprintf("%v", p.CapabilitySpeedLte)
+if val != "0" {
+qry.Add("capability_speed_lte", val)
+}
+val = fmt.Sprintf("%v", p.CapabilitySpeedGt)
+if val != "0" {
+qry.Add("capability_speed_gt", val)
+}
+val = fmt.Sprintf("%v", p.CapabilitySpeedGte)
+if val != "0" {
+qry.Add("capability_speed_gte", val)
+}
+return qry.Encode()}
 
-// PopsList List all PoPs
+
+// PopsList **Operation:** `pops_list`
+// 
+//  **Summary:** List all PoPs
 func (c *Client) PopsList(
-	ctx context.Context,
-
-	qry ...*PopsListQuery,
+    ctx context.Context,
+    
+    qry ...*PopsListQuery,
 ) ([]*PointOfPresence, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/pops" + params)
+url := c.resourceURL("/pops"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -894,26 +978,26 @@ func (c *Client) PopsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*PointOfPresence{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*PointOfPresence{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -921,7 +1005,7 @@ func (c *Client) PopsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -930,7 +1014,7 @@ func (c *Client) PopsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -939,7 +1023,7 @@ func (c *Client) PopsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -948,29 +1032,32 @@ func (c *Client) PopsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PopsRead Get a single point of presence
+// PopsRead **Operation:** `pops_read`
+// 
+//  **Summary:** Get a single point of presence
 func (c *Client) PopsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*PointOfPresence, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/pops/{id}"+params, id)
+url := c.resourceURL("/pops/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -986,26 +1073,26 @@ func (c *Client) PopsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &PointOfPresence{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &PointOfPresence{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -1013,7 +1100,7 @@ func (c *Client) PopsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -1022,7 +1109,7 @@ func (c *Client) PopsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -1031,7 +1118,7 @@ func (c *Client) PopsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -1040,71 +1127,95 @@ func (c *Client) PopsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // MetroAreaNetworksListQuery has all query parameters for MetroAreaNetworksList
 type MetroAreaNetworksListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// Name is a name
-	Name string `json:"name,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// MetroArea is a metro_area
-	MetroArea string `json:"metro_area,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// ServiceProvider is a service_provider
-	ServiceProvider string `json:"service_provider,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
+// Name is a name
+Name string `json:"name,omitempty"`
+
+// MetroArea is a metro_area
+MetroArea string `json:"metro_area,omitempty"`
+
+// ServiceProvider is a service_provider
+ServiceProvider string `json:"service_provider,omitempty"`
+
 }
 
 // RawQuery creates a query string for MetroAreaNetworksListQuery
-func (m *MetroAreaNetworksListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(m.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = m.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	val = m.MetroArea
-	if val != "" {
-		qry.Add("metro_area", val)
-	}
-	val = m.ServiceProvider
-	if val != "" {
-		qry.Add("service_provider", val)
-	}
-	return qry.Encode()
+func (m* MetroAreaNetworksListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(m.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", m.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", m.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = m.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = m.Name
+if val != "" {
+qry.Add("name", val)
+}
+val = m.MetroArea
+if val != "" {
+qry.Add("metro_area", val)
+}
+val = m.ServiceProvider
+if val != "" {
+qry.Add("service_provider", val)
+}
+return qry.Encode()}
 
-// MetroAreaNetworksList List all MetroAreaNetworks
+
+// MetroAreaNetworksList **Operation:** `metro_area_networks_list`
+// 
+//  **Summary:** List all MetroAreaNetworks
 func (c *Client) MetroAreaNetworksList(
-	ctx context.Context,
-
-	qry ...*MetroAreaNetworksListQuery,
+    ctx context.Context,
+    
+    qry ...*MetroAreaNetworksListQuery,
 ) ([]*MetroAreaNetwork, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/metro-area-networks" + params)
+url := c.resourceURL("/metro-area-networks"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -1120,26 +1231,26 @@ func (c *Client) MetroAreaNetworksList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*MetroAreaNetwork{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*MetroAreaNetwork{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -1147,7 +1258,7 @@ func (c *Client) MetroAreaNetworksList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -1156,7 +1267,7 @@ func (c *Client) MetroAreaNetworksList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -1165,7 +1276,7 @@ func (c *Client) MetroAreaNetworksList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -1174,29 +1285,32 @@ func (c *Client) MetroAreaNetworksList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MetroAreaNetworksRead Retrieve a MetroAreaNetwork
+// MetroAreaNetworksRead **Operation:** `metro_area_networks_read`
+// 
+//  **Summary:** Retrieve a MetroAreaNetwork
 func (c *Client) MetroAreaNetworksRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*MetroAreaNetwork, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/metro-area-networks/{id}"+params, id)
+url := c.resourceURL("/metro-area-networks/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -1212,26 +1326,26 @@ func (c *Client) MetroAreaNetworksRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &MetroAreaNetwork{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &MetroAreaNetwork{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -1239,7 +1353,7 @@ func (c *Client) MetroAreaNetworksRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -1248,7 +1362,7 @@ func (c *Client) MetroAreaNetworksRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -1257,7 +1371,7 @@ func (c *Client) MetroAreaNetworksRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -1266,50 +1380,74 @@ func (c *Client) MetroAreaNetworksRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // MetroAreasListQuery has all query parameters for MetroAreasList
 type MetroAreasListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
+
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
+
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
+
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
 }
 
 // RawQuery creates a query string for MetroAreasListQuery
-func (m *MetroAreasListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(m.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	return qry.Encode()
+func (m* MetroAreasListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(m.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", m.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", m.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = m.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+return qry.Encode()}
 
-// MetroAreasList List all MetroAreas
+
+// MetroAreasList **Operation:** `metro_areas_list`
+// 
+//  **Summary:** List all MetroAreas
 func (c *Client) MetroAreasList(
-	ctx context.Context,
-
-	qry ...*MetroAreasListQuery,
+    ctx context.Context,
+    
+    qry ...*MetroAreasListQuery,
 ) ([]*MetroArea, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/metro-areas" + params)
+url := c.resourceURL("/metro-areas"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -1325,26 +1463,26 @@ func (c *Client) MetroAreasList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*MetroArea{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*MetroArea{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -1352,7 +1490,7 @@ func (c *Client) MetroAreasList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -1361,7 +1499,7 @@ func (c *Client) MetroAreasList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -1370,7 +1508,7 @@ func (c *Client) MetroAreasList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -1379,29 +1517,32 @@ func (c *Client) MetroAreasList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MetroAreasRead Get a single MetroArea
+// MetroAreasRead **Operation:** `metro_areas_read`
+// 
+//  **Summary:** Get a single MetroArea
 func (c *Client) MetroAreasRead(
-	ctx context.Context,
-	id string,
+    ctx context.Context,
+    id string,
+    
+) (*MetroArea, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-) ([]*MetroArea, error) {
-
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/metro-areas/{id}"+params, id)
+url := c.resourceURL("/metro-areas/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -1417,26 +1558,26 @@ func (c *Client) MetroAreasRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &MetroArea{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*MetroArea{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -1444,7 +1585,7 @@ func (c *Client) MetroAreasRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -1453,7 +1594,7 @@ func (c *Client) MetroAreasRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -1462,7 +1603,7 @@ func (c *Client) MetroAreasRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -1471,176 +1612,228 @@ func (c *Client) MetroAreasRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // ProductOfferingsListQuery has all query parameters for ProductOfferingsList
 type ProductOfferingsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// Type is a type
-	Type string `json:"type,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// ResourceType is a resource_type
-	ResourceType string `json:"resource_type,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// Name is a name
-	Name string `json:"name,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// HandoverMetroArea is a handover_metro_area
-	HandoverMetroArea string `json:"handover_metro_area,omitempty"`
+// Type is a type
+Type string `json:"type,omitempty"`
 
-	// HandoverMetroAreaNetwork is a handover_metro_area_network
-	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
+// ResourceType is a resource_type
+ResourceType string `json:"resource_type,omitempty"`
 
-	// HandoverPop is a handover_pop
-	HandoverPop string `json:"handover_pop,omitempty"`
+// Name is a name
+Name string `json:"name,omitempty"`
 
-	// ServiceMetroArea is a service_metro_area
-	ServiceMetroArea string `json:"service_metro_area,omitempty"`
+// HandoverMetroArea is a handover_metro_area
+HandoverMetroArea string `json:"handover_metro_area,omitempty"`
 
-	// ServiceMetroAreaNetwork is a service_metro_area_network
-	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
+// HandoverMetroAreaNetwork is a handover_metro_area_network
+HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
 
-	// ServiceProvider is a service_provider
-	ServiceProvider string `json:"service_provider,omitempty"`
+// HandoverPop is a handover_pop
+HandoverPop string `json:"handover_pop,omitempty"`
 
-	// DowngradeAllowed is a downgrade_allowed
-	DowngradeAllowed string `json:"downgrade_allowed,omitempty"`
+// ServiceMetroArea is a service_metro_area
+ServiceMetroArea string `json:"service_metro_area,omitempty"`
 
-	// UpgradeAllowed is a upgrade_allowed
-	UpgradeAllowed string `json:"upgrade_allowed,omitempty"`
+// ServiceMetroAreaNetwork is a service_metro_area_network
+ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
 
-	// Bandwidth is a bandwidth
-	Bandwidth int `json:"bandwidth,omitempty"`
+// ServiceProvider is a service_provider
+ServiceProvider string `json:"service_provider,omitempty"`
 
-	// PhysicalPortSpeed is a physical_port_speed
-	PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
+// DowngradeAllowed is a downgrade_allowed
+DowngradeAllowed string `json:"downgrade_allowed,omitempty"`
 
-	// ServiceProviderRegion is a service_provider_region
-	ServiceProviderRegion string `json:"service_provider_region,omitempty"`
+// UpgradeAllowed is a upgrade_allowed
+UpgradeAllowed string `json:"upgrade_allowed,omitempty"`
 
-	// ServiceProviderPop is a service_provider_pop
-	ServiceProviderPop string `json:"service_provider_pop,omitempty"`
+// Bandwidth is a bandwidth
+Bandwidth int `json:"bandwidth,omitempty"`
 
-	// DeliveryMethod is a delivery_method
-	DeliveryMethod string `json:"delivery_method,omitempty"`
+// PhysicalPortSpeed is a physical_port_speed
+PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
 
-	// CloudKey is a cloud_key
-	CloudKey string `json:"cloud_key,omitempty"`
+// ServiceProviderRegion is a service_provider_region
+ServiceProviderRegion string `json:"service_provider_region,omitempty"`
 
-	// Fields is a fields
-	Fields string `json:"fields,omitempty"`
+// ServiceProviderPop is a service_provider_pop
+ServiceProviderPop string `json:"service_provider_pop,omitempty"`
+
+// DeliveryMethod is a delivery_method
+DeliveryMethod string `json:"delivery_method,omitempty"`
+
+// CloudKey is a cloud_key
+CloudKey string `json:"cloud_key,omitempty"`
+
+// ContractInitialPeriod is a contract_initial_period
+ContractInitialPeriod string `json:"contract_initial_period,omitempty"`
+
+// ContractInitialNoticePeriod is a contract_initial_notice_period
+ContractInitialNoticePeriod string `json:"contract_initial_notice_period,omitempty"`
+
+// ContractRenewalPeriod is a contract_renewal_period
+ContractRenewalPeriod string `json:"contract_renewal_period,omitempty"`
+
+// ContractRenewalNoticePeriod is a contract_renewal_notice_period
+ContractRenewalNoticePeriod string `json:"contract_renewal_notice_period,omitempty"`
+
+// Fields is a fields
+Fields string `json:"fields,omitempty"`
+
 }
 
 // RawQuery creates a query string for ProductOfferingsListQuery
-func (p *ProductOfferingsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(p.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = p.Type
-	if val != "" {
-		qry.Add("type", val)
-	}
-	val = p.ResourceType
-	if val != "" {
-		qry.Add("resource_type", val)
-	}
-	val = p.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	val = p.HandoverMetroArea
-	if val != "" {
-		qry.Add("handover_metro_area", val)
-	}
-	val = p.HandoverMetroAreaNetwork
-	if val != "" {
-		qry.Add("handover_metro_area_network", val)
-	}
-	val = p.HandoverPop
-	if val != "" {
-		qry.Add("handover_pop", val)
-	}
-	val = p.ServiceMetroArea
-	if val != "" {
-		qry.Add("service_metro_area", val)
-	}
-	val = p.ServiceMetroAreaNetwork
-	if val != "" {
-		qry.Add("service_metro_area_network", val)
-	}
-	val = p.ServiceProvider
-	if val != "" {
-		qry.Add("service_provider", val)
-	}
-	val = p.DowngradeAllowed
-	if val != "" {
-		qry.Add("downgrade_allowed", val)
-	}
-	val = p.UpgradeAllowed
-	if val != "" {
-		qry.Add("upgrade_allowed", val)
-	}
-	val = fmt.Sprintf("%v", p.Bandwidth)
-	if val != "0" {
-		qry.Add("bandwidth", val)
-	}
-	val = fmt.Sprintf("%v", p.PhysicalPortSpeed)
-	if val != "0" {
-		qry.Add("physical_port_speed", val)
-	}
-	val = p.ServiceProviderRegion
-	if val != "" {
-		qry.Add("service_provider_region", val)
-	}
-	val = p.ServiceProviderPop
-	if val != "" {
-		qry.Add("service_provider_pop", val)
-	}
-	val = p.DeliveryMethod
-	if val != "" {
-		qry.Add("delivery_method", val)
-	}
-	val = p.CloudKey
-	if val != "" {
-		qry.Add("cloud_key", val)
-	}
-	val = p.Fields
-	if val != "" {
-		qry.Add("fields", val)
-	}
-	return qry.Encode()
+func (p* ProductOfferingsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(p.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", p.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", p.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = p.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = p.Type
+if val != "" {
+qry.Add("type", val)
+}
+val = p.ResourceType
+if val != "" {
+qry.Add("resource_type", val)
+}
+val = p.Name
+if val != "" {
+qry.Add("name", val)
+}
+val = p.HandoverMetroArea
+if val != "" {
+qry.Add("handover_metro_area", val)
+}
+val = p.HandoverMetroAreaNetwork
+if val != "" {
+qry.Add("handover_metro_area_network", val)
+}
+val = p.HandoverPop
+if val != "" {
+qry.Add("handover_pop", val)
+}
+val = p.ServiceMetroArea
+if val != "" {
+qry.Add("service_metro_area", val)
+}
+val = p.ServiceMetroAreaNetwork
+if val != "" {
+qry.Add("service_metro_area_network", val)
+}
+val = p.ServiceProvider
+if val != "" {
+qry.Add("service_provider", val)
+}
+val = p.DowngradeAllowed
+if val != "" {
+qry.Add("downgrade_allowed", val)
+}
+val = p.UpgradeAllowed
+if val != "" {
+qry.Add("upgrade_allowed", val)
+}
+val = fmt.Sprintf("%v", p.Bandwidth)
+if val != "0" {
+qry.Add("bandwidth", val)
+}
+val = fmt.Sprintf("%v", p.PhysicalPortSpeed)
+if val != "0" {
+qry.Add("physical_port_speed", val)
+}
+val = p.ServiceProviderRegion
+if val != "" {
+qry.Add("service_provider_region", val)
+}
+val = p.ServiceProviderPop
+if val != "" {
+qry.Add("service_provider_pop", val)
+}
+val = p.DeliveryMethod
+if val != "" {
+qry.Add("delivery_method", val)
+}
+val = p.CloudKey
+if val != "" {
+qry.Add("cloud_key", val)
+}
+val = p.ContractInitialPeriod
+if val != "" {
+qry.Add("contract_initial_period", val)
+}
+val = p.ContractInitialNoticePeriod
+if val != "" {
+qry.Add("contract_initial_notice_period", val)
+}
+val = p.ContractRenewalPeriod
+if val != "" {
+qry.Add("contract_renewal_period", val)
+}
+val = p.ContractRenewalNoticePeriod
+if val != "" {
+qry.Add("contract_renewal_notice_period", val)
+}
+val = p.Fields
+if val != "" {
+qry.Add("fields", val)
+}
+return qry.Encode()}
 
-// ProductOfferingsList List all (filtered) products-offerings available on the platform
+
+// ProductOfferingsList **Operation:** `product_offerings_list`
+// 
+//  **Summary:** List all (filtered) products-offerings available on the platform
 func (c *Client) ProductOfferingsList(
-	ctx context.Context,
-
-	qry ...*ProductOfferingsListQuery,
+    ctx context.Context,
+    
+    qry ...*ProductOfferingsListQuery,
 ) ([]ProductOffering, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/product-offerings" + params)
+url := c.resourceURL("/product-offerings"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -1656,87 +1849,39 @@ func (c *Client) ProductOfferingsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    msgs := []json.RawMessage{}
+    if err := json.Unmarshal(body, &msgs); err != nil {
+        return nil, err
+    }
+    res := make([]ProductOffering, 0, len(msgs))
 
-		msgs := []json.RawMessage{}
-		if err := json.Unmarshal(body, &msgs); err != nil {
-			return nil, err
-		}
-		res := make([]ProductOffering, 0, len(msgs))
+    for _, msg := range msgs {
+        tmp := &PolymorphicProductOffering{}
+        if err := json.Unmarshal(msg, tmp); err != nil {
+            return nil, err
+        }
+        ptype := tmp.PolymorphicType()
+        switch(ptype) {
+            
+        }
+    }
 
-		for _, msg := range msgs {
-			tmp := &PolymorphicProductOffering{}
-			if err := json.Unmarshal(msg, tmp); err != nil {
-				return nil, err
-			}
-			ptype := tmp.PolymorphicType()
-			switch ptype {
+    return res, nil
 
-			case ConnectionProductOfferingType:
-				rval := &ConnectionProductOffering{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
+    }
 
-				res = append(res, rval)
-
-			case ExchangeLanNetworkProductOfferingType:
-				rval := &ExchangeLanNetworkProductOffering{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			case P2PNetworkProductOfferingType:
-				rval := &P2PNetworkProductOffering{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			case MP2MPNetworkProductOfferingType:
-				rval := &MP2MPNetworkProductOffering{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			case P2MPNetworkProductOfferingType:
-				rval := &P2MPNetworkProductOffering{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			case CloudNetworkProductOfferingType:
-				rval := &CloudNetworkProductOffering{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			}
-		}
-
-		return res, nil
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -1744,7 +1889,7 @@ func (c *Client) ProductOfferingsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -1753,7 +1898,7 @@ func (c *Client) ProductOfferingsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -1762,7 +1907,7 @@ func (c *Client) ProductOfferingsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -1771,29 +1916,32 @@ func (c *Client) ProductOfferingsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ProductOfferingsRead Get a single products-offering by id.
+// ProductOfferingsRead **Operation:** `product_offerings_read`
+// 
+//  **Summary:** Get a single products-offering by id.
 func (c *Client) ProductOfferingsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (ProductOffering, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/product-offerings/{id}"+params, id)
+url := c.resourceURL("/product-offerings/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -1809,79 +1957,31 @@ func (c *Client) ProductOfferingsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicProductOffering{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicProductOffering{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ConnectionProductOfferingType:
-			res := &ConnectionProductOffering{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case ExchangeLanNetworkProductOfferingType:
-			res := &ExchangeLanNetworkProductOffering{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case P2PNetworkProductOfferingType:
-			res := &P2PNetworkProductOffering{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case MP2MPNetworkProductOfferingType:
-			res := &MP2MPNetworkProductOffering{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case P2MPNetworkProductOfferingType:
-			res := &P2MPNetworkProductOffering{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case CloudNetworkProductOfferingType:
-			res := &CloudNetworkProductOffering{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -1889,7 +1989,7 @@ func (c *Client) ProductOfferingsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -1898,7 +1998,7 @@ func (c *Client) ProductOfferingsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -1907,7 +2007,7 @@ func (c *Client) ProductOfferingsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -1916,113 +2016,390 @@ func (c *Client) ProductOfferingsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
+	return nil, res
+}
+// AvailabilityZonesListQuery has all query parameters for AvailabilityZonesList
+type AvailabilityZonesListQuery struct {
+// ID is a id
+ID []string `json:"id,omitempty"`
+
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
+
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
+
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
+// Name is a name
+Name string `json:"name,omitempty"`
+
+}
+
+// RawQuery creates a query string for AvailabilityZonesListQuery
+func (a* AvailabilityZonesListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(a.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", a.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", a.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = a.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = a.Name
+if val != "" {
+qry.Add("name", val)
+}
+return qry.Encode()}
+
+
+// AvailabilityZonesList **Operation:** `availability_zones_list`
+// 
+//  **Summary:** List all availability zones available on the platform.
+func (c *Client) AvailabilityZonesList(
+    ctx context.Context,
+    
+    qry ...*AvailabilityZonesListQuery,
+) ([]*AvailabilityZone, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
+
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/availability-zones"+params)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*AvailabilityZone{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
+// AvailabilityZonesRead **Operation:** `availability_zones_read`
+// 
+//  **Summary:** Get a single availability zone by id.
+func (c *Client) AvailabilityZonesRead(
+    ctx context.Context,
+    id string,
+    
+) (*AvailabilityZone, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/availability-zones/{id}"+params, id)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &AvailabilityZone{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
 // PortsListQuery has all query parameters for PortsList
 type PortsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// State is a state
-	State string `json:"state,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// StateIsNot is a state__is_not
-	StateIsNot string `json:"state__is_not,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// MediaType is a media_type
-	MediaType string `json:"media_type,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// Pop is a pop
-	Pop string `json:"pop,omitempty"`
+// State is a state
+State string `json:"state,omitempty"`
 
-	// Name is a name
-	Name string `json:"name,omitempty"`
+// StateIsNot is a state__is_not
+StateIsNot string `json:"state__is_not,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
 
-	// Device is a device
-	Device string `json:"device,omitempty"`
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// Speed is a speed
-	Speed string `json:"speed,omitempty"`
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
 
-	// Connection is a connection
-	Connection string `json:"connection,omitempty"`
+// MediaType is a media_type
+MediaType string `json:"media_type,omitempty"`
+
+// Pop is a pop
+Pop string `json:"pop,omitempty"`
+
+// Name is a name
+Name string `json:"name,omitempty"`
+
+// Device is a device
+Device string `json:"device,omitempty"`
+
+// Speed is a speed
+Speed string `json:"speed,omitempty"`
+
+// Connection is a connection
+Connection string `json:"connection,omitempty"`
+
 }
 
 // RawQuery creates a query string for PortsListQuery
-func (p *PortsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(p.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = p.State
-	if val != "" {
-		qry.Add("state", val)
-	}
-	val = p.StateIsNot
-	if val != "" {
-		qry.Add("state__is_not", val)
-	}
-	val = p.MediaType
-	if val != "" {
-		qry.Add("media_type", val)
-	}
-	val = p.Pop
-	if val != "" {
-		qry.Add("pop", val)
-	}
-	val = p.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	val = p.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	val = p.Device
-	if val != "" {
-		qry.Add("device", val)
-	}
-	val = p.Speed
-	if val != "" {
-		qry.Add("speed", val)
-	}
-	val = p.Connection
-	if val != "" {
-		qry.Add("connection", val)
-	}
-	return qry.Encode()
+func (p* PortsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(p.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", p.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", p.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = p.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = p.State
+if val != "" {
+qry.Add("state", val)
+}
+val = p.StateIsNot
+if val != "" {
+qry.Add("state__is_not", val)
+}
+val = p.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = p.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = p.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = p.MediaType
+if val != "" {
+qry.Add("media_type", val)
+}
+val = p.Pop
+if val != "" {
+qry.Add("pop", val)
+}
+val = p.Name
+if val != "" {
+qry.Add("name", val)
+}
+val = p.Device
+if val != "" {
+qry.Add("device", val)
+}
+val = p.Speed
+if val != "" {
+qry.Add("speed", val)
+}
+val = p.Connection
+if val != "" {
+qry.Add("connection", val)
+}
+return qry.Encode()}
 
-// PortsList List all ports.
+
+// PortsList **Operation:** `ports_list`
+// 
+//  **Summary:** List all ports.
 func (c *Client) PortsList(
-	ctx context.Context,
-
-	qry ...*PortsListQuery,
+    ctx context.Context,
+    
+    qry ...*PortsListQuery,
 ) ([]*Port, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/ports" + params)
+url := c.resourceURL("/ports"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2038,26 +2415,26 @@ func (c *Client) PortsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*Port{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*Port{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2065,7 +2442,7 @@ func (c *Client) PortsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2074,7 +2451,7 @@ func (c *Client) PortsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2083,7 +2460,7 @@ func (c *Client) PortsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2092,29 +2469,32 @@ func (c *Client) PortsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PortsRead Retrieve a port.
+// PortsRead **Operation:** `ports_read`
+// 
+//  **Summary:** Retrieve a port.
 func (c *Client) PortsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Port, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/ports/{id}"+params, id)
+url := c.resourceURL("/ports/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2130,26 +2510,26 @@ func (c *Client) PortsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Port{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Port{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2157,7 +2537,7 @@ func (c *Client) PortsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2166,7 +2546,7 @@ func (c *Client) PortsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2175,7 +2555,7 @@ func (c *Client) PortsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2184,85 +2564,109 @@ func (c *Client) PortsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // PortReservationsListQuery has all query parameters for PortReservationsList
 type PortReservationsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// State is a state
-	State string `json:"state,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// StateIsNot is a state__is_not
-	StateIsNot string `json:"state__is_not,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// Connection is a connection
-	Connection string `json:"connection,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// Port is a port
-	Port string `json:"port,omitempty"`
+// State is a state
+State string `json:"state,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// StateIsNot is a state__is_not
+StateIsNot string `json:"state__is_not,omitempty"`
+
+// Connection is a connection
+Connection string `json:"connection,omitempty"`
+
+// Port is a port
+Port string `json:"port,omitempty"`
+
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
+
 }
 
 // RawQuery creates a query string for PortReservationsListQuery
-func (p *PortReservationsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(p.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = p.State
-	if val != "" {
-		qry.Add("state", val)
-	}
-	val = p.StateIsNot
-	if val != "" {
-		qry.Add("state__is_not", val)
-	}
-	val = p.Connection
-	if val != "" {
-		qry.Add("connection", val)
-	}
-	val = p.Port
-	if val != "" {
-		qry.Add("port", val)
-	}
-	val = p.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	return qry.Encode()
+func (p* PortReservationsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(p.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", p.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", p.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = p.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = p.State
+if val != "" {
+qry.Add("state", val)
+}
+val = p.StateIsNot
+if val != "" {
+qry.Add("state__is_not", val)
+}
+val = p.Connection
+if val != "" {
+qry.Add("connection", val)
+}
+val = p.Port
+if val != "" {
+qry.Add("port", val)
+}
+val = p.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+return qry.Encode()}
+
+
+// PortReservationsList **Operation:** `port_reservations_list`
+// 
+//  **Summary:** List all port reservations.
+func (c *Client) PortReservationsList(
+    ctx context.Context,
+    
+    qry ...*PortReservationsListQuery,
+) ([]*PortReservation, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// PortReservationsList List all port reservations.
-func (c *Client) PortReservationsList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*PortReservationsListQuery,
-) ([]*PortReservation, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations" + params)
+url := c.resourceURL("/port-reservations"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2278,26 +2682,26 @@ func (c *Client) PortReservationsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*PortReservation{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*PortReservation{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2305,7 +2709,7 @@ func (c *Client) PortReservationsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2314,7 +2718,7 @@ func (c *Client) PortReservationsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2323,7 +2727,7 @@ func (c *Client) PortReservationsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2332,34 +2736,37 @@ func (c *Client) PortReservationsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PortReservationsCreate Create a new `PortReservation`.
-//
+// PortReservationsCreate **Operation:** `port_reservations_create`
+// 
+//  **Summary:** Create a new `PortReservation`.
+// 
 // Two workflows for allocating ports is supported and
 // dependent on the `cross_connect_initiator` property
 // of the corresponding `product-offering`:
-//
+// 
 // Individual LOAs can be uploaded and downloaded for
 // each PortAllocation using the endpoint
 // `/port-reservations/{id}/loa`.
-//
+// 
 // Please refer to the internet exchange's api usage
 // guide for implementation specific details.
 func (c *Client) PortReservationsCreate(
-	ctx context.Context,
-	req *PortReservationRequest,
+    ctx context.Context,
+    req *PortReservationRequest,
 
+    
 ) (*PortReservation, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations" + params)
+url := c.resourceURL("/port-reservations"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -2370,7 +2777,8 @@ func (c *Client) PortReservationsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2386,26 +2794,26 @@ func (c *Client) PortReservationsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &PortReservation{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &PortReservation{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2413,7 +2821,7 @@ func (c *Client) PortReservationsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2422,7 +2830,7 @@ func (c *Client) PortReservationsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2431,7 +2839,7 @@ func (c *Client) PortReservationsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2440,23 +2848,25 @@ func (c *Client) PortReservationsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PortReservationsRead Retrieve a `PortReservation`.
+// PortReservationsRead **Operation:** `port_reservations_read`
+// 
+//  **Summary:** Retrieve a `PortReservation`.
 func (c *Client) PortReservationsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*PortReservation, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations/{id}"+params, id)
+url := c.resourceURL("/port-reservations/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -2464,6 +2874,7 @@ func (c *Client) PortReservationsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -2478,26 +2889,26 @@ func (c *Client) PortReservationsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &PortReservation{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &PortReservation{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2505,7 +2916,7 @@ func (c *Client) PortReservationsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2514,7 +2925,7 @@ func (c *Client) PortReservationsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2523,7 +2934,7 @@ func (c *Client) PortReservationsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2532,23 +2943,29 @@ func (c *Client) PortReservationsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PortReservationsUpdate Update a port reservation.
+// PortReservationsUpdate **Operation:** `port_reservations_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update a port reservation.
 func (c *Client) PortReservationsUpdate(
-	ctx context.Context,
-	id string, req *PortReservationUpdate,
+    ctx context.Context,
+    id string,req *PortReservationUpdate,
 
+    
 ) (*PortReservation, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations/{id}"+params, id)
+url := c.resourceURL("/port-reservations/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -2559,7 +2976,8 @@ func (c *Client) PortReservationsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2575,26 +2993,26 @@ func (c *Client) PortReservationsUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &PortReservation{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &PortReservation{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2602,7 +3020,7 @@ func (c *Client) PortReservationsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2611,7 +3029,7 @@ func (c *Client) PortReservationsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2620,7 +3038,7 @@ func (c *Client) PortReservationsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2629,23 +3047,26 @@ func (c *Client) PortReservationsUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PortReservationsPatch Partially update a port reservation.
+// PortReservationsPatch **Operation:** `port_reservations_partial_update`
+// 
+//  **Summary:** Update a port reservation.
 func (c *Client) PortReservationsPatch(
-	ctx context.Context,
-	id string, req *PortReservationPatch,
+    ctx context.Context,
+    id string,req *PortReservationPatch,
 
+    
 ) (*PortReservation, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations/{id}"+params, id)
+url := c.resourceURL("/port-reservations/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -2656,7 +3077,8 @@ func (c *Client) PortReservationsPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2672,26 +3094,26 @@ func (c *Client) PortReservationsPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &PortReservation{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &PortReservation{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2699,7 +3121,7 @@ func (c *Client) PortReservationsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2708,7 +3130,7 @@ func (c *Client) PortReservationsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2717,7 +3139,7 @@ func (c *Client) PortReservationsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2726,25 +3148,28 @@ func (c *Client) PortReservationsPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PortReservationsDestroy Request decommissioning the port-reservation.
+// PortReservationsDestroy **Operation:** `port_reservations_destroy`
+// 
+//  **Summary:** Request decommissioning the port-reservation.
 // The associated `port` will be deallocated and
 // removed from the `connection`.
 func (c *Client) PortReservationsDestroy(
-	ctx context.Context,
-	id string, req *CancellationRequest,
+    ctx context.Context,
+    id string,req *CancellationRequest,
 
+    
 ) (*PortReservation, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations/{id}"+params, id)
+url := c.resourceURL("/port-reservations/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -2755,7 +3180,8 @@ func (c *Client) PortReservationsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2771,26 +3197,26 @@ func (c *Client) PortReservationsDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &PortReservation{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &PortReservation{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2798,7 +3224,7 @@ func (c *Client) PortReservationsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2807,7 +3233,7 @@ func (c *Client) PortReservationsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2816,7 +3242,7 @@ func (c *Client) PortReservationsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2825,63 +3251,66 @@ func (c *Client) PortReservationsDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
+// PortReservationCancellationPolicyReadQuery has all query parameters for PortReservationCancellationPolicyRead
+type PortReservationCancellationPolicyReadQuery struct {
+// DecommissionAt is a decommission_at
+DecommissionAt string `json:"decommission_at,omitempty"`
 
-// PortReservationCancellationPolicyQuery has all query parameters for PortReservationCancellationPolicy
-type PortReservationCancellationPolicyQuery struct {
-	// DecommissionAt is a decommission_at
-	DecommissionAt string `json:"decommission_at,omitempty"`
 }
 
-// RawQuery creates a query string for PortReservationCancellationPolicyQuery
-func (p *PortReservationCancellationPolicyQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = p.DecommissionAt
-	if val != "" {
-		qry.Add("decommission_at", val)
-	}
-	return qry.Encode()
+// RawQuery creates a query string for PortReservationCancellationPolicyReadQuery
+func (p* PortReservationCancellationPolicyReadQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = p.DecommissionAt
+if val != "" {
+qry.Add("decommission_at", val)
 }
+return qry.Encode()}
 
-// PortReservationCancellationPolicy The cancellation-policy can be queried to answer
+
+// PortReservationCancellationPolicyRead **Operation:** `port_reservation_cancellation_policy_read`
+// 
+//  **Summary:** The cancellation-policy can be queried to answer
 // the questions:
-//
+// 
 // If I cancel my subscription, *when will it be technically
 // decommissioned*?
 // If I cancel my subscription, *until what date will I be charged*?
-//
+// 
 // When the query parameter `decommision_at` is not provided
 // it will provide the first possible cancellation date
 // and charge period if cancelled at above date.
-//
+// 
 // The granularity of the date field is a day, the start and end
 // of which are to be interpreted by the IXP (some may use UTC,
 // some may use their local time zone).
-func (c *Client) PortReservationCancellationPolicy(
-	ctx context.Context,
-	id string,
-	qry ...*PortReservationCancellationPolicyQuery,
+func (c *Client) PortReservationCancellationPolicyRead(
+    ctx context.Context,
+    id string,
+    qry ...*PortReservationCancellationPolicyReadQuery,
 ) (*CancellationPolicy, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations/{id}/cancellation-policy"+params, id)
+url := c.resourceURL("/port-reservations/{id}/cancellation-policy"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2897,26 +3326,26 @@ func (c *Client) PortReservationCancellationPolicy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &CancellationPolicy{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &CancellationPolicy{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -2924,7 +3353,7 @@ func (c *Client) PortReservationCancellationPolicy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -2933,7 +3362,7 @@ func (c *Client) PortReservationCancellationPolicy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -2942,7 +3371,7 @@ func (c *Client) PortReservationCancellationPolicy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -2951,33 +3380,36 @@ func (c *Client) PortReservationCancellationPolicy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PortReservationsLoaDownload Download the *Letter Of Authorization* associated
+// PortReservationsLoaDownload **Operation:** `port_reservations_loa_download`
+// 
+//  **Summary:** Download the *Letter Of Authorization* associated
 // with the port-reservation.
-//
+// 
 // In case of a *subscriber initiated cross-connect*,
 // it will be provided by the exchange.
 func (c *Client) PortReservationsLoaDownload(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (Response, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations/{id}/loa"+params, id)
+url := c.resourceURL("/port-reservations/{id}/loa"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -2993,20 +3425,20 @@ func (c *Client) PortReservationsLoaDownload(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
-		return body, nil
-	}
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      return body, nil
+    }
 
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3014,7 +3446,7 @@ func (c *Client) PortReservationsLoaDownload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3023,7 +3455,7 @@ func (c *Client) PortReservationsLoaDownload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3032,7 +3464,7 @@ func (c *Client) PortReservationsLoaDownload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3041,30 +3473,34 @@ func (c *Client) PortReservationsLoaDownload(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// PortReservationsLoaUpload Upload a *Letter Of Authorization* for this
+// PortReservationsLoaUpload **Operation:** `port_reservations_loa_upload`
+// 
+//  **Summary:** Upload a *Letter Of Authorization* for this
 // `PortReservation`.
 func (c *Client) PortReservationsLoaUpload(
-	ctx context.Context,
-	id string, data []byte,
+    ctx context.Context,
+    id string,data []byte,
 
+    
 ) (Response, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/port-reservations/{id}/loa"+params, id)
+url := c.resourceURL("/port-reservations/{id}/loa"+params, id)
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, url, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/octet-stream")
+    hreq.Header.Set("Content-Type", "application/octet-stream")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -3080,20 +3516,20 @@ func (c *Client) PortReservationsLoaUpload(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
-		return body, nil
-	}
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      return body, nil
+    }
 
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3101,7 +3537,7 @@ func (c *Client) PortReservationsLoaUpload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3110,7 +3546,7 @@ func (c *Client) PortReservationsLoaUpload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3119,7 +3555,7 @@ func (c *Client) PortReservationsLoaUpload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3128,121 +3564,172 @@ func (c *Client) PortReservationsLoaUpload(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // ConnectionsListQuery has all query parameters for ConnectionsList
 type ConnectionsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// State is a state
-	State string `json:"state,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// StateIsNot is a state__is_not
-	StateIsNot string `json:"state__is_not,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// Mode is a mode
-	Mode string `json:"mode,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// ModeIsNot is a mode__is_not
-	ModeIsNot string `json:"mode__is_not,omitempty"`
+// State is a state
+State string `json:"state,omitempty"`
 
-	// Name is a name
-	Name string `json:"name,omitempty"`
+// StateIsNot is a state__is_not
+StateIsNot string `json:"state__is_not,omitempty"`
 
-	// MetroAreaNetwork is a metro_area_network
-	MetroAreaNetwork string `json:"metro_area_network,omitempty"`
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
 
-	// Pop is a pop
-	Pop string `json:"pop,omitempty"`
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// Facility is a facility
-	Facility string `json:"facility,omitempty"`
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
 
-	// RoleAssignments is a role_assignments
-	RoleAssignments []string `json:"role_assignments,omitempty"`
+// Mode is a mode
+Mode string `json:"mode,omitempty"`
 
-	// Contacts is a contacts
-	Contacts []string `json:"contacts,omitempty"`
+// ModeIsNot is a mode__is_not
+ModeIsNot string `json:"mode__is_not,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// Name is a name
+Name string `json:"name,omitempty"`
+
+// MetroArea is a metro_area
+MetroArea string `json:"metro_area,omitempty"`
+
+// MetroAreaNetwork is a metro_area_network
+MetroAreaNetwork string `json:"metro_area_network,omitempty"`
+
+// Pop is a pop
+Pop string `json:"pop,omitempty"`
+
+// Facility is a facility
+Facility string `json:"facility,omitempty"`
+
+// RoleAssignments is a role_assignments
+RoleAssignments []string `json:"role_assignments,omitempty"`
+
+// Contacts is a contacts
+Contacts []string `json:"contacts,omitempty"`
+
+// SupportedNetworkService is a supported_network_service
+SupportedNetworkService string `json:"supported_network_service,omitempty"`
+
 }
 
 // RawQuery creates a query string for ConnectionsListQuery
-func (c *ConnectionsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(c.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = c.State
-	if val != "" {
-		qry.Add("state", val)
-	}
-	val = c.StateIsNot
-	if val != "" {
-		qry.Add("state__is_not", val)
-	}
-	val = c.Mode
-	if val != "" {
-		qry.Add("mode", val)
-	}
-	val = c.ModeIsNot
-	if val != "" {
-		qry.Add("mode__is_not", val)
-	}
-	val = c.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	val = c.MetroAreaNetwork
-	if val != "" {
-		qry.Add("metro_area_network", val)
-	}
-	val = c.Pop
-	if val != "" {
-		qry.Add("pop", val)
-	}
-	val = c.Facility
-	if val != "" {
-		qry.Add("facility", val)
-	}
-	val = strings.Join(c.RoleAssignments, ",")
-	if val != "" {
-		qry.Add("role_assignments", val)
-	}
-	val = strings.Join(c.Contacts, ",")
-	if val != "" {
-		qry.Add("contacts", val)
-	}
-	val = c.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	return qry.Encode()
+func (c* ConnectionsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(c.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", c.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", c.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = c.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = c.State
+if val != "" {
+qry.Add("state", val)
+}
+val = c.StateIsNot
+if val != "" {
+qry.Add("state__is_not", val)
+}
+val = c.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = c.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = c.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = c.Mode
+if val != "" {
+qry.Add("mode", val)
+}
+val = c.ModeIsNot
+if val != "" {
+qry.Add("mode__is_not", val)
+}
+val = c.Name
+if val != "" {
+qry.Add("name", val)
+}
+val = c.MetroArea
+if val != "" {
+qry.Add("metro_area", val)
+}
+val = c.MetroAreaNetwork
+if val != "" {
+qry.Add("metro_area_network", val)
+}
+val = c.Pop
+if val != "" {
+qry.Add("pop", val)
+}
+val = c.Facility
+if val != "" {
+qry.Add("facility", val)
+}
+val = strings.Join(c.RoleAssignments, ",")
+if val != "" {
+qry.Add("role_assignments", val)
+}
+val = strings.Join(c.Contacts, ",")
+if val != "" {
+qry.Add("contacts", val)
+}
+val = c.SupportedNetworkService
+if val != "" {
+qry.Add("supported_network_service", val)
+}
+return qry.Encode()}
+
+
+// ConnectionsList **Operation:** `connections_list`
+// 
+//  **Summary:** List all `connection`s.
+func (c *Client) ConnectionsList(
+    ctx context.Context,
+    
+    qry ...*ConnectionsListQuery,
+) ([]*Connection, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// ConnectionsList List all `connection`s.
-func (c *Client) ConnectionsList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*ConnectionsListQuery,
-) ([]*Connection, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections" + params)
+url := c.resourceURL("/connections"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -3250,6 +3737,7 @@ func (c *Client) ConnectionsList(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -3264,26 +3752,26 @@ func (c *Client) ConnectionsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*Connection{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*Connection{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3291,7 +3779,7 @@ func (c *Client) ConnectionsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3300,7 +3788,7 @@ func (c *Client) ConnectionsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3309,7 +3797,7 @@ func (c *Client) ConnectionsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3318,41 +3806,44 @@ func (c *Client) ConnectionsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ConnectionsCreate Create a new `connection` and request ports
+// ConnectionsCreate **Operation:** `connections_create`
+// 
+//  **Summary:** Create a new `connection` and request ports
 // allocation.
-//
+// 
 // Two workflows for allocating ports is supported and
 // dependent on the `cross_connect_initiator` property
 // of the corresponding `product-offering`:
-//
+// 
 // When the initiator is the `subscriber`, a Letter Of
 // Authorization (LOA) can
 // be downloaded from the `/connection/<id>/loa`
 // resource. In case the `exchange` is the initiator,
 // the LOA can be uploaded to this resource.
-//
+// 
 // Creating a connection will also create
 // PortReservations. See the `port_quantity` and
 // `subscriber_side_demarcs` attributes for details.
-//
+// 
 // Please refer to the internet exchange's api usage
 // guide for implementation specific details.
 func (c *Client) ConnectionsCreate(
-	ctx context.Context,
-	req *ConnectionRequest,
+    ctx context.Context,
+    req *ConnectionRequest,
 
+    
 ) (*Connection, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections" + params)
+url := c.resourceURL("/connections"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -3363,7 +3854,8 @@ func (c *Client) ConnectionsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -3379,26 +3871,26 @@ func (c *Client) ConnectionsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Connection{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Connection{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3406,7 +3898,7 @@ func (c *Client) ConnectionsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3415,7 +3907,7 @@ func (c *Client) ConnectionsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3424,7 +3916,7 @@ func (c *Client) ConnectionsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3433,23 +3925,25 @@ func (c *Client) ConnectionsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ConnectionsRead Read a `connection`.
+// ConnectionsRead **Operation:** `connections_read`
+// 
+//  **Summary:** Read a `connection`.
 func (c *Client) ConnectionsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Connection, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections/{id}"+params, id)
+url := c.resourceURL("/connections/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -3457,6 +3951,7 @@ func (c *Client) ConnectionsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -3471,26 +3966,26 @@ func (c *Client) ConnectionsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Connection{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Connection{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3498,7 +3993,7 @@ func (c *Client) ConnectionsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3507,7 +4002,7 @@ func (c *Client) ConnectionsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3516,7 +4011,7 @@ func (c *Client) ConnectionsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3525,23 +4020,29 @@ func (c *Client) ConnectionsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ConnectionsUpdate Update a connection.
+// ConnectionsUpdate **Operation:** `connections_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update a connection.
 func (c *Client) ConnectionsUpdate(
-	ctx context.Context,
-	id string, req *ConnectionUpdate,
+    ctx context.Context,
+    id string,req *ConnectionUpdate,
 
+    
 ) (*Connection, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections/{id}"+params, id)
+url := c.resourceURL("/connections/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -3552,7 +4053,8 @@ func (c *Client) ConnectionsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -3568,26 +4070,26 @@ func (c *Client) ConnectionsUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Connection{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Connection{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3595,7 +4097,7 @@ func (c *Client) ConnectionsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3604,7 +4106,7 @@ func (c *Client) ConnectionsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3613,7 +4115,7 @@ func (c *Client) ConnectionsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3622,23 +4124,26 @@ func (c *Client) ConnectionsUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ConnectionsPatch Partially update a connection.
+// ConnectionsPatch **Operation:** `connections_partial_update`
+// 
+//  **Summary:** Update a connection.
 func (c *Client) ConnectionsPatch(
-	ctx context.Context,
-	id string, req *ConnectionPatch,
+    ctx context.Context,
+    id string,req *ConnectionPatch,
 
+    
 ) (*Connection, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections/{id}"+params, id)
+url := c.resourceURL("/connections/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -3649,7 +4154,8 @@ func (c *Client) ConnectionsPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -3665,26 +4171,26 @@ func (c *Client) ConnectionsPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Connection{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Connection{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3692,7 +4198,7 @@ func (c *Client) ConnectionsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3701,7 +4207,7 @@ func (c *Client) ConnectionsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3710,7 +4216,7 @@ func (c *Client) ConnectionsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3719,38 +4225,41 @@ func (c *Client) ConnectionsPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ConnectionsDestroy Request decommissioning the connection.
-//
+// ConnectionsDestroy **Operation:** `connections_destroy`
+// 
+//  **Summary:** Request decommissioning the connection.
+// 
 // The cancellation policy of the connection applies
 // here and is independent from the
 // policy of the network-service and network-service-config
 // using the connection.
-//
+// 
 // The connection will assume the state
 // `decommission_requested`.
-//
+// 
 // Associated `port-reservation` will be also
 // marked for decommissining and ports will
 // be deallocated.
-//
+// 
 // The decommissioning request will *not* cascade
 // to network services and configs.
 func (c *Client) ConnectionsDestroy(
-	ctx context.Context,
-	id string, req *CancellationRequest,
+    ctx context.Context,
+    id string,req *CancellationRequest,
 
+    
 ) (*Connection, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections/{id}"+params, id)
+url := c.resourceURL("/connections/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -3761,7 +4270,8 @@ func (c *Client) ConnectionsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -3777,26 +4287,26 @@ func (c *Client) ConnectionsDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Connection{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Connection{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3804,7 +4314,7 @@ func (c *Client) ConnectionsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3813,7 +4323,7 @@ func (c *Client) ConnectionsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3822,7 +4332,7 @@ func (c *Client) ConnectionsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3831,25 +4341,27 @@ func (c *Client) ConnectionsDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ConnectionsLoaDownload Download the *Letter Of Authorization* associated with the `connection`.
+// ConnectionsLoaDownload **Operation:** `connections_loa_download`
+// 
+//  **Summary:** Download the *Letter Of Authorization* associated with the `connection`.
 // In case of a *subscriber initiated cross-connect*,
 // it will be provided by the exchange.
 func (c *Client) ConnectionsLoaDownload(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (Response, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections/{id}/loa"+params, id)
+url := c.resourceURL("/connections/{id}/loa"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -3857,6 +4369,7 @@ func (c *Client) ConnectionsLoaDownload(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -3871,20 +4384,20 @@ func (c *Client) ConnectionsLoaDownload(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
-		return body, nil
-	}
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      return body, nil
+    }
 
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3892,7 +4405,7 @@ func (c *Client) ConnectionsLoaDownload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3901,7 +4414,7 @@ func (c *Client) ConnectionsLoaDownload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -3910,7 +4423,7 @@ func (c *Client) ConnectionsLoaDownload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -3919,33 +4432,37 @@ func (c *Client) ConnectionsLoaDownload(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ConnectionsLoaUpload Upload a *Letter Of Authorization* for this
+// ConnectionsLoaUpload **Operation:** `connections_loa_upload`
+// 
+//  **Summary:** Upload a *Letter Of Authorization* for this
 // `connection`.
-//
+// 
 // The LOA is valid for the entire connection and must
 // include all ports.
 func (c *Client) ConnectionsLoaUpload(
-	ctx context.Context,
-	id string, data []byte,
+    ctx context.Context,
+    id string,data []byte,
 
+    
 ) (Response, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections/{id}/loa"+params, id)
+url := c.resourceURL("/connections/{id}/loa"+params, id)
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodPost, url, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/octet-stream")
+    hreq.Header.Set("Content-Type", "application/octet-stream")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -3961,20 +4478,20 @@ func (c *Client) ConnectionsLoaUpload(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
-		return body, nil
-	}
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      return body, nil
+    }
 
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -3982,7 +4499,7 @@ func (c *Client) ConnectionsLoaUpload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -3991,7 +4508,7 @@ func (c *Client) ConnectionsLoaUpload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -4000,7 +4517,7 @@ func (c *Client) ConnectionsLoaUpload(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -4009,63 +4526,66 @@ func (c *Client) ConnectionsLoaUpload(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
+// ConnectionsCancellationPolicyReadQuery has all query parameters for ConnectionsCancellationPolicyRead
+type ConnectionsCancellationPolicyReadQuery struct {
+// DecommissionAt is a decommission_at
+DecommissionAt string `json:"decommission_at,omitempty"`
 
-// ConnectionsCancellationPolicyQuery has all query parameters for ConnectionsCancellationPolicy
-type ConnectionsCancellationPolicyQuery struct {
-	// DecommissionAt is a decommission_at
-	DecommissionAt string `json:"decommission_at,omitempty"`
 }
 
-// RawQuery creates a query string for ConnectionsCancellationPolicyQuery
-func (c *ConnectionsCancellationPolicyQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = c.DecommissionAt
-	if val != "" {
-		qry.Add("decommission_at", val)
-	}
-	return qry.Encode()
+// RawQuery creates a query string for ConnectionsCancellationPolicyReadQuery
+func (c* ConnectionsCancellationPolicyReadQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = c.DecommissionAt
+if val != "" {
+qry.Add("decommission_at", val)
 }
+return qry.Encode()}
 
-// ConnectionsCancellationPolicy The cancellation-policy can be queried to answer
+
+// ConnectionsCancellationPolicyRead **Operation:** `connections_cancellation_policy_read`
+// 
+//  **Summary:** The cancellation-policy can be queried to answer
 // the questions:
-//
+// 
 // If I cancel my subscription, *when will it be technically
 // decommissioned*?
 // If I cancel my subscription, *until what date will I be charged*?
-//
+// 
 // When the query parameter `decommision_at` is not provided
 // it will provide the first possible cancellation date
 // and charge period if cancelled at above date.
-//
+// 
 // The granularity of the date field is a day, the start and end
 // of which are to be interpreted by the IXP (some may use UTC,
 // some may use their local time zone).
-func (c *Client) ConnectionsCancellationPolicy(
-	ctx context.Context,
-	id string,
-	qry ...*ConnectionsCancellationPolicyQuery,
+func (c *Client) ConnectionsCancellationPolicyRead(
+    ctx context.Context,
+    id string,
+    qry ...*ConnectionsCancellationPolicyReadQuery,
 ) (*CancellationPolicy, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/connections/{id}/cancellation-policy"+params, id)
+url := c.resourceURL("/connections/{id}/cancellation-policy"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -4081,26 +4601,26 @@ func (c *Client) ConnectionsCancellationPolicy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &CancellationPolicy{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &CancellationPolicy{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -4108,7 +4628,7 @@ func (c *Client) ConnectionsCancellationPolicy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -4117,7 +4637,7 @@ func (c *Client) ConnectionsCancellationPolicy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -4126,7 +4646,7 @@ func (c *Client) ConnectionsCancellationPolicy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -4135,148 +4655,172 @@ func (c *Client) ConnectionsCancellationPolicy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // NetworkServiceConfigsListQuery has all query parameters for NetworkServiceConfigsList
 type NetworkServiceConfigsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// State is a state
-	State string `json:"state,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// StateIsNot is a state__is_not
-	StateIsNot string `json:"state__is_not,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// ManagingAccount is a managing_account
-	ManagingAccount string `json:"managing_account,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// ConsumingAccount is a consuming_account
-	ConsumingAccount string `json:"consuming_account,omitempty"`
+// State is a state
+State string `json:"state,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// StateIsNot is a state__is_not
+StateIsNot string `json:"state__is_not,omitempty"`
 
-	// Type is a type
-	Type string `json:"type,omitempty"`
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
 
-	// InnerVLAN is a inner_vlan
-	InnerVLAN int `json:"inner_vlan,omitempty"`
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// OuterVLAN is a outer_vlan
-	OuterVLAN int `json:"outer_vlan,omitempty"`
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
 
-	// Capacity is a capacity
-	Capacity int `json:"capacity,omitempty"`
+// Type is a type
+Type string `json:"type,omitempty"`
 
-	// NetworkService is a network_service
-	NetworkService string `json:"network_service,omitempty"`
+// InnerVLAN is a inner_vlan
+InnerVLAN int `json:"inner_vlan,omitempty"`
 
-	// Connection is a connection
-	Connection string `json:"connection,omitempty"`
+// OuterVLAN is a outer_vlan
+OuterVLAN int `json:"outer_vlan,omitempty"`
 
-	// ProductOffering is a product_offering
-	ProductOffering string `json:"product_offering,omitempty"`
+// Capacity is a capacity
+Capacity int `json:"capacity,omitempty"`
 
-	// RoleAssignments is a role_assignments
-	RoleAssignments []string `json:"role_assignments,omitempty"`
+// NetworkService is a network_service
+NetworkService string `json:"network_service,omitempty"`
 
-	// Contacts is a contacts
-	Contacts []string `json:"contacts,omitempty"`
+// Connection is a connection
+Connection string `json:"connection,omitempty"`
+
+// ProductOffering is a product_offering
+ProductOffering string `json:"product_offering,omitempty"`
+
+// RoleAssignments is a role_assignments
+RoleAssignments []string `json:"role_assignments,omitempty"`
+
+// Contacts is a contacts
+Contacts []string `json:"contacts,omitempty"`
+
 }
 
 // RawQuery creates a query string for NetworkServiceConfigsListQuery
-func (n *NetworkServiceConfigsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(n.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = n.State
-	if val != "" {
-		qry.Add("state", val)
-	}
-	val = n.StateIsNot
-	if val != "" {
-		qry.Add("state__is_not", val)
-	}
-	val = n.ManagingAccount
-	if val != "" {
-		qry.Add("managing_account", val)
-	}
-	val = n.ConsumingAccount
-	if val != "" {
-		qry.Add("consuming_account", val)
-	}
-	val = n.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	val = n.Type
-	if val != "" {
-		qry.Add("type", val)
-	}
-	val = fmt.Sprintf("%v", n.InnerVLAN)
-	if val != "0" {
-		qry.Add("inner_vlan", val)
-	}
-	val = fmt.Sprintf("%v", n.OuterVLAN)
-	if val != "0" {
-		qry.Add("outer_vlan", val)
-	}
-	val = fmt.Sprintf("%v", n.Capacity)
-	if val != "0" {
-		qry.Add("capacity", val)
-	}
-	val = n.NetworkService
-	if val != "" {
-		qry.Add("network_service", val)
-	}
-	val = n.Connection
-	if val != "" {
-		qry.Add("connection", val)
-	}
-	val = n.ProductOffering
-	if val != "" {
-		qry.Add("product_offering", val)
-	}
-	val = strings.Join(n.RoleAssignments, ",")
-	if val != "" {
-		qry.Add("role_assignments", val)
-	}
-	val = strings.Join(n.Contacts, ",")
-	if val != "" {
-		qry.Add("contacts", val)
-	}
-	return qry.Encode()
+func (n* NetworkServiceConfigsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(n.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", n.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", n.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = n.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = n.State
+if val != "" {
+qry.Add("state", val)
+}
+val = n.StateIsNot
+if val != "" {
+qry.Add("state__is_not", val)
+}
+val = n.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = n.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = n.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = n.Type
+if val != "" {
+qry.Add("type", val)
+}
+val = fmt.Sprintf("%v", n.InnerVLAN)
+if val != "0" {
+qry.Add("inner_vlan", val)
+}
+val = fmt.Sprintf("%v", n.OuterVLAN)
+if val != "0" {
+qry.Add("outer_vlan", val)
+}
+val = fmt.Sprintf("%v", n.Capacity)
+if val != "0" {
+qry.Add("capacity", val)
+}
+val = n.NetworkService
+if val != "" {
+qry.Add("network_service", val)
+}
+val = n.Connection
+if val != "" {
+qry.Add("connection", val)
+}
+val = n.ProductOffering
+if val != "" {
+qry.Add("product_offering", val)
+}
+val = strings.Join(n.RoleAssignments, ",")
+if val != "" {
+qry.Add("role_assignments", val)
+}
+val = strings.Join(n.Contacts, ",")
+if val != "" {
+qry.Add("contacts", val)
+}
+return qry.Encode()}
+
+
+// NetworkServiceConfigsList **Operation:** `network_service_configs_list`
+// 
+//  **Summary:** Get all `network-service-config`s.
+func (c *Client) NetworkServiceConfigsList(
+    ctx context.Context,
+    
+    qry ...*NetworkServiceConfigsListQuery,
+) ([]NetworkServiceConfig, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// NetworkServiceConfigsList Get all `network-service-config`s.
-func (c *Client) NetworkServiceConfigsList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*NetworkServiceConfigsListQuery,
-) ([]NetworkServiceConfig, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-service-configs" + params)
+url := c.resourceURL("/network-service-configs"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -4292,109 +4836,39 @@ func (c *Client) NetworkServiceConfigsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    msgs := []json.RawMessage{}
+    if err := json.Unmarshal(body, &msgs); err != nil {
+        return nil, err
+    }
+    res := make([]NetworkServiceConfig, 0, len(msgs))
 
-		msgs := []json.RawMessage{}
-		if err := json.Unmarshal(body, &msgs); err != nil {
-			return nil, err
-		}
-		res := make([]NetworkServiceConfig, 0, len(msgs))
+    for _, msg := range msgs {
+        tmp := &PolymorphicNetworkServiceConfig{}
+        if err := json.Unmarshal(msg, tmp); err != nil {
+            return nil, err
+        }
+        ptype := tmp.PolymorphicType()
+        switch(ptype) {
+            
+        }
+    }
 
-		for _, msg := range msgs {
-			tmp := &PolymorphicNetworkServiceConfig{}
-			if err := json.Unmarshal(msg, tmp); err != nil {
-				return nil, err
-			}
-			ptype := tmp.PolymorphicType()
-			switch ptype {
+    return res, nil
 
-			case ExchangeLanNetworkServiceConfigType:
-				rval := &ExchangeLanNetworkServiceConfig{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
+    }
 
-				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
-				if err != nil {
-					return nil, err
-				}
-				rval.VLANConfig = vlanConfig
-
-				res = append(res, rval)
-
-			case P2PNetworkServiceConfigType:
-				rval := &P2PNetworkServiceConfig{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
-				if err != nil {
-					return nil, err
-				}
-				rval.VLANConfig = vlanConfig
-
-				res = append(res, rval)
-
-			case P2MPNetworkServiceConfigType:
-				rval := &P2MPNetworkServiceConfig{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
-				if err != nil {
-					return nil, err
-				}
-				rval.VLANConfig = vlanConfig
-
-				res = append(res, rval)
-
-			case MP2MPNetworkServiceConfigType:
-				rval := &MP2MPNetworkServiceConfig{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
-				if err != nil {
-					return nil, err
-				}
-				rval.VLANConfig = vlanConfig
-
-				res = append(res, rval)
-
-			case CloudNetworkServiceConfigType:
-				rval := &CloudNetworkServiceConfig{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				vlanConfig, err := decodeVLANConfig(rval.VLANConfigRaw)
-				if err != nil {
-					return nil, err
-				}
-				rval.VLANConfig = vlanConfig
-
-				res = append(res, rval)
-
-			}
-		}
-
-		return res, nil
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -4402,7 +4876,7 @@ func (c *Client) NetworkServiceConfigsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -4411,7 +4885,7 @@ func (c *Client) NetworkServiceConfigsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -4420,7 +4894,7 @@ func (c *Client) NetworkServiceConfigsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -4429,23 +4903,26 @@ func (c *Client) NetworkServiceConfigsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServiceConfigsCreate Create a `network-service-config`.
+// NetworkServiceConfigsCreate **Operation:** `network_service_configs_create`
+// 
+//  **Summary:** Create a `network-service-config`.
 func (c *Client) NetworkServiceConfigsCreate(
-	ctx context.Context,
-	req NetworkServiceConfigRequest,
+    ctx context.Context,
+    req NetworkServiceConfigRequest,
 
+    
 ) (NetworkServiceConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-service-configs" + params)
+url := c.resourceURL("/network-service-configs"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -4456,7 +4933,8 @@ func (c *Client) NetworkServiceConfigsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -4472,101 +4950,31 @@ func (c *Client) NetworkServiceConfigsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkServiceConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkServiceConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceConfigType:
-			res := &ExchangeLanNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2PNetworkServiceConfigType:
-			res := &P2PNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2MPNetworkServiceConfigType:
-			res := &P2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case MP2MPNetworkServiceConfigType:
-			res := &MP2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case CloudNetworkServiceConfigType:
-			res := &CloudNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -4574,7 +4982,7 @@ func (c *Client) NetworkServiceConfigsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -4583,7 +4991,7 @@ func (c *Client) NetworkServiceConfigsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -4592,7 +5000,7 @@ func (c *Client) NetworkServiceConfigsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -4601,23 +5009,25 @@ func (c *Client) NetworkServiceConfigsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServiceConfigsRead Get a `network-service-config`
+// NetworkServiceConfigsRead **Operation:** `network_service_configs_read`
+// 
+//  **Summary:** Get a `network-service-config`
 func (c *Client) NetworkServiceConfigsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (NetworkServiceConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-service-configs/{id}"+params, id)
+url := c.resourceURL("/network-service-configs/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -4625,6 +5035,7 @@ func (c *Client) NetworkServiceConfigsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -4639,101 +5050,31 @@ func (c *Client) NetworkServiceConfigsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkServiceConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkServiceConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceConfigType:
-			res := &ExchangeLanNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2PNetworkServiceConfigType:
-			res := &P2PNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2MPNetworkServiceConfigType:
-			res := &P2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case MP2MPNetworkServiceConfigType:
-			res := &MP2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case CloudNetworkServiceConfigType:
-			res := &CloudNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -4741,7 +5082,7 @@ func (c *Client) NetworkServiceConfigsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -4750,7 +5091,7 @@ func (c *Client) NetworkServiceConfigsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -4759,7 +5100,7 @@ func (c *Client) NetworkServiceConfigsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -4768,23 +5109,29 @@ func (c *Client) NetworkServiceConfigsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServiceConfigsUpdate Update an exisiting `network-service-config`
+// NetworkServiceConfigsUpdate **Operation:** `network_service_configs_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update an exisiting `network-service-config`
 func (c *Client) NetworkServiceConfigsUpdate(
-	ctx context.Context,
-	id string, req NetworkServiceConfigUpdate,
+    ctx context.Context,
+    id string,req NetworkServiceConfigUpdate,
 
+    
 ) (NetworkServiceConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-service-configs/{id}"+params, id)
+url := c.resourceURL("/network-service-configs/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -4795,7 +5142,8 @@ func (c *Client) NetworkServiceConfigsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -4811,101 +5159,31 @@ func (c *Client) NetworkServiceConfigsUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkServiceConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkServiceConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceConfigType:
-			res := &ExchangeLanNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2PNetworkServiceConfigType:
-			res := &P2PNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2MPNetworkServiceConfigType:
-			res := &P2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case MP2MPNetworkServiceConfigType:
-			res := &MP2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case CloudNetworkServiceConfigType:
-			res := &CloudNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -4913,7 +5191,7 @@ func (c *Client) NetworkServiceConfigsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -4922,7 +5200,7 @@ func (c *Client) NetworkServiceConfigsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -4931,7 +5209,7 @@ func (c *Client) NetworkServiceConfigsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -4940,23 +5218,26 @@ func (c *Client) NetworkServiceConfigsUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServiceConfigsPatch Update parts of an exisiting `network-service-config`.
+// NetworkServiceConfigsPatch **Operation:** `network_service_configs_partial_update`
+// 
+//  **Summary:** Update an exisiting `network-service-config`.
 func (c *Client) NetworkServiceConfigsPatch(
-	ctx context.Context,
-	id string, req NetworkServiceConfigPatch,
+    ctx context.Context,
+    id string,req NetworkServiceConfigPatch,
 
+    
 ) (NetworkServiceConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-service-configs/{id}"+params, id)
+url := c.resourceURL("/network-service-configs/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -4967,7 +5248,8 @@ func (c *Client) NetworkServiceConfigsPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -4983,101 +5265,31 @@ func (c *Client) NetworkServiceConfigsPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkServiceConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkServiceConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceConfigType:
-			res := &ExchangeLanNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2PNetworkServiceConfigType:
-			res := &P2PNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2MPNetworkServiceConfigType:
-			res := &P2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case MP2MPNetworkServiceConfigType:
-			res := &MP2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case CloudNetworkServiceConfigType:
-			res := &CloudNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -5085,7 +5297,7 @@ func (c *Client) NetworkServiceConfigsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -5094,7 +5306,7 @@ func (c *Client) NetworkServiceConfigsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -5103,7 +5315,7 @@ func (c *Client) NetworkServiceConfigsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -5112,28 +5324,31 @@ func (c *Client) NetworkServiceConfigsPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServiceConfigsDestroy Request decommissioning the network service configuration.
-//
+// NetworkServiceConfigsDestroy **Operation:** `network_service_configs_destroy`
+// 
+//  **Summary:** Request decommissioning the network service configuration.
+// 
 // The network service config will assume the state
 // `decommission_requested`.
 // This will cascade to related resources like
 // `network-feature-configs`.
 func (c *Client) NetworkServiceConfigsDestroy(
-	ctx context.Context,
-	id string, req *CancellationRequest,
+    ctx context.Context,
+    id string,req *CancellationRequest,
 
+    
 ) (NetworkServiceConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-service-configs/{id}"+params, id)
+url := c.resourceURL("/network-service-configs/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -5144,7 +5359,8 @@ func (c *Client) NetworkServiceConfigsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -5160,101 +5376,31 @@ func (c *Client) NetworkServiceConfigsDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkServiceConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkServiceConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceConfigType:
-			res := &ExchangeLanNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2PNetworkServiceConfigType:
-			res := &P2PNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case P2MPNetworkServiceConfigType:
-			res := &P2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case MP2MPNetworkServiceConfigType:
-			res := &MP2MPNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		case CloudNetworkServiceConfigType:
-			res := &CloudNetworkServiceConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
-			if err != nil {
-				return nil, err
-			}
-			res.VLANConfig = vlanConfig
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -5262,7 +5408,7 @@ func (c *Client) NetworkServiceConfigsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -5271,7 +5417,7 @@ func (c *Client) NetworkServiceConfigsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -5280,7 +5426,7 @@ func (c *Client) NetworkServiceConfigsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -5289,63 +5435,397 @@ func (c *Client) NetworkServiceConfigsDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
+// NetworkServiceConfigsPeerStatisticsReadQuery has all query parameters for NetworkServiceConfigsPeerStatisticsRead
+type NetworkServiceConfigsPeerStatisticsReadQuery struct {
+// Start is a start
+Start time.Time `json:"start,omitempty"`
 
+// End is a end
+End time.Time `json:"end,omitempty"`
+
+// ASN is a asn
+ASN int `json:"asn,omitempty"`
+
+// MacAddress is a mac_address
+MacAddress string `json:"mac_address,omitempty"`
+
+// IPAddress is a ip_address
+IPAddress string `json:"ip_address,omitempty"`
+
+// IPVersion is a ip_version
+IPVersion int `json:"ip_version,omitempty"`
+
+}
+
+// RawQuery creates a query string for NetworkServiceConfigsPeerStatisticsReadQuery
+func (n* NetworkServiceConfigsPeerStatisticsReadQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = n.Start
+if val != "" {
+qry.Add("start", val)
+}
+val = n.End
+if val != "" {
+qry.Add("end", val)
+}
+val = fmt.Sprintf("%v", n.ASN)
+if val != "0" {
+qry.Add("asn", val)
+}
+val = n.MacAddress
+if val != "" {
+qry.Add("mac_address", val)
+}
+val = n.IPAddress
+if val != "" {
+qry.Add("ip_address", val)
+}
+val = fmt.Sprintf("%v", n.IPVersion)
+if val != "0" {
+qry.Add("ip_version", val)
+}
+return qry.Encode()}
+
+
+// NetworkServiceConfigsPeerStatisticsRead **Operation:** `network_service_configs_peer_statistics_read`
+// 
+//  **Summary:** Read the aggregated peer to peer statistics in relation
+//             to the peer represented by the
+//             `NetworkServiceConfig`.
+//             This operation will return a list of aggregated statistics.
+//         
+// A `start` and `end` query parameter can be used to
+// retrieve the aggregated traffic for a given window.
+// In this case the key of the returned statistics is `custom`.
+// 
+// With a given `start` and `end` window, the resolution for
+// the aggregated data is chosen by the implementation.
+// 
+// You need to check the `accuracy` attribute of the aggregate,
+// to see if the data can be used for the desired
+// usecase. The `accuracy` is the ratio of *total samples* to
+// *expected samples*.
+// 
+// If no `start` or `end` parameter is given, a sliding window
+// is assumed and key value pairs of resolutions and aggregated
+// statistics are returned.
+func (c *Client) NetworkServiceConfigsPeerStatisticsRead(
+    ctx context.Context,
+    id string,
+    qry ...*NetworkServiceConfigsPeerStatisticsReadQuery,
+) ([]*PeerAggregate, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
+
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/network-service-configs/{id}/peer-statistics"+params, id)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*PeerAggregate{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
+// NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery has all query parameters for NetworkServiceConfigsPeerStatisticsTimeseriesRead
+type NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery struct {
+// Start is a start
+Start time.Time `json:"start,omitempty"`
+
+// End is a end
+End time.Time `json:"end,omitempty"`
+
+// Fields is a fields
+Fields string `json:"fields,omitempty"`
+
+// ASN is a asn
+ASN int `json:"asn,omitempty"`
+
+// MacAddress is a mac_address
+MacAddress string `json:"mac_address,omitempty"`
+
+// IPAddress is a ip_address
+IPAddress string `json:"ip_address,omitempty"`
+
+// IPVersion is a ip_version
+IPVersion int `json:"ip_version,omitempty"`
+
+}
+
+// RawQuery creates a query string for NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery
+func (n* NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = n.Start
+if val != "" {
+qry.Add("start", val)
+}
+val = n.End
+if val != "" {
+qry.Add("end", val)
+}
+val = n.Fields
+if val != "" {
+qry.Add("fields", val)
+}
+val = fmt.Sprintf("%v", n.ASN)
+if val != "0" {
+qry.Add("asn", val)
+}
+val = n.MacAddress
+if val != "" {
+qry.Add("mac_address", val)
+}
+val = n.IPAddress
+if val != "" {
+qry.Add("ip_address", val)
+}
+val = fmt.Sprintf("%v", n.IPVersion)
+if val != "0" {
+qry.Add("ip_version", val)
+}
+return qry.Encode()}
+
+
+// NetworkServiceConfigsPeerStatisticsTimeseriesRead **Operation:** `network_service_configs_peer_statistics_timeseries_read`
+// 
+//  **Summary:** Read peer to peer aggregated timeseries.
+// The resolution is defined by the aggregate.
+// 
+// This operation will return a list of timeseries for each peer.
+func (c *Client) NetworkServiceConfigsPeerStatisticsTimeseriesRead(
+    ctx context.Context,
+    id string,
+    qry ...*NetworkServiceConfigsPeerStatisticsTimeseriesReadQuery,
+) ([]*PeerTimeseries, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
+
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/network-service-configs/{id}/peer-statistics/{aggregate}/timeseries"+params, id)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*PeerTimeseries{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
 // NetworkServiceConfigCancellationPolicyReadQuery has all query parameters for NetworkServiceConfigCancellationPolicyRead
 type NetworkServiceConfigCancellationPolicyReadQuery struct {
-	// DecommissionAt is a decommission_at
-	DecommissionAt string `json:"decommission_at,omitempty"`
+// DecommissionAt is a decommission_at
+DecommissionAt string `json:"decommission_at,omitempty"`
+
 }
 
 // RawQuery creates a query string for NetworkServiceConfigCancellationPolicyReadQuery
-func (n *NetworkServiceConfigCancellationPolicyReadQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = n.DecommissionAt
-	if val != "" {
-		qry.Add("decommission_at", val)
-	}
-	return qry.Encode()
+func (n* NetworkServiceConfigCancellationPolicyReadQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = n.DecommissionAt
+if val != "" {
+qry.Add("decommission_at", val)
 }
+return qry.Encode()}
 
-// NetworkServiceConfigCancellationPolicyRead The cancellation-policy can be queried to answer
+
+// NetworkServiceConfigCancellationPolicyRead **Operation:** `network_service_config_cancellation_policy_read`
+// 
+//  **Summary:** The cancellation-policy can be queried to answer
 // the questions:
-//
+// 
 // If I cancel my subscription, *when will it be technically
 // decommissioned*?
 // If I cancel my subscription, *until what date will I be charged*?
-//
+// 
 // When the query parameter `decommision_at` is not provided
 // it will provide the first possible cancellation date
 // and charge period if cancelled at above date.
-//
+// 
 // The granularity of the date field is a day, the start and end
 // of which are to be interpreted by the IXP (some may use UTC,
 // some may use their local time zone).
 func (c *Client) NetworkServiceConfigCancellationPolicyRead(
-	ctx context.Context,
-	id string,
-	qry ...*NetworkServiceConfigCancellationPolicyReadQuery,
+    ctx context.Context,
+    id string,
+    qry ...*NetworkServiceConfigCancellationPolicyReadQuery,
 ) (*CancellationPolicy, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-service-configs/{id}/cancellation-policy"+params, id)
+url := c.resourceURL("/network-service-configs/{id}/cancellation-policy"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -5361,26 +5841,26 @@ func (c *Client) NetworkServiceConfigCancellationPolicyRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &CancellationPolicy{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &CancellationPolicy{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -5388,7 +5868,7 @@ func (c *Client) NetworkServiceConfigCancellationPolicyRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -5397,7 +5877,7 @@ func (c *Client) NetworkServiceConfigCancellationPolicyRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -5406,7 +5886,7 @@ func (c *Client) NetworkServiceConfigCancellationPolicyRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -5415,120 +5895,151 @@ func (c *Client) NetworkServiceConfigCancellationPolicyRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // NetworkFeatureConfigsListQuery has all query parameters for NetworkFeatureConfigsList
 type NetworkFeatureConfigsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// State is a state
-	State string `json:"state,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// StateIsNot is a state__is_not
-	StateIsNot string `json:"state__is_not,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// ManagingAccount is a managing_account
-	ManagingAccount string `json:"managing_account,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// ConsumingAccount is a consuming_account
-	ConsumingAccount string `json:"consuming_account,omitempty"`
+// State is a state
+State string `json:"state,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// StateIsNot is a state__is_not
+StateIsNot string `json:"state__is_not,omitempty"`
 
-	// Type is a type
-	Type string `json:"type,omitempty"`
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
 
-	// ServiceConfig is a service_config
-	ServiceConfig string `json:"service_config,omitempty"`
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// NetworkFeature is a network_feature
-	NetworkFeature string `json:"network_feature,omitempty"`
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
 
-	// RoleAssignments is a role_assignments
-	RoleAssignments []string `json:"role_assignments,omitempty"`
+// Type is a type
+Type string `json:"type,omitempty"`
 
-	// Contacts is a contacts
-	Contacts []string `json:"contacts,omitempty"`
+// ServiceConfig is a service_config
+ServiceConfig string `json:"service_config,omitempty"`
+
+// NetworkServiceConfig is a network_service_config
+NetworkServiceConfig string `json:"network_service_config,omitempty"`
+
+// NetworkFeature is a network_feature
+NetworkFeature string `json:"network_feature,omitempty"`
+
+// RoleAssignments is a role_assignments
+RoleAssignments []string `json:"role_assignments,omitempty"`
+
+// Contacts is a contacts
+Contacts []string `json:"contacts,omitempty"`
+
 }
 
 // RawQuery creates a query string for NetworkFeatureConfigsListQuery
-func (n *NetworkFeatureConfigsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(n.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = n.State
-	if val != "" {
-		qry.Add("state", val)
-	}
-	val = n.StateIsNot
-	if val != "" {
-		qry.Add("state__is_not", val)
-	}
-	val = n.ManagingAccount
-	if val != "" {
-		qry.Add("managing_account", val)
-	}
-	val = n.ConsumingAccount
-	if val != "" {
-		qry.Add("consuming_account", val)
-	}
-	val = n.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	val = n.Type
-	if val != "" {
-		qry.Add("type", val)
-	}
-	val = n.ServiceConfig
-	if val != "" {
-		qry.Add("service_config", val)
-	}
-	val = n.NetworkFeature
-	if val != "" {
-		qry.Add("network_feature", val)
-	}
-	val = strings.Join(n.RoleAssignments, ",")
-	if val != "" {
-		qry.Add("role_assignments", val)
-	}
-	val = strings.Join(n.Contacts, ",")
-	if val != "" {
-		qry.Add("contacts", val)
-	}
-	return qry.Encode()
+func (n* NetworkFeatureConfigsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(n.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", n.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", n.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = n.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = n.State
+if val != "" {
+qry.Add("state", val)
+}
+val = n.StateIsNot
+if val != "" {
+qry.Add("state__is_not", val)
+}
+val = n.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = n.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = n.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = n.Type
+if val != "" {
+qry.Add("type", val)
+}
+val = n.ServiceConfig
+if val != "" {
+qry.Add("service_config", val)
+}
+val = n.NetworkServiceConfig
+if val != "" {
+qry.Add("network_service_config", val)
+}
+val = n.NetworkFeature
+if val != "" {
+qry.Add("network_feature", val)
+}
+val = strings.Join(n.RoleAssignments, ",")
+if val != "" {
+qry.Add("role_assignments", val)
+}
+val = strings.Join(n.Contacts, ",")
+if val != "" {
+qry.Add("contacts", val)
+}
+return qry.Encode()}
+
+
+// NetworkFeatureConfigsList **Operation:** `network_feature_configs_list`
+// 
+//  **Summary:** Get all network feature configs.
+func (c *Client) NetworkFeatureConfigsList(
+    ctx context.Context,
+    
+    qry ...*NetworkFeatureConfigsListQuery,
+) ([]NetworkFeatureConfig, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// NetworkFeatureConfigsList Get all network feature configs.
-func (c *Client) NetworkFeatureConfigsList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*NetworkFeatureConfigsListQuery,
-) ([]NetworkFeatureConfig, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-feature-configs" + params)
+url := c.resourceURL("/network-feature-configs"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -5544,47 +6055,39 @@ func (c *Client) NetworkFeatureConfigsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    msgs := []json.RawMessage{}
+    if err := json.Unmarshal(body, &msgs); err != nil {
+        return nil, err
+    }
+    res := make([]NetworkFeatureConfig, 0, len(msgs))
 
-		msgs := []json.RawMessage{}
-		if err := json.Unmarshal(body, &msgs); err != nil {
-			return nil, err
-		}
-		res := make([]NetworkFeatureConfig, 0, len(msgs))
+    for _, msg := range msgs {
+        tmp := &PolymorphicNetworkFeatureConfig{}
+        if err := json.Unmarshal(msg, tmp); err != nil {
+            return nil, err
+        }
+        ptype := tmp.PolymorphicType()
+        switch(ptype) {
+            
+        }
+    }
 
-		for _, msg := range msgs {
-			tmp := &PolymorphicNetworkFeatureConfig{}
-			if err := json.Unmarshal(msg, tmp); err != nil {
-				return nil, err
-			}
-			ptype := tmp.PolymorphicType()
-			switch ptype {
+    return res, nil
 
-			case RouteServerNetworkFeatureConfigType:
-				rval := &RouteServerNetworkFeatureConfig{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
+    }
 
-				res = append(res, rval)
-
-			}
-		}
-
-		return res, nil
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -5592,7 +6095,7 @@ func (c *Client) NetworkFeatureConfigsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -5601,7 +6104,7 @@ func (c *Client) NetworkFeatureConfigsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -5610,7 +6113,7 @@ func (c *Client) NetworkFeatureConfigsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -5619,24 +6122,27 @@ func (c *Client) NetworkFeatureConfigsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkFeatureConfigsCreate Create a configuration for a `NetworkFeature`
+// NetworkFeatureConfigsCreate **Operation:** `network_feature_configs_create`
+// 
+//  **Summary:** Create a configuration for a `NetworkFeature`
 // defined in the `NetworkFeature`s collection.
 func (c *Client) NetworkFeatureConfigsCreate(
-	ctx context.Context,
-	req NetworkFeatureConfigRequest,
+    ctx context.Context,
+    req NetworkFeatureConfigRequest,
 
+    
 ) (NetworkFeatureConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-feature-configs" + params)
+url := c.resourceURL("/network-feature-configs"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -5647,7 +6153,8 @@ func (c *Client) NetworkFeatureConfigsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -5663,39 +6170,31 @@ func (c *Client) NetworkFeatureConfigsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkFeatureConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkFeatureConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case RouteServerNetworkFeatureConfigType:
-			res := &RouteServerNetworkFeatureConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -5703,7 +6202,7 @@ func (c *Client) NetworkFeatureConfigsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -5712,7 +6211,7 @@ func (c *Client) NetworkFeatureConfigsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -5721,7 +6220,7 @@ func (c *Client) NetworkFeatureConfigsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -5730,23 +6229,25 @@ func (c *Client) NetworkFeatureConfigsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkFeatureConfigsRead Get a single network feature config.
+// NetworkFeatureConfigsRead **Operation:** `network_feature_configs_read`
+// 
+//  **Summary:** Get a single network feature config.
 func (c *Client) NetworkFeatureConfigsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (NetworkFeatureConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-feature-configs/{id}"+params, id)
+url := c.resourceURL("/network-feature-configs/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -5754,6 +6255,7 @@ func (c *Client) NetworkFeatureConfigsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -5768,39 +6270,31 @@ func (c *Client) NetworkFeatureConfigsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkFeatureConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkFeatureConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case RouteServerNetworkFeatureConfigType:
-			res := &RouteServerNetworkFeatureConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -5808,7 +6302,7 @@ func (c *Client) NetworkFeatureConfigsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -5817,7 +6311,7 @@ func (c *Client) NetworkFeatureConfigsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -5826,7 +6320,7 @@ func (c *Client) NetworkFeatureConfigsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -5835,23 +6329,29 @@ func (c *Client) NetworkFeatureConfigsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkFeatureConfigsUpdate Update a network feature configuration
+// NetworkFeatureConfigsUpdate **Operation:** `network_feature_configs_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update a network feature configuration
 func (c *Client) NetworkFeatureConfigsUpdate(
-	ctx context.Context,
-	id string, req NetworkFeatureConfigUpdate,
+    ctx context.Context,
+    id string,req NetworkFeatureConfigUpdate,
 
+    
 ) (NetworkFeatureConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-feature-configs/{id}"+params, id)
+url := c.resourceURL("/network-feature-configs/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -5862,7 +6362,8 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -5878,39 +6379,31 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkFeatureConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkFeatureConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case RouteServerNetworkFeatureConfigType:
-			res := &RouteServerNetworkFeatureConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -5918,7 +6411,7 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -5927,7 +6420,7 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -5936,7 +6429,7 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -5945,23 +6438,26 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkFeatureConfigsPatch Update parts of a network feature configuration
+// NetworkFeatureConfigsPatch **Operation:** `network_feature_configs_partial_update`
+// 
+//  **Summary:** Update a network feature configuration.
 func (c *Client) NetworkFeatureConfigsPatch(
-	ctx context.Context,
-	id string, req NetworkFeatureConfigPatch,
+    ctx context.Context,
+    id string,req NetworkFeatureConfigPatch,
 
+    
 ) (NetworkFeatureConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-feature-configs/{id}"+params, id)
+url := c.resourceURL("/network-feature-configs/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -5972,7 +6468,8 @@ func (c *Client) NetworkFeatureConfigsPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -5988,39 +6485,31 @@ func (c *Client) NetworkFeatureConfigsPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkFeatureConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkFeatureConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case RouteServerNetworkFeatureConfigType:
-			res := &RouteServerNetworkFeatureConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6028,7 +6517,7 @@ func (c *Client) NetworkFeatureConfigsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6037,7 +6526,7 @@ func (c *Client) NetworkFeatureConfigsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6046,7 +6535,7 @@ func (c *Client) NetworkFeatureConfigsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6055,34 +6544,37 @@ func (c *Client) NetworkFeatureConfigsPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkFeatureConfigsDestroy Remove a network feature config.
-//
+// NetworkFeatureConfigsDestroy **Operation:** `network_feature_configs_destroy`
+// 
+//  **Summary:** Remove a network feature config.
+// 
 // The network feature config will be marked as
 // `decommission_requested`.
 // Decommissioning a network feature config will not
 // cascade to related services or service configs.
 func (c *Client) NetworkFeatureConfigsDestroy(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (NetworkFeatureConfig, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-feature-configs/{id}"+params, id)
+url := c.resourceURL("/network-feature-configs/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodDelete, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -6098,39 +6590,31 @@ func (c *Client) NetworkFeatureConfigsDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkFeatureConfig{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkFeatureConfig{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case RouteServerNetworkFeatureConfigType:
-			res := &RouteServerNetworkFeatureConfig{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6138,7 +6622,7 @@ func (c *Client) NetworkFeatureConfigsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6147,7 +6631,7 @@ func (c *Client) NetworkFeatureConfigsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6156,7 +6640,7 @@ func (c *Client) NetworkFeatureConfigsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6165,99 +6649,225 @@ func (c *Client) NetworkFeatureConfigsDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
+// AccountRead **Operation:** `account_read`
+// 
+//  **Summary:** Get the currently authenticated `Account`.
+func (c *Client) AccountRead(
+    ctx context.Context,
+    
+    
+) (*Account, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/account"+params)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Account{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
 // AccountsListQuery has all query parameters for AccountsList
 type AccountsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// State is a state
-	State string `json:"state,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// StateIsNot is a state__is_not
-	StateIsNot string `json:"state__is_not,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// ManagingAccount is a managing_account
-	ManagingAccount string `json:"managing_account,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// Billable is a billable
-	Billable int `json:"billable,omitempty"`
+// State is a state
+State string `json:"state,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// StateIsNot is a state__is_not
+StateIsNot string `json:"state__is_not,omitempty"`
 
-	// Name is a name
-	Name string `json:"name,omitempty"`
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
+
+// Billable is a billable
+Billable int `json:"billable,omitempty"`
+
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
+
+// Name is a name
+Name string `json:"name,omitempty"`
+
+// ASN is a asn
+ASN int `json:"asn,omitempty"`
+
 }
 
 // RawQuery creates a query string for AccountsListQuery
-func (a *AccountsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(a.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = a.State
-	if val != "" {
-		qry.Add("state", val)
-	}
-	val = a.StateIsNot
-	if val != "" {
-		qry.Add("state__is_not", val)
-	}
-	val = a.ManagingAccount
-	if val != "" {
-		qry.Add("managing_account", val)
-	}
-	val = fmt.Sprintf("%v", a.Billable)
-	if val != "0" {
-		qry.Add("billable", val)
-	}
-	val = a.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	val = a.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	return qry.Encode()
+func (a* AccountsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(a.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", a.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", a.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = a.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = a.State
+if val != "" {
+qry.Add("state", val)
+}
+val = a.StateIsNot
+if val != "" {
+qry.Add("state__is_not", val)
+}
+val = a.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = fmt.Sprintf("%v", a.Billable)
+if val != "0" {
+qry.Add("billable", val)
+}
+val = a.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = a.Name
+if val != "" {
+qry.Add("name", val)
+}
+val = fmt.Sprintf("%v", a.ASN)
+if val != "0" {
+qry.Add("asn", val)
+}
+return qry.Encode()}
 
-// AccountsList Retrieve a list of `Account`s.
-//
+
+// AccountsList **Operation:** `accounts_list`
+// 
+//  **Summary:** Retrieve a list of `Account`s.
+// 
 // This includes all accounts the currently authorized account
 // is managing and the current account itself.
-//
+// 
 // Also `discoverable` accounts will be included, however
 // sensitive properties, like `address` or `external_ref` will
 // either not be present or redacted.
 func (c *Client) AccountsList(
-	ctx context.Context,
-
-	qry ...*AccountsListQuery,
+    ctx context.Context,
+    
+    qry ...*AccountsListQuery,
 ) ([]*Account, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/accounts" + params)
+url := c.resourceURL("/accounts"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -6273,26 +6883,26 @@ func (c *Client) AccountsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*Account{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*Account{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6300,7 +6910,7 @@ func (c *Client) AccountsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6309,7 +6919,7 @@ func (c *Client) AccountsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6318,7 +6928,7 @@ func (c *Client) AccountsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6327,23 +6937,26 @@ func (c *Client) AccountsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// AccountsCreate Create a new account.
+// AccountsCreate **Operation:** `accounts_create`
+// 
+//  **Summary:** Create a new account.
 func (c *Client) AccountsCreate(
-	ctx context.Context,
-	req *AccountRequest,
+    ctx context.Context,
+    req *AccountRequest,
 
+    
 ) (*Account, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/accounts" + params)
+url := c.resourceURL("/accounts"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -6354,7 +6967,8 @@ func (c *Client) AccountsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -6370,26 +6984,26 @@ func (c *Client) AccountsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Account{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Account{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6397,7 +7011,7 @@ func (c *Client) AccountsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6406,7 +7020,7 @@ func (c *Client) AccountsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6415,7 +7029,7 @@ func (c *Client) AccountsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6424,23 +7038,25 @@ func (c *Client) AccountsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// AccountsRead Get a single account.
+// AccountsRead **Operation:** `accounts_read`
+// 
+//  **Summary:** Get a single account.
 func (c *Client) AccountsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Account, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/accounts/{id}"+params, id)
+url := c.resourceURL("/accounts/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -6448,6 +7064,7 @@ func (c *Client) AccountsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -6462,26 +7079,26 @@ func (c *Client) AccountsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Account{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Account{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6489,7 +7106,7 @@ func (c *Client) AccountsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6498,7 +7115,7 @@ func (c *Client) AccountsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6507,7 +7124,7 @@ func (c *Client) AccountsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6516,23 +7133,29 @@ func (c *Client) AccountsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// AccountsUpdate Update the entire account.
+// AccountsUpdate **Operation:** `accounts_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update the entire account.
 func (c *Client) AccountsUpdate(
-	ctx context.Context,
-	id string, req *AccountUpdate,
+    ctx context.Context,
+    id string,req *AccountUpdate,
 
+    
 ) (*Account, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/accounts/{id}"+params, id)
+url := c.resourceURL("/accounts/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -6543,7 +7166,8 @@ func (c *Client) AccountsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -6559,26 +7183,26 @@ func (c *Client) AccountsUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Account{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Account{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6586,7 +7210,7 @@ func (c *Client) AccountsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6595,7 +7219,7 @@ func (c *Client) AccountsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6604,7 +7228,7 @@ func (c *Client) AccountsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6613,23 +7237,26 @@ func (c *Client) AccountsUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// AccountsPatch Update parts of an account.
+// AccountsPatch **Operation:** `accounts_partial_update`
+// 
+//  **Summary:** Update an account.
 func (c *Client) AccountsPatch(
-	ctx context.Context,
-	id string, req *AccountPatch,
+    ctx context.Context,
+    id string,req *AccountPatch,
 
+    
 ) (*Account, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/accounts/{id}"+params, id)
+url := c.resourceURL("/accounts/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -6640,7 +7267,8 @@ func (c *Client) AccountsPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -6656,26 +7284,26 @@ func (c *Client) AccountsPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Account{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Account{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6683,7 +7311,7 @@ func (c *Client) AccountsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6692,7 +7320,7 @@ func (c *Client) AccountsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6701,7 +7329,7 @@ func (c *Client) AccountsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6710,31 +7338,33 @@ func (c *Client) AccountsPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// AccountsDestroy Accounts can be deleted, when all services and configs
+// AccountsDestroy **Operation:** `accounts_destroy`
+// 
+//  **Summary:** Accounts can be deleted, when all services and configs
 // are decommissioned or the account is not longer referenced
 // e.g. as a `managing_account` or `billing_account`.
-//
+// 
 // Deleting an account will cascade to `contacts` and
 // `role-assignments`.
-//
+// 
 // The request will immediately fail, if the above preconditions
 // are not met.
 func (c *Client) AccountsDestroy(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Account, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/accounts/{id}"+params, id)
+url := c.resourceURL("/accounts/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodDelete, url, nil)
@@ -6742,6 +7372,7 @@ func (c *Client) AccountsDestroy(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -6756,26 +7387,26 @@ func (c *Client) AccountsDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Account{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Account{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6783,7 +7414,7 @@ func (c *Client) AccountsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6792,7 +7423,7 @@ func (c *Client) AccountsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6801,7 +7432,7 @@ func (c *Client) AccountsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6810,64 +7441,88 @@ func (c *Client) AccountsDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // RolesListQuery has all query parameters for RolesList
 type RolesListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// Name is a name
-	Name string `json:"name,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// Contact is a contact
-	Contact string `json:"contact,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
+
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
+// Name is a name
+Name string `json:"name,omitempty"`
+
+// Contact is a contact
+Contact string `json:"contact,omitempty"`
+
 }
 
 // RawQuery creates a query string for RolesListQuery
-func (r *RolesListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(r.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = r.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	val = r.Contact
-	if val != "" {
-		qry.Add("contact", val)
-	}
-	return qry.Encode()
+func (r* RolesListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(r.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", r.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", r.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = r.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = r.Name
+if val != "" {
+qry.Add("name", val)
+}
+val = r.Contact
+if val != "" {
+qry.Add("contact", val)
+}
+return qry.Encode()}
 
-// RolesList List all roles available.
+
+// RolesList **Operation:** `roles_list`
+// 
+//  **Summary:** List all roles available.
 func (c *Client) RolesList(
-	ctx context.Context,
-
-	qry ...*RolesListQuery,
+    ctx context.Context,
+    
+    qry ...*RolesListQuery,
 ) ([]*Role, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/roles" + params)
+url := c.resourceURL("/roles"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -6883,26 +7538,26 @@ func (c *Client) RolesList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*Role{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*Role{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -6910,7 +7565,7 @@ func (c *Client) RolesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -6919,7 +7574,7 @@ func (c *Client) RolesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -6928,7 +7583,7 @@ func (c *Client) RolesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -6937,29 +7592,32 @@ func (c *Client) RolesList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// RolesRead Get a single `Role`.
+// RolesRead **Operation:** `roles_read`
+// 
+//  **Summary:** Get a single `Role`.
 func (c *Client) RolesRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Role, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/roles/{id}"+params, id)
+url := c.resourceURL("/roles/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -6975,26 +7633,26 @@ func (c *Client) RolesRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Role{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Role{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7002,7 +7660,7 @@ func (c *Client) RolesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7011,7 +7669,7 @@ func (c *Client) RolesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7020,7 +7678,7 @@ func (c *Client) RolesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7029,71 +7687,95 @@ func (c *Client) RolesRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // ContactsListQuery has all query parameters for ContactsList
 type ContactsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// ManagingAccount is a managing_account
-	ManagingAccount string `json:"managing_account,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// ConsumingAccount is a consuming_account
-	ConsumingAccount string `json:"consuming_account,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
+
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
+
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
+
 }
 
 // RawQuery creates a query string for ContactsListQuery
-func (c *ContactsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(c.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = c.ManagingAccount
-	if val != "" {
-		qry.Add("managing_account", val)
-	}
-	val = c.ConsumingAccount
-	if val != "" {
-		qry.Add("consuming_account", val)
-	}
-	val = c.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	return qry.Encode()
+func (c* ContactsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(c.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", c.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", c.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = c.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = c.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = c.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = c.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+return qry.Encode()}
+
+
+// ContactsList **Operation:** `contacts_list`
+// 
+//  **Summary:** List available contacts managed by the authorized account.
+func (c *Client) ContactsList(
+    ctx context.Context,
+    
+    qry ...*ContactsListQuery,
+) ([]*Contact, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// ContactsList List available contacts managed by the authorized account.
-func (c *Client) ContactsList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*ContactsListQuery,
-) ([]*Contact, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/contacts" + params)
+url := c.resourceURL("/contacts"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -7109,26 +7791,26 @@ func (c *Client) ContactsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*Contact{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*Contact{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7136,7 +7818,7 @@ func (c *Client) ContactsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7145,7 +7827,7 @@ func (c *Client) ContactsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7154,7 +7836,7 @@ func (c *Client) ContactsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7163,23 +7845,26 @@ func (c *Client) ContactsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ContactsCreate Create a new contact.
+// ContactsCreate **Operation:** `contacts_create`
+// 
+//  **Summary:** Create a new contact.
 func (c *Client) ContactsCreate(
-	ctx context.Context,
-	req *ContactRequest,
+    ctx context.Context,
+    req *ContactRequest,
 
+    
 ) (*Contact, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/contacts" + params)
+url := c.resourceURL("/contacts"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -7190,7 +7875,8 @@ func (c *Client) ContactsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -7206,26 +7892,26 @@ func (c *Client) ContactsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Contact{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Contact{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7233,7 +7919,7 @@ func (c *Client) ContactsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7242,7 +7928,7 @@ func (c *Client) ContactsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7251,7 +7937,7 @@ func (c *Client) ContactsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7260,23 +7946,25 @@ func (c *Client) ContactsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ContactsRead Get a contact by it's id
+// ContactsRead **Operation:** `contacts_read`
+// 
+//  **Summary:** Get a contact by it's id
 func (c *Client) ContactsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Contact, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/contacts/{id}"+params, id)
+url := c.resourceURL("/contacts/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -7284,6 +7972,7 @@ func (c *Client) ContactsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -7298,26 +7987,26 @@ func (c *Client) ContactsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Contact{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Contact{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7325,7 +8014,7 @@ func (c *Client) ContactsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7334,7 +8023,7 @@ func (c *Client) ContactsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7343,7 +8032,7 @@ func (c *Client) ContactsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7352,23 +8041,29 @@ func (c *Client) ContactsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ContactsUpdate Update a contact
+// ContactsUpdate **Operation:** `contacts_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update a contact.
 func (c *Client) ContactsUpdate(
-	ctx context.Context,
-	id string, req *ContactUpdate,
+    ctx context.Context,
+    id string,req *ContactUpdate,
 
+    
 ) (*Contact, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/contacts/{id}"+params, id)
+url := c.resourceURL("/contacts/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -7379,7 +8074,8 @@ func (c *Client) ContactsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -7395,26 +8091,26 @@ func (c *Client) ContactsUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Contact{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Contact{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7422,7 +8118,7 @@ func (c *Client) ContactsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7431,7 +8127,7 @@ func (c *Client) ContactsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7440,7 +8136,7 @@ func (c *Client) ContactsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7449,23 +8145,26 @@ func (c *Client) ContactsUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ContactsPatch Update parts of a contact
+// ContactsPatch **Operation:** `contacts_partial_update`
+// 
+//  **Summary:** Update a contact.
 func (c *Client) ContactsPatch(
-	ctx context.Context,
-	id string, req *ContactPatch,
+    ctx context.Context,
+    id string,req *ContactPatch,
 
+    
 ) (*Contact, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/contacts/{id}"+params, id)
+url := c.resourceURL("/contacts/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -7476,7 +8175,8 @@ func (c *Client) ContactsPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -7492,26 +8192,26 @@ func (c *Client) ContactsPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Contact{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Contact{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7519,7 +8219,7 @@ func (c *Client) ContactsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7528,7 +8228,7 @@ func (c *Client) ContactsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7537,7 +8237,7 @@ func (c *Client) ContactsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7546,27 +8246,29 @@ func (c *Client) ContactsPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// ContactsDestroy Remove a contact.
-//
+// ContactsDestroy **Operation:** `contacts_destroy`
+// 
+//  **Summary:** Remove a contact.
+// 
 // Please note, that a contact can only be removed if
 // it is not longer in use in a network service or config
 // through a role assignment.
 func (c *Client) ContactsDestroy(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*Contact, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/contacts/{id}"+params, id)
+url := c.resourceURL("/contacts/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodDelete, url, nil)
@@ -7574,6 +8276,7 @@ func (c *Client) ContactsDestroy(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -7588,26 +8291,26 @@ func (c *Client) ContactsDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &Contact{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &Contact{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7615,7 +8318,7 @@ func (c *Client) ContactsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7624,7 +8327,7 @@ func (c *Client) ContactsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7633,7 +8336,7 @@ func (c *Client) ContactsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7642,58 +8345,81 @@ func (c *Client) ContactsDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // RoleAssignmentsListQuery has all query parameters for RoleAssignmentsList
 type RoleAssignmentsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// Contact is a contact
-	Contact string `json:"contact,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// Role is a role
-	Role string `json:"role,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
+
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
+// Contact is a contact
+Contact string `json:"contact,omitempty"`
+
+// Role is a role
+Role string `json:"role,omitempty"`
+
 }
 
 // RawQuery creates a query string for RoleAssignmentsListQuery
-func (r *RoleAssignmentsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(r.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = r.Contact
-	if val != "" {
-		qry.Add("contact", val)
-	}
-	val = r.Role
-	if val != "" {
-		qry.Add("role", val)
-	}
-	return qry.Encode()
+func (r* RoleAssignmentsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(r.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", r.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", r.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = r.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = r.Contact
+if val != "" {
+qry.Add("contact", val)
+}
+val = r.Role
+if val != "" {
+qry.Add("role", val)
+}
+return qry.Encode()}
+
+
+// RoleAssignmentsList **Operation:** `role_assignments_list`
+// 
+//  **Summary:** List all role assignments for a contact.
+func (c *Client) RoleAssignmentsList(
+    ctx context.Context,
+    
+    qry ...*RoleAssignmentsListQuery,
+) ([]*RoleAssignment, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// RoleAssignmentsList List all role assignments for a contact.
-func (c *Client) RoleAssignmentsList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*RoleAssignmentsListQuery,
-) ([]*RoleAssignment, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/role-assignments" + params)
+url := c.resourceURL("/role-assignments"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -7701,6 +8427,7 @@ func (c *Client) RoleAssignmentsList(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -7715,26 +8442,26 @@ func (c *Client) RoleAssignmentsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*RoleAssignment{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*RoleAssignment{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7742,7 +8469,7 @@ func (c *Client) RoleAssignmentsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7751,7 +8478,7 @@ func (c *Client) RoleAssignmentsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7760,7 +8487,7 @@ func (c *Client) RoleAssignmentsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7769,27 +8496,30 @@ func (c *Client) RoleAssignmentsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// RoleAssignmentsCreate Assign a `Role` to a `Contact`.
-//
+// RoleAssignmentsCreate **Operation:** `role_assignments_create`
+// 
+//  **Summary:** Assign a `Role` to a `Contact`.
+// 
 // The contact needs to have all fields filled, which the
 // role requires. If this is not the case a `400`
 // `UnableToFulfill` will be returned.
 func (c *Client) RoleAssignmentsCreate(
-	ctx context.Context,
-	req *RoleAssignmentRequest,
+    ctx context.Context,
+    req *RoleAssignmentRequest,
 
+    
 ) (*RoleAssignment, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/role-assignments" + params)
+url := c.resourceURL("/role-assignments"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -7800,7 +8530,8 @@ func (c *Client) RoleAssignmentsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -7816,26 +8547,26 @@ func (c *Client) RoleAssignmentsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &RoleAssignment{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &RoleAssignment{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7843,7 +8574,7 @@ func (c *Client) RoleAssignmentsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7852,7 +8583,7 @@ func (c *Client) RoleAssignmentsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7861,7 +8592,7 @@ func (c *Client) RoleAssignmentsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7870,23 +8601,25 @@ func (c *Client) RoleAssignmentsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// RoleAssignmentsRead Get a role assignment for a contact.
+// RoleAssignmentsRead **Operation:** `role_assignments_read`
+// 
+//  **Summary:** Get a role assignment for a contact.
 func (c *Client) RoleAssignmentsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*RoleAssignment, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/role-assignments/{id}"+params, id)
+url := c.resourceURL("/role-assignments/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -7894,6 +8627,7 @@ func (c *Client) RoleAssignmentsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -7908,26 +8642,26 @@ func (c *Client) RoleAssignmentsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &RoleAssignment{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &RoleAssignment{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -7935,7 +8669,7 @@ func (c *Client) RoleAssignmentsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -7944,7 +8678,7 @@ func (c *Client) RoleAssignmentsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -7953,7 +8687,7 @@ func (c *Client) RoleAssignmentsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -7962,26 +8696,28 @@ func (c *Client) RoleAssignmentsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// RoleAssignmentsDestroy Remove a role assignment from a contact.
-//
+// RoleAssignmentsDestroy **Operation:** `role_assignments_destroy`
+// 
+//  **Summary:** Remove a role assignment from a contact.
+// 
 // If the contact is still in use with a given role required,
 // this will yield an `UnableToFulfill` error.
 func (c *Client) RoleAssignmentsDestroy(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*RoleAssignment, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/role-assignments/{id}"+params, id)
+url := c.resourceURL("/role-assignments/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodDelete, url, nil)
@@ -7989,6 +8725,7 @@ func (c *Client) RoleAssignmentsDestroy(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -8003,26 +8740,26 @@ func (c *Client) RoleAssignmentsDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &RoleAssignment{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &RoleAssignment{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8030,7 +8767,7 @@ func (c *Client) RoleAssignmentsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8039,7 +8776,7 @@ func (c *Client) RoleAssignmentsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8048,7 +8785,7 @@ func (c *Client) RoleAssignmentsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8057,28 +8794,32 @@ func (c *Client) RoleAssignmentsDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// APIHealthRead Get the IX-API service health status.
+// APIHealthRead **Operation:** `api_health_read`
+// 
+//  **Summary:** Get the IX-API service health status.
 func (c *Client) APIHealthRead(
-	ctx context.Context,
-
+    ctx context.Context,
+    
+    
 ) (*APIHealth, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/health" + params)
+url := c.resourceURL("/health"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -8094,26 +8835,26 @@ func (c *Client) APIHealthRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &APIHealth{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &APIHealth{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8121,7 +8862,7 @@ func (c *Client) APIHealthRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8130,7 +8871,7 @@ func (c *Client) APIHealthRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8139,7 +8880,7 @@ func (c *Client) APIHealthRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8148,28 +8889,32 @@ func (c *Client) APIHealthRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// APIImplementationRead Get the API implementation details.
+// APIImplementationRead **Operation:** `api_implementation_read`
+// 
+//  **Summary:** Get the API implementation details.
 func (c *Client) APIImplementationRead(
-	ctx context.Context,
-
+    ctx context.Context,
+    
+    
 ) (*APIImplementation, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/implementation" + params)
+url := c.resourceURL("/implementation"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -8185,26 +8930,26 @@ func (c *Client) APIImplementationRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &APIImplementation{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &APIImplementation{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8212,7 +8957,7 @@ func (c *Client) APIImplementationRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8221,7 +8966,7 @@ func (c *Client) APIImplementationRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8230,7 +8975,7 @@ func (c *Client) APIImplementationRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8239,28 +8984,67 @@ func (c *Client) APIImplementationRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
+// APIExtensionsListQuery has all query parameters for APIExtensionsList
+type APIExtensionsListQuery struct {
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-// APIExtensionsList List provider extensions to the IX-API.
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
+
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
+}
+
+// RawQuery creates a query string for APIExtensionsListQuery
+func (a* APIExtensionsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = fmt.Sprintf("%v", a.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", a.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = a.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+return qry.Encode()}
+
+
+// APIExtensionsList **Operation:** `api_extensions_list`
+// 
+//  **Summary:** List provider extensions to the IX-API.
 func (c *Client) APIExtensionsList(
-	ctx context.Context,
+    ctx context.Context,
+    
+    qry ...*APIExtensionsListQuery,
+) ([]*APIExtension, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-) ([]*APIExtensions, error) {
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/extensions" + params)
+url := c.resourceURL("/extensions"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -8276,26 +9060,26 @@ func (c *Client) APIExtensionsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*APIExtension{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*APIExtensions{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8303,7 +9087,7 @@ func (c *Client) APIExtensionsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8312,7 +9096,7 @@ func (c *Client) APIExtensionsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8321,7 +9105,7 @@ func (c *Client) APIExtensionsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8330,134 +9114,158 @@ func (c *Client) APIExtensionsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // IPsListQuery has all query parameters for IPsList
 type IPsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// ManagingAccount is a managing_account
-	ManagingAccount string `json:"managing_account,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// ConsumingAccount is a consuming_account
-	ConsumingAccount string `json:"consuming_account,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// NetworkService is a network_service
-	NetworkService string `json:"network_service,omitempty"`
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
 
-	// NetworkServiceConfig is a network_service_config
-	NetworkServiceConfig string `json:"network_service_config,omitempty"`
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// NetworkFeature is a network_feature
-	NetworkFeature string `json:"network_feature,omitempty"`
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
 
-	// NetworkFeatureConfig is a network_feature_config
-	NetworkFeatureConfig string `json:"network_feature_config,omitempty"`
+// NetworkService is a network_service
+NetworkService string `json:"network_service,omitempty"`
 
-	// Version is a version
-	Version int `json:"version,omitempty"`
+// NetworkServiceConfig is a network_service_config
+NetworkServiceConfig string `json:"network_service_config,omitempty"`
 
-	// FQDN is a fqdn
-	FQDN string `json:"fqdn,omitempty"`
+// NetworkFeature is a network_feature
+NetworkFeature string `json:"network_feature,omitempty"`
 
-	// PrefixLength is a prefix_length
-	PrefixLength int `json:"prefix_length,omitempty"`
+// NetworkFeatureConfig is a network_feature_config
+NetworkFeatureConfig string `json:"network_feature_config,omitempty"`
 
-	// ValidNotBefore is a valid_not_before
-	ValidNotBefore string `json:"valid_not_before,omitempty"`
+// Version is a version
+Version int `json:"version,omitempty"`
 
-	// ValidNotAfter is a valid_not_after
-	ValidNotAfter string `json:"valid_not_after,omitempty"`
+// FQDN is a fqdn
+FQDN string `json:"fqdn,omitempty"`
+
+// PrefixLength is a prefix_length
+PrefixLength int `json:"prefix_length,omitempty"`
+
+// ValidNotBefore is a valid_not_before
+ValidNotBefore string `json:"valid_not_before,omitempty"`
+
+// ValidNotAfter is a valid_not_after
+ValidNotAfter string `json:"valid_not_after,omitempty"`
+
 }
 
 // RawQuery creates a query string for IPsListQuery
-func (i *IPsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(i.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = i.ManagingAccount
-	if val != "" {
-		qry.Add("managing_account", val)
-	}
-	val = i.ConsumingAccount
-	if val != "" {
-		qry.Add("consuming_account", val)
-	}
-	val = i.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	val = i.NetworkService
-	if val != "" {
-		qry.Add("network_service", val)
-	}
-	val = i.NetworkServiceConfig
-	if val != "" {
-		qry.Add("network_service_config", val)
-	}
-	val = i.NetworkFeature
-	if val != "" {
-		qry.Add("network_feature", val)
-	}
-	val = i.NetworkFeatureConfig
-	if val != "" {
-		qry.Add("network_feature_config", val)
-	}
-	val = fmt.Sprintf("%v", i.Version)
-	if val != "0" {
-		qry.Add("version", val)
-	}
-	val = i.FQDN
-	if val != "" {
-		qry.Add("fqdn", val)
-	}
-	val = fmt.Sprintf("%v", i.PrefixLength)
-	if val != "0" {
-		qry.Add("prefix_length", val)
-	}
-	val = i.ValidNotBefore
-	if val != "" {
-		qry.Add("valid_not_before", val)
-	}
-	val = i.ValidNotAfter
-	if val != "" {
-		qry.Add("valid_not_after", val)
-	}
-	return qry.Encode()
+func (i* IPsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(i.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", i.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", i.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = i.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = i.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = i.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = i.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = i.NetworkService
+if val != "" {
+qry.Add("network_service", val)
+}
+val = i.NetworkServiceConfig
+if val != "" {
+qry.Add("network_service_config", val)
+}
+val = i.NetworkFeature
+if val != "" {
+qry.Add("network_feature", val)
+}
+val = i.NetworkFeatureConfig
+if val != "" {
+qry.Add("network_feature_config", val)
+}
+val = fmt.Sprintf("%v", i.Version)
+if val != "0" {
+qry.Add("version", val)
+}
+val = i.FQDN
+if val != "" {
+qry.Add("fqdn", val)
+}
+val = fmt.Sprintf("%v", i.PrefixLength)
+if val != "0" {
+qry.Add("prefix_length", val)
+}
+val = i.ValidNotBefore
+if val != "" {
+qry.Add("valid_not_before", val)
+}
+val = i.ValidNotAfter
+if val != "" {
+qry.Add("valid_not_after", val)
+}
+return qry.Encode()}
+
+
+// IPsList **Operation:** `ips_list`
+// 
+//  **Summary:** List all ip addresses (and prefixes).
+func (c *Client) IPsList(
+    ctx context.Context,
+    
+    qry ...*IPsListQuery,
+) ([]*IPAddress, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// IPsList List all ip addresses (and prefixes).
-func (c *Client) IPsList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*IPsListQuery,
-) ([]*IPAddress, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/ips" + params)
+url := c.resourceURL("/ips"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -8473,26 +9281,26 @@ func (c *Client) IPsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*IPAddress{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*IPAddress{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8500,7 +9308,7 @@ func (c *Client) IPsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8509,7 +9317,7 @@ func (c *Client) IPsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8518,7 +9326,7 @@ func (c *Client) IPsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8527,23 +9335,26 @@ func (c *Client) IPsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// IPsCreate Add an ip host address or network prefix.
+// IPsCreate **Operation:** `ips_create`
+// 
+//  **Summary:** Add an ip host address or network prefix.
 func (c *Client) IPsCreate(
-	ctx context.Context,
-	req *IPAddressRequest,
+    ctx context.Context,
+    req *IPAddressRequest,
 
+    
 ) (*IPAddress, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/ips" + params)
+url := c.resourceURL("/ips"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -8554,7 +9365,8 @@ func (c *Client) IPsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -8570,26 +9382,26 @@ func (c *Client) IPsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &IPAddress{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &IPAddress{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8597,7 +9409,7 @@ func (c *Client) IPsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8606,7 +9418,7 @@ func (c *Client) IPsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8615,7 +9427,7 @@ func (c *Client) IPsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8624,23 +9436,25 @@ func (c *Client) IPsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// IPsRead Get a single ip addresses by it's id.
+// IPsRead **Operation:** `ips_read`
+// 
+//  **Summary:** Get a single ip addresses by it's id.
 func (c *Client) IPsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*IPAddress, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/ips/{id}"+params, id)
+url := c.resourceURL("/ips/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -8648,6 +9462,7 @@ func (c *Client) IPsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -8662,26 +9477,26 @@ func (c *Client) IPsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &IPAddress{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &IPAddress{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8689,7 +9504,7 @@ func (c *Client) IPsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8698,7 +9513,7 @@ func (c *Client) IPsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8707,7 +9522,7 @@ func (c *Client) IPsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8716,30 +9531,36 @@ func (c *Client) IPsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// IPsUpdate Update an ip address object.
-//
+// IPsUpdate **Operation:** `ips_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update an ip address object.
+// 
 // You can only update
 // IP addresses within your current scope. Not all
 // addresses you can read you can update.
-//
+// 
 // If the ip address was allocated for you, you might
 // not be able to change anything but the `fqdn`.
 func (c *Client) IPsUpdate(
-	ctx context.Context,
-	id string, req *IPAddressUpdate,
+    ctx context.Context,
+    id string,req *IPAddressUpdate,
 
+    
 ) (*IPAddress, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/ips/{id}"+params, id)
+url := c.resourceURL("/ips/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -8750,7 +9571,8 @@ func (c *Client) IPsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -8766,26 +9588,26 @@ func (c *Client) IPsUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &IPAddress{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &IPAddress{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8793,7 +9615,7 @@ func (c *Client) IPsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8802,7 +9624,7 @@ func (c *Client) IPsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8811,7 +9633,7 @@ func (c *Client) IPsUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8820,31 +9642,33 @@ func (c *Client) IPsUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// IPsPatch Update parts of an ip address.
-//
-//
-// As with the `PUT` opertaion, IP addresses, where you
-// don't have update rights, will yield a `resource access denied`
-// error when attempting an update.
-//
+// IPsPatch **Operation:** `ips_partial_update`
+// 
+//  **Summary:** Update an ip address.
+// 
+// You can only update
+// IP addresses within your current scope. Not all
+// addresses you can read you can update.
+// 
 // If the ip address was allocated for you, you might
 // not be able to change anything but the `fqdn`.
 func (c *Client) IPsPatch(
-	ctx context.Context,
-	id string, req *IPAddressPatch,
+    ctx context.Context,
+    id string,req *IPAddressPatch,
 
+    
 ) (*IPAddress, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/ips/{id}"+params, id)
+url := c.resourceURL("/ips/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -8855,7 +9679,8 @@ func (c *Client) IPsPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -8871,26 +9696,26 @@ func (c *Client) IPsPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &IPAddress{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &IPAddress{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -8898,7 +9723,7 @@ func (c *Client) IPsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -8907,7 +9732,7 @@ func (c *Client) IPsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -8916,7 +9741,7 @@ func (c *Client) IPsPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -8925,93 +9750,116 @@ func (c *Client) IPsPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // MacsListQuery has all query parameters for MacsList
 type MacsListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// ManagingAccount is a managing_account
-	ManagingAccount string `json:"managing_account,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// ConsumingAccount is a consuming_account
-	ConsumingAccount string `json:"consuming_account,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// NetworkServiceConfig is a network_service_config
-	NetworkServiceConfig string `json:"network_service_config,omitempty"`
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
 
-	// Address is a address
-	Address string `json:"address,omitempty"`
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// ValidNotBefore is a valid_not_before
-	ValidNotBefore string `json:"valid_not_before,omitempty"`
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
 
-	// ValidNotAfter is a valid_not_after
-	ValidNotAfter string `json:"valid_not_after,omitempty"`
+// NetworkServiceConfig is a network_service_config
+NetworkServiceConfig string `json:"network_service_config,omitempty"`
+
+// Address is a address
+Address string `json:"address,omitempty"`
+
+// ValidNotBefore is a valid_not_before
+ValidNotBefore string `json:"valid_not_before,omitempty"`
+
+// ValidNotAfter is a valid_not_after
+ValidNotAfter string `json:"valid_not_after,omitempty"`
+
 }
 
 // RawQuery creates a query string for MacsListQuery
-func (m *MacsListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(m.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = m.ManagingAccount
-	if val != "" {
-		qry.Add("managing_account", val)
-	}
-	val = m.ConsumingAccount
-	if val != "" {
-		qry.Add("consuming_account", val)
-	}
-	val = m.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	val = m.NetworkServiceConfig
-	if val != "" {
-		qry.Add("network_service_config", val)
-	}
-	val = m.Address
-	if val != "" {
-		qry.Add("address", val)
-	}
-	val = m.ValidNotBefore
-	if val != "" {
-		qry.Add("valid_not_before", val)
-	}
-	val = m.ValidNotAfter
-	if val != "" {
-		qry.Add("valid_not_after", val)
-	}
-	return qry.Encode()
+func (m* MacsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(m.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", m.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", m.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = m.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = m.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = m.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = m.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = m.NetworkServiceConfig
+if val != "" {
+qry.Add("network_service_config", val)
+}
+val = m.Address
+if val != "" {
+qry.Add("address", val)
+}
+val = m.ValidNotBefore
+if val != "" {
+qry.Add("valid_not_before", val)
+}
+val = m.ValidNotAfter
+if val != "" {
+qry.Add("valid_not_after", val)
+}
+return qry.Encode()}
+
+
+// MacsList **Operation:** `macs_list`
+// 
+//  **Summary:** List all mac addresses managed by the authorized customer.
+func (c *Client) MacsList(
+    ctx context.Context,
+    
+    qry ...*MacsListQuery,
+) ([]*MacAddress, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// MacsList List all mac addresses managed by the authorized customer.
-func (c *Client) MacsList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*MacsListQuery,
-) ([]*MacAddress, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/macs" + params)
+url := c.resourceURL("/macs"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -9019,6 +9867,7 @@ func (c *Client) MacsList(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -9033,26 +9882,26 @@ func (c *Client) MacsList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*MacAddress{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := []*MacAddress{}
-		if err := json.Unmarshal(body, &res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -9060,7 +9909,7 @@ func (c *Client) MacsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -9069,7 +9918,7 @@ func (c *Client) MacsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -9078,7 +9927,7 @@ func (c *Client) MacsList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -9087,23 +9936,26 @@ func (c *Client) MacsList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MacsCreate Register a mac address.
+// MacsCreate **Operation:** `macs_create`
+// 
+//  **Summary:** Register a mac address.
 func (c *Client) MacsCreate(
-	ctx context.Context,
-	req *MacAddressRequest,
+    ctx context.Context,
+    req *MacAddressRequest,
 
+    
 ) (*MacAddress, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/macs" + params)
+url := c.resourceURL("/macs"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -9114,7 +9966,8 @@ func (c *Client) MacsCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -9130,26 +9983,26 @@ func (c *Client) MacsCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &MacAddress{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &MacAddress{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -9157,7 +10010,7 @@ func (c *Client) MacsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -9166,7 +10019,7 @@ func (c *Client) MacsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -9175,7 +10028,7 @@ func (c *Client) MacsCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -9184,23 +10037,25 @@ func (c *Client) MacsCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MacsRead Get a single mac address by it's id.
+// MacsRead **Operation:** `macs_read`
+// 
+//  **Summary:** Get a single mac address by it's id.
 func (c *Client) MacsRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*MacAddress, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/macs/{id}"+params, id)
+url := c.resourceURL("/macs/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -9208,6 +10063,7 @@ func (c *Client) MacsRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -9222,26 +10078,26 @@ func (c *Client) MacsRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &MacAddress{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &MacAddress{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -9249,7 +10105,7 @@ func (c *Client) MacsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -9258,7 +10114,7 @@ func (c *Client) MacsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -9267,7 +10123,7 @@ func (c *Client) MacsRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -9276,23 +10132,25 @@ func (c *Client) MacsRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MacsDestroy Remove a mac address.
+// MacsDestroy **Operation:** `macs_destroy`
+// 
+//  **Summary:** Remove a mac address.
 func (c *Client) MacsDestroy(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*MacAddress, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/macs/{id}"+params, id)
+url := c.resourceURL("/macs/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodDelete, url, nil)
@@ -9300,6 +10158,7 @@ func (c *Client) MacsDestroy(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -9314,26 +10173,26 @@ func (c *Client) MacsDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &MacAddress{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &MacAddress{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -9341,7 +10200,7 @@ func (c *Client) MacsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -9350,7 +10209,7 @@ func (c *Client) MacsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -9359,7 +10218,7 @@ func (c *Client) MacsDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -9368,100 +10227,123 @@ func (c *Client) MacsDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // NetworkServicesListQuery has all query parameters for NetworkServicesList
 type NetworkServicesListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// State is a state
-	State string `json:"state,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// StateIsNot is a state__is_not
-	StateIsNot string `json:"state__is_not,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// ManagingAccount is a managing_account
-	ManagingAccount string `json:"managing_account,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// ConsumingAccount is a consuming_account
-	ConsumingAccount string `json:"consuming_account,omitempty"`
+// State is a state
+State string `json:"state,omitempty"`
 
-	// ExternalRef is a external_ref
-	ExternalRef string `json:"external_ref,omitempty"`
+// StateIsNot is a state__is_not
+StateIsNot string `json:"state__is_not,omitempty"`
 
-	// Type is a type
-	Type string `json:"type,omitempty"`
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
 
-	// Pop is a pop
-	Pop string `json:"pop,omitempty"`
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// ProductOffering is a product_offering
-	ProductOffering string `json:"product_offering,omitempty"`
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
+
+// Type is a type
+Type string `json:"type,omitempty"`
+
+// Pop is a pop
+Pop string `json:"pop,omitempty"`
+
+// ProductOffering is a product_offering
+ProductOffering string `json:"product_offering,omitempty"`
+
 }
 
 // RawQuery creates a query string for NetworkServicesListQuery
-func (n *NetworkServicesListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(n.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = n.State
-	if val != "" {
-		qry.Add("state", val)
-	}
-	val = n.StateIsNot
-	if val != "" {
-		qry.Add("state__is_not", val)
-	}
-	val = n.ManagingAccount
-	if val != "" {
-		qry.Add("managing_account", val)
-	}
-	val = n.ConsumingAccount
-	if val != "" {
-		qry.Add("consuming_account", val)
-	}
-	val = n.ExternalRef
-	if val != "" {
-		qry.Add("external_ref", val)
-	}
-	val = n.Type
-	if val != "" {
-		qry.Add("type", val)
-	}
-	val = n.Pop
-	if val != "" {
-		qry.Add("pop", val)
-	}
-	val = n.ProductOffering
-	if val != "" {
-		qry.Add("product_offering", val)
-	}
-	return qry.Encode()
+func (n* NetworkServicesListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(n.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", n.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", n.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = n.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = n.State
+if val != "" {
+qry.Add("state", val)
+}
+val = n.StateIsNot
+if val != "" {
+qry.Add("state__is_not", val)
+}
+val = n.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = n.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = n.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = n.Type
+if val != "" {
+qry.Add("type", val)
+}
+val = n.Pop
+if val != "" {
+qry.Add("pop", val)
+}
+val = n.ProductOffering
+if val != "" {
+qry.Add("product_offering", val)
+}
+return qry.Encode()}
+
+
+// NetworkServicesList **Operation:** `network_services_list`
+// 
+//  **Summary:** List available `NetworkService`s.
+func (c *Client) NetworkServicesList(
+    ctx context.Context,
+    
+    qry ...*NetworkServicesListQuery,
+) ([]NetworkService, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// NetworkServicesList List available `NetworkService`s.
-func (c *Client) NetworkServicesList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*NetworkServicesListQuery,
-) ([]NetworkService, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services" + params)
+url := c.resourceURL("/network-services"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -9469,6 +10351,7 @@ func (c *Client) NetworkServicesList(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -9483,79 +10366,39 @@ func (c *Client) NetworkServicesList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    msgs := []json.RawMessage{}
+    if err := json.Unmarshal(body, &msgs); err != nil {
+        return nil, err
+    }
+    res := make([]NetworkService, 0, len(msgs))
 
-		msgs := []json.RawMessage{}
-		if err := json.Unmarshal(body, &msgs); err != nil {
-			return nil, err
-		}
-		res := make([]NetworkService, 0, len(msgs))
+    for _, msg := range msgs {
+        tmp := &PolymorphicNetworkService{}
+        if err := json.Unmarshal(msg, tmp); err != nil {
+            return nil, err
+        }
+        ptype := tmp.PolymorphicType()
+        switch(ptype) {
+            
+        }
+    }
 
-		for _, msg := range msgs {
-			tmp := &PolymorphicNetworkService{}
-			if err := json.Unmarshal(msg, tmp); err != nil {
-				return nil, err
-			}
-			ptype := tmp.PolymorphicType()
-			switch ptype {
+    return res, nil
 
-			case ExchangeLanNetworkServiceType:
-				rval := &ExchangeLanNetworkService{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
+    }
 
-				res = append(res, rval)
-
-			case P2PNetworkServiceType:
-				rval := &P2PNetworkService{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			case P2MPNetworkServiceType:
-				rval := &P2MPNetworkService{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			case MP2MPNetworkServiceType:
-				rval := &MP2MPNetworkService{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			case CloudNetworkServiceType:
-				rval := &CloudNetworkService{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			}
-		}
-
-		return res, nil
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -9563,7 +10406,7 @@ func (c *Client) NetworkServicesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -9572,7 +10415,7 @@ func (c *Client) NetworkServicesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -9581,7 +10424,7 @@ func (c *Client) NetworkServicesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -9590,23 +10433,26 @@ func (c *Client) NetworkServicesList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServicesCreate Create a new network service
+// NetworkServicesCreate **Operation:** `network_services_create`
+// 
+//  **Summary:** Create a new network service
 func (c *Client) NetworkServicesCreate(
-	ctx context.Context,
-	req NetworkServiceRequest,
+    ctx context.Context,
+    req NetworkServiceRequest,
 
+    
 ) (NetworkService, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services" + params)
+url := c.resourceURL("/network-services"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -9617,7 +10463,8 @@ func (c *Client) NetworkServicesCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -9633,71 +10480,31 @@ func (c *Client) NetworkServicesCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkService{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkService{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceType:
-			res := &ExchangeLanNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case P2PNetworkServiceType:
-			res := &P2PNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case P2MPNetworkServiceType:
-			res := &P2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case MP2MPNetworkServiceType:
-			res := &MP2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case CloudNetworkServiceType:
-			res := &CloudNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -9705,7 +10512,7 @@ func (c *Client) NetworkServicesCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -9714,7 +10521,7 @@ func (c *Client) NetworkServicesCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -9723,7 +10530,7 @@ func (c *Client) NetworkServicesCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -9732,23 +10539,25 @@ func (c *Client) NetworkServicesCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServicesRead Get a specific `network-service` by id.
+// NetworkServicesRead **Operation:** `network_services_read`
+// 
+//  **Summary:** Get a specific `network-service` by id.
 func (c *Client) NetworkServicesRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (NetworkService, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services/{id}"+params, id)
+url := c.resourceURL("/network-services/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -9756,6 +10565,7 @@ func (c *Client) NetworkServicesRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -9770,71 +10580,31 @@ func (c *Client) NetworkServicesRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkService{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkService{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceType:
-			res := &ExchangeLanNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case P2PNetworkServiceType:
-			res := &P2PNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case P2MPNetworkServiceType:
-			res := &P2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case MP2MPNetworkServiceType:
-			res := &MP2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case CloudNetworkServiceType:
-			res := &CloudNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -9842,7 +10612,7 @@ func (c *Client) NetworkServicesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -9851,7 +10621,7 @@ func (c *Client) NetworkServicesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -9860,7 +10630,7 @@ func (c *Client) NetworkServicesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -9869,23 +10639,29 @@ func (c *Client) NetworkServicesRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServicesUpdate Update a network service
+// NetworkServicesUpdate **Operation:** `network_services_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update a network service.
 func (c *Client) NetworkServicesUpdate(
-	ctx context.Context,
-	id string, req NetworkServiceUpdate,
+    ctx context.Context,
+    id string,req NetworkServiceUpdate,
 
+    
 ) (NetworkService, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services/{id}"+params, id)
+url := c.resourceURL("/network-services/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -9896,7 +10672,8 @@ func (c *Client) NetworkServicesUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -9912,71 +10689,31 @@ func (c *Client) NetworkServicesUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkService{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkService{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceType:
-			res := &ExchangeLanNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case P2PNetworkServiceType:
-			res := &P2PNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case P2MPNetworkServiceType:
-			res := &P2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case MP2MPNetworkServiceType:
-			res := &MP2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case CloudNetworkServiceType:
-			res := &CloudNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -9984,7 +10721,7 @@ func (c *Client) NetworkServicesUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -9993,7 +10730,7 @@ func (c *Client) NetworkServicesUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -10002,7 +10739,7 @@ func (c *Client) NetworkServicesUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -10011,23 +10748,26 @@ func (c *Client) NetworkServicesUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServicesPatch Partially update a network service
+// NetworkServicesPatch **Operation:** `network_services_partial_update`
+// 
+//  **Summary:** Update a network service
 func (c *Client) NetworkServicesPatch(
-	ctx context.Context,
-	id string, req NetworkServicePatch,
+    ctx context.Context,
+    id string,req NetworkServicePatch,
 
+    
 ) (NetworkService, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services/{id}"+params, id)
+url := c.resourceURL("/network-services/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -10038,7 +10778,8 @@ func (c *Client) NetworkServicesPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -10054,71 +10795,31 @@ func (c *Client) NetworkServicesPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkService{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkService{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceType:
-			res := &ExchangeLanNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case P2PNetworkServiceType:
-			res := &P2PNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case P2MPNetworkServiceType:
-			res := &P2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case MP2MPNetworkServiceType:
-			res := &MP2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case CloudNetworkServiceType:
-			res := &CloudNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -10126,7 +10827,7 @@ func (c *Client) NetworkServicesPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -10135,7 +10836,7 @@ func (c *Client) NetworkServicesPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -10144,7 +10845,7 @@ func (c *Client) NetworkServicesPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -10153,41 +10854,44 @@ func (c *Client) NetworkServicesPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServicesDestroy Request decomissioning of the network service.
-//
+// NetworkServicesDestroy **Operation:** `network_services_destroy`
+// 
+//  **Summary:** Request decomissioning of the network service.
+// 
 // The network service will enter the state of
 // `decommission_requested`. The request will
 // cascade to related network service and feature
 // configs.
-//
+// 
 // An *optional request body* can be provided to request
 // a specific service termination date.
-//
+// 
 // If no date is given in the request body, it is assumed to
 // be the earliest possible date.
-//
+// 
 // Possible values for `decommission_at` can be queried
 // through the `network_service_cancellation_policy_read`
 // operation.
-//
+// 
 // The response will contain the dates on which the
 // changes will be effected.
 func (c *Client) NetworkServicesDestroy(
-	ctx context.Context,
-	id string, req *CancellationRequest,
+    ctx context.Context,
+    id string,req *CancellationRequest,
 
+    
 ) (NetworkService, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services/{id}"+params, id)
+url := c.resourceURL("/network-services/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -10198,7 +10902,8 @@ func (c *Client) NetworkServicesDestroy(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -10214,71 +10919,31 @@ func (c *Client) NetworkServicesDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkService{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkService{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case ExchangeLanNetworkServiceType:
-			res := &ExchangeLanNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case P2PNetworkServiceType:
-			res := &P2PNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case P2MPNetworkServiceType:
-			res := &P2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case MP2MPNetworkServiceType:
-			res := &MP2MPNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		case CloudNetworkServiceType:
-			res := &CloudNetworkService{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -10286,7 +10951,7 @@ func (c *Client) NetworkServicesDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -10295,7 +10960,7 @@ func (c *Client) NetworkServicesDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -10304,7 +10969,7 @@ func (c *Client) NetworkServicesDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -10313,23 +10978,82 @@ func (c *Client) NetworkServicesDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
+// NetworkServicesStatisticsRttReadQuery has all query parameters for NetworkServicesStatisticsRttRead
+type NetworkServicesStatisticsRttReadQuery struct {
+// ASN is a asn
+ASN string `json:"asn,omitempty"`
 
-// NetworkServiceChangeRequestRead Get the change request.
-func (c *Client) NetworkServiceChangeRequestRead(
-	ctx context.Context,
-	id string,
+// IP is a ip
+IP string `json:"ip,omitempty"`
 
-) (*NetworkServiceChangeRequest, error) {
+// After is a after
+After int `json:"after,omitempty"`
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
+}
 
-	url := c.resourceURL("/network-services/{id}/change-request"+params, id)
+// RawQuery creates a query string for NetworkServicesStatisticsRttReadQuery
+func (n* NetworkServicesStatisticsRttReadQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = n.ASN
+if val != "" {
+qry.Add("asn", val)
+}
+val = n.IP
+if val != "" {
+qry.Add("ip", val)
+}
+val = fmt.Sprintf("%v", n.After)
+if val != "0" {
+qry.Add("after", val)
+}
+return qry.Encode()}
+
+
+// NetworkServicesStatisticsRttRead **Operation:** `network_services_statistics_rtt_read`
+// 
+//  **Summary:** Get **rtt statistics** from neighbors consuming this network
+// service. You can filter by `asn` and peer `ip`.
+// 
+// If the `NetworkService` does not support RTT statistics,
+// a `404` error response will be returned.
+// 
+// ### Receiving Updates
+// To poll for updates, you can provide a `serial` to the
+// `after` parameter in order to only receive
+// results with a serial greater than the one
+// provided. All of the above filters can be applied
+// here and allow for receiving updates for a specific peer.
+// 
+// If no `serial` is provided the latest RTT statistics are returned.
+// 
+// ### Event Streaming
+// This endpoint supports streaming updates using
+// [**Server Sent Events**](https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events).
+// 
+// To subscribe to events, negotiate the response content
+// using the HTTP header: `Accept: text/event-stream`.
+// 
+// Filteres are applied as above.
+func (c *Client) NetworkServicesStatisticsRttRead(
+    ctx context.Context,
+    id string,
+    qry ...*NetworkServicesStatisticsRttReadQuery,
+) ([]*PeerRTT, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
+
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/network-services/{id}/rtt-statistics"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -10337,6 +11061,7 @@ func (c *Client) NetworkServiceChangeRequestRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -10351,26 +11076,26 @@ func (c *Client) NetworkServiceChangeRequestRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*PeerRTT{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &NetworkServiceChangeRequest{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -10378,7 +11103,7 @@ func (c *Client) NetworkServiceChangeRequestRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -10387,7 +11112,7 @@ func (c *Client) NetworkServiceChangeRequestRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -10396,7 +11121,7 @@ func (c *Client) NetworkServiceChangeRequestRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -10405,16 +11130,113 @@ func (c *Client) NetworkServiceChangeRequestRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServiceChangeRequestCreate Request a change to the network service.
-//
+// NetworkServiceChangeRequestRead **Operation:** `network_service_change_request_read`
+// 
+//  **Summary:** Get the change request.
+func (c *Client) NetworkServiceChangeRequestRead(
+    ctx context.Context,
+    id string,
+    
+) (*NetworkServiceChangeRequest, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/network-services/{id}/change-request"+params, id)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &NetworkServiceChangeRequest{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
+
+// NetworkServiceChangeRequestCreate **Operation:** `network_service_change_request_create`
+// 
+//  **Summary:** Request a change to the network service.
+// 
 // The B-side participant in a peer-to-peer network service
 // (`p2p_vc`) can issue a change request, expressing a
 // desired change in the capacity.
-//
+// 
 // The change is accepted when the A-side has configured
 // the network service and config with the new bandwidth.
 // This is done using the `network_service_update`,
@@ -10422,34 +11244,35 @@ func (c *Client) NetworkServiceChangeRequestRead(
 // `network_service_config_update` or
 // `network_service_config_partial_update` operations by
 // the A-side.
-//
+// 
 // These changes can sometimes require a change of the
 // product offering. The product offering may only
 // differ in bandwidth.
-//
+// 
 // The network service will change its state from `production`
 // into `production_change_pending`.
-//
+// 
 // A change can by rejected (by the A-side) or retracted
 // (by the B-side) using the
 // `network_service_change_request_destroy` operation.
-//
+// 
 // Only one change request may be issued at a time.
-//
+// 
 // A change request by the A-side is not a valid request
 // and will be rejected.
 func (c *Client) NetworkServiceChangeRequestCreate(
-	ctx context.Context,
-	id string, req *NetworkServiceChangeRequest,
+    ctx context.Context,
+    id string,req *NetworkServiceChangeRequest,
 
+    
 ) (*NetworkServiceChangeRequest, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services/{id}/change-request"+params, id)
+url := c.resourceURL("/network-services/{id}/change-request"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -10460,7 +11283,8 @@ func (c *Client) NetworkServiceChangeRequestCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -10476,26 +11300,26 @@ func (c *Client) NetworkServiceChangeRequestCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &NetworkServiceChangeRequest{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &NetworkServiceChangeRequest{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -10503,7 +11327,7 @@ func (c *Client) NetworkServiceChangeRequestCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -10512,7 +11336,7 @@ func (c *Client) NetworkServiceChangeRequestCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -10521,7 +11345,7 @@ func (c *Client) NetworkServiceChangeRequestCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -10530,23 +11354,25 @@ func (c *Client) NetworkServiceChangeRequestCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkServiceChangeRequestDestroy Retract or reject a change to the network service.
+// NetworkServiceChangeRequestDestroy **Operation:** `network_service_change_request_destroy`
+// 
+//  **Summary:** Retract or reject a change to the network service.
 func (c *Client) NetworkServiceChangeRequestDestroy(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (*NetworkServiceChangeRequest, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services/{id}/change-request"+params, id)
+url := c.resourceURL("/network-services/{id}/change-request"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodDelete, url, nil)
@@ -10554,6 +11380,7 @@ func (c *Client) NetworkServiceChangeRequestDestroy(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -10568,26 +11395,26 @@ func (c *Client) NetworkServiceChangeRequestDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &NetworkServiceChangeRequest{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &NetworkServiceChangeRequest{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -10595,7 +11422,7 @@ func (c *Client) NetworkServiceChangeRequestDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -10604,7 +11431,7 @@ func (c *Client) NetworkServiceChangeRequestDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -10613,7 +11440,7 @@ func (c *Client) NetworkServiceChangeRequestDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -10622,63 +11449,66 @@ func (c *Client) NetworkServiceChangeRequestDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // NetworkServiceCancellationPolicyReadQuery has all query parameters for NetworkServiceCancellationPolicyRead
 type NetworkServiceCancellationPolicyReadQuery struct {
-	// DecommissionAt is a decommission_at
-	DecommissionAt string `json:"decommission_at,omitempty"`
+// DecommissionAt is a decommission_at
+DecommissionAt string `json:"decommission_at,omitempty"`
+
 }
 
 // RawQuery creates a query string for NetworkServiceCancellationPolicyReadQuery
-func (n *NetworkServiceCancellationPolicyReadQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = n.DecommissionAt
-	if val != "" {
-		qry.Add("decommission_at", val)
-	}
-	return qry.Encode()
+func (n* NetworkServiceCancellationPolicyReadQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = n.DecommissionAt
+if val != "" {
+qry.Add("decommission_at", val)
 }
+return qry.Encode()}
 
-// NetworkServiceCancellationPolicyRead The cancellation-policy can be queried to answer
+
+// NetworkServiceCancellationPolicyRead **Operation:** `network_service_cancellation_policy_read`
+// 
+//  **Summary:** The cancellation-policy can be queried to answer
 // the questions:
-//
+// 
 // If I cancel my service, *when will it be technically
 // decommissioned*?
 // If I cancel my service, *until what date will I be charged*?
-//
+// 
 // When the query parameter `decommision_at` is not provided
 // it will provide the first possible cancellation date
 // and charge period if cancelled at above date.
-//
+// 
 // The granularity of the date field is a day, the start and end
 // of which are to be interpreted by the IXP (some may use UTC,
 // some may use their local time zone).
 func (c *Client) NetworkServiceCancellationPolicyRead(
-	ctx context.Context,
-	id string,
-	qry ...*NetworkServiceCancellationPolicyReadQuery,
+    ctx context.Context,
+    id string,
+    qry ...*NetworkServiceCancellationPolicyReadQuery,
 ) (*CancellationPolicy, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-services/{id}/cancellation-policy"+params, id)
+url := c.resourceURL("/network-services/{id}/cancellation-policy"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -10694,26 +11524,26 @@ func (c *Client) NetworkServiceCancellationPolicyRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &CancellationPolicy{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
 
-		res := &CancellationPolicy{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		return res, nil
+    }
 
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -10721,7 +11551,7 @@ func (c *Client) NetworkServiceCancellationPolicyRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -10730,7 +11560,7 @@ func (c *Client) NetworkServiceCancellationPolicyRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -10739,7 +11569,7 @@ func (c *Client) NetworkServiceCancellationPolicyRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -10748,78 +11578,102 @@ func (c *Client) NetworkServiceCancellationPolicyRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // NetworkFeaturesListQuery has all query parameters for NetworkFeaturesList
 type NetworkFeaturesListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// Type is a type
-	Type string `json:"type,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
 
-	// Required is a required
-	Required string `json:"required,omitempty"`
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
 
-	// NetworkService is a network_service
-	NetworkService string `json:"network_service,omitempty"`
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
 
-	// Name is a name
-	Name string `json:"name,omitempty"`
+// Type is a type
+Type string `json:"type,omitempty"`
+
+// Required is a required
+Required string `json:"required,omitempty"`
+
+// NetworkService is a network_service
+NetworkService string `json:"network_service,omitempty"`
+
+// Name is a name
+Name string `json:"name,omitempty"`
+
 }
 
 // RawQuery creates a query string for NetworkFeaturesListQuery
-func (n *NetworkFeaturesListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(n.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = n.Type
-	if val != "" {
-		qry.Add("type", val)
-	}
-	val = n.Required
-	if val != "" {
-		qry.Add("required", val)
-	}
-	val = n.NetworkService
-	if val != "" {
-		qry.Add("network_service", val)
-	}
-	val = n.Name
-	if val != "" {
-		qry.Add("name", val)
-	}
-	return qry.Encode()
+func (n* NetworkFeaturesListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(n.ID, ",")
+if val != "" {
+qry.Add("id", val)
 }
+val = fmt.Sprintf("%v", n.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", n.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = n.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = n.Type
+if val != "" {
+qry.Add("type", val)
+}
+val = n.Required
+if val != "" {
+qry.Add("required", val)
+}
+val = n.NetworkService
+if val != "" {
+qry.Add("network_service", val)
+}
+val = n.Name
+if val != "" {
+qry.Add("name", val)
+}
+return qry.Encode()}
 
-// NetworkFeaturesList List available network features.
+
+// NetworkFeaturesList **Operation:** `network_features_list`
+// 
+//  **Summary:** List available network features.
 func (c *Client) NetworkFeaturesList(
-	ctx context.Context,
-
-	qry ...*NetworkFeaturesListQuery,
+    ctx context.Context,
+    
+    qry ...*NetworkFeaturesListQuery,
 ) ([]NetworkFeature, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
 
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
+if params != "" {
+  params = "?" + params
+}
 
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-features" + params)
+url := c.resourceURL("/network-features"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -10835,47 +11689,39 @@ func (c *Client) NetworkFeaturesList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    msgs := []json.RawMessage{}
+    if err := json.Unmarshal(body, &msgs); err != nil {
+        return nil, err
+    }
+    res := make([]NetworkFeature, 0, len(msgs))
 
-		msgs := []json.RawMessage{}
-		if err := json.Unmarshal(body, &msgs); err != nil {
-			return nil, err
-		}
-		res := make([]NetworkFeature, 0, len(msgs))
+    for _, msg := range msgs {
+        tmp := &PolymorphicNetworkFeature{}
+        if err := json.Unmarshal(msg, tmp); err != nil {
+            return nil, err
+        }
+        ptype := tmp.PolymorphicType()
+        switch(ptype) {
+            
+        }
+    }
 
-		for _, msg := range msgs {
-			tmp := &PolymorphicNetworkFeature{}
-			if err := json.Unmarshal(msg, tmp); err != nil {
-				return nil, err
-			}
-			ptype := tmp.PolymorphicType()
-			switch ptype {
+    return res, nil
 
-			case RouteServerNetworkFeatureType:
-				rval := &RouteServerNetworkFeature{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
+    }
 
-				res = append(res, rval)
-
-			}
-		}
-
-		return res, nil
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -10883,7 +11729,7 @@ func (c *Client) NetworkFeaturesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -10892,7 +11738,7 @@ func (c *Client) NetworkFeaturesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -10901,7 +11747,7 @@ func (c *Client) NetworkFeaturesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -10910,29 +11756,32 @@ func (c *Client) NetworkFeaturesList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// NetworkFeaturesRead Get a single network feature by it's id.
+// NetworkFeaturesRead **Operation:** `network_features_read`
+// 
+//  **Summary:** Get a single network feature by it's id.
 func (c *Client) NetworkFeaturesRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (NetworkFeature, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/network-features/{id}"+params, id)
+url := c.resourceURL("/network-features/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -10948,39 +11797,31 @@ func (c *Client) NetworkFeaturesRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicNetworkFeature{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicNetworkFeature{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case RouteServerNetworkFeatureType:
-			res := &RouteServerNetworkFeature{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -10988,7 +11829,7 @@ func (c *Client) NetworkFeaturesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -10997,7 +11838,7 @@ func (c *Client) NetworkFeaturesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -11006,7 +11847,7 @@ func (c *Client) NetworkFeaturesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -11015,57 +11856,102 @@ func (c *Client) NetworkFeaturesRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
-
 // MemberJoiningRulesListQuery has all query parameters for MemberJoiningRulesList
 type MemberJoiningRulesListQuery struct {
-	// ID is a id
-	ID []string `json:"id,omitempty"`
+// ID is a id
+ID []string `json:"id,omitempty"`
 
-	// NetworkService is a network_service
-	NetworkService string `json:"network_service,omitempty"`
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
+
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
+
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
+
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
+
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
+
+// NetworkService is a network_service
+NetworkService string `json:"network_service,omitempty"`
+
 }
 
 // RawQuery creates a query string for MemberJoiningRulesListQuery
-func (m *MemberJoiningRulesListQuery) RawQuery() string {
-	qry := url.Values{}
-	val := ""
-	val = strings.Join(m.ID, ",")
-	if val != "" {
-		qry.Add("id", val)
-	}
-	val = m.NetworkService
-	if val != "" {
-		qry.Add("network_service", val)
-	}
-	return qry.Encode()
+func (m* MemberJoiningRulesListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(m.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", m.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", m.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = m.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = m.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = m.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = m.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = m.NetworkService
+if val != "" {
+qry.Add("network_service", val)
+}
+return qry.Encode()}
+
+
+// MemberJoiningRulesList **Operation:** `member_joining_rules_list`
+// 
+//  **Summary:** Get a list of joining rules
+func (c *Client) MemberJoiningRulesList(
+    ctx context.Context,
+    
+    qry ...*MemberJoiningRulesListQuery,
+) ([]MemberJoiningRule, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
 }
 
-// MemberJoiningRulesList Get a list of joining rules
-func (c *Client) MemberJoiningRulesList(
-	ctx context.Context,
+if params != "" {
+  params = "?" + params
+}
 
-	qry ...*MemberJoiningRulesListQuery,
-) ([]MemberJoiningRule, error) {
-
-	params := ""
-	if len(qry) > 0 && qry[0] != nil {
-		params = qry[0].RawQuery()
-	}
-
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/member-joining-rules" + params)
+url := c.resourceURL("/member-joining-rules"+params)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -11081,55 +11967,39 @@ func (c *Client) MemberJoiningRulesList(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    msgs := []json.RawMessage{}
+    if err := json.Unmarshal(body, &msgs); err != nil {
+        return nil, err
+    }
+    res := make([]MemberJoiningRule, 0, len(msgs))
 
-		msgs := []json.RawMessage{}
-		if err := json.Unmarshal(body, &msgs); err != nil {
-			return nil, err
-		}
-		res := make([]MemberJoiningRule, 0, len(msgs))
+    for _, msg := range msgs {
+        tmp := &PolymorphicMemberJoiningRule{}
+        if err := json.Unmarshal(msg, tmp); err != nil {
+            return nil, err
+        }
+        ptype := tmp.PolymorphicType()
+        switch(ptype) {
+            
+        }
+    }
 
-		for _, msg := range msgs {
-			tmp := &PolymorphicMemberJoiningRule{}
-			if err := json.Unmarshal(msg, tmp); err != nil {
-				return nil, err
-			}
-			ptype := tmp.PolymorphicType()
-			switch ptype {
+    return res, nil
 
-			case AllowMemberJoiningRuleType:
-				rval := &AllowMemberJoiningRule{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
+    }
 
-				res = append(res, rval)
-
-			case DenyMemberJoiningRuleType:
-				rval := &DenyMemberJoiningRule{}
-				if err := json.Unmarshal(msg, rval); err != nil {
-					return nil, err
-				}
-
-				res = append(res, rval)
-
-			}
-		}
-
-		return res, nil
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -11137,7 +12007,7 @@ func (c *Client) MemberJoiningRulesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -11146,7 +12016,7 @@ func (c *Client) MemberJoiningRulesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -11155,7 +12025,7 @@ func (c *Client) MemberJoiningRulesList(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -11164,23 +12034,26 @@ func (c *Client) MemberJoiningRulesList(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MemberJoiningRulesCreate Create a member joining rule
+// MemberJoiningRulesCreate **Operation:** `member_joining_rules_create`
+// 
+//  **Summary:** Create a member joining rule
 func (c *Client) MemberJoiningRulesCreate(
-	ctx context.Context,
-	req MemberJoiningRuleRequest,
+    ctx context.Context,
+    req MemberJoiningRuleRequest,
 
+    
 ) (MemberJoiningRule, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/member-joining-rules" + params)
+url := c.resourceURL("/member-joining-rules"+params)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -11191,7 +12064,8 @@ func (c *Client) MemberJoiningRulesCreate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -11207,47 +12081,31 @@ func (c *Client) MemberJoiningRulesCreate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicMemberJoiningRule{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicMemberJoiningRule{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case AllowMemberJoiningRuleType:
-			res := &AllowMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case DenyMemberJoiningRuleType:
-			res := &DenyMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -11255,7 +12113,7 @@ func (c *Client) MemberJoiningRulesCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -11264,7 +12122,7 @@ func (c *Client) MemberJoiningRulesCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -11273,7 +12131,7 @@ func (c *Client) MemberJoiningRulesCreate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -11282,23 +12140,25 @@ func (c *Client) MemberJoiningRulesCreate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MemberJoiningRulesRead Get a single rule
+// MemberJoiningRulesRead **Operation:** `member_joining_rules_read`
+// 
+//  **Summary:** Get a single rule
 func (c *Client) MemberJoiningRulesRead(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (MemberJoiningRule, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/member-joining-rules/{id}"+params, id)
+url := c.resourceURL("/member-joining-rules/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, url, nil)
@@ -11306,6 +12166,7 @@ func (c *Client) MemberJoiningRulesRead(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -11320,47 +12181,31 @@ func (c *Client) MemberJoiningRulesRead(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicMemberJoiningRule{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicMemberJoiningRule{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case AllowMemberJoiningRuleType:
-			res := &AllowMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case DenyMemberJoiningRuleType:
-			res := &DenyMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -11368,7 +12213,7 @@ func (c *Client) MemberJoiningRulesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -11377,7 +12222,7 @@ func (c *Client) MemberJoiningRulesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -11386,7 +12231,7 @@ func (c *Client) MemberJoiningRulesRead(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -11395,23 +12240,29 @@ func (c *Client) MemberJoiningRulesRead(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MemberJoiningRulesUpdate Update a joining rule
+// MemberJoiningRulesUpdate **Operation:** `member_joining_rules_update`
+// 
+//  **Summary:** **DEPRECATION NOTICE**: This operation will be removed in favor
+// of using `PATCH` for all updates.
+// 
+// Update a joining rule.
 func (c *Client) MemberJoiningRulesUpdate(
-	ctx context.Context,
-	id string, req MemberJoiningRuleUpdate,
+    ctx context.Context,
+    id string,req MemberJoiningRuleUpdate,
 
+    
 ) (MemberJoiningRule, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/member-joining-rules/{id}"+params, id)
+url := c.resourceURL("/member-joining-rules/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -11422,7 +12273,8 @@ func (c *Client) MemberJoiningRulesUpdate(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -11438,47 +12290,31 @@ func (c *Client) MemberJoiningRulesUpdate(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicMemberJoiningRule{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicMemberJoiningRule{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case AllowMemberJoiningRuleType:
-			res := &AllowMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case DenyMemberJoiningRuleType:
-			res := &DenyMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -11486,7 +12322,7 @@ func (c *Client) MemberJoiningRulesUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -11495,7 +12331,7 @@ func (c *Client) MemberJoiningRulesUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -11504,7 +12340,7 @@ func (c *Client) MemberJoiningRulesUpdate(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -11513,23 +12349,26 @@ func (c *Client) MemberJoiningRulesUpdate(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MemberJoiningRulesPatch Partially update a joining rule
+// MemberJoiningRulesPatch **Operation:** `member_joining_rules_partial_update`
+// 
+//  **Summary:** Update a joining rule
 func (c *Client) MemberJoiningRulesPatch(
-	ctx context.Context,
-	id string, req MemberJoiningRulePatch,
+    ctx context.Context,
+    id string,req MemberJoiningRulePatch,
 
+    
 ) (MemberJoiningRule, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/member-joining-rules/{id}"+params, id)
+url := c.resourceURL("/member-joining-rules/{id}"+params, id)
 
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -11540,7 +12379,8 @@ func (c *Client) MemberJoiningRulesPatch(
 	if err != nil {
 		return nil, err
 	}
-	hreq.Header.Set("Content-Type", "application/json")
+    hreq.Header.Set("Content-Type", "application/json")
+
 
 	// Set request headers
 	for k, v := range c.header {
@@ -11556,47 +12396,31 @@ func (c *Client) MemberJoiningRulesPatch(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicMemberJoiningRule{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicMemberJoiningRule{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case AllowMemberJoiningRuleType:
-			res := &AllowMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case DenyMemberJoiningRuleType:
-			res := &DenyMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -11604,7 +12428,7 @@ func (c *Client) MemberJoiningRulesPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -11613,7 +12437,7 @@ func (c *Client) MemberJoiningRulesPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -11622,7 +12446,7 @@ func (c *Client) MemberJoiningRulesPatch(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -11631,23 +12455,25 @@ func (c *Client) MemberJoiningRulesPatch(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
 	return nil, res
 }
 
-// MemberJoiningRulesDestroy Delete a joining rule
+// MemberJoiningRulesDestroy **Operation:** `member_joining_rules_destroy`
+// 
+//  **Summary:** Delete a joining rule
 func (c *Client) MemberJoiningRulesDestroy(
-	ctx context.Context,
-	id string,
-
+    ctx context.Context,
+    id string,
+    
 ) (MemberJoiningRule, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
 
-	params := ""
-	if params != "" {
-		params = "?" + params
-	}
-
-	url := c.resourceURL("/member-joining-rules/{id}"+params, id)
+url := c.resourceURL("/member-joining-rules/{id}"+params, id)
 
 	hreq, err := http.NewRequestWithContext(
 		ctx, http.MethodDelete, url, nil)
@@ -11655,6 +12481,7 @@ func (c *Client) MemberJoiningRulesDestroy(
 		return nil, err
 	}
 
+
 	// Set request headers
 	for k, v := range c.header {
 		hreq.Header.Set(k, v[0])
@@ -11669,47 +12496,31 @@ func (c *Client) MemberJoiningRulesDestroy(
 		return nil, err
 	}
 
-	// Success
-	if ret.StatusCode <= http.StatusAccepted {
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    tmp := &PolymorphicMemberJoiningRule{}
+    if err := json.Unmarshal(body, tmp); err != nil {
+        return nil, err
+    }
+    ptype := tmp.PolymorphicType()
+    switch(ptype) {
+        
+    }
 
-		tmp := &PolymorphicMemberJoiningRule{}
-		if err := json.Unmarshal(body, tmp); err != nil {
-			return nil, err
-		}
-		ptype := tmp.PolymorphicType()
-		switch ptype {
+    return nil, ErrInvalidPolymorphicType
 
-		case AllowMemberJoiningRuleType:
-			res := &AllowMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
+    }
 
-			return res, nil
-
-		case DenyMemberJoiningRuleType:
-			res := &DenyMemberJoiningRule{}
-			if err := json.Unmarshal(body, res); err != nil {
-				return nil, err
-			}
-
-			return res, nil
-
-		}
-
-		return nil, ErrInvalidPolymorphicType
-
-	}
-
-	// Decode error 404
-	if ret.StatusCode == http.StatusNotFound {
-		res := &NotFoundError{}
-		if err := json.Unmarshal(body, res); err != nil {
-			return nil, err
-		}
-		res.Status = ret.StatusCode // implementations are not reliable
-		return nil, res
-	}
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
 
 	// Decode error 403
 	if ret.StatusCode == http.StatusForbidden {
@@ -11717,7 +12528,7 @@ func (c *Client) MemberJoiningRulesDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 401
@@ -11726,7 +12537,7 @@ func (c *Client) MemberJoiningRulesDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 	// Decode error 400
@@ -11735,7 +12546,7 @@ func (c *Client) MemberJoiningRulesDestroy(
 		if err := json.Unmarshal(body, res); err != nil {
 			return nil, err
 		}
-		res.Status = ret.StatusCode
+        res.Status = ret.StatusCode
 		return nil, res
 	}
 
@@ -11744,6 +12555,723 @@ func (c *Client) MemberJoiningRulesDestroy(
 	if err := json.Unmarshal(body, res); err != nil {
 		return nil, err
 	}
-	res.Status = ret.StatusCode
+    res.Status = ret.StatusCode
+	return nil, res
+}
+// RoutingFunctionsListQuery has all query parameters for RoutingFunctionsList
+type RoutingFunctionsListQuery struct {
+// ID is a id
+ID []string `json:"id,omitempty"`
+
+// PageLimit is a page_limit
+PageLimit int `json:"page_limit,omitempty"`
+
+// PageOffset is a page_offset
+PageOffset int `json:"page_offset,omitempty"`
+
+// PageToken is a page_token
+PageToken string `json:"page_token,omitempty"`
+
+// State is a state
+State string `json:"state,omitempty"`
+
+// StateIsNot is a state__is_not
+StateIsNot string `json:"state__is_not,omitempty"`
+
+// ManagingAccount is a managing_account
+ManagingAccount string `json:"managing_account,omitempty"`
+
+// ConsumingAccount is a consuming_account
+ConsumingAccount string `json:"consuming_account,omitempty"`
+
+// ExternalRef is a external_ref
+ExternalRef string `json:"external_ref,omitempty"`
+
+// ASN is a asn
+ASN string `json:"asn,omitempty"`
+
+}
+
+// RawQuery creates a query string for RoutingFunctionsListQuery
+func (r* RoutingFunctionsListQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = strings.Join(r.ID, ",")
+if val != "" {
+qry.Add("id", val)
+}
+val = fmt.Sprintf("%v", r.PageLimit)
+if val != "0" {
+qry.Add("page_limit", val)
+}
+val = fmt.Sprintf("%v", r.PageOffset)
+if val != "0" {
+qry.Add("page_offset", val)
+}
+val = r.PageToken
+if val != "" {
+qry.Add("page_token", val)
+}
+val = r.State
+if val != "" {
+qry.Add("state", val)
+}
+val = r.StateIsNot
+if val != "" {
+qry.Add("state__is_not", val)
+}
+val = r.ManagingAccount
+if val != "" {
+qry.Add("managing_account", val)
+}
+val = r.ConsumingAccount
+if val != "" {
+qry.Add("consuming_account", val)
+}
+val = r.ExternalRef
+if val != "" {
+qry.Add("external_ref", val)
+}
+val = r.ASN
+if val != "" {
+qry.Add("asn", val)
+}
+return qry.Encode()}
+
+
+// RoutingFunctionsList **Operation:** `routing_functions_list`
+// 
+//  **Summary:** Get a list of routing functions
+func (c *Client) RoutingFunctionsList(
+    ctx context.Context,
+    
+    qry ...*RoutingFunctionsListQuery,
+) ([]*RoutingFunction, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
+
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/routing-functions"+params)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := []*RoutingFunction{}
+    if err := json.Unmarshal(body, &res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
+
+// RoutingFunctionsCreate **Operation:** `routing_functions_create`
+// 
+//  **Summary:** Create a routing function
+func (c *Client) RoutingFunctionsCreate(
+    ctx context.Context,
+    req *RoutingFunctionRequest,
+
+    
+) (*RoutingFunction, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/routing-functions"+params)
+
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPost, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+    hreq.Header.Set("Content-Type", "application/json")
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &RoutingFunction{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
+
+// RoutingFunctionsRead **Operation:** `routing_functions_read`
+// 
+//  **Summary:** Get a single routing function instance.
+func (c *Client) RoutingFunctionsRead(
+    ctx context.Context,
+    id string,
+    
+) (*RoutingFunction, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/routing-functions/{id}"+params, id)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &RoutingFunction{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
+
+// RoutingFunctionsPatch **Operation:** `routing_functions_partial_update`
+// 
+//  **Summary:** Update a routing function
+func (c *Client) RoutingFunctionsPatch(
+    ctx context.Context,
+    id string,req *RoutingFunctionPatch,
+
+    
+) (*RoutingFunction, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/routing-functions/{id}"+params, id)
+
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPatch, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+    hreq.Header.Set("Content-Type", "application/json")
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &RoutingFunction{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
+
+// RoutingFunctionsDestroy **Operation:** `routing_functions_destroy`
+// 
+//  **Summary:** Request decomissioning the routing function.
+// 
+// The cancellation policy of the routing function applies
+// here and is independent from the
+// policy of the network-service and network-service-config
+// using the routing function.
+// 
+// The routing function will assume the state
+// `decommission_requested`.
+// 
+// The decommissioning request will *not* cascade
+// to network services and configs.
+func (c *Client) RoutingFunctionsDestroy(
+    ctx context.Context,
+    id string,req *CancellationRequest,
+
+    
+) (*RoutingFunction, error) {
+    
+    params := ""
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/routing-functions/{id}"+params, id)
+
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodDelete, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+    hreq.Header.Set("Content-Type", "application/json")
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &RoutingFunction{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
+	return nil, res
+}
+// RoutingFunctionsCancellationPolicyReadQuery has all query parameters for RoutingFunctionsCancellationPolicyRead
+type RoutingFunctionsCancellationPolicyReadQuery struct {
+// DecommissionAt is a decommission_at
+DecommissionAt string `json:"decommission_at,omitempty"`
+
+}
+
+// RawQuery creates a query string for RoutingFunctionsCancellationPolicyReadQuery
+func (r* RoutingFunctionsCancellationPolicyReadQuery) RawQuery() string {
+qry := url.Values{}
+val := ""
+val = r.DecommissionAt
+if val != "" {
+qry.Add("decommission_at", val)
+}
+return qry.Encode()}
+
+
+// RoutingFunctionsCancellationPolicyRead **Operation:** `routing_functions_cancellation_policy_read`
+// 
+//  **Summary:** The cancellation-policy can be queried to answer
+// the questions:
+// 
+// If I cancel my subscription, *when will it be technically
+// decommissioned*?
+// If I cancel my subscription, *until what date will I be charged*?
+// 
+// When the query parameter `decommision_at` is not provided
+// it will provide the first possible cancellation date
+// and charge period if cancelled at above date.
+// 
+// The granularity of the date field is a day, the start and end
+// of which are to be interpreted by the IXP (some may use UTC,
+// some may use their local time zone).
+func (c *Client) RoutingFunctionsCancellationPolicyRead(
+    ctx context.Context,
+    id string,
+    qry ...*RoutingFunctionsCancellationPolicyReadQuery,
+) (*CancellationPolicy, error) {
+    
+    params := ""
+if len(qry) > 0 && qry[0] != nil {
+ params = qry[0].RawQuery()
+}
+
+if params != "" {
+  params = "?" + params
+}
+
+url := c.resourceURL("/routing-functions/{id}/cancellation-policy"+params, id)
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+
+	// Set request headers
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+    // Success
+    if ret.StatusCode <= http.StatusAccepted {
+      
+    res := &CancellationPolicy{}
+    if err := json.Unmarshal(body, res); err != nil {
+        return nil, err
+    }
+    return res, nil
+
+    }
+
+    // Decode error 404
+    if ret.StatusCode == http.StatusNotFound {
+        res := &NotFoundError{}
+        if err := json.Unmarshal(body, res); err != nil {
+            return nil, err
+        }
+        res.Status = ret.StatusCode // implementations are not reliable
+        return nil, res
+    }
+
+	// Decode error 403
+	if ret.StatusCode == http.StatusForbidden {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 401
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+	// Decode error 400
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+        res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	// Decode as generic error
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+    res.Status = ret.StatusCode
 	return nil, res
 }
