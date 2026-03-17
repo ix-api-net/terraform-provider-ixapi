@@ -40,8 +40,8 @@ data "ixapi_role_assignment" "impl" {
 
 ### Required
 
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
 - `roles` (List of String)
 
 ### Optional
@@ -53,6 +53,6 @@ data "ixapi_role_assignment" "impl" {
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `Contact`.
 
 

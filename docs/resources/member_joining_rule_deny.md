@@ -18,8 +18,8 @@ Use the `ixapi_member_joining_rule_deny` to prevent a `consuming_account` to joi
 ### Required
 
 - `consuming_account` (String) The `id` of the account to which access to the network service should be granted or denied.
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
-- `network_service` (String)
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
+- `network_service` (String) The `id` of the related `NetworkService`.
 
 ### Optional
 
@@ -27,6 +27,6 @@ Use the `ixapi_member_joining_rule_deny` to prevent a `consuming_account` to joi
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `A rule for members joining a private vlan`.
 
 

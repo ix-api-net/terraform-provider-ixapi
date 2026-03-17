@@ -52,13 +52,10 @@ data "ixapi_metro_area_networks" "ixp" {
 
 Optional:
 
+- `id` (String) The *primary identifier* of the `MetroAreaNetwork`.
 - `metro_area` (String) The id of the metro area.
 - `name` (String) The name of the metro area network.
 - `pops` (List of String)
 - `service_provider` (String) The service provider is operating the network. Usually the exchange.
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 

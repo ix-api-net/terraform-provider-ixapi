@@ -18,30 +18,84 @@ Use the `ixapi_network_service_config_cloud_vc` resource to provision an access 
 ### Required
 
 - `billing_account` (String) An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*
-- `cloud_vlan` (Number) If the `provider_vlans` property of the `ProductOffering` is `multi`, a numeric value refers to a specific vlan on the service provider side.  Otherwise, if set to `null`, it refers to all unmatched vlan ids on the service provider side. (All vlan ids from the service provider side are presented as tags within any vlans specified in `vlan_config`.)  If the `provider_vlans` property of the `ProductOffering` is `single`, the `cloud_vlan` MUST be `null` or MUST NOT be provided.
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
 - `handover` (Number) The handover enumerates the connection and is required for checking diversity constraints.  It must be within `1 <= x <= network_service.diversity`.
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
-- `network_connection` (String) The id of the connection to use for this `NetworkServiceConfig`.
-- `network_service` (String) The id of the configured network service.
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
+- `network_service` (String) The id of the configured `NetworkService`.
 - `role_assignments` (List of String)
-- `vlan_config` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--vlan_config))
 
 ### Optional
 
+- `availability_zone` (String) The availability zone that shall be used on the provider side. *(Sensitive Property)*
 - `charged_until` (String) The service continues incurring charges until this date. Typically `≥ decommission_at`.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.  *(Sensitive Property)*
+- `cloud_config` (Block List, Max: 1) (see [below for nested schema](#nestedblock--cloud_config))
+- `cloud_vlan` (Number) **Deprecation Notice**: This field is deprecated and will be removed in favor of using the `cloud_config.vlan` property. The `ProductOffering` will include `vlan` in the `nsc_required_cloud_config_fields`, if `provider_vlans` are `multi`.  If the `provider_vlans` property of the `ProductOffering` is `multi`, a numeric value refers to a specific vlan on the service provider side.  Otherwise, if set to `null`, it refers to all unmatched vlan ids on the service provider side. (All vlan ids from the service provider side are presented as tags within any vlans specified in `vlan_config`.)  If the `provider_vlans` property of the `ProductOffering` is `single`, the `cloud_vlan` MUST be `null` or MUST NOT be provided.
 - `contract_ref` (String) A reference to a contract. If no specific contract is used, a default MAY be chosen by the implementer. *(Sensitive Property)*
 - `current_billing_start_date` (String) Your obligation to pay for the service will start on this date.  However, this date may change after an upgrade and not reflect the inital start date of the service.  *(Sensitive Property)*
-- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.
+- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`. *(Sensitive Property)*
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
+- `l3_config` (Block List, Max: 1) (see [below for nested schema](#nestedblock--l3_config))
+- `network_connection` (String) The id of the connection to use for this `NetworkServiceConfig`.  If no connection is specified, you have to provide a routing function.  When a connection is provided, you also need to specify the `lan_config`. The `routing_function` attribute may not be used. Some network services may require the use of the `l3_config`, please check the `nsc_required_l3_config_fields` attribute of the `ProductOffering`.  Connections ans Routing Functions are mutually exclusive. *(Sensitive Property)*
 - `network_feature_configs` (List of String)
+- `product_offering` (String) An optional id of a `ProductOffering`.  Valid ids of product-offerings can be found in the `nsc_product_offerings` property of the `NetworkService`.
 - `purchase_order` (String) Purchase Order ID which will be displayed on the invoice. *(Sensitive Property)*
-- `state` (String)
+- `routing_function` (String) The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.  If no routing function is provided, you need to provide the connection to use.  When a routing function is provided, you also need to specify the `l3_config`. The `connection` attribute may not be used.  Connections ans Routing Functions are mutually exclusive. *(Sensitive Property)*
+- `state` (String) The state of the object. *(Sensitive Property)*
 - `status` (Block List) (see [below for nested schema](#nestedblock--status))
+- `vlan_config` (Block List, Max: 1) (see [below for nested schema](#nestedblock--vlan_config))
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `Cloud Network Service Config`.
+
+<a id="nestedblock--cloud_config"></a>
+### Nested Schema for `cloud_config`
+
+Optional:
+
+- `bfd` (Boolean) Enable BFD for the BGP session.
+- `bgp_address_family` (String)
+- `bgp_neighbor_address` (String) The IP address of the BGP neighbor.
+- `bgp_neighbor_address_primary` (String) The primary IP address of the BGP neighbor.
+- `bgp_neighbor_address_secondary` (String) The secondary IP address of the BGP neighbor.
+- `bgp_neighbor_asn` (Number) The ASN of the BGP neighbor.
+- `bgp_password` (String) The password to use for BGP sessions.
+- `local_address` (String) The IP address of the router function instance in CIDR notation.
+- `local_address_primary` (String) The primary IP address of the router function instance in CIDR notation.
+- `local_address_secondary` (String) The secondary IP address of the router function instance in CIDR notation.
+- `local_asn` (Number) The local ASN.
+- `peering_type` (String) Some `cloud_vc` network services require selecting a peering type.  See the `nsc_supported_cloud_config_peering_types` attribute of the corresponding `ProductOffering` for valid values.
+- `vlan` (Number) If the `provider_vlans` property of the `ProductOffering` is `multi`, a numeric value refers to a specific vlan on the service provider side.  The `nsc_required_cloud_config_fields` attribute of the `ProductOffering` will include `vlan` if `provider_vlans` are `multi`.
+
+
+<a id="nestedblock--l3_config"></a>
+### Nested Schema for `l3_config`
+
+Optional:
+
+- `bfd` (Boolean) Enable BFD for the BGP session.
+- `bgp_address_family` (String)
+- `bgp_neighbor_address` (String) The IP address of the BGP neighbor.
+- `bgp_neighbor_address_primary` (String) The primary IP address of the BGP neighbor.
+- `bgp_neighbor_address_secondary` (String) The secondary IP address of the BGP neighbor.
+- `bgp_neighbor_asn` (Number) The ASN of the BGP neighbor.
+- `bgp_password` (String) The password to use for BGP sessions.
+- `local_address` (String) The IP address of the router function instance in CIDR notation.
+- `local_address_primary` (String) The primary IP address of the router function instance in CIDR notation.
+- `local_address_secondary` (String) The secondary IP address of the router function instance in CIDR notation.
+- `local_asn` (Number) The local ASN.
+
+
+<a id="nestedblock--status"></a>
+### Nested Schema for `status`
+
+Optional:
+
+- `message` (String) A human readable message, describing the problem and may contain hints for resolution.
+- `severity` (Number) We are using syslog severity levels: 0 = Emergency, 1 = Alert, 2 = Critical, 3 = Error, 4 = Warning, 5 = Notice, 6 = Informational, 7 = Debug.
+- `tag` (String) A machine readable message identifier.
+- `timestamp` (String) The time and date when the event occured.
+
 
 <a id="nestedblock--vlan_config"></a>
 ### Nested Schema for `vlan_config`
@@ -57,16 +111,5 @@ Optional:
 - `outer_vlan_ethertype` (String) Outer vlan ether type, defaults to: 0x8100. Only used with type QinQ.
 - `vlan` (Number) A VLAN tag. If not present, the IXP will auto-select a valid vlan-id. Only used with VLAN type Dot1Q.
 - `vlan_ethertype` (String) VLAN ether type, defaults to: 0x8100. Only used with type Dot1Q.
-
-
-<a id="nestedblock--status"></a>
-### Nested Schema for `status`
-
-Optional:
-
-- `message` (String) A human readable message, describing the problem and may contain hints for resolution.
-- `severity` (Number) We are using syslog severity levels: 0 = Emergency, 1 = Alert, 2 = Critical, 3 = Error, 4 = Warning, 5 = Notice, 6 = Informational, 7 = Debug.
-- `tag` (String) A machine readable message identifier.
-- `timestamp` (String) The time and date when the event occured.
 
 

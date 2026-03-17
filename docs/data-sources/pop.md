@@ -17,13 +17,11 @@ Use the `pop` data source to reference a single point of presence.
 
 ### Optional
 
+- `availability_zone` (String) Availability zone of the pop.
 - `devices` (List of String)
 - `facility` (String) The pop is located in this `Facility`.
-- `metro_area_network` (String)
+- `id` (String) The *primary identifier* of the `Point Of Presence`.
+- `metro_area_network` (String) The `id` of the related `MetroAreaNetwork`.
 - `name` (String)
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
 
 

@@ -18,8 +18,8 @@ Use the `ixapi_mac` resource to register a mac address. *Attention:* MAC address
 ### Required
 
 - `address` (String) Unicast MAC address, formatted hexadecimal values with colons.
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
 
 ### Optional
 
@@ -29,6 +29,6 @@ Use the `ixapi_mac` resource to register a mac address. *Attention:* MAC address
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `MAC-Address`.
 
 

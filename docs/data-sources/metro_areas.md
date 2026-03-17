@@ -36,11 +36,8 @@ Optional:
 - `display_name` (String) The name of the metro area. Likely the same as the IATA code.
 - `facilities` (List of String)
 - `iata_code` (String) The three letter IATA airport code for identiying the metro area.
+- `id` (String) The *primary identifier* of the `MetroArea`.
 - `metro_area_networks` (List of String)
 - `un_locode` (String) The UN/LOCODE for identifying the metro area.
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 

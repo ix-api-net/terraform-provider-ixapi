@@ -34,24 +34,21 @@ Get network services of type: exchange lan
 
 Optional:
 
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
+- `id` (String) The *primary identifier* of the `Exchange Lan Network Service`.
 - `ixfdb_ixid` (Number) id of ixfdb
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
 - `metro_area_network` (String) Id of the `MetroAreaNetwork` where the exchange lan network service is directly provided.  Same as `service_metro_area_network` on the related `ProductOffering`.
 - `name` (String) Exchange-dependent service name, will be shown on the invoice.
 - `network_features` (List of String)
 - `nsc_required_contact_roles` (List of String)
 - `peeringdb_ixid` (Number) PeeringDB ixid
 - `product_offering` (String) *deprecation notice*
-- `state` (String)
+- `state` (String) The state of the object. *(Sensitive Property)*
 - `status` (Block List) (see [below for nested schema](#nestedblock--network_services--status))
 - `subnet_v4` (String) IPv4 subnet in [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation) CIDR notation.
 - `subnet_v6` (String) IPv6 subnet in hexadecimal colon separated CIDR notation.
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedblock--network_services--status"></a>
 ### Nested Schema for `network_services.status`

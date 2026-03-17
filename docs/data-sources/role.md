@@ -40,11 +40,8 @@ data "ixapi_role" "legal" {
 
 ### Optional
 
+- `id` (String) The *primary identifier* of the `Role for a Contact`.
 - `name` (String) The name of the role.
 - `required_fields` (List of String)
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
 
 

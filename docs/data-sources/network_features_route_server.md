@@ -38,18 +38,15 @@ Optional:
 - `available_bgp_session_types` (List of String)
 - `flags` (Block List) (see [below for nested schema](#nestedblock--network_features--flags))
 - `fqdn` (String) The FQDN of the route server.
+- `id` (String) The *primary identifier* of the `Route Server Network Feature`.
 - `ip_v4` (String) IPv4 address in [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation) notation.  This field is only set if the `address_families` include `af_inet`.
 - `ip_v6` (String) IPv6 address in hexadecimal colon separated notation.  This field is only set if the `address_families` include `af_inet6`.
 - `looking_glass_url` (String) The url of the looking glass.
 - `name` (String)
-- `network_service` (String)
+- `network_service` (String) The `id` of the related `NetworkService`.
 - `nfc_required_contact_roles` (List of String)
 - `required` (Boolean)
 - `session_mode` (String) When creating a route server feature config, remember to specify the same session_mode as the route server.
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedblock--network_features--flags"></a>
 ### Nested Schema for `network_features.flags`

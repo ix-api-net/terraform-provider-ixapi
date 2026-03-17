@@ -49,10 +49,7 @@ data "ixapi_role_assignments" "noc" {
 Optional:
 
 - `contact` (String) The `id` of a contact the role is assigned to.
+- `id` (String) The *primary identifier* of the `A role assignment for a contact`.
 - `role` (String) The `id` of a role the contact is assigned to.
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 
