@@ -20,7 +20,7 @@ func TestCloudRouterConfigP2PVCRequestFromResourceData(t *testing.T) {
 	res.Set("bgp_neighbor_asn", 64512)
 	res.Set("admin_status", "enabled")
 	res.Set("bfd_enabled", false)
-	res.Set("nic", "conn-abc123")
+	res.Set("network_connection", "conn-abc123")
 
 	req, err := cloudRouterConfigP2PVCRequestFromResourceData(res)
 	if err != nil {
@@ -37,7 +37,7 @@ func TestCloudRouterConfigP2PVCRequestFromResourceData(t *testing.T) {
 		t.Error("unexpected cloud_router:", req.CloudRouter)
 	}
 	if req.Connection == nil || *req.Connection != "conn-abc123" {
-		t.Error("unexpected connection (nic):", req.Connection)
+		t.Error("unexpected connection:", req.Connection)
 	}
 	if req.CloudVLAN != nil {
 		t.Error("cloud_vlan should be nil for p2p_vc type")
@@ -101,7 +101,7 @@ func TestCloudRouterConfigP2PVCCreate(t *testing.T) {
 	res.Set("bgp_neighbor", "192.0.2.2")
 	res.Set("bgp_neighbor_asn", 64512)
 	res.Set("admin_status", "enabled")
-	res.Set("nic", "conn-abc123")
+	res.Set("network_connection", "conn-abc123")
 
 	created := &ixapi.CloudRouterNetworkServiceConfig{
 		ID:               "20",

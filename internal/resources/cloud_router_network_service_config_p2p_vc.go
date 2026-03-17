@@ -53,7 +53,7 @@ func cloudRouterConfigP2PVCRequestFromResourceData(
 		BFDEnabled:            res.GetBool("bfd_enabled"),
 		CloudVLAN:             nil,
 		Handover:              nil,
-		Connection:            res.GetStringOpt("nic"),
+		Connection:            res.GetStringOpt("network_connection"),
 		PurchaseOrder:         res.GetStringOpt("purchase_order"),
 		NetworkFeatureConfigs: res.GetStringList("network_feature_configs"),
 	}

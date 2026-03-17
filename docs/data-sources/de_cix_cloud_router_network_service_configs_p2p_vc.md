@@ -54,9 +54,9 @@ Optional:
 - `consuming_account` (String) Consuming account ID
 - `external_ref` (String) External reference
 - `managing_account` (String) Managing account ID
+- `network_connection` (String) The id of the connection to use for this NetworkServiceConfig
 - `network_feature_configs` (List of String) Network feature configuration IDs
 - `network_service` (String) Network service ID to connect to the Cloud ROUTER
-- `nic` (String) Network Interface Card (NIC/Connection) ID to use for this network service config
 - `policy_egress` (String) Name of the outbound routing policy
 - `policy_egress_id` (String)
 - `policy_ingress` (String) Name of the inbound routing policy

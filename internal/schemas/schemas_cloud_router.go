@@ -252,11 +252,11 @@ func CloudRouterNetworkServiceConfigCloudVCSchema() map[string]*schema.Schema {
 func CloudRouterNetworkServiceConfigP2PVCSchema() map[string]*schema.Schema {
 	s := CloudRouterNetworkServiceConfigCommonSchema()
 
-	s["nic"] = &schema.Schema{
+	s["network_connection"] = &schema.Schema{
 		Type:        schema.TypeString,
 		Required:    true,
 		ForceNew:    true,
-		Description: "Network Interface Card (NIC/Connection) ID to use for this network service config",
+		Description: "The id of the connection to use for this NetworkServiceConfig",
 	}
 	s["connection_id"] = &schema.Schema{
 		Type:        schema.TypeString,
