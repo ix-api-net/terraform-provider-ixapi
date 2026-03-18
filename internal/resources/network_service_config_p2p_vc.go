@@ -20,7 +20,7 @@ func NewNetworkServiceConfigP2PVCResource() *schema.Resource {
 		ReadContext:   crud.Read(nscP2PVCRead),
 		DeleteContext: crud.Delete(nscP2PVCDelete),
 
-		Schema: schemas.P2PNetworkServiceConfigSchema(),
+		Schema: addConnectionConstraints(schemas.P2PNetworkServiceConfigSchema()),
 
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -47,7 +47,8 @@ func nscP2PVCRequestFromResourceData(
 		PurchaseOrder:    res.GetStringOpt("purchase_order"),
 		ContractRef:      res.GetStringOpt("contract_ref"),
 		RoleAssignments:  res.GetStringList("role_assignments"),
-		Connection:       res.GetString("network_connection"),
+		Connection:       res.GetStringOpt("network_connection"),
+		RoutingFunction:  res.GetStringOpt("routing_function"),
 		VLANConfig:       vlanConfig,
 		ProductOffering:  res.GetStringOpt("product_offering"),
 		Capacity:         res.GetIntOpt("capacity"),
@@ -92,6 +93,9 @@ func nscP2PVCPatchFromResourceData(
 	}
 	if res.HasChange("network_connection") {
 		patch.Connection = res.GetStringOpt("network_connection")
+	}
+	if res.HasChange("routing_function") {
+		patch.RoutingFunction = res.GetStringOpt("routing_function")
 	}
 	if res.HasChange("capacity") {
 		patch.Capacity = res.GetIntOpt("capacity")

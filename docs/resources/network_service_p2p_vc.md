@@ -18,29 +18,30 @@ Use the `ixapi_network_service_p2p_vc` resource to create and manage a point to 
 ### Required
 
 - `billing_account` (String) An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
 - `joining_member_account` (String) The account of the B-side member joining the virtual circuit.
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
-- `product_offering` (String)
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
+- `product_offering` (String) The `id` of the related `ProductOffering`.
 
 ### Optional
 
+- `availability_zones` (List of String)
 - `capacity` (Number) The capacity of the service in Mbps. When null, the maximum capacity will be used.
 - `charged_until` (String) The service continues incurring charges until this date. Typically `≥ decommission_at`.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.  *(Sensitive Property)*
 - `contract_ref` (String) A reference to a contract. If no specific contract is used, a default MAY be chosen by the implementer. *(Sensitive Property)*
 - `current_billing_start_date` (String) Your obligation to pay for the service will start on this date.  However, this date may change after an upgrade and not reflect the inital start date of the service.  *(Sensitive Property)*
-- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.
+- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`. *(Sensitive Property)*
 - `display_name` (String) Name of the point to point virtual circuit.  It is visible to all parties allowed to connect to this virtual circuit.  It is intended for humans to make sense of.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
 - `nsc_product_offerings` (List of String)
 - `nsc_required_contact_roles` (List of String)
 - `purchase_order` (String) Purchase Order ID which will be displayed on the invoice. *(Sensitive Property)*
-- `state` (String)
+- `state` (String) The state of the object. *(Sensitive Property)*
 - `status` (Block List) (see [below for nested schema](#nestedblock--status))
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `P2P Network Service`.
 
 <a id="nestedblock--status"></a>
 ### Nested Schema for `status`

@@ -18,16 +18,16 @@ Use the `ixapi_network_service_p2mp_vc` resource to create and manage a point to
 ### Required
 
 - `billing_account` (String) An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
-- `product_offering` (String)
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
+- `product_offering` (String) The `id` of the related `ProductOffering`.
 
 ### Optional
 
 - `charged_until` (String) The service continues incurring charges until this date. Typically `≥ decommission_at`.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.  *(Sensitive Property)*
 - `contract_ref` (String) A reference to a contract. If no specific contract is used, a default MAY be chosen by the implementer. *(Sensitive Property)*
 - `current_billing_start_date` (String) Your obligation to pay for the service will start on this date.  However, this date may change after an upgrade and not reflect the inital start date of the service.  *(Sensitive Property)*
-- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.
+- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`. *(Sensitive Property)*
 - `display_name` (String) Name of the point to multi-point virtual circuit.  It is visible to all parties allowed to connect to this virtual circuit.  It is intended for humans to make sense of.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
 - `member_joining_rules` (List of String)
@@ -36,12 +36,12 @@ Use the `ixapi_network_service_p2mp_vc` resource to create and manage a point to
 - `nsc_required_contact_roles` (List of String)
 - `public` (Boolean) A public p2mp network service can be joined by everyone on the exchange unless denied by a member-joining-rule.  Public network services are visible to other members of the IXP, however only `name`, `type`, `product_offering`, `consuming_account` and `managing_account` are made available.  Other required fields are redacted.
 - `purchase_order` (String) Purchase Order ID which will be displayed on the invoice. *(Sensitive Property)*
-- `state` (String)
+- `state` (String) The state of the object. *(Sensitive Property)*
 - `status` (Block List) (see [below for nested schema](#nestedblock--status))
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `P2MP Network Service`.
 
 <a id="nestedblock--status"></a>
 ### Nested Schema for `status`

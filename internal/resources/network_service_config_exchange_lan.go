@@ -21,7 +21,7 @@ func NewNetworkServiceConfigExchangeLanResource() *schema.Resource {
 		ReadContext:   crud.Read(nscExchangeLanRead),
 		DeleteContext: crud.Delete(nscExchangeLanDelete),
 
-		Schema: schemas.ExchangeLanNetworkServiceConfigSchema(),
+		Schema: addConnectionConstraints(schemas.ExchangeLanNetworkServiceConfigSchema()),
 
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -48,7 +48,8 @@ func nscExchangeLanRequestFromResourceData(
 		PurchaseOrder:    res.GetStringOpt("purchase_order"),
 		ContractRef:      res.GetStringOpt("contract_ref"),
 		RoleAssignments:  res.GetStringList("role_assignments"),
-		Connection:       res.GetString("network_connection"),
+		Connection:       res.GetStringOpt("network_connection"),
+		RoutingFunction:  res.GetStringOpt("routing_function"),
 		VLANConfig:       vlanConfig,
 		Capacity:         res.GetIntOpt("capacity"),
 		ASNs:             res.GetIntList("asns"),
@@ -96,6 +97,9 @@ func nscExchangeLanPatchFromResourceData(
 	}
 	if res.HasChange("network_connection") {
 		patch.Connection = res.GetStringOpt("network_connection")
+	}
+	if res.HasChange("routing_function") {
+		patch.RoutingFunction = res.GetStringOpt("routing_function")
 	}
 	if res.HasChange("capacity") {
 		patch.Capacity = res.GetIntOpt("capacity")

@@ -57,6 +57,7 @@ Optional:
 - `address_country` (String) ISO 3166-1 alpha-2 country code, for example DE
 - `address_locality` (String) The locality/city. For example, Mountain View.
 - `address_region` (String) The region. For example, CA
+- `id` (String) The *primary identifier* of the `Facility`.
 - `latitude` (Number) Latitude of the facility's location.
 - `longitude` (Number) Longitude of the facility's location.
 - `metro_area` (String) Id of the `MetroArea` the DC is located in.
@@ -66,9 +67,5 @@ Optional:
 - `pops` (List of String)
 - `postal_code` (String) A postal code. For example, 9404
 - `street_address` (String) The street address. For example, 1600 Amphitheatre Pkwy.
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 

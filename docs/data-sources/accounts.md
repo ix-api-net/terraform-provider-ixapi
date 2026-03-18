@@ -43,19 +43,17 @@ locals {
 Optional:
 
 - `address` (Block List, Max: 1) (see [below for nested schema](#nestedblock--accounts--address))
+- `asns` (List of Number)
 - `billing_information` (Block List, Max: 1) (see [below for nested schema](#nestedblock--accounts--billing_information))
 - `discoverable` (Boolean) The account will be included for all members of the ix in the list of accounts.  Only `id`, `name` and `present_in_metro_area_networks` are provided to other members.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
+- `id` (String) The *primary identifier* of the `Account`.
 - `legal_name` (String) Legal name of the organisation. Only required when it's different from the account name. *(Sensitive Property)*
 - `managing_account` (String) The `id` of a managing account. Can be used for creating a customer hierachy. *(Sensitive Property)*
 - `metro_area_network_presence` (List of String)
 - `name` (String) Name of the account, how it gets represented in e.g. a "customers list".
 - `state` (String)
 - `status` (Block List) (see [below for nested schema](#nestedblock--accounts--status))
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedblock--accounts--address"></a>
 ### Nested Schema for `accounts.address`

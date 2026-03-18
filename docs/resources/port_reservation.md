@@ -26,19 +26,19 @@ Use the `ixapi_port_reservation` resource to manage port reservations for a conn
 - `contract_ref` (String) A reference to a contract. If no specific contract is used, a default MAY be chosen by the implementer. *(Sensitive Property)*
 - `cross_connect_id` (String) An optional identifier of a cross connect.
 - `current_billing_start_date` (String) Your obligation to pay for the service will start on this date.  However, this date may change after an upgrade and not reflect the inital start date of the service.  *(Sensitive Property)*
-- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.
+- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`. *(Sensitive Property)*
 - `exchange_side_demarc` (String) Exchange side demarc information. This field will only be filled in when the port state is `allocated` or in `production`.  Otherwise this field will be `null`.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
 - `port` (String) This field will be null, until a port will be allocated.
 - `port_num` (Number) When the `port_num` is provided, the resource will reference an already allocated port reservation. Starting at 1.
 - `purchase_order` (String) Purchase Order ID which will be displayed on the invoice. *(Sensitive Property)*
-- `state` (String)
+- `state` (String) The state of the object. *(Sensitive Property)*
 - `status` (Block List) (see [below for nested schema](#nestedblock--status))
 - `subscriber_side_demarc` (String) In an exchange initiated scenario, this field will indicated one of the provided `subscriber_side_demarcs` from the connection.
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `A PortReservation`.
 
 <a id="nestedblock--status"></a>
 ### Nested Schema for `status`

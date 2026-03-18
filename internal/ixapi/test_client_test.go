@@ -18,9 +18,10 @@ func TestMockResponseClient(t *testing.T) {
 	res, err := c.NetworkServicesRead(ctx, "1")
 	if err != nil {
 		t.Fatal(err)
-
 	}
-	t.Log(res)
+	if _, ok := res.(*ExchangeLanNetworkService); !ok {
+		t.Fatalf("expected *ExchangeLanNetworkService, got %T", res)
+	}
 
 	_, err = c.NetworkServicesList(ctx)
 	if err == nil {
@@ -46,8 +47,9 @@ func TestMockResponseClientHandlerFunc(t *testing.T) {
 	res, err := c.NetworkServicesRead(ctx, "1")
 	if err != nil {
 		t.Fatal(err)
-
 	}
-	t.Log(res)
+	if _, ok := res.(*ExchangeLanNetworkService); !ok {
+		t.Fatalf("expected *ExchangeLanNetworkService, got %T", res)
+	}
 
 }

@@ -51,12 +51,9 @@ Optional:
 
 - `capabilities` (Block List) (see [below for nested schema](#nestedblock--devices--capabilities))
 - `facility` (String) Identifier of the facility where the device is physically based.
+- `id` (String) The *primary identifier* of the `Device`.
 - `name` (String) Name of the device
 - `pop` (String) The `PointOfPresence` the device is in.
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedblock--devices--capabilities"></a>
 ### Nested Schema for `devices.capabilities`

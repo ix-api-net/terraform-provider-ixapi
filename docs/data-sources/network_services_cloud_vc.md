@@ -33,27 +33,27 @@ Get network services of type: cloud
 
 Optional:
 
+- `availability_zones` (List of String)
 - `billing_account` (String) An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*
 - `capacity` (Number) The capacity of the service in Mbps. When null, the maximum capacity will be used.
 - `charged_until` (String) The service continues incurring charges until this date. Typically `≥ decommission_at`.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.  *(Sensitive Property)*
 - `cloud_key` (String) The cloud key is used to specify to which user or existing circuit of a cloud provider this `network-service` should be provisioned.  For example, for a provider like *AWS*, this would be the *account number* (Example: `123456789876`), or for a provider like Azure, this would be the service key (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
 - `contract_ref` (String) A reference to a contract. If no specific contract is used, a default MAY be chosen by the implementer. *(Sensitive Property)*
 - `current_billing_start_date` (String) Your obligation to pay for the service will start on this date.  However, this date may change after an upgrade and not reflect the inital start date of the service.  *(Sensitive Property)*
-- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.
+- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`. *(Sensitive Property)*
 - `diversity` (Number) Same value as the corresponding `ProductOffering`.  The service can be delivered over multiple handovers from the exchange to the `service_provider`.  The `diversity` denotes the number of handovers between the exchange and the service provider. A value of two signals a redundant service.  Only one network service configuration for each `handover` and `cloud_vlan` can be created.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
+- `id` (String) The *primary identifier* of the `Cloud Network Service`.
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
+- `network_features` (List of String)
+- `nsc_product_offerings` (List of String)
 - `nsc_required_contact_roles` (List of String)
-- `product_offering` (String)
+- `product_offering` (String) The `id` of the related `ProductOffering`.
 - `provider_ref` (String) For a cloud network service with the exchange first workflow, the `provider_ref` will be a reference to a resource of the cloud provider. (E.g. the UUID of a virtual circuit.)  The `provider_ref` is managed by the exchange and its meaning may vary between different cloud services.
 - `purchase_order` (String) Purchase Order ID which will be displayed on the invoice. *(Sensitive Property)*
-- `state` (String)
+- `state` (String) The state of the object. *(Sensitive Property)*
 - `status` (Block List) (see [below for nested schema](#nestedblock--network_services--status))
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedblock--network_services--status"></a>
 ### Nested Schema for `network_services.status`

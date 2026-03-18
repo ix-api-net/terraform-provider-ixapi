@@ -53,7 +53,11 @@ output "product_offerings" {
 
 Optional:
 
-- `contract_terms` (String) The contract terms informally describe the contract period and renewals.
+- `contract_initial_notice_period` (String) _**Format:** ISO8601 Duration_  The notice period for canceling the contract within the initial period.
+- `contract_initial_period` (String) _**Format:** ISO8601 Duration_  The initial duration of the contract. The contract will be renewed after this period for the duration of `contract_renewal_period`.
+- `contract_renewal_notice_period` (String) _**Format:** ISO8601 Duration_  The notice period denotes the time before the end of the `contract_renewal_period` in which the client has to inform the IXP in order to prevent renewal of the contract.
+- `contract_renewal_period` (String) _**Format:** ISO8601 Duration_  The duration for which the contract will be renewed after the initial period.  Unless the contract is canceled, it will be automatically renewed after the period. Cancellation has to be done within the `contract_renewal_notice_period`.
+- `contract_terms` (String) This property informally describe the contract's notice- and renewal periods as well as additional terms.  **Note**: This property contains informal information about the contract. For a structured representation see: `contract_initial_period`, `contract_initial_notice_period`, `contract_renewal_period` and `contract_renewal_notice_period`.  **Example**: A contract with the terms _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_ can be represented as: * `contract_initial_period: "P2W"` * `contract_initial_notice_period: "P5D"` * `contract_renewal_period: "P6M"` * `contract_renewal_notice_period: "P1M"`
 - `cross_connect_initiator` (String) A cross connect can be initiated by either the exchange or the subscriber.  This property affects which side has to provide a LOA and demarc information.
 - `display_name` (String)
 - `downgrade_allowed` (Boolean) Indicates if the service can be migrated to a lower bandwidth.
@@ -61,9 +65,10 @@ Optional:
 - `handover_metro_area` (String) Id of the `MetroArea`. The network service will be accessed from this metro area.  In case of a `p2p_vc`, the `handover_metro_area` refers to the A-side of the point-to-point connection. The A-side is the entity which initiates the network service creation.
 - `handover_metro_area_network` (String) Id of the `MetroAreaNetwork`. The service will be accessed through the handover metro area network.  In case of a `p2p_vc`, the `handover_metro_area_network` refers to the A-side of the point-to-point connection. The A-side is the entity which initiates the network service creation.
 - `handover_pop` (String) The ID of the point of presence (see `/pops`), where the physical port will be present.
+- `id` (String) The *primary identifier* of the `Connection Product Offering`.
 - `maximum_port_quantity` (Number) The maximum amount of ports which can be aggregated in the connection. `null` means no limit.
 - `name` (String) Name of the product
-- `notice_period` (String) The notice period informally states constraints which define when the client needs to inform the IXP in order to prevent renewal of the contract.
+- `notice_period` (String) **DEPRECATION NOTICE**: This property will be replaced by `contract_initial_period`, `contract_initial_notice_period`, `contract_renewal_period` and `contract_renewal_notice_period`.  The notice period informally states constraints which define when the client needs to inform the IXP in order to prevent renewal of the contract.
 - `orderable_not_after` (String) This product offering will become unavailable for ordering after this point in time.
 - `orderable_not_before` (String) This product offering becomes available for ordering after this point in time.
 - `physical_port_speed` (Number) If the service is dependent on the speed of the physical port this field denotes the speed.
@@ -73,9 +78,5 @@ Optional:
 - `service_provider` (String) The name of the provider providing the service.
 - `service_provider_logo` (String) An URI referencing the logo of the service provider.
 - `upgrade_allowed` (Boolean) Indicates if the service can be migrated to a higher bandwidth.
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 

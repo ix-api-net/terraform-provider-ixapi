@@ -25,7 +25,11 @@ data "ixapi_product_offering_cloud_vc" "instant_lon1" {
 
 - `bandwidth_max` (Number) When not `null`, this value enforces a mandatory rate limit for all network service configs.
 - `bandwidth_min` (Number) When configuring access to the network service, at least this `capacity` must be provided.
-- `contract_terms` (String) The contract terms informally describe the contract period and renewals.
+- `contract_initial_notice_period` (String) _**Format:** ISO8601 Duration_  The notice period for canceling the contract within the initial period.
+- `contract_initial_period` (String) _**Format:** ISO8601 Duration_  The initial duration of the contract. The contract will be renewed after this period for the duration of `contract_renewal_period`.
+- `contract_renewal_notice_period` (String) _**Format:** ISO8601 Duration_  The notice period denotes the time before the end of the `contract_renewal_period` in which the client has to inform the IXP in order to prevent renewal of the contract.
+- `contract_renewal_period` (String) _**Format:** ISO8601 Duration_  The duration for which the contract will be renewed after the initial period.  Unless the contract is canceled, it will be automatically renewed after the period. Cancellation has to be done within the `contract_renewal_notice_period`.
+- `contract_terms` (String) This property informally describe the contract's notice- and renewal periods as well as additional terms.  **Note**: This property contains informal information about the contract. For a structured representation see: `contract_initial_period`, `contract_initial_notice_period`, `contract_renewal_period` and `contract_renewal_notice_period`.  **Example**: A contract with the terms _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_ can be represented as: * `contract_initial_period: "P2W"` * `contract_initial_notice_period: "P5D"` * `contract_renewal_period: "P6M"` * `contract_renewal_notice_period: "P1M"`
 - `delivery_method` (String) The exchange delivers the service over a `shared` or `dedicated` NNI.
 - `display_name` (String)
 - `diversity` (Number) The service can be delivered over multiple handovers from the exchange to the `service_provider`. The `diversity` denotes the number of handovers between the exchange and the service provider. A value of two signals a redundant service.  Only one network service configuration for each `handover` and `cloud_vlan` can be created.
@@ -33,14 +37,21 @@ data "ixapi_product_offering_cloud_vc" "instant_lon1" {
 - `exchange_logo` (String) An URI referencing the logo of the internet exchange.
 - `handover_metro_area` (String) Id of the `MetroArea`. The network service will be accessed from this metro area.  In case of a `p2p_vc`, the `handover_metro_area` refers to the A-side of the point-to-point connection. The A-side is the entity which initiates the network service creation.
 - `handover_metro_area_network` (String) Id of the `MetroAreaNetwork`. The service will be accessed through the handover metro area network.  In case of a `p2p_vc`, the `handover_metro_area_network` refers to the A-side of the point-to-point connection. The A-side is the entity which initiates the network service creation.
+- `id` (String) The *primary identifier* of the `Cloud Network Product Offering`.
 - `name` (String) Name of the product
-- `notice_period` (String) The notice period informally states constraints which define when the client needs to inform the IXP in order to prevent renewal of the contract.
+- `notice_period` (String) **DEPRECATION NOTICE**: This property will be replaced by `contract_initial_period`, `contract_initial_notice_period`, `contract_renewal_period` and `contract_renewal_notice_period`.  The notice period informally states constraints which define when the client needs to inform the IXP in order to prevent renewal of the contract.
+- `nsc_required_cloud_config_fields` (List of String)
+- `nsc_required_l3_config_fields` (List of String)
+- `nsc_supported_cloud_config_fields` (List of String)
+- `nsc_supported_cloud_config_peering_types` (List of String)
+- `nsc_supported_l3_config_fields` (List of String)
 - `orderable_not_after` (String) This product offering will become unavailable for ordering after this point in time.
 - `orderable_not_before` (String) This product offering becomes available for ordering after this point in time.
 - `physical_port_speed` (Number) If the service is dependent on the speed of the physical port this field denotes the speed.
 - `product_logo` (String) An URI referencing a logo for the product offered.
 - `provider_vlans` (String) The `NetworkService` provides `single` or `multi`ple vlans.
 - `resource_type` (String) The resource type refers to an ix-api resource.
+- `service_exchange_pops` (Block List) (see [below for nested schema](#nestedblock--service_exchange_pops))
 - `service_metro_area` (String) Id of the `MetroArea`. The service is delivered in this metro area.  In case of a `p2p_vc`, the `service_metro_area` refers to the B-side of the point-to-point connection. The B-side is the accepting party.
 - `service_metro_area_network` (String) Id of the `MetroAreaNetwork`. The service is directly provided on the metro area network.  In case of a `p2p_vc`, the `service_metro_area_network` refers to the B-side of the point-to-point connection. The B-side is the accepting party.
 - `service_provider` (String) The name of the provider providing the service.
@@ -51,8 +62,12 @@ data "ixapi_product_offering_cloud_vc" "instant_lon1" {
 - `service_provider_workflow` (String) When the workflow is `provider_first` the subscriber creates a circuit with the cloud provider and provides a `cloud_key` for filtering the product-offerings.  If the workflow is `exchange_first` the IX will create the cloud circuit on the provider side.
 - `upgrade_allowed` (Boolean) Indicates if the service can be migrated to a higher bandwidth.
 
-### Read-Only
+<a id="nestedblock--service_exchange_pops"></a>
+### Nested Schema for `service_exchange_pops`
 
-- `id` (String) The ID of this resource.
+Optional:
+
+- `path_info` (String) An *optional* text property that describes the path of the service where it is tethered through another party.
+- `pop` (String) The `id` of the `PointOfPresence` the service is provided.
 
 

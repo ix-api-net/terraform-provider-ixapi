@@ -20,7 +20,7 @@ func NewNetworkServiceConfigMP2MPVCResource() *schema.Resource {
 		ReadContext:   crud.Read(nscMP2MPVCRead),
 		DeleteContext: crud.Delete(nscMP2MPVCDelete),
 
-		Schema: schemas.MP2MPNetworkServiceConfigSchema(),
+		Schema: addConnectionConstraints(schemas.MP2MPNetworkServiceConfigSchema()),
 
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -47,7 +47,8 @@ func nscMP2MPVCRequestFromResourceData(
 		PurchaseOrder:    res.GetStringOpt("purchase_order"),
 		ContractRef:      res.GetStringOpt("contract_ref"),
 		RoleAssignments:  res.GetStringList("role_assignments"),
-		Connection:       res.GetString("network_connection"),
+		Connection:       res.GetStringOpt("network_connection"),
+		RoutingFunction:  res.GetStringOpt("routing_function"),
 		VLANConfig:       vlanConfig,
 		ProductOffering:  res.GetStringOpt("product_offering"),
 		Capacity:         res.GetIntOpt("capacity"),
@@ -93,6 +94,9 @@ func nscMP2MPVCPatchFromResourceData(
 	}
 	if res.HasChange("network_connection") {
 		patch.Connection = res.GetStringOpt("network_connection")
+	}
+	if res.HasChange("routing_function") {
+		patch.RoutingFunction = res.GetStringOpt("routing_function")
 	}
 	if res.HasChange("capacity") {
 		patch.Capacity = res.GetIntOpt("capacity")

@@ -24,10 +24,10 @@ data "ixapi_contact" "impl1" {
 
 ### Optional
 
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
 - `email` (String) The email of the legal company entity.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
 - `name` (String) A name of a person or an organisation
 - `telephone` (String) The telephone number in E.164 Phone Number Formatting
 

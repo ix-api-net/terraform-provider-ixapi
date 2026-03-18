@@ -157,6 +157,9 @@ func New(version string) func() *schema.Provider {
 				"ixapi_product_offering_mp2mp_vc":      datasources.NewProductOfferingMP2MPVCDataSource(),
 				"ixapi_product_offerings_cloud_vc":     datasources.NewProductOfferingsCloudVCDataSource(),
 				"ixapi_product_offering_cloud_vc":      datasources.NewProductOfferingCloudVCDataSource(),
+
+				"ixapi_routing_functions": datasources.NewRoutingFunctionsDataSource(),
+				"ixapi_routing_function":  datasources.NewRoutingFunctionDataSource(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"ixapi_contact":          resources.NewContactResource(),
@@ -182,6 +185,8 @@ func New(version string) func() *schema.Provider {
 				"ixapi_network_feature_config_route_server": resources.NewNetworkFeatureConfigRouteServerResource(),
 
 				"ixapi_ip_allocation_network_service_config": resources.NewIPAllocationNetworkServiceConfigResource(),
+
+				"ixapi_routing_function": resources.NewRoutingFunctionResource(),
 			},
 			ConfigureContextFunc: configure,
 		}

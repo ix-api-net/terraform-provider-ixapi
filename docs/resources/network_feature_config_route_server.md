@@ -20,11 +20,11 @@ Use the `ixapi_nfc_route_server` resource to configure access to a route server 
 - `asn` (Number) The ASN of the peer.
 - `bgp_session_type` (String) The session type describes which of the both parties will open the connection. If set to passive, the customer router needs to open the connection. If its set to active, the route server will open the connection. The standard behavior on most exchanges is passive.
 - `billing_account` (String) An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
 - `ip` (String) The BGP session will be established from this IP address, referenced by ID.  Only IDs of IPs assigned to the corresponding network service config can be used.
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
-- `network_feature` (String)
-- `network_service_config` (String)
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
+- `network_feature` (String) The `id` of the related `NetworkFeature`.
+- `network_service_config` (String) The `id` of the related `NetworkServiceConfig`.
 - `role_assignments` (List of String)
 - `session_mode` (String) Set the session mode with the routeserver.
 
@@ -40,12 +40,12 @@ Use the `ixapi_nfc_route_server` resource to configure access to a route server 
 - `max_prefix_v6` (Number) Announcing more than `max_prefix` IPv6 prefixes the bgp session will be droped.
 - `password` (String) The cleartext BGP session password
 - `purchase_order` (String) Purchase Order ID which will be displayed on the invoice. *(Sensitive Property)*
-- `state` (String)
+- `state` (String) The state of the object. *(Sensitive Property)*
 - `status` (Block List) (see [below for nested schema](#nestedblock--status))
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `Route Server Network Feature Config`.
 
 <a id="nestedblock--flags"></a>
 ### Nested Schema for `flags`

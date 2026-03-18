@@ -18,30 +18,62 @@ Use the `ixapi_network_service_config_p2p_vc` resource to provision an access to
 ### Required
 
 - `billing_account` (String) An account requires billing_information to be used as a `billing_account`. *(Sensitive Property)*
-- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`.
-- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.
-- `network_connection` (String) The id of the connection to use for this `NetworkServiceConfig`.
-- `network_service` (String) The id of the configured network service.
+- `consuming_account` (String) The `id` of the account consuming a service.  Used to be `owning_customer`. *(Sensitive Property)*
+- `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities. *(Sensitive Property)*
+- `network_service` (String) The id of the configured `NetworkService`.
 - `role_assignments` (List of String)
-- `vlan_config` (Block List, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--vlan_config))
 
 ### Optional
 
-- `capacity` (Number) The capacity of the service in Mbps. If set to Null, the maximum capacity will be used, i.e. the virtual circuit is not rate-limited.  An exchange may choose to constrain the available capacity range of a `ProductOffering`.  That means, the service can consume up to the total bandwidth of the `Connection`.  Typically the service is charged based on the capacity.
+- `capacity` (Number) The capacity of the service in Mbps. If set to Null, the maximum capacity will be used, i.e. the virtual circuit is not rate-limited.  An exchange may choose to constrain the available capacity range of a `ProductOffering`.  That means, the service can consume up to the total bandwidth of the `Connection`.  Typically the service is charged based on the capacity. *(Sensitive Property)*
 - `charged_until` (String) The service continues incurring charges until this date. Typically `≥ decommission_at`.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.  *(Sensitive Property)*
 - `contract_ref` (String) A reference to a contract. If no specific contract is used, a default MAY be chosen by the implementer. *(Sensitive Property)*
 - `current_billing_start_date` (String) Your obligation to pay for the service will start on this date.  However, this date may change after an upgrade and not reflect the inital start date of the service.  *(Sensitive Property)*
-- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.
+- `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`. *(Sensitive Property)*
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
+- `l3_config` (Block List, Max: 1) (see [below for nested schema](#nestedblock--l3_config))
+- `macs` (List of String)
+- `network_connection` (String) The id of the connection to use for this `NetworkServiceConfig`.  If no connection is specified, you have to provide a routing function.  When a connection is provided, you also need to specify the `lan_config`. The `routing_function` attribute may not be used. Some network services may require the use of the `l3_config`, please check the `nsc_required_l3_config_fields` attribute of the `ProductOffering`.  Connections ans Routing Functions are mutually exclusive. *(Sensitive Property)*
 - `network_feature_configs` (List of String)
 - `product_offering` (String) An optional id of a `ProductOffering`.  Valid ids of product-offerings can be found in the `nsc_product_offerings` property of the `NetworkService`.
 - `purchase_order` (String) Purchase Order ID which will be displayed on the invoice. *(Sensitive Property)*
-- `state` (String)
+- `routing_function` (String) The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.  If no routing function is provided, you need to provide the connection to use.  When a routing function is provided, you also need to specify the `l3_config`. The `connection` attribute may not be used.  Connections ans Routing Functions are mutually exclusive. *(Sensitive Property)*
+- `state` (String) The state of the object. *(Sensitive Property)*
 - `status` (Block List) (see [below for nested schema](#nestedblock--status))
+- `vlan_config` (Block List, Max: 1) (see [below for nested schema](#nestedblock--vlan_config))
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The *primary identifier* of the `P2P Network Service Config`.
+
+<a id="nestedblock--l3_config"></a>
+### Nested Schema for `l3_config`
+
+Optional:
+
+- `bfd` (Boolean) Enable BFD for the BGP session.
+- `bgp_address_family` (String)
+- `bgp_neighbor_address` (String) The IP address of the BGP neighbor.
+- `bgp_neighbor_address_primary` (String) The primary IP address of the BGP neighbor.
+- `bgp_neighbor_address_secondary` (String) The secondary IP address of the BGP neighbor.
+- `bgp_neighbor_asn` (Number) The ASN of the BGP neighbor.
+- `bgp_password` (String) The password to use for BGP sessions.
+- `local_address` (String) The IP address of the router function instance in CIDR notation.
+- `local_address_primary` (String) The primary IP address of the router function instance in CIDR notation.
+- `local_address_secondary` (String) The secondary IP address of the router function instance in CIDR notation.
+- `local_asn` (Number) The local ASN.
+
+
+<a id="nestedblock--status"></a>
+### Nested Schema for `status`
+
+Optional:
+
+- `message` (String) A human readable message, describing the problem and may contain hints for resolution.
+- `severity` (Number) We are using syslog severity levels: 0 = Emergency, 1 = Alert, 2 = Critical, 3 = Error, 4 = Warning, 5 = Notice, 6 = Informational, 7 = Debug.
+- `tag` (String) A machine readable message identifier.
+- `timestamp` (String) The time and date when the event occured.
+
 
 <a id="nestedblock--vlan_config"></a>
 ### Nested Schema for `vlan_config`
@@ -57,16 +89,5 @@ Optional:
 - `outer_vlan_ethertype` (String) Outer vlan ether type, defaults to: 0x8100. Only used with type QinQ.
 - `vlan` (Number) A VLAN tag. If not present, the IXP will auto-select a valid vlan-id. Only used with VLAN type Dot1Q.
 - `vlan_ethertype` (String) VLAN ether type, defaults to: 0x8100. Only used with type Dot1Q.
-
-
-<a id="nestedblock--status"></a>
-### Nested Schema for `status`
-
-Optional:
-
-- `message` (String) A human readable message, describing the problem and may contain hints for resolution.
-- `severity` (Number) We are using syslog severity levels: 0 = Emergency, 1 = Alert, 2 = Critical, 3 = Error, 4 = Warning, 5 = Notice, 6 = Informational, 7 = Debug.
-- `tag` (String) A machine readable message identifier.
-- `timestamp` (String) The time and date when the event occured.
 
 

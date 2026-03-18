@@ -70,7 +70,7 @@ type Polymorphic interface {
 type Response interface{}
 
 // SchemaVersion is the version of the ix-api schema
-const SchemaVersion = "2.4.2"
+const SchemaVersion = "2.7.1"
 
 // AuthToken AuthToken
 type AuthToken struct {
@@ -114,12 +114,21 @@ type CancellationRequest struct {
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 }
 
+// AvailabilityZone AvailabilityZone
+type AvailabilityZone struct {
+	// ID The *primary identifier* of the `AvailabilityZone`.
+	ID string `json:"id,omitempty"`
+
+	// Name The name (description) for the availability zone
+	Name string `json:"name,omitempty"`
+}
+
 // CloudNetworkProductOffering Cloud Network Product Offering
 type CloudNetworkProductOffering struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Cloud Network Product Offering`.
 	ID string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -129,19 +138,15 @@ type CloudNetworkProductOffering struct {
 	DisplayName string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -150,7 +155,6 @@ type CloudNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -159,7 +163,6 @@ type CloudNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -167,7 +170,6 @@ type CloudNetworkProductOffering struct {
 	PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -186,15 +188,60 @@ type CloudNetworkProductOffering struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -206,7 +253,6 @@ type CloudNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -215,7 +261,6 @@ type CloudNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -226,19 +271,30 @@ type CloudNetworkProductOffering struct {
 	// rate limit for all network service configs.
 	BandwidthMax int `json:"bandwidth_max,omitempty"`
 
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
+
 	// ServiceProviderRegion The service provider offers the network service for a
 	// specific region.
-	//
 	ServiceProviderRegion string `json:"service_provider_region,omitempty"`
 
 	// ServiceProviderPop The datacenter id of the partner NNI to the service provider.
 	// It supposed to be used when identifying a location via
 	// the cloud provider's APIs.
-	//
 	ServiceProviderPop string `json:"service_provider_pop,omitempty"`
 
 	// ServiceProviderPopName The datacenter description of the partner NNI to the service provider.
-	//
 	ServiceProviderPopName *string `json:"service_provider_pop_name,omitempty"`
 
 	// ServiceProviderWorkflow When the workflow is `provider_first` the subscriber creates
@@ -247,8 +303,12 @@ type CloudNetworkProductOffering struct {
 	//
 	// If the workflow is `exchange_first` the IX will create
 	// the cloud circuit on the provider side.
-	//
 	ServiceProviderWorkflow string `json:"service_provider_workflow,omitempty"`
+
+	// ServiceExchangePops A list of object, referencing a `PointOfPresence`
+	// and providing additional path information, in case the services
+	// is tethered through another party.
+	ServiceExchangePops []*ServiceExchangePop `json:"service_exchange_pops,omitempty"`
 
 	// DeliveryMethod The exchange delivers the service over a `shared` or `dedicated` NNI.
 	DeliveryMethod string `json:"delivery_method,omitempty"`
@@ -262,6 +322,27 @@ type CloudNetworkProductOffering struct {
 	// Only one network service configuration for each `handover` and
 	// `cloud_vlan` can be created.
 	Diversity int `json:"diversity,omitempty"`
+
+	// NscSupportedCloudConfigPeeringTypes The supported peering types for the cloud network service.
+	//
+	// In case selecting a peering type is required, the
+	// `peering_type` property will be in the
+	// `nsc_required_cloud_config_fields` list.
+	NscSupportedCloudConfigPeeringTypes []string `json:"nsc_supported_cloud_config_peering_types,omitempty"`
+
+	// NscRequiredCloudConfigFields A list of required attributes in the `cloud_config` of a corresponding
+	// `NetworkServiceConfig`.
+	//
+	// For example: `"vlan"`, `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredCloudConfigFields []string `json:"nsc_required_cloud_config_fields,omitempty"`
+
+	// NscSupportedCloudConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"vlan"`, "`peering_type`",
+	// `"bgp_password"`, `"bgp_neighbor_address"`, ...
+	NscSupportedCloudConfigFields []string `json:"nsc_supported_cloud_config_fields,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -272,9 +353,9 @@ func (c CloudNetworkProductOffering) PolymorphicType() string {
 // CloudNetworkProductOfferingPatch Cloud Network Product Offering
 type CloudNetworkProductOfferingPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Cloud Network Product Offering`.
 	ID *string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -284,19 +365,15 @@ type CloudNetworkProductOfferingPatch struct {
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType *string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -305,7 +382,6 @@ type CloudNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -314,7 +390,6 @@ type CloudNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -322,7 +397,6 @@ type CloudNetworkProductOfferingPatch struct {
 	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider *string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -341,15 +415,60 @@ type CloudNetworkProductOfferingPatch struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -361,7 +480,6 @@ type CloudNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -370,7 +488,6 @@ type CloudNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -381,19 +498,30 @@ type CloudNetworkProductOfferingPatch struct {
 	// rate limit for all network service configs.
 	BandwidthMax *int `json:"bandwidth_max,omitempty"`
 
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
+
 	// ServiceProviderRegion The service provider offers the network service for a
 	// specific region.
-	//
 	ServiceProviderRegion *string `json:"service_provider_region,omitempty"`
 
 	// ServiceProviderPop The datacenter id of the partner NNI to the service provider.
 	// It supposed to be used when identifying a location via
 	// the cloud provider's APIs.
-	//
 	ServiceProviderPop *string `json:"service_provider_pop,omitempty"`
 
 	// ServiceProviderPopName The datacenter description of the partner NNI to the service provider.
-	//
 	ServiceProviderPopName *string `json:"service_provider_pop_name,omitempty"`
 
 	// ServiceProviderWorkflow When the workflow is `provider_first` the subscriber creates
@@ -402,8 +530,12 @@ type CloudNetworkProductOfferingPatch struct {
 	//
 	// If the workflow is `exchange_first` the IX will create
 	// the cloud circuit on the provider side.
-	//
 	ServiceProviderWorkflow *string `json:"service_provider_workflow,omitempty"`
+
+	// ServiceExchangePops A list of object, referencing a `PointOfPresence`
+	// and providing additional path information, in case the services
+	// is tethered through another party.
+	ServiceExchangePops []*ServiceExchangePop `json:"service_exchange_pops,omitempty"`
 
 	// DeliveryMethod The exchange delivers the service over a `shared` or `dedicated` NNI.
 	DeliveryMethod *string `json:"delivery_method,omitempty"`
@@ -417,6 +549,27 @@ type CloudNetworkProductOfferingPatch struct {
 	// Only one network service configuration for each `handover` and
 	// `cloud_vlan` can be created.
 	Diversity *int `json:"diversity,omitempty"`
+
+	// NscSupportedCloudConfigPeeringTypes The supported peering types for the cloud network service.
+	//
+	// In case selecting a peering type is required, the
+	// `peering_type` property will be in the
+	// `nsc_required_cloud_config_fields` list.
+	NscSupportedCloudConfigPeeringTypes []string `json:"nsc_supported_cloud_config_peering_types,omitempty"`
+
+	// NscRequiredCloudConfigFields A list of required attributes in the `cloud_config` of a corresponding
+	// `NetworkServiceConfig`.
+	//
+	// For example: `"vlan"`, `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredCloudConfigFields []string `json:"nsc_required_cloud_config_fields,omitempty"`
+
+	// NscSupportedCloudConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"vlan"`, "`peering_type`",
+	// `"bgp_password"`, `"bgp_neighbor_address"`, ...
+	NscSupportedCloudConfigFields []string `json:"nsc_supported_cloud_config_fields,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -427,9 +580,9 @@ func (c CloudNetworkProductOfferingPatch) PolymorphicType() string {
 // ConnectionProductOffering Connection Product Offering
 type ConnectionProductOffering struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Connection Product Offering`.
 	ID string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -439,19 +592,15 @@ type ConnectionProductOffering struct {
 	DisplayName string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -460,7 +609,6 @@ type ConnectionProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -469,7 +617,6 @@ type ConnectionProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -477,7 +624,6 @@ type ConnectionProductOffering struct {
 	PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -496,15 +642,60 @@ type ConnectionProductOffering struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// CrossConnectInitiator A cross connect can be initiated by either the
@@ -516,7 +707,6 @@ type ConnectionProductOffering struct {
 
 	// HandoverPop The ID of the point of presence (see `/pops`), where
 	// the physical port will be present.
-	//
 	HandoverPop *string `json:"handover_pop,omitempty"`
 
 	// MaximumPortQuantity The maximum amount of ports which can be aggregated
@@ -539,9 +729,9 @@ func (c ConnectionProductOffering) PolymorphicType() string {
 // ConnectionProductOfferingPatch Conncetion Product Offering
 type ConnectionProductOfferingPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Conncetion Product Offering`.
 	ID *string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -551,19 +741,15 @@ type ConnectionProductOfferingPatch struct {
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType *string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -572,7 +758,6 @@ type ConnectionProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -581,7 +766,6 @@ type ConnectionProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -589,7 +773,6 @@ type ConnectionProductOfferingPatch struct {
 	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider *string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -608,15 +791,60 @@ type ConnectionProductOfferingPatch struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// CrossConnectInitiator A cross connect can be initiated by either the
@@ -628,7 +856,6 @@ type ConnectionProductOfferingPatch struct {
 
 	// HandoverPop The ID of the point of presence (see `/pops`), where
 	// the physical port will be present.
-	//
 	HandoverPop *string `json:"handover_pop,omitempty"`
 
 	// MaximumPortQuantity The maximum amount of ports which can be aggregated
@@ -650,8 +877,10 @@ func (c ConnectionProductOfferingPatch) PolymorphicType() string {
 
 // Device Device
 type Device struct {
+	// ID The *primary identifier* of the `Device`.
+	ID string `json:"id,omitempty"`
+
 	// Name Name of the device
-	//
 	Name string `json:"name,omitempty"`
 
 	// Pop The `PointOfPresence` the device is in.
@@ -663,26 +892,20 @@ type Device struct {
 	// Facility Identifier of the facility where the device
 	// is physically based.
 	Facility string `json:"facility,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 }
 
 // DeviceCapability Device Capability
 type DeviceCapability struct {
 	// MediaType The media type of the port (e.g. 1000BASE-LX, 10GBASE-LR, ...)
-	//
 	MediaType string `json:"media_type,omitempty"`
 
 	// Speed Speed of port in Mbit/s
-	//
 	Speed int `json:"speed,omitempty"`
 
 	// MaxLag Maximum count of ports which can be bundled to a max_lag
 	MaxLag int `json:"max_lag,omitempty"`
 
 	// Availability Count of available ports on device
-	//
 	Availability int `json:"availability,omitempty"`
 }
 
@@ -691,22 +914,22 @@ type DeviceConnection struct {
 	// CapacityMax is a capacity_max
 	CapacityMax int `json:"capacity_max,omitempty"`
 
-	// Device is a device
+	// Device The `id` of the related `Device`.
 	Device string `json:"device,omitempty"`
 
-	// ConnectedDevice is a connected_device
+	// ConnectedDevice The `id` of the related `Device`.
 	ConnectedDevice string `json:"connected_device,omitempty"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Device Connection`.
 	ID string `json:"id,omitempty"`
 }
 
 // ExchangeLanNetworkProductOffering Exchange Lan Network Product Offering
 type ExchangeLanNetworkProductOffering struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Exchange Lan Network Product Offering`.
 	ID string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -716,19 +939,15 @@ type ExchangeLanNetworkProductOffering struct {
 	DisplayName string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -737,7 +956,6 @@ type ExchangeLanNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -746,7 +964,6 @@ type ExchangeLanNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -754,7 +971,6 @@ type ExchangeLanNetworkProductOffering struct {
 	PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -773,15 +989,60 @@ type ExchangeLanNetworkProductOffering struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -793,7 +1054,6 @@ type ExchangeLanNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -802,7 +1062,6 @@ type ExchangeLanNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -812,6 +1071,20 @@ type ExchangeLanNetworkProductOffering struct {
 	// BandwidthMax When not `null`, this value enforces a mandatory
 	// rate limit for all network service configs.
 	BandwidthMax int `json:"bandwidth_max,omitempty"`
+
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
 
 	// ExchangeLanNetworkService The id of the exchange lan network service.
 	ExchangeLanNetworkService string `json:"exchange_lan_network_service,omitempty"`
@@ -825,9 +1098,9 @@ func (e ExchangeLanNetworkProductOffering) PolymorphicType() string {
 // ExchangeLanNetworkProductOfferingPatch Exchange Lan Network Product Offering
 type ExchangeLanNetworkProductOfferingPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Exchange Lan Network Product Offering`.
 	ID *string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -837,19 +1110,15 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType *string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -858,7 +1127,6 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -867,7 +1135,6 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -875,7 +1142,6 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider *string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -894,15 +1160,60 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -914,7 +1225,6 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -923,7 +1233,6 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -933,6 +1242,20 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 	// BandwidthMax When not `null`, this value enforces a mandatory
 	// rate limit for all network service configs.
 	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
 
 	// ExchangeLanNetworkService The id of the exchange lan network service.
 	ExchangeLanNetworkService *string `json:"exchange_lan_network_service,omitempty"`
@@ -945,16 +1268,16 @@ func (e ExchangeLanNetworkProductOfferingPatch) PolymorphicType() string {
 
 // Facility Facility
 type Facility struct {
+	// ID The *primary identifier* of the `Facility`.
+	ID string `json:"id,omitempty"`
+
 	// Name Name of the Datacenter as called by the operator
-	//
 	Name string `json:"name,omitempty"`
 
 	// MetroArea Id of the `MetroArea` the DC is located in.
-	//
 	MetroArea string `json:"metro_area,omitempty"`
 
 	// AddressCountry ISO 3166-1 alpha-2 country code, for example DE
-	//
 	AddressCountry string `json:"address_country,omitempty"`
 
 	// AddressLocality The locality/city. For example, Mountain View.
@@ -971,34 +1294,27 @@ type Facility struct {
 
 	// PeeringdbFacilityID [PeeringDB](https://www.peeringdb.com) facitlity ID,
 	// can be extracted from the url https://www.peeringdb.com/fac/$id
-	//
 	PeeringdbFacilityID *int `json:"peeringdb_facility_id,omitempty"`
 
 	// OrganisationName Name of Datacenter operator
-	//
 	OrganisationName string `json:"organisation_name,omitempty"`
 
 	// Pops List of pops reachable from the `Facility`.
 	Pops []string `json:"pops,omitempty"`
 
 	// Latitude Latitude of the facility's location.
-	//
 	Latitude *float64 `json:"latitude,omitempty"`
 
 	// Longitude Longitude of the facility's location.
-	//
 	Longitude *float64 `json:"longitude,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 }
 
 // MP2MPNetworkProductOffering MP2MP Network Product Offering
 type MP2MPNetworkProductOffering struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `MP2MP Network Product Offering`.
 	ID string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -1008,19 +1324,15 @@ type MP2MPNetworkProductOffering struct {
 	DisplayName string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -1029,7 +1341,6 @@ type MP2MPNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -1038,7 +1349,6 @@ type MP2MPNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -1046,7 +1356,6 @@ type MP2MPNetworkProductOffering struct {
 	PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -1065,15 +1374,60 @@ type MP2MPNetworkProductOffering struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -1085,7 +1439,6 @@ type MP2MPNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -1094,7 +1447,6 @@ type MP2MPNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -1104,6 +1456,20 @@ type MP2MPNetworkProductOffering struct {
 	// BandwidthMax When not `null`, this value enforces a mandatory
 	// rate limit for all network service configs.
 	BandwidthMax int `json:"bandwidth_max,omitempty"`
+
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -1114,9 +1480,9 @@ func (m MP2MPNetworkProductOffering) PolymorphicType() string {
 // MP2MPNetworkProductOfferingPatch MP2MP Network Product Offering
 type MP2MPNetworkProductOfferingPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `MP2MP Network Product Offering`.
 	ID *string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -1126,19 +1492,15 @@ type MP2MPNetworkProductOfferingPatch struct {
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType *string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -1147,7 +1509,6 @@ type MP2MPNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -1156,7 +1517,6 @@ type MP2MPNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -1164,7 +1524,6 @@ type MP2MPNetworkProductOfferingPatch struct {
 	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider *string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -1183,15 +1542,60 @@ type MP2MPNetworkProductOfferingPatch struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -1203,7 +1607,6 @@ type MP2MPNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -1212,7 +1615,6 @@ type MP2MPNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -1222,6 +1624,20 @@ type MP2MPNetworkProductOfferingPatch struct {
 	// BandwidthMax When not `null`, this value enforces a mandatory
 	// rate limit for all network service configs.
 	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -1231,20 +1647,17 @@ func (m MP2MPNetworkProductOfferingPatch) PolymorphicType() string {
 
 // MetroArea MetroArea
 type MetroArea struct {
-	// ID is a id
+	// ID The *primary identifier* of the `MetroArea`.
 	ID string `json:"id,omitempty"`
 
 	// UnLocode The UN/LOCODE for identifying the metro area.
-	//
 	UnLocode string `json:"un_locode,omitempty"`
 
 	// IataCode The three letter IATA airport code for identiying the
 	// metro area.
-	//
 	IataCode string `json:"iata_code,omitempty"`
 
 	// DisplayName The name of the metro area. Likely the same as the IATA code.
-	//
 	DisplayName string `json:"display_name,omitempty"`
 
 	// Facilities List of facilities the metro area network.
@@ -1256,32 +1669,29 @@ type MetroArea struct {
 
 // MetroAreaNetwork MetroAreaNetwork
 type MetroAreaNetwork struct {
+	// ID The *primary identifier* of the `MetroAreaNetwork`.
+	ID string `json:"id,omitempty"`
+
 	// Name The name of the metro area network.
-	//
 	Name string `json:"name,omitempty"`
 
 	// MetroArea The id of the metro area.
-	//
 	MetroArea string `json:"metro_area,omitempty"`
 
 	// ServiceProvider The service provider is operating the network.
 	// Usually the exchange.
-	//
 	ServiceProvider string `json:"service_provider,omitempty"`
 
 	// Pops List of pops in the metro area network.
 	Pops []string `json:"pops,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 }
 
 // P2MPNetworkProductOffering P2MP Network Product Offering
 type P2MPNetworkProductOffering struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `P2MP Network Product Offering`.
 	ID string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -1291,19 +1701,15 @@ type P2MPNetworkProductOffering struct {
 	DisplayName string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -1312,7 +1718,6 @@ type P2MPNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -1321,7 +1726,6 @@ type P2MPNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -1329,7 +1733,6 @@ type P2MPNetworkProductOffering struct {
 	PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -1348,15 +1751,60 @@ type P2MPNetworkProductOffering struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -1368,7 +1816,6 @@ type P2MPNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -1377,7 +1824,6 @@ type P2MPNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -1387,6 +1833,20 @@ type P2MPNetworkProductOffering struct {
 	// BandwidthMax When not `null`, this value enforces a mandatory
 	// rate limit for all network service configs.
 	BandwidthMax int `json:"bandwidth_max,omitempty"`
+
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -1397,9 +1857,9 @@ func (p P2MPNetworkProductOffering) PolymorphicType() string {
 // P2MPNetworkProductOfferingPatch P2MP Network Product Offering
 type P2MPNetworkProductOfferingPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `P2MP Network Product Offering`.
 	ID *string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -1409,19 +1869,15 @@ type P2MPNetworkProductOfferingPatch struct {
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType *string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -1430,7 +1886,6 @@ type P2MPNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -1439,7 +1894,6 @@ type P2MPNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -1447,7 +1901,6 @@ type P2MPNetworkProductOfferingPatch struct {
 	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider *string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -1466,15 +1919,60 @@ type P2MPNetworkProductOfferingPatch struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -1486,7 +1984,6 @@ type P2MPNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -1495,7 +1992,6 @@ type P2MPNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -1505,6 +2001,20 @@ type P2MPNetworkProductOfferingPatch struct {
 	// BandwidthMax When not `null`, this value enforces a mandatory
 	// rate limit for all network service configs.
 	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -1515,9 +2025,9 @@ func (p P2MPNetworkProductOfferingPatch) PolymorphicType() string {
 // P2PNetworkProductOffering P2P Network Product Offering
 type P2PNetworkProductOffering struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `P2P Network Product Offering`.
 	ID string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -1527,19 +2037,15 @@ type P2PNetworkProductOffering struct {
 	DisplayName string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -1548,7 +2054,6 @@ type P2PNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -1557,7 +2062,6 @@ type P2PNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -1565,7 +2069,6 @@ type P2PNetworkProductOffering struct {
 	PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -1584,15 +2087,60 @@ type P2PNetworkProductOffering struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -1604,7 +2152,6 @@ type P2PNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -1613,7 +2160,6 @@ type P2PNetworkProductOffering struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -1623,6 +2169,20 @@ type P2PNetworkProductOffering struct {
 	// BandwidthMax When not `null`, this value enforces a mandatory
 	// rate limit for all network service configs.
 	BandwidthMax int `json:"bandwidth_max,omitempty"`
+
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -1633,9 +2193,9 @@ func (p P2PNetworkProductOffering) PolymorphicType() string {
 // P2PNetworkProductOfferingPatch P2P Network Product Offering
 type P2PNetworkProductOfferingPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `P2P Network Product Offering`.
 	ID *string `json:"id,omitempty"`
 
 	// Name Name of the product
@@ -1645,19 +2205,15 @@ type P2PNetworkProductOfferingPatch struct {
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// ExchangeLogo An URI referencing the logo of the internet exchange.
-	//
 	ExchangeLogo *string `json:"exchange_logo,omitempty"`
 
 	// ServiceProviderLogo An URI referencing the logo of the service provider.
-	//
 	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
 
 	// ProductLogo An URI referencing a logo for the product offered.
-	//
 	ProductLogo *string `json:"product_logo,omitempty"`
 
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType *string `json:"resource_type,omitempty"`
 
 	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
@@ -1666,7 +2222,6 @@ type P2PNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
 
 	// HandoverMetroArea Id of the `MetroArea`. The network service will be
@@ -1675,7 +2230,6 @@ type P2PNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `handover_metro_area` refers
 	// to the A-side of the point-to-point connection.
 	// The A-side is the entity which initiates the network service creation.
-	//
 	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
 
 	// PhysicalPortSpeed If the service is dependent on the speed of
@@ -1683,7 +2237,6 @@ type P2PNetworkProductOfferingPatch struct {
 	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
 
 	// ServiceProvider The name of the provider providing the service.
-	//
 	ServiceProvider *string `json:"service_provider,omitempty"`
 
 	// DowngradeAllowed Indicates if the service can be migrated to
@@ -1702,15 +2255,60 @@ type P2PNetworkProductOfferingPatch struct {
 	// this point in time.
 	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
 
-	// ContractTerms The contract terms informally describe the contract period and
-	// renewals.
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
 	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
-	// NoticePeriod The notice period informally states constraints
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
-	//
 	NoticePeriod *string `json:"notice_period,omitempty"`
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
@@ -1722,7 +2320,6 @@ type P2PNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area_network` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroAreaNetwork *string `json:"service_metro_area_network,omitempty"`
 
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
@@ -1731,7 +2328,6 @@ type P2PNetworkProductOfferingPatch struct {
 	// In case of a `p2p_vc`, the `service_metro_area` refers
 	// to the B-side of the point-to-point connection.
 	// The B-side is the accepting party.
-	//
 	ServiceMetroArea *string `json:"service_metro_area,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
@@ -1741,6 +2337,20 @@ type P2PNetworkProductOfferingPatch struct {
 	// BandwidthMax When not `null`, this value enforces a mandatory
 	// rate limit for all network service configs.
 	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+
+	// NscRequiredL3ConfigFields A list of required attributes in the `l3_config` of a corresponding
+	// `NetworkServiceConfig` when used with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"bgp_neighbor_asn"`, `"local_address_primary"`, ...
+	NscRequiredL3ConfigFields []string `json:"nsc_required_l3_config_fields,omitempty"`
+
+	// NscSupportedL3ConfigFields The list of fields which are supported in the `l3_config`
+	// when creating the network service config with a `routing_function`.
+	//
+	// For example:  `"bgp_password"`, `"bgp_neighbor_address"`
+	// `"local_address_primary"`, ...
+	NscSupportedL3ConfigFields []string `json:"nsc_supported_l3_config_fields,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -1756,14 +2366,17 @@ type PointOfPresence struct {
 	// Facility The pop is located in this `Facility`.
 	Facility string `json:"facility,omitempty"`
 
-	// MetroAreaNetwork is a metro_area_network
+	// MetroAreaNetwork The `id` of the related `MetroAreaNetwork`.
 	MetroAreaNetwork string `json:"metro_area_network,omitempty"`
 
-	// Devices is a devices
+	// Devices A list of `id`s of the related `Device`.
 	Devices []string `json:"devices,omitempty"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Point Of Presence`.
 	ID string `json:"id,omitempty"`
+
+	// AvailabilityZone Availability zone of the pop.
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
 }
 
 // ProductOffering Polymorphic Product Offering
@@ -1799,6 +2412,9 @@ const P2MPNetworkProductOfferingType = "p2mp_vc"
 // CloudNetworkProductOfferingType is a polymorphic type value for CloudNetworkProductOffering
 const CloudNetworkProductOfferingType = "cloud_vc"
 
+// RoutingFunctionProductOfferingType is a polymorphic type value for RoutingFunctionProductOffering
+const RoutingFunctionProductOfferingType = "routing_function"
+
 // ProductOfferingPatch Polymorphic Product Offering
 type ProductOfferingPatch interface {
 	Polymorphic
@@ -1832,15 +2448,370 @@ const P2MPNetworkProductOfferingPatchType = "p2mp_vc"
 // CloudNetworkProductOfferingPatchType is a polymorphic type value for CloudNetworkProductOfferingPatch
 const CloudNetworkProductOfferingPatchType = "cloud_vc"
 
+// RoutingFunctionProductOfferingPatchType is a polymorphic type value for RoutingFunctionProductOfferingPatch
+const RoutingFunctionProductOfferingPatchType = "routing_function"
+
+// RoutingFunctionProductOffering Routing Function Product Offering
+type RoutingFunctionProductOffering struct {
+	// Type is a type
+	Type string `json:"type"`
+
+	// ID The *primary identifier* of the `Routing Function Product Offering`.
+	ID string `json:"id,omitempty"`
+
+	// Name Name of the product
+	Name string `json:"name,omitempty"`
+
+	// DisplayName is a display_name
+	DisplayName string `json:"display_name,omitempty"`
+
+	// ExchangeLogo An URI referencing the logo of the internet exchange.
+	ExchangeLogo *string `json:"exchange_logo,omitempty"`
+
+	// ServiceProviderLogo An URI referencing the logo of the service provider.
+	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
+
+	// ProductLogo An URI referencing a logo for the product offered.
+	ProductLogo *string `json:"product_logo,omitempty"`
+
+	// ResourceType The resource type refers to an ix-api resource.
+	ResourceType string `json:"resource_type,omitempty"`
+
+	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
+	// through the handover metro area network.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
+
+	// HandoverMetroArea Id of the `MetroArea`. The network service will be
+	// accessed from this metro area.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	HandoverMetroArea string `json:"handover_metro_area,omitempty"`
+
+	// PhysicalPortSpeed If the service is dependent on the speed of
+	// the physical port this field denotes the speed.
+	PhysicalPortSpeed int `json:"physical_port_speed,omitempty"`
+
+	// ServiceProvider The name of the provider providing the service.
+	ServiceProvider string `json:"service_provider,omitempty"`
+
+	// DowngradeAllowed Indicates if the service can be migrated to
+	// a lower bandwidth.
+	DowngradeAllowed bool `json:"downgrade_allowed,omitempty"`
+
+	// UpgradeAllowed Indicates if the service can be migrated to
+	// a higher bandwidth.
+	UpgradeAllowed bool `json:"upgrade_allowed,omitempty"`
+
+	// OrderableNotBefore This product offering becomes available for ordering after
+	// this point in time.
+	OrderableNotBefore *time.Time `json:"orderable_not_before,omitempty"`
+
+	// OrderableNotAfter This product offering will become unavailable for ordering after
+	// this point in time.
+	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
+
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
+	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
+	ContractTerms *string `json:"contract_terms,omitempty"`
+
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
+	// which define when the client needs to inform the
+	// IXP in order to prevent renewal of the contract.
+	NoticePeriod *string `json:"notice_period,omitempty"`
+
+	// BandwidthMin The minimum bandwidth of the routing service in Mbit/s.
+	BandwidthMin int `json:"bandwidth_min,omitempty"`
+
+	// BandwidthMax The maximum bandwidth of the routing service in Mbit/s.
+	BandwidthMax int `json:"bandwidth_max,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (r RoutingFunctionProductOffering) PolymorphicType() string {
+	return RoutingFunctionProductOfferingType
+}
+
+// RoutingFunctionProductOfferingPatch Routing Function Product Offering
+type RoutingFunctionProductOfferingPatch struct {
+	// Type is a type
+	Type string `json:"type"`
+
+	// ID The *primary identifier* of the `Routing Function Product Offering`.
+	ID *string `json:"id,omitempty"`
+
+	// Name Name of the product
+	Name *string `json:"name,omitempty"`
+
+	// DisplayName is a display_name
+	DisplayName *string `json:"display_name,omitempty"`
+
+	// ExchangeLogo An URI referencing the logo of the internet exchange.
+	ExchangeLogo *string `json:"exchange_logo,omitempty"`
+
+	// ServiceProviderLogo An URI referencing the logo of the service provider.
+	ServiceProviderLogo *string `json:"service_provider_logo,omitempty"`
+
+	// ProductLogo An URI referencing a logo for the product offered.
+	ProductLogo *string `json:"product_logo,omitempty"`
+
+	// ResourceType The resource type refers to an ix-api resource.
+	ResourceType *string `json:"resource_type,omitempty"`
+
+	// HandoverMetroAreaNetwork Id of the `MetroAreaNetwork`. The service will be accessed
+	// through the handover metro area network.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area_network` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	HandoverMetroAreaNetwork *string `json:"handover_metro_area_network,omitempty"`
+
+	// HandoverMetroArea Id of the `MetroArea`. The network service will be
+	// accessed from this metro area.
+	//
+	// In case of a `p2p_vc`, the `handover_metro_area` refers
+	// to the A-side of the point-to-point connection.
+	// The A-side is the entity which initiates the network service creation.
+	HandoverMetroArea *string `json:"handover_metro_area,omitempty"`
+
+	// PhysicalPortSpeed If the service is dependent on the speed of
+	// the physical port this field denotes the speed.
+	PhysicalPortSpeed *int `json:"physical_port_speed,omitempty"`
+
+	// ServiceProvider The name of the provider providing the service.
+	ServiceProvider *string `json:"service_provider,omitempty"`
+
+	// DowngradeAllowed Indicates if the service can be migrated to
+	// a lower bandwidth.
+	DowngradeAllowed *bool `json:"downgrade_allowed,omitempty"`
+
+	// UpgradeAllowed Indicates if the service can be migrated to
+	// a higher bandwidth.
+	UpgradeAllowed *bool `json:"upgrade_allowed,omitempty"`
+
+	// OrderableNotBefore This product offering becomes available for ordering after
+	// this point in time.
+	OrderableNotBefore *time.Time `json:"orderable_not_before,omitempty"`
+
+	// OrderableNotAfter This product offering will become unavailable for ordering after
+	// this point in time.
+	OrderableNotAfter *time.Time `json:"orderable_not_after,omitempty"`
+
+	// ContractTerms This property informally describe the contract's notice- and
+	// renewal periods as well as additional terms.
+	//
+	// **Note**: This property contains informal information about
+	// the contract. For a structured representation see:
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// **Example**: A contract with the terms
+	// _"initially two weeks, renewing for six month afterwards, cancelable with a notice period of one month after and within 5 days during the initial period"_
+	// can be represented as:
+	// * `contract_initial_period: "P2W"`
+	// * `contract_initial_notice_period: "P5D"`
+	// * `contract_renewal_period: "P6M"`
+	// * `contract_renewal_notice_period: "P1M"`
+	ContractTerms *string `json:"contract_terms,omitempty"`
+
+	// ContractInitialPeriod _**Format:** ISO8601 Duration_
+	//
+	// The initial duration of the contract. The contract will be
+	// renewed after this period for the duration of `contract_renewal_period`.
+	ContractInitialPeriod *string `json:"contract_initial_period,omitempty"`
+
+	// ContractInitialNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period for canceling the contract within
+	// the initial period.
+	ContractInitialNoticePeriod *string `json:"contract_initial_notice_period,omitempty"`
+
+	// ContractRenewalPeriod _**Format:** ISO8601 Duration_
+	//
+	// The duration for which the contract will be renewed after
+	// the initial period.
+	//
+	// Unless the contract is canceled, it will be
+	// automatically renewed after the period.
+	// Cancellation has to be done within the
+	// `contract_renewal_notice_period`.
+	ContractRenewalPeriod *string `json:"contract_renewal_period,omitempty"`
+
+	// ContractRenewalNoticePeriod _**Format:** ISO8601 Duration_
+	//
+	// The notice period denotes the time before the end of the
+	// `contract_renewal_period` in which the client has to inform
+	// the IXP in order to prevent renewal of the contract.
+	ContractRenewalNoticePeriod *string `json:"contract_renewal_notice_period,omitempty"`
+
+	// NoticePeriod **DEPRECATION NOTICE**: This property will be replaced by
+	// `contract_initial_period`, `contract_initial_notice_period`,
+	// `contract_renewal_period` and `contract_renewal_notice_period`.
+	//
+	// The notice period informally states constraints
+	// which define when the client needs to inform the
+	// IXP in order to prevent renewal of the contract.
+	NoticePeriod *string `json:"notice_period,omitempty"`
+
+	// BandwidthMin The minimum bandwidth of the routing service in Mbit/s.
+	BandwidthMin *int `json:"bandwidth_min,omitempty"`
+
+	// BandwidthMax The maximum bandwidth of the routing service in Mbit/s.
+	BandwidthMax *int `json:"bandwidth_max,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (r RoutingFunctionProductOfferingPatch) PolymorphicType() string {
+	return RoutingFunctionProductOfferingPatchType
+}
+
+// ServiceExchangePop Service Exchange PoP
+//
+// A list of object, referencing a `PointOfPresence`
+// and providing additional path information, in case the services
+// is tethered through another party.
+type ServiceExchangePop struct {
+	// Pop The `id` of the `PointOfPresence` the service is provided.
+	Pop string `json:"pop,omitempty"`
+
+	// PathInfo An *optional* text property that describes the path of the service
+	// where it is tethered through another party.
+	PathInfo *string `json:"path_info,omitempty"`
+}
+
+// CloudConfig The `CloudConfig` provides additional configuration for
+// creating the `NetworkServiceConfig` on the cloud provider
+// side.
+//
+// The `nsc_required_cloud_config_fields` and
+// `nsc_supported_cloud_config_fields` attributes of the
+// `ProductOffering` specifies which fields are required
+// or can be optionally supplied.
+//
+// When creating the `NetworkServiceConfig` with a `l3_config`
+// and a `routing_functions`, some required fields
+// will automatically be derived from the `l3_config`
+// and can be ommitted.
+//
+// Values in the `cloud_config` will have precedence
+// over the `l3_config`.
+type CloudConfig struct {
+	// BGPPassword The password to use for BGP sessions.
+	BGPPassword *string `json:"bgp_password,omitempty"`
+
+	// BGPNeighborAddress The IP address of the BGP neighbor.
+	BGPNeighborAddress *string `json:"bgp_neighbor_address,omitempty"`
+
+	// BGPNeighborAddressPrimary The primary IP address of the BGP neighbor.
+	BGPNeighborAddressPrimary *string `json:"bgp_neighbor_address_primary,omitempty"`
+
+	// BGPNeighborAddressSecondary The secondary IP address of the BGP neighbor.
+	BGPNeighborAddressSecondary *string `json:"bgp_neighbor_address_secondary,omitempty"`
+
+	// BGPNeighborASN The ASN of the BGP neighbor.
+	BGPNeighborASN *int `json:"bgp_neighbor_asn,omitempty"`
+
+	// BGPAddressFamily is a bgp_address_family
+	BGPAddressFamily *string `json:"bgp_address_family,omitempty"`
+
+	// Bfd Enable BFD for the BGP session.
+	Bfd *bool `json:"bfd,omitempty"`
+
+	// LocalASN The local ASN.
+	LocalASN *int `json:"local_asn,omitempty"`
+
+	// LocalAddress The IP address of the router function instance
+	// in CIDR notation.
+	LocalAddress *string `json:"local_address,omitempty"`
+
+	// LocalAddressPrimary The primary IP address of the router function instance
+	// in CIDR notation.
+	LocalAddressPrimary *string `json:"local_address_primary,omitempty"`
+
+	// LocalAddressSecondary The secondary IP address of the router function instance
+	// in CIDR notation.
+	LocalAddressSecondary *string `json:"local_address_secondary,omitempty"`
+
+	// VLAN If the `provider_vlans` property of the `ProductOffering` is
+	// `multi`, a numeric value refers to a specific vlan on the service
+	// provider side.
+	//
+	// The `nsc_required_cloud_config_fields` attribute of the
+	// `ProductOffering` will include `vlan` if `provider_vlans` are
+	// `multi`.
+	VLAN *int `json:"vlan,omitempty"`
+
+	// PeeringType Some `cloud_vc` network services require selecting
+	// a peering type.
+	//
+	// See the `nsc_supported_cloud_config_peering_types` attribute of the corresponding
+	// `ProductOffering` for valid values.
+	PeeringType *string `json:"peering_type,omitempty"`
+}
+
 // CloudNetworkServiceConfig Cloud Network Service Config
 type CloudNetworkServiceConfig struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// DecommissionAt The service will be decommissioned on this date.
@@ -1848,6 +2819,7 @@ type CloudNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -1868,37 +2840,31 @@ type CloudNetworkServiceConfig struct {
 	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
-	// ID is a id
-	ID string `json:"id,omitempty"`
-
-	// NetworkService The id of the configured network service.
+	// NetworkService The id of the configured `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -1914,13 +2880,47 @@ type CloudNetworkServiceConfig struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `Cloud Network Service Config`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a polymorphic vlan configuration
@@ -1928,14 +2928,28 @@ type CloudNetworkServiceConfig struct {
 	// VLANConfigRaw contains the vlan config response data
 	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
 
+	// ProductOffering An optional id of a `ProductOffering`.
+	//
+	// Valid ids of product-offerings can be found in the
+	// `nsc_product_offerings` property of the `NetworkService`.
+	ProductOffering *string `json:"product_offering,omitempty"`
+
 	// Handover The handover enumerates the connection and is
 	// required for checking diversity constraints.
 	//
 	// It must be within `1 <= x <= network_service.diversity`.
-	//
 	Handover int `json:"handover,omitempty"`
 
-	// CloudVLAN If the `provider_vlans` property of the `ProductOffering` is
+	// CloudConfig is a cloud_config
+	CloudConfig *CloudConfig `json:"cloud_config,omitempty"`
+
+	// CloudVLAN **Deprecation Notice**: This field is deprecated and will
+	// be removed in favor of using the `cloud_config.vlan` property.
+	// The `ProductOffering` will include `vlan` in the
+	// `nsc_required_cloud_config_fields`, if `provider_vlans` are
+	// `multi`.
+	//
+	// If the `provider_vlans` property of the `ProductOffering` is
 	// `multi`, a numeric value refers to a specific vlan on the service
 	// provider side.
 	//
@@ -1946,7 +2960,11 @@ type CloudNetworkServiceConfig struct {
 	//
 	// If the `provider_vlans` property of the `ProductOffering` is `single`,
 	// the `cloud_vlan` MUST be `null` or MUST NOT be provided.
-	CloudVLAN int `json:"cloud_vlan,omitempty"`
+	CloudVLAN *int `json:"cloud_vlan,omitempty"`
+
+	// AvailabilityZone The availability zone that shall be used on the provider side.
+	// *(Sensitive Property)*
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -1957,36 +2975,30 @@ func (c CloudNetworkServiceConfig) PolymorphicType() string {
 // CloudNetworkServiceConfigPatch Cloud Network Service Config Update
 type CloudNetworkServiceConfigPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
-
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2002,23 +3014,74 @@ type CloudNetworkServiceConfigPatch struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `Cloud Network Service Config Update`.
+	ID *string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
 	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
+
+	// VLANConfig is a vlan_config
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+
+	// ProductOffering An optional id of a `ProductOffering`.
+	//
+	// Valid ids of product-offerings can be found in the
+	// `nsc_product_offerings` property of the `NetworkService`.
+	ProductOffering *string `json:"product_offering,omitempty"`
 
 	// Handover The handover enumerates the connection and is
 	// required for checking diversity constraints.
 	//
 	// It must be within `1 <= x <= network_service.diversity`.
-	//
 	Handover *int `json:"handover,omitempty"`
 
-	// CloudVLAN If the `provider_vlans` property of the `ProductOffering` is
+	// CloudConfig is a cloud_config
+	CloudConfig *CloudConfig `json:"cloud_config,omitempty"`
+
+	// CloudVLAN **Deprecation Notice**: This field is deprecated and will
+	// be removed in favor of using the `cloud_config.vlan` property.
+	// The `ProductOffering` will include `vlan` in the
+	// `nsc_required_cloud_config_fields`, if `provider_vlans` are
+	// `multi`.
+	//
+	// If the `provider_vlans` property of the `ProductOffering` is
 	// `multi`, a numeric value refers to a specific vlan on the service
 	// provider side.
 	//
@@ -2030,6 +3093,10 @@ type CloudNetworkServiceConfigPatch struct {
 	// If the `provider_vlans` property of the `ProductOffering` is `single`,
 	// the `cloud_vlan` MUST be `null` or MUST NOT be provided.
 	CloudVLAN *int `json:"cloud_vlan,omitempty"`
+
+	// AvailabilityZone The availability zone that shall be used on the provider side.
+	// *(Sensitive Property)*
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -2040,22 +3107,21 @@ func (c CloudNetworkServiceConfigPatch) PolymorphicType() string {
 // CloudNetworkServiceConfigRequest Cloud Network Service Config Request
 type CloudNetworkServiceConfigRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// NetworkService The id of the `NetworkService` to configure.
@@ -2063,13 +3129,11 @@ type CloudNetworkServiceConfigRequest struct {
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2085,26 +3149,74 @@ type CloudNetworkServiceConfigRequest struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `Cloud Network Service Config Request`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
+	// ProductOffering An optional id of a `ProductOffering`.
+	//
+	// Valid ids of product-offerings can be found in the
+	// `nsc_product_offerings` property of the `NetworkService`.
+	ProductOffering *string `json:"product_offering,omitempty"`
+
 	// Handover The handover enumerates the connection and is
 	// required for checking diversity constraints.
 	//
 	// It must be within `1 <= x <= network_service.diversity`.
-	//
 	Handover int `json:"handover,omitempty"`
 
-	// CloudVLAN If the `provider_vlans` property of the `ProductOffering` is
+	// CloudConfig is a cloud_config
+	CloudConfig *CloudConfig `json:"cloud_config,omitempty"`
+
+	// CloudVLAN **Deprecation Notice**: This field is deprecated and will
+	// be removed in favor of using the `cloud_config.vlan` property.
+	// The `ProductOffering` will include `vlan` in the
+	// `nsc_required_cloud_config_fields`, if `provider_vlans` are
+	// `multi`.
+	//
+	// If the `provider_vlans` property of the `ProductOffering` is
 	// `multi`, a numeric value refers to a specific vlan on the service
 	// provider side.
 	//
@@ -2115,7 +3227,11 @@ type CloudNetworkServiceConfigRequest struct {
 	//
 	// If the `provider_vlans` property of the `ProductOffering` is `single`,
 	// the `cloud_vlan` MUST be `null` or MUST NOT be provided.
-	CloudVLAN int `json:"cloud_vlan,omitempty"`
+	CloudVLAN *int `json:"cloud_vlan,omitempty"`
+
+	// AvailabilityZone The availability zone that shall be used on the provider side.
+	// *(Sensitive Property)*
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -2126,36 +3242,30 @@ func (c CloudNetworkServiceConfigRequest) PolymorphicType() string {
 // CloudNetworkServiceConfigUpdate Cloud Network Service Config Update
 type CloudNetworkServiceConfigUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
-
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2171,23 +3281,74 @@ type CloudNetworkServiceConfigUpdate struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `Cloud Network Service Config Update`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
+
+	// VLANConfig is a vlan_config
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+
+	// ProductOffering An optional id of a `ProductOffering`.
+	//
+	// Valid ids of product-offerings can be found in the
+	// `nsc_product_offerings` property of the `NetworkService`.
+	ProductOffering *string `json:"product_offering,omitempty"`
 
 	// Handover The handover enumerates the connection and is
 	// required for checking diversity constraints.
 	//
 	// It must be within `1 <= x <= network_service.diversity`.
-	//
 	Handover int `json:"handover,omitempty"`
 
-	// CloudVLAN If the `provider_vlans` property of the `ProductOffering` is
+	// CloudConfig is a cloud_config
+	CloudConfig *CloudConfig `json:"cloud_config,omitempty"`
+
+	// CloudVLAN **Deprecation Notice**: This field is deprecated and will
+	// be removed in favor of using the `cloud_config.vlan` property.
+	// The `ProductOffering` will include `vlan` in the
+	// `nsc_required_cloud_config_fields`, if `provider_vlans` are
+	// `multi`.
+	//
+	// If the `provider_vlans` property of the `ProductOffering` is
 	// `multi`, a numeric value refers to a specific vlan on the service
 	// provider side.
 	//
@@ -2198,7 +3359,11 @@ type CloudNetworkServiceConfigUpdate struct {
 	//
 	// If the `provider_vlans` property of the `ProductOffering` is `single`,
 	// the `cloud_vlan` MUST be `null` or MUST NOT be provided.
-	CloudVLAN int `json:"cloud_vlan,omitempty"`
+	CloudVLAN *int `json:"cloud_vlan,omitempty"`
+
+	// AvailabilityZone The availability zone that shall be used on the provider side.
+	// *(Sensitive Property)*
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -2208,10 +3373,12 @@ func (c CloudNetworkServiceConfigUpdate) PolymorphicType() string {
 
 // Connection Connection
 type Connection struct {
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// DecommissionAt The service will be decommissioned on this date.
@@ -2219,6 +3386,7 @@ type Connection struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -2241,29 +3409,26 @@ type Connection struct {
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2279,7 +3444,11 @@ type Connection struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
+
+	// ID The *primary identifier* of the `Connection`.
+	ID string `json:"id,omitempty"`
 
 	// Mode Sets the mode of the connection. The mode can be:
 	//
@@ -2288,19 +3457,14 @@ type Connection struct {
 	// - `flex_ethernet`: connect is build as a FlexEthernet channel
 	// - `standalone`: only one port is allowed in this connection without
 	// any bundling.
-	//
 	Mode string `json:"mode,omitempty"`
 
 	// LacpTimeout This sets the LACP Timeout mode. Both ends of the connections need
 	// to be configured the same.
-	//
 	LacpTimeout *string `json:"lacp_timeout,omitempty"`
 
 	// ProductOffering The product offering must match the type `connection`.
 	ProductOffering string `json:"product_offering,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// Name is a name
 	Name string `json:"name,omitempty"`
@@ -2308,7 +3472,6 @@ type Connection struct {
 	// Ports References to the port belonging to this connection. Typically
 	// all ports within one connection are distributed over the same
 	// device.
-	//
 	Ports []string `json:"ports,omitempty"`
 
 	// PortReservations A list of `port-reservations` for this connection.
@@ -2316,20 +3479,17 @@ type Connection struct {
 
 	// Pop The ID of the point of presence (see `/pops`), where
 	// the physical port(s) are present.
-	//
 	Pop string `json:"pop,omitempty"`
 
 	// Speed Shows the total bandwidth of the connection in Mbit/s.
-	//
 	Speed *int `json:"speed,omitempty"`
 
-	// CapacityAllocated Sum of the bandwidth of all network services using
-	// the connection in Mbit/s.
+	// CapacityAllocated Sum of the bandwidth of all network service configs
+	// using the connection in Mbit/s.
 	CapacityAllocated int `json:"capacity_allocated,omitempty"`
 
 	// CapacityAllocationLimit Maximum allocatable capacity of the connection in Mbit/s.
 	// When `null`, the exchange does not impose any limit.
-	//
 	CapacityAllocationLimit int `json:"capacity_allocation_limit,omitempty"`
 
 	// VLANTypes A list of vlan config types you can configure using
@@ -2337,7 +3497,6 @@ type Connection struct {
 	VLANTypes []string `json:"vlan_types,omitempty"`
 
 	// OuterVLANEthertypes The ethertype of the outer tag in hexadecimal notation.
-	//
 	OuterVLANEthertypes []string `json:"outer_vlan_ethertypes,omitempty"`
 
 	// PortQuantity The number of ports which should be allocated
@@ -2352,7 +3511,6 @@ type Connection struct {
 	//
 	// The subscriber needs to provide a
 	// list of demarc information.
-	//
 	//
 	// At least one needs to be provided, but not more than
 	// `port_quantity`.
@@ -2372,35 +3530,40 @@ type Connection struct {
 	// This field can be omitted, when the cross connect
 	// initiator is the `subscriber`.
 	SubscriberSideDemarcs []string `json:"subscriber_side_demarcs,omitempty"`
+
+	// MetroArea Optional ID of the service metro area the connection
+	// is provided in.
+	MetroArea *string `json:"metro_area,omitempty"`
+
+	// MetroAreaNetwork Optional ID of the service metro area network the
+	// connection is present on.
+	MetroAreaNetwork *string `json:"metro_area_network,omitempty"`
 }
 
 // ConnectionPatch Connection Update
 type ConnectionPatch struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2416,7 +3579,11 @@ type ConnectionPatch struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
+
+	// ID The *primary identifier* of the `Connection Update`.
+	ID *string `json:"id,omitempty"`
 
 	// Mode Sets the mode of the connection. The mode can be:
 	//
@@ -2425,12 +3592,10 @@ type ConnectionPatch struct {
 	// - `flex_ethernet`: connect is build as a FlexEthernet channel
 	// - `standalone`: only one port is allowed in this connection without
 	// any bundling.
-	//
 	Mode *string `json:"mode,omitempty"`
 
 	// LacpTimeout This sets the LACP Timeout mode. Both ends of the connections need
 	// to be configured the same.
-	//
 	LacpTimeout *string `json:"lacp_timeout,omitempty"`
 
 	// ProductOffering The product offering must match the type `connection`.
@@ -2441,29 +3606,26 @@ type ConnectionPatch struct {
 type ConnectionRequest struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2479,7 +3641,11 @@ type ConnectionRequest struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
+
+	// ID The *primary identifier* of the `Request a new connection`.
+	ID string `json:"id,omitempty"`
 
 	// Mode Sets the mode of the connection. The mode can be:
 	//
@@ -2488,12 +3654,10 @@ type ConnectionRequest struct {
 	// - `flex_ethernet`: connect is build as a FlexEthernet channel
 	// - `standalone`: only one port is allowed in this connection without
 	// any bundling.
-	//
 	Mode string `json:"mode,omitempty"`
 
 	// LacpTimeout This sets the LACP Timeout mode. Both ends of the connections need
 	// to be configured the same.
-	//
 	LacpTimeout *string `json:"lacp_timeout,omitempty"`
 
 	// ProductOffering The product offering must match the type `connection`.
@@ -2545,29 +3709,26 @@ type ConnectionRequest struct {
 type ConnectionUpdate struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2583,7 +3744,11 @@ type ConnectionUpdate struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
+
+	// ID The *primary identifier* of the `Connection Update`.
+	ID string `json:"id,omitempty"`
 
 	// Mode Sets the mode of the connection. The mode can be:
 	//
@@ -2592,12 +3757,10 @@ type ConnectionUpdate struct {
 	// - `flex_ethernet`: connect is build as a FlexEthernet channel
 	// - `standalone`: only one port is allowed in this connection without
 	// any bundling.
-	//
 	Mode string `json:"mode,omitempty"`
 
 	// LacpTimeout This sets the LACP Timeout mode. Both ends of the connections need
 	// to be configured the same.
-	//
 	LacpTimeout *string `json:"lacp_timeout,omitempty"`
 
 	// ProductOffering The product offering must match the type `connection`.
@@ -2607,12 +3770,14 @@ type ConnectionUpdate struct {
 // ExchangeLanNetworkServiceConfig Exchange Lan Network Service Config
 type ExchangeLanNetworkServiceConfig struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// DecommissionAt The service will be decommissioned on this date.
@@ -2620,6 +3785,7 @@ type ExchangeLanNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -2640,37 +3806,31 @@ type ExchangeLanNetworkServiceConfig struct {
 	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
-	// ID is a id
-	ID string `json:"id,omitempty"`
-
-	// NetworkService The id of the configured network service.
+	// NetworkService The id of the configured `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2686,13 +3846,47 @@ type ExchangeLanNetworkServiceConfig struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `Exchange Lan Network Service Config`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a polymorphic vlan configuration
@@ -2711,22 +3905,49 @@ type ExchangeLanNetworkServiceConfig struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
-	// ASNs is a asns
+	// ASNs A list of AS numbers.
+	//
+	// Depending on the implementation, these can be used for different
+	// purposes.  For example in the members list on the website, links to
+	// the looking glass or even generating IPv6 prefixes.
 	ASNs []int `json:"asns,omitempty"`
 
-	// Macs A list of mac-address IDs.
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
 	Macs []string `json:"macs,omitempty"`
 
 	// IPs A list of ip-address IDs.
 	//
 	// Allocation of IP Addresses might be deferred depending on
 	// the IXP implementation. No assumption should be made.
+	// *(Sensitive Property)*
 	IPs []string `json:"ips,omitempty"`
 
 	// Listed The customer wants to be featured on the member list
 	Listed bool `json:"listed,omitempty"`
+
+	// ConsumerSideReady You can use this optional property to signal to the
+	// IXP, that your equipment is set up and ready to be
+	// tested.
+	// *(Sensitive Property)*
+	ConsumerSideReady *bool `json:"consumer_side_ready,omitempty"`
+
+	// AvailabilityZone The availability zone that shall be used on the provider side.
+	//
+	// Availability Zones may not be supported for exchange_lan because by
+	// default they span multiple networks.
+	//
+	// If an availability zone is set then this refers to a circuit that
+	// is placed on a specific on-ramp to the exchange_lan.
+	// *(Sensitive Property)*
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
+
+	// SharedStatistics is a shared_statistics
+	SharedStatistics *SharedStatisticsConfig `json:"shared_statistics,omitempty"`
 
 	// ProductOffering The product offering must match the type `exchange_lan`
 	// and must refer to the related network service through
@@ -2742,36 +3963,30 @@ func (e ExchangeLanNetworkServiceConfig) PolymorphicType() string {
 // ExchangeLanNetworkServiceConfigPatch Exchange Lan Network Service Config Update
 type ExchangeLanNetworkServiceConfigPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
-
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2787,104 +4002,47 @@ type ExchangeLanNetworkServiceConfigPatch struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `Exchange Lan Network Service Config Update`.
+	ID *string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
 	Connection *string `json:"connection,omitempty"`
 
-	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
 	//
-	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
-
-	// Capacity The capacity of the service in Mbps. If set to Null,
-	// the maximum capacity will be used, i.e. the virtual circuit is
-	// not rate-limited.
+	// If no routing function is provided, you need to provide
+	// the connection to use.
 	//
-	// An exchange may choose to constrain the available capacity range
-	// of a `ProductOffering`.
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
 	//
-	// That means, the service can consume up to the total bandwidth
-	// of the `Connection`.
-	//
-	// Typically the service is charged based on the capacity.
-	Capacity *int `json:"capacity,omitempty"`
-
-	// ASNs is a asns
-	ASNs []int `json:"asns,omitempty"`
-
-	// Macs A list of mac-address IDs.
-	Macs []string `json:"macs,omitempty"`
-
-	// IPs A list of ip-address IDs.
-	//
-	// Allocation of IP Addresses might be deferred depending on
-	// the IXP implementation. No assumption should be made.
-	IPs []string `json:"ips,omitempty"`
-
-	// Listed The customer wants to be featured on the member list
-	Listed *bool `json:"listed,omitempty"`
-}
-
-// PolymorphicType implements the polymorphic interface
-func (e ExchangeLanNetworkServiceConfigPatch) PolymorphicType() string {
-	return ExchangeLanNetworkServiceConfigPatchType
-}
-
-// ExchangeLanNetworkServiceConfigRequest Exchange Lan Network Service Config Request
-type ExchangeLanNetworkServiceConfigRequest struct {
-	// Type is a type
-	Type string `json:"type,omitempty"`
-
-	// ManagingAccount The `id` of the account responsible for managing the service via
-	// the API. A manager can read and update the state of entities.
-	//
-	ManagingAccount string `json:"managing_account,omitempty"`
-
-	// ConsumingAccount The `id` of the account consuming a service.
-	//
-	// Used to be `owning_customer`.
-	//
-	ConsumingAccount string `json:"consuming_account,omitempty"`
-
-	// ExternalRef Reference field, free to use for the API user.
+	// Connections ans Routing Functions are mutually exclusive.
 	// *(Sensitive Property)*
-	//
-	ExternalRef *string `json:"external_ref,omitempty"`
+	RoutingFunction *string `json:"routing_function,omitempty"`
 
-	// NetworkService The id of the `NetworkService` to configure.
-	NetworkService string `json:"network_service,omitempty"`
-
-	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
-	// *(Sensitive Property)*
-	//
-	PurchaseOrder *string `json:"purchase_order,omitempty"`
-
-	// ContractRef A reference to a contract. If no specific contract is used,
-	// a default MAY be chosen by the implementer.
-	// *(Sensitive Property)*
-	//
-	ContractRef *string `json:"contract_ref,omitempty"`
-
-	// BillingAccount An account requires billing_information to be used as a `billing_account`.
-	// *(Sensitive Property)*
-	BillingAccount string `json:"billing_account,omitempty"`
-
-	// RoleAssignments A set of `RoleAssignment`s. See the documentation
-	// on the specific `required_contact_roles`,
-	// `nfc_required_contact_roles` or `nsc_required_contact_roles`
-	// on what `RoleAssignment`s to provide.
-	//
-	// Please note, that any contact role can additionally be provided.
-	// The presence of at least one of each required contact roles
-	// is necessary.
-	//
-	RoleAssignments []string `json:"role_assignments,omitempty"`
-
-	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
@@ -2901,22 +4059,201 @@ type ExchangeLanNetworkServiceConfigRequest struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
-	// ASNs is a asns
+	// ASNs A list of AS numbers.
+	//
+	// Depending on the implementation, these can be used for different
+	// purposes.  For example in the members list on the website, links to
+	// the looking glass or even generating IPv6 prefixes.
 	ASNs []int `json:"asns,omitempty"`
 
-	// Macs A list of mac-address IDs.
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
 	Macs []string `json:"macs,omitempty"`
 
 	// IPs A list of ip-address IDs.
 	//
 	// Allocation of IP Addresses might be deferred depending on
 	// the IXP implementation. No assumption should be made.
+	// *(Sensitive Property)*
+	IPs []string `json:"ips,omitempty"`
+
+	// Listed The customer wants to be featured on the member list
+	Listed *bool `json:"listed,omitempty"`
+
+	// ConsumerSideReady You can use this optional property to signal to the
+	// IXP, that your equipment is set up and ready to be
+	// tested.
+	// *(Sensitive Property)*
+	ConsumerSideReady *bool `json:"consumer_side_ready,omitempty"`
+
+	// AvailabilityZone The availability zone that shall be used on the provider side.
+	//
+	// Availability Zones may not be supported for exchange_lan because by
+	// default they span multiple networks.
+	//
+	// If an availability zone is set then this refers to a circuit that
+	// is placed on a specific on-ramp to the exchange_lan.
+	// *(Sensitive Property)*
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
+
+	// SharedStatistics is a shared_statistics
+	SharedStatistics *SharedStatisticsConfig `json:"shared_statistics,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (e ExchangeLanNetworkServiceConfigPatch) PolymorphicType() string {
+	return ExchangeLanNetworkServiceConfigPatchType
+}
+
+// ExchangeLanNetworkServiceConfigRequest Exchange Lan Network Service Config Request
+type ExchangeLanNetworkServiceConfigRequest struct {
+	// Type is a type
+	Type string `json:"type"`
+
+	// ManagingAccount The `id` of the account responsible for managing the service via
+	// the API. A manager can read and update the state of entities.
+	// *(Sensitive Property)*
+	ManagingAccount string `json:"managing_account,omitempty"`
+
+	// ConsumingAccount The `id` of the account consuming a service.
+	//
+	// Used to be `owning_customer`.
+	// *(Sensitive Property)*
+	ConsumingAccount string `json:"consuming_account,omitempty"`
+
+	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// NetworkService The id of the `NetworkService` to configure.
+	NetworkService string `json:"network_service,omitempty"`
+
+	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
+	PurchaseOrder *string `json:"purchase_order,omitempty"`
+
+	// ContractRef A reference to a contract. If no specific contract is used,
+	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
+	ContractRef *string `json:"contract_ref,omitempty"`
+
+	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
+	BillingAccount string `json:"billing_account,omitempty"`
+
+	// RoleAssignments A set of `RoleAssignment`s. See the documentation
+	// on the specific `required_contact_roles`,
+	// `nfc_required_contact_roles` or `nsc_required_contact_roles`
+	// on what `RoleAssignment`s to provide.
+	//
+	// Please note, that any contact role can additionally be provided.
+	// The presence of at least one of each required contact roles
+	// is necessary.
+	//
+	// *(Sensitive Property)*
+	RoleAssignments []string `json:"role_assignments,omitempty"`
+
+	// ID The *primary identifier* of the `Exchange Lan Network Service Config Request`.
+	ID string `json:"id,omitempty"`
+
+	// Connection The id of the connection to use for this `NetworkServiceConfig`.
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
+
+	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
+	//
+	// *(Sensitive Property)*
+	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
+
+	// VLANConfig is a vlan_config
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+
+	// Capacity The capacity of the service in Mbps. If set to Null,
+	// the maximum capacity will be used, i.e. the virtual circuit is
+	// not rate-limited.
+	//
+	// An exchange may choose to constrain the available capacity range
+	// of a `ProductOffering`.
+	//
+	// That means, the service can consume up to the total bandwidth
+	// of the `Connection`.
+	//
+	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
+	Capacity *int `json:"capacity,omitempty"`
+
+	// ASNs A list of AS numbers.
+	//
+	// Depending on the implementation, these can be used for different
+	// purposes.  For example in the members list on the website, links to
+	// the looking glass or even generating IPv6 prefixes.
+	ASNs []int `json:"asns,omitempty"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
+
+	// IPs A list of ip-address IDs.
+	//
+	// Allocation of IP Addresses might be deferred depending on
+	// the IXP implementation. No assumption should be made.
+	// *(Sensitive Property)*
 	IPs []string `json:"ips,omitempty"`
 
 	// Listed The customer wants to be featured on the member list
 	Listed bool `json:"listed,omitempty"`
+
+	// ConsumerSideReady You can use this optional property to signal to the
+	// IXP, that your equipment is set up and ready to be
+	// tested.
+	// *(Sensitive Property)*
+	ConsumerSideReady *bool `json:"consumer_side_ready,omitempty"`
+
+	// AvailabilityZone The availability zone that shall be used on the provider side.
+	//
+	// Availability Zones may not be supported for exchange_lan because by
+	// default they span multiple networks.
+	//
+	// If an availability zone is set then this refers to a circuit that
+	// is placed on a specific on-ramp to the exchange_lan.
+	// *(Sensitive Property)*
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
+
+	// SharedStatistics is a shared_statistics
+	SharedStatistics *SharedStatisticsConfig `json:"shared_statistics,omitempty"`
 
 	// ProductOffering The product offering must match the type `exchange_lan`
 	// and must refer to the related network service through
@@ -2932,36 +4269,30 @@ func (e ExchangeLanNetworkServiceConfigRequest) PolymorphicType() string {
 // ExchangeLanNetworkServiceConfigUpdate Exchange Lan Network Service Config Update
 type ExchangeLanNetworkServiceConfigUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
-
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -2977,14 +4308,51 @@ type ExchangeLanNetworkServiceConfigUpdate struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `Exchange Lan Network Service Config Update`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
+
+	// VLANConfig is a vlan_config
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// Capacity The capacity of the service in Mbps. If set to Null,
 	// the maximum capacity will be used, i.e. the virtual circuit is
@@ -2997,22 +4365,49 @@ type ExchangeLanNetworkServiceConfigUpdate struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
-	// ASNs is a asns
+	// ASNs A list of AS numbers.
+	//
+	// Depending on the implementation, these can be used for different
+	// purposes.  For example in the members list on the website, links to
+	// the looking glass or even generating IPv6 prefixes.
 	ASNs []int `json:"asns,omitempty"`
 
-	// Macs A list of mac-address IDs.
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
 	Macs []string `json:"macs,omitempty"`
 
 	// IPs A list of ip-address IDs.
 	//
 	// Allocation of IP Addresses might be deferred depending on
 	// the IXP implementation. No assumption should be made.
+	// *(Sensitive Property)*
 	IPs []string `json:"ips,omitempty"`
 
 	// Listed The customer wants to be featured on the member list
 	Listed bool `json:"listed,omitempty"`
+
+	// ConsumerSideReady You can use this optional property to signal to the
+	// IXP, that your equipment is set up and ready to be
+	// tested.
+	// *(Sensitive Property)*
+	ConsumerSideReady *bool `json:"consumer_side_ready,omitempty"`
+
+	// AvailabilityZone The availability zone that shall be used on the provider side.
+	//
+	// Availability Zones may not be supported for exchange_lan because by
+	// default they span multiple networks.
+	//
+	// If an availability zone is set then this refers to a circuit that
+	// is placed on a specific on-ramp to the exchange_lan.
+	// *(Sensitive Property)*
+	AvailabilityZone *string `json:"availability_zone,omitempty"`
+
+	// SharedStatistics is a shared_statistics
+	SharedStatistics *SharedStatisticsConfig `json:"shared_statistics,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -3023,7 +4418,6 @@ func (e ExchangeLanNetworkServiceConfigUpdate) PolymorphicType() string {
 // IXPSpecificFeatureFlagConfig IXP-Specific Feature Flag Configuration
 type IXPSpecificFeatureFlagConfig struct {
 	// Name The name of the feature flag.
-	//
 	Name string `json:"name,omitempty"`
 
 	// Enabled Enable the feature.
@@ -3032,15 +4426,69 @@ type IXPSpecificFeatureFlagConfig struct {
 	Enabled bool `json:"enabled,omitempty"`
 }
 
+// L3Config The layer 3 configuration for the NetworkServiceConfig.
+//
+// It is **required** when a `routing_function` is provided.
+// It may be required with a `connection`, depending on the
+// `ProductOffering`.
+//
+// Please check the `nsc_required_l3_config_fields` attribute
+// of the corresponding `ProductOffering` to see which fields
+// are required.
+//
+// For additional optional fields, please check the
+// `nsc_supported_l3_config_fields` attribute of the `ProductOffering`.
+//
+// *(Sensitive Property)*
+type L3Config struct {
+	// BGPPassword The password to use for BGP sessions.
+	BGPPassword *string `json:"bgp_password,omitempty"`
+
+	// BGPNeighborAddress The IP address of the BGP neighbor.
+	BGPNeighborAddress *string `json:"bgp_neighbor_address,omitempty"`
+
+	// BGPNeighborAddressPrimary The primary IP address of the BGP neighbor.
+	BGPNeighborAddressPrimary *string `json:"bgp_neighbor_address_primary,omitempty"`
+
+	// BGPNeighborAddressSecondary The secondary IP address of the BGP neighbor.
+	BGPNeighborAddressSecondary *string `json:"bgp_neighbor_address_secondary,omitempty"`
+
+	// BGPNeighborASN The ASN of the BGP neighbor.
+	BGPNeighborASN *int `json:"bgp_neighbor_asn,omitempty"`
+
+	// BGPAddressFamily is a bgp_address_family
+	BGPAddressFamily *string `json:"bgp_address_family,omitempty"`
+
+	// Bfd Enable BFD for the BGP session.
+	Bfd *bool `json:"bfd,omitempty"`
+
+	// LocalASN The local ASN.
+	LocalASN *int `json:"local_asn,omitempty"`
+
+	// LocalAddress The IP address of the router function instance
+	// in CIDR notation.
+	LocalAddress *string `json:"local_address,omitempty"`
+
+	// LocalAddressPrimary The primary IP address of the router function instance
+	// in CIDR notation.
+	LocalAddressPrimary *string `json:"local_address_primary,omitempty"`
+
+	// LocalAddressSecondary The secondary IP address of the router function instance
+	// in CIDR notation.
+	LocalAddressSecondary *string `json:"local_address_secondary,omitempty"`
+}
+
 // MP2MPNetworkServiceConfig MP2MP Network Service Config
 type MP2MPNetworkServiceConfig struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// DecommissionAt The service will be decommissioned on this date.
@@ -3048,6 +4496,7 @@ type MP2MPNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -3068,11 +4517,13 @@ type MP2MPNetworkServiceConfig struct {
 	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
-	// ID is a id
-	ID string `json:"id,omitempty"`
-
-	// NetworkService The id of the configured network service.
+	// NetworkService The id of the configured `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3091,33 +4542,31 @@ type MP2MPNetworkServiceConfig struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -3133,13 +4582,47 @@ type MP2MPNetworkServiceConfig struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `MP2MP Network Service Config`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a polymorphic vlan configuration
@@ -3147,8 +4630,19 @@ type MP2MPNetworkServiceConfig struct {
 	// VLANConfigRaw contains the vlan config response data
 	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
 
-	// Macs is a macs
-	Macs []string `json:"macs,omitempty"`
+	// IPs A list of ip-address IDs.
+	//
+	// Allocation of IP Addresses might be deferred depending on
+	// the IXP implementation. No assumption should be made.
+	// *(Sensitive Property)*
+	IPs []string `json:"ips,omitempty"`
+
+	// ASNs A list of AS numbers.
+	//
+	// Depending on the implementation, these can be used for different
+	// purposes.  For example in the members list on the website, links to
+	// the looking glass or even generating IPv6 prefixes.
+	ASNs []int `json:"asns,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -3159,26 +4653,27 @@ func (m MP2MPNetworkServiceConfig) PolymorphicType() string {
 // MP2MPNetworkServiceConfigPatch MP2MP Network Service Config Update
 type MP2MPNetworkServiceConfigPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3197,17 +4692,16 @@ type MP2MPNetworkServiceConfigPatch struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -3223,17 +4717,65 @@ type MP2MPNetworkServiceConfigPatch struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `MP2MP Network Service Config Update`.
+	ID *string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
 	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
-	// Macs is a macs
-	Macs []string `json:"macs,omitempty"`
+	// VLANConfig is a vlan_config
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+
+	// IPs A list of ip-address IDs.
+	//
+	// Allocation of IP Addresses might be deferred depending on
+	// the IXP implementation. No assumption should be made.
+	// *(Sensitive Property)*
+	IPs []string `json:"ips,omitempty"`
+
+	// ASNs A list of AS numbers.
+	//
+	// Depending on the implementation, these can be used for different
+	// purposes.  For example in the members list on the website, links to
+	// the looking glass or even generating IPv6 prefixes.
+	ASNs []int `json:"asns,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -3244,26 +4786,30 @@ func (m MP2MPNetworkServiceConfigPatch) PolymorphicType() string {
 // MP2MPNetworkServiceConfigRequest MP2MP Network Service Config Request
 type MP2MPNetworkServiceConfigRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// NetworkService The id of the `NetworkService` to configure.
 	NetworkService string `json:"network_service,omitempty"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3282,17 +4828,16 @@ type MP2MPNetworkServiceConfigRequest struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -3308,20 +4853,65 @@ type MP2MPNetworkServiceConfigRequest struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `MP2MP Network Service Config Request`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
-	// Macs is a macs
-	Macs []string `json:"macs,omitempty"`
+	// IPs A list of ip-address IDs.
+	//
+	// Allocation of IP Addresses might be deferred depending on
+	// the IXP implementation. No assumption should be made.
+	// *(Sensitive Property)*
+	IPs []string `json:"ips,omitempty"`
+
+	// ASNs A list of AS numbers.
+	//
+	// Depending on the implementation, these can be used for different
+	// purposes.  For example in the members list on the website, links to
+	// the looking glass or even generating IPv6 prefixes.
+	ASNs []int `json:"asns,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -3332,26 +4922,27 @@ func (m MP2MPNetworkServiceConfigRequest) PolymorphicType() string {
 // MP2MPNetworkServiceConfigUpdate MP2MP Network Service Config Update
 type MP2MPNetworkServiceConfigUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3370,17 +4961,16 @@ type MP2MPNetworkServiceConfigUpdate struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -3396,17 +4986,65 @@ type MP2MPNetworkServiceConfigUpdate struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `MP2MP Network Service Config Update`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
-	// Macs is a macs
-	Macs []string `json:"macs,omitempty"`
+	// VLANConfig is a vlan_config
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+
+	// IPs A list of ip-address IDs.
+	//
+	// Allocation of IP Addresses might be deferred depending on
+	// the IXP implementation. No assumption should be made.
+	// *(Sensitive Property)*
+	IPs []string `json:"ips,omitempty"`
+
+	// ASNs A list of AS numbers.
+	//
+	// Depending on the implementation, these can be used for different
+	// purposes.  For example in the members list on the website, links to
+	// the looking glass or even generating IPv6 prefixes.
+	ASNs []int `json:"asns,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -3609,7 +5247,12 @@ const CloudNetworkServiceConfigUpdateType = "cloud_vc"
 // P2MPNetworkServiceConfig P2MP Network Service Config
 type P2MPNetworkServiceConfig struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3628,33 +5271,31 @@ type P2MPNetworkServiceConfig struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -3670,13 +5311,47 @@ type P2MPNetworkServiceConfig struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `P2MP Network Service Config`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a polymorphic vlan configuration
@@ -3690,10 +5365,12 @@ type P2MPNetworkServiceConfig struct {
 	// including other roots.
 	Role *string `json:"role,omitempty"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// DecommissionAt The service will be decommissioned on this date.
@@ -3701,6 +5378,7 @@ type P2MPNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -3721,10 +5399,7 @@ type P2MPNetworkServiceConfig struct {
 	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
-	// ID is a id
-	ID string `json:"id,omitempty"`
-
-	// NetworkService The id of the configured network service.
+	// NetworkService The id of the configured `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
 }
 
@@ -3736,7 +5411,12 @@ func (p P2MPNetworkServiceConfig) PolymorphicType() string {
 // P2MPNetworkServiceConfigPatch P2MP Network Service Config Update
 type P2MPNetworkServiceConfigPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3755,33 +5435,31 @@ type P2MPNetworkServiceConfigPatch struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -3797,13 +5475,47 @@ type P2MPNetworkServiceConfigPatch struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `P2MP Network Service Config Update`.
+	ID *string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
 	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
@@ -3824,26 +5536,12 @@ func (p P2MPNetworkServiceConfigPatch) PolymorphicType() string {
 // P2MPNetworkServiceConfigRequest P2MP Network Service Config Request
 type P2MPNetworkServiceConfigRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ManagingAccount The `id` of the account responsible for managing the service via
-	// the API. A manager can read and update the state of entities.
-	//
-	ManagingAccount string `json:"managing_account,omitempty"`
-
-	// ConsumingAccount The `id` of the account consuming a service.
-	//
-	// Used to be `owning_customer`.
-	//
-	ConsumingAccount string `json:"consuming_account,omitempty"`
-
-	// ExternalRef Reference field, free to use for the API user.
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
 	// *(Sensitive Property)*
-	//
-	ExternalRef *string `json:"external_ref,omitempty"`
-
-	// NetworkService The id of the `NetworkService` to configure.
-	NetworkService string `json:"network_service,omitempty"`
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3862,17 +5560,31 @@ type P2MPNetworkServiceConfigRequest struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
+
+	// ManagingAccount The `id` of the account responsible for managing the service via
+	// the API. A manager can read and update the state of entities.
+	// *(Sensitive Property)*
+	ManagingAccount string `json:"managing_account,omitempty"`
+
+	// ConsumingAccount The `id` of the account consuming a service.
+	//
+	// Used to be `owning_customer`.
+	// *(Sensitive Property)*
+	ConsumingAccount string `json:"consuming_account,omitempty"`
+
+	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -3888,13 +5600,47 @@ type P2MPNetworkServiceConfigRequest struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `P2MP Network Service Config Request`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
@@ -3905,6 +5651,9 @@ type P2MPNetworkServiceConfigRequest struct {
 	// reach any other point in the virtual circuit
 	// including other roots.
 	Role *string `json:"role,omitempty"`
+
+	// NetworkService The id of the `NetworkService` to configure.
+	NetworkService string `json:"network_service,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -3915,7 +5664,12 @@ func (p P2MPNetworkServiceConfigRequest) PolymorphicType() string {
 // P2MPNetworkServiceConfigUpdate P2MP Network Service Config Update
 type P2MPNetworkServiceConfigUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -3934,33 +5688,31 @@ type P2MPNetworkServiceConfigUpdate struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -3976,13 +5728,47 @@ type P2MPNetworkServiceConfigUpdate struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `P2MP Network Service Config Update`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
@@ -4003,12 +5789,14 @@ func (p P2MPNetworkServiceConfigUpdate) PolymorphicType() string {
 // P2PNetworkServiceConfig P2P Network Service Config
 type P2PNetworkServiceConfig struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// DecommissionAt The service will be decommissioned on this date.
@@ -4016,6 +5804,7 @@ type P2PNetworkServiceConfig struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -4036,37 +5825,31 @@ type P2PNetworkServiceConfig struct {
 	// *(Sensitive Property)*
 	CurrentBillingStartDate *Date `json:"current_billing_start_date,omitempty"`
 
-	// ID is a id
-	ID string `json:"id,omitempty"`
-
-	// NetworkService The id of the configured network service.
+	// NetworkService The id of the configured `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -4082,19 +5865,58 @@ type P2PNetworkServiceConfig struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `P2P Network Service Config`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a polymorphic vlan configuration
 	VLANConfig VLANConfig `tf:"vlan_config" json:"-"`
 	// VLANConfigRaw contains the vlan config response data
 	VLANConfigRaw json.RawMessage `tf:"-" json:"vlan_config,omitempty"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -4113,6 +5935,7 @@ type P2PNetworkServiceConfig struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 }
 
@@ -4124,36 +5947,30 @@ func (p P2PNetworkServiceConfig) PolymorphicType() string {
 // P2PNetworkServiceConfigPatch P2P Network Service Config Update
 type P2PNetworkServiceConfigPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
-
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -4169,14 +5986,56 @@ type P2PNetworkServiceConfigPatch struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `P2P Network Service Config Update`.
+	ID *string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
 	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
+
+	// VLANConfig is a vlan_config
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -4195,6 +6054,7 @@ type P2PNetworkServiceConfigPatch struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 }
 
@@ -4206,22 +6066,21 @@ func (p P2PNetworkServiceConfigPatch) PolymorphicType() string {
 // P2PNetworkServiceConfigRequest P2P Network Service Config Request
 type P2PNetworkServiceConfigRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// NetworkService The id of the `NetworkService` to configure.
@@ -4229,13 +6088,11 @@ type P2PNetworkServiceConfigRequest struct {
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -4251,17 +6108,56 @@ type P2PNetworkServiceConfigRequest struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `P2P Network Service Config Request`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
 
 	// VLANConfig is a vlan_config
 	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -4280,6 +6176,7 @@ type P2PNetworkServiceConfigRequest struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 }
 
@@ -4291,36 +6188,30 @@ func (p P2PNetworkServiceConfigRequest) PolymorphicType() string {
 // P2PNetworkServiceConfigUpdate P2P Network Service Config Update
 type P2PNetworkServiceConfigUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
-
-	// VLANConfig is a vlan_config
-	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -4336,14 +6227,56 @@ type P2PNetworkServiceConfigUpdate struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
+	// ID The *primary identifier* of the `P2P Network Service Config Update`.
+	ID string `json:"id,omitempty"`
+
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
-	Connection string `json:"connection,omitempty"`
+	//
+	// If no connection is specified, you have to provide
+	// a routing function.
+	//
+	// When a connection is provided, you also need to specify
+	// the `lan_config`. The `routing_function` attribute
+	// may not be used. Some network services may require the
+	// use of the `l3_config`, please check the
+	// `nsc_required_l3_config_fields` attribute of the
+	// `ProductOffering`.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	Connection *string `json:"connection,omitempty"`
+
+	// RoutingFunction The id of the `RoutingFunction` to use for this `NetworkServiceConfig`.
+	//
+	// If no routing function is provided, you need to provide
+	// the connection to use.
+	//
+	// When a routing function is provided, you also need to
+	// specify the `l3_config`. The `connection` attribute
+	// may not be used.
+	//
+	// Connections ans Routing Functions are mutually exclusive.
+	// *(Sensitive Property)*
+	RoutingFunction *string `json:"routing_function,omitempty"`
+
+	// L3Config is a l3_config
+	L3Config *L3Config `json:"l3_config,omitempty"`
 
 	// NetworkFeatureConfigs A list of ids of `NetworkFeatureConfig`s.
 	//
+	// *(Sensitive Property)*
 	NetworkFeatureConfigs []string `json:"network_feature_configs,omitempty"`
+
+	// VLANConfig is a vlan_config
+	VLANConfig VLANConfig `json:"vlan_config,omitempty"`
+
+	// Macs A list of MAC address IDs. You may have to register the
+	// address using the `macs_create` operation.
+	// *(Sensitive Property)*
+	Macs []string `json:"macs,omitempty"`
 
 	// ProductOffering An optional id of a `ProductOffering`.
 	//
@@ -4362,6 +6295,7 @@ type P2PNetworkServiceConfigUpdate struct {
 	// of the `Connection`.
 	//
 	// Typically the service is charged based on the capacity.
+	// *(Sensitive Property)*
 	Capacity *int `json:"capacity,omitempty"`
 }
 
@@ -4372,37 +6306,36 @@ func (p P2PNetworkServiceConfigUpdate) PolymorphicType() string {
 
 // Port Port
 type Port struct {
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
@@ -4418,43 +6351,43 @@ type Port struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
-	// Connection is a connection
+	// ID The *primary identifier* of the `Port`.
+	ID string `json:"id,omitempty"`
+
+	// Connection The `id` of the related `Connection`.
 	Connection *string `json:"connection,omitempty"`
 
 	// Speed is a speed
 	Speed *int `json:"speed,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// Name Name of the port (set by the exchange)
 	Name *string `json:"name,omitempty"`
 
 	// MediaType The media type of the port.
 	// Query the device's capabilities for available types.
-	//
 	MediaType string `json:"media_type,omitempty"`
 
 	// OperationalState The operational state of the port.
 	OperationalState *string `json:"operational_state,omitempty"`
 
 	// Device The device the port.
-	//
 	Device string `json:"device,omitempty"`
 
 	// Pop Same as the `pop` of the `device`.
-	//
 	Pop string `json:"pop,omitempty"`
 }
 
 // PortReservation A PortReservation
 type PortReservation struct {
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// DecommissionAt The service will be decommissioned on this date.
@@ -4462,6 +6395,7 @@ type PortReservation struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -4484,19 +6418,19 @@ type PortReservation struct {
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `A PortReservation`.
+	ID string `json:"id,omitempty"`
 
 	// SubscriberSideDemarc In an exchange initiated scenario, this field will
 	// indicated one of the provided `subscriber_side_demarcs`
@@ -4514,9 +6448,6 @@ type PortReservation struct {
 
 	// CrossConnectID An optional identifier of a cross connect.
 	CrossConnectID *string `json:"cross_connect_id,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// Connection The `Port` will become part of this connection.
 	Connection string `json:"connection,omitempty"`
@@ -4537,19 +6468,19 @@ type PortReservation struct {
 type PortReservationPatch struct {
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `PortReservation Update`.
+	ID *string `json:"id,omitempty"`
 
 	// SubscriberSideDemarc In an exchange initiated scenario, this field will
 	// indicated one of the provided `subscriber_side_demarcs`
@@ -4573,19 +6504,19 @@ type PortReservationPatch struct {
 type PortReservationRequest struct {
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `A PortReservation`.
+	ID string `json:"id,omitempty"`
 
 	// SubscriberSideDemarc In an exchange initiated scenario, this field will
 	// indicated one of the provided `subscriber_side_demarcs`
@@ -4612,19 +6543,19 @@ type PortReservationRequest struct {
 type PortReservationUpdate struct {
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `PortReservation Update`.
+	ID string `json:"id,omitempty"`
 
 	// SubscriberSideDemarc In an exchange initiated scenario, this field will
 	// indicated one of the provided `subscriber_side_demarcs`
@@ -4647,44 +6578,52 @@ type PortReservationUpdate struct {
 // RouteServerNetworkFeatureConfig Route Server Network Feature Config
 type RouteServerNetworkFeatureConfig struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Route Server Network Feature Config`.
+	ID string `json:"id,omitempty"`
+
+	// NetworkFeature The `id` of the related `NetworkFeature`.
+	NetworkFeature string `json:"network_feature,omitempty"`
+
+	// NetworkServiceConfig The `id` of the related `NetworkServiceConfig`.
+	NetworkServiceConfig string `json:"network_service_config,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
 	// on the specific `required_contact_roles`,
@@ -4695,20 +6634,10 @@ type RouteServerNetworkFeatureConfig struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
-	// NetworkFeature is a network_feature
-	NetworkFeature string `json:"network_feature,omitempty"`
-
-	// NetworkServiceConfig is a network_service_config
-	NetworkServiceConfig string `json:"network_service_config,omitempty"`
-
-	// Flags A list of IXP specific feature flag configs. This can be used
-	// to enable or disable a specific feature flag.
-	Flags []*IXPSpecificFeatureFlagConfig `json:"flags,omitempty"`
-
 	// ASN The ASN of the peer.
-	//
 	ASN int `json:"asn,omitempty"`
 
 	// Password The cleartext BGP session password
@@ -4729,7 +6658,6 @@ type RouteServerNetworkFeatureConfig struct {
 	// Important: The format has to be: "AS-SET@IRR". IRR is the database
 	// where the AS-SET is registred. Typically used IRR's are RADB, RIPE,
 	// NTTCOM, APNIC, ALTDB, LEVEL3, ARIN, AFRINIC, LACNIC
-	//
 	AsSetV4 *string `json:"as_set_v4,omitempty"`
 
 	// AsSetV6 AS-SET of the customer for IPv6. This is used to generate filters
@@ -4745,33 +6673,27 @@ type RouteServerNetworkFeatureConfig struct {
 	// Important: The format has to be: "AS-SET@IRR". IRR is the database
 	// where the AS-SET is registred. Typically used IRR's are RADB, RIPE,
 	// NTTCOM, APNIC, ALTDB, LEVEL3, ARIN, AFRINIC, LACNIC
-	//
 	AsSetV6 *string `json:"as_set_v6,omitempty"`
 
 	// MaxPrefixV4 Announcing more than `max_prefix` IPv4 prefixes the bgp
 	// session will be droped.
-	//
 	MaxPrefixV4 *int `json:"max_prefix_v4,omitempty"`
 
 	// MaxPrefixV6 Announcing more than `max_prefix` IPv6 prefixes the bgp
 	// session will be droped.
-	//
 	MaxPrefixV6 *int `json:"max_prefix_v6,omitempty"`
 
 	// InsertIxpASN Insert the ASN of the exchange into the AS path. This function is only
 	// used in special cases. In 99% of all cases, it should be false.
-	//
 	InsertIxpASN *bool `json:"insert_ixp_asn,omitempty"`
 
 	// SessionMode Set the session mode with the routeserver.
-	//
 	SessionMode string `json:"session_mode,omitempty"`
 
 	// BGPSessionType The session type describes which of the both parties will open the
 	// connection. If set to passive, the customer router needs to open
 	// the connection. If its set to active, the route server will open
 	// the connection. The standard behavior on most exchanges is passive.
-	//
 	BGPSessionType string `json:"bgp_session_type,omitempty"`
 
 	// IP The BGP session will be established from this IP address,
@@ -4781,8 +6703,9 @@ type RouteServerNetworkFeatureConfig struct {
 	// config can be used.
 	IP string `json:"ip,omitempty"`
 
-	// ID is a id
-	ID string `json:"id,omitempty"`
+	// Flags A list of IXP specific feature flag configs. This can be used
+	// to enable or disable a specific feature flag.
+	Flags []*IXPSpecificFeatureFlagConfig `json:"flags,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -4793,26 +6716,24 @@ func (r RouteServerNetworkFeatureConfig) PolymorphicType() string {
 // RouteServerNetworkFeatureConfigPatch Route Server Network Feature Config Update
 type RouteServerNetworkFeatureConfigPatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ASN The ASN of the peer.
-	//
 	ASN *int `json:"asn,omitempty"`
 
 	// Password The cleartext BGP session password
@@ -4833,7 +6754,6 @@ type RouteServerNetworkFeatureConfigPatch struct {
 	// Important: The format has to be: "AS-SET@IRR". IRR is the database
 	// where the AS-SET is registred. Typically used IRR's are RADB, RIPE,
 	// NTTCOM, APNIC, ALTDB, LEVEL3, ARIN, AFRINIC, LACNIC
-	//
 	AsSetV4 *string `json:"as_set_v4,omitempty"`
 
 	// AsSetV6 AS-SET of the customer for IPv6. This is used to generate filters
@@ -4849,33 +6769,27 @@ type RouteServerNetworkFeatureConfigPatch struct {
 	// Important: The format has to be: "AS-SET@IRR". IRR is the database
 	// where the AS-SET is registred. Typically used IRR's are RADB, RIPE,
 	// NTTCOM, APNIC, ALTDB, LEVEL3, ARIN, AFRINIC, LACNIC
-	//
 	AsSetV6 *string `json:"as_set_v6,omitempty"`
 
 	// MaxPrefixV4 Announcing more than `max_prefix` IPv4 prefixes the bgp
 	// session will be droped.
-	//
 	MaxPrefixV4 *int `json:"max_prefix_v4,omitempty"`
 
 	// MaxPrefixV6 Announcing more than `max_prefix` IPv6 prefixes the bgp
 	// session will be droped.
-	//
 	MaxPrefixV6 *int `json:"max_prefix_v6,omitempty"`
 
 	// InsertIxpASN Insert the ASN of the exchange into the AS path. This function is only
 	// used in special cases. In 99% of all cases, it should be false.
-	//
 	InsertIxpASN *bool `json:"insert_ixp_asn,omitempty"`
 
 	// SessionMode Set the session mode with the routeserver.
-	//
 	SessionMode *string `json:"session_mode,omitempty"`
 
 	// BGPSessionType The session type describes which of the both parties will open the
 	// connection. If set to passive, the customer router needs to open
 	// the connection. If its set to active, the route server will open
 	// the connection. The standard behavior on most exchanges is passive.
-	//
 	BGPSessionType *string `json:"bgp_session_type,omitempty"`
 
 	// IP The BGP session will be established from this IP address,
@@ -4894,38 +6808,44 @@ func (r RouteServerNetworkFeatureConfigPatch) PolymorphicType() string {
 // RouteServerNetworkFeatureConfigRequest Route Server Network Feature Config Request
 type RouteServerNetworkFeatureConfigRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Route Server Network Feature Config Request`.
+	ID string `json:"id,omitempty"`
+
+	// NetworkFeature The `id` of the related `NetworkFeature`.
+	NetworkFeature string `json:"network_feature,omitempty"`
+
+	// NetworkServiceConfig The `id` of the related `NetworkServiceConfig`.
+	NetworkServiceConfig string `json:"network_service_config,omitempty"`
 
 	// RoleAssignments A set of `RoleAssignment`s. See the documentation
 	// on the specific `required_contact_roles`,
@@ -4936,20 +6856,10 @@ type RouteServerNetworkFeatureConfigRequest struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
+	// *(Sensitive Property)*
 	RoleAssignments []string `json:"role_assignments,omitempty"`
 
-	// NetworkFeature is a network_feature
-	NetworkFeature string `json:"network_feature,omitempty"`
-
-	// NetworkServiceConfig is a network_service_config
-	NetworkServiceConfig string `json:"network_service_config,omitempty"`
-
-	// Flags A list of IXP specific feature flag configs. This can be used
-	// to enable or disable a specific feature flag.
-	Flags []*IXPSpecificFeatureFlagConfig `json:"flags,omitempty"`
-
 	// ASN The ASN of the peer.
-	//
 	ASN int `json:"asn,omitempty"`
 
 	// Password The cleartext BGP session password
@@ -4970,7 +6880,6 @@ type RouteServerNetworkFeatureConfigRequest struct {
 	// Important: The format has to be: "AS-SET@IRR". IRR is the database
 	// where the AS-SET is registred. Typically used IRR's are RADB, RIPE,
 	// NTTCOM, APNIC, ALTDB, LEVEL3, ARIN, AFRINIC, LACNIC
-	//
 	AsSetV4 *string `json:"as_set_v4,omitempty"`
 
 	// AsSetV6 AS-SET of the customer for IPv6. This is used to generate filters
@@ -4986,33 +6895,27 @@ type RouteServerNetworkFeatureConfigRequest struct {
 	// Important: The format has to be: "AS-SET@IRR". IRR is the database
 	// where the AS-SET is registred. Typically used IRR's are RADB, RIPE,
 	// NTTCOM, APNIC, ALTDB, LEVEL3, ARIN, AFRINIC, LACNIC
-	//
 	AsSetV6 *string `json:"as_set_v6,omitempty"`
 
 	// MaxPrefixV4 Announcing more than `max_prefix` IPv4 prefixes the bgp
 	// session will be droped.
-	//
 	MaxPrefixV4 *int `json:"max_prefix_v4,omitempty"`
 
 	// MaxPrefixV6 Announcing more than `max_prefix` IPv6 prefixes the bgp
 	// session will be droped.
-	//
 	MaxPrefixV6 *int `json:"max_prefix_v6,omitempty"`
 
 	// InsertIxpASN Insert the ASN of the exchange into the AS path. This function is only
 	// used in special cases. In 99% of all cases, it should be false.
-	//
 	InsertIxpASN *bool `json:"insert_ixp_asn,omitempty"`
 
 	// SessionMode Set the session mode with the routeserver.
-	//
 	SessionMode string `json:"session_mode,omitempty"`
 
 	// BGPSessionType The session type describes which of the both parties will open the
 	// connection. If set to passive, the customer router needs to open
 	// the connection. If its set to active, the route server will open
 	// the connection. The standard behavior on most exchanges is passive.
-	//
 	BGPSessionType string `json:"bgp_session_type,omitempty"`
 
 	// IP The BGP session will be established from this IP address,
@@ -5021,6 +6924,10 @@ type RouteServerNetworkFeatureConfigRequest struct {
 	// Only IDs of IPs assigned to the corresponding network service
 	// config can be used.
 	IP string `json:"ip,omitempty"`
+
+	// Flags A list of IXP specific feature flag configs. This can be used
+	// to enable or disable a specific feature flag.
+	Flags []*IXPSpecificFeatureFlagConfig `json:"flags,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -5031,26 +6938,24 @@ func (r RouteServerNetworkFeatureConfigRequest) PolymorphicType() string {
 // RouteServerNetworkFeatureConfigUpdate Route Server Network Feature Config Update
 type RouteServerNetworkFeatureConfigUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ASN The ASN of the peer.
-	//
 	ASN int `json:"asn,omitempty"`
 
 	// Password The cleartext BGP session password
@@ -5071,7 +6976,6 @@ type RouteServerNetworkFeatureConfigUpdate struct {
 	// Important: The format has to be: "AS-SET@IRR". IRR is the database
 	// where the AS-SET is registred. Typically used IRR's are RADB, RIPE,
 	// NTTCOM, APNIC, ALTDB, LEVEL3, ARIN, AFRINIC, LACNIC
-	//
 	AsSetV4 *string `json:"as_set_v4,omitempty"`
 
 	// AsSetV6 AS-SET of the customer for IPv6. This is used to generate filters
@@ -5087,33 +6991,27 @@ type RouteServerNetworkFeatureConfigUpdate struct {
 	// Important: The format has to be: "AS-SET@IRR". IRR is the database
 	// where the AS-SET is registred. Typically used IRR's are RADB, RIPE,
 	// NTTCOM, APNIC, ALTDB, LEVEL3, ARIN, AFRINIC, LACNIC
-	//
 	AsSetV6 *string `json:"as_set_v6,omitempty"`
 
 	// MaxPrefixV4 Announcing more than `max_prefix` IPv4 prefixes the bgp
 	// session will be droped.
-	//
 	MaxPrefixV4 *int `json:"max_prefix_v4,omitempty"`
 
 	// MaxPrefixV6 Announcing more than `max_prefix` IPv6 prefixes the bgp
 	// session will be droped.
-	//
 	MaxPrefixV6 *int `json:"max_prefix_v6,omitempty"`
 
 	// InsertIxpASN Insert the ASN of the exchange into the AS path. This function is only
 	// used in special cases. In 99% of all cases, it should be false.
-	//
 	InsertIxpASN *bool `json:"insert_ixp_asn,omitempty"`
 
 	// SessionMode Set the session mode with the routeserver.
-	//
 	SessionMode string `json:"session_mode,omitempty"`
 
 	// BGPSessionType The session type describes which of the both parties will open the
 	// connection. If set to passive, the customer router needs to open
 	// the connection. If its set to active, the route server will open
 	// the connection. The standard behavior on most exchanges is passive.
-	//
 	BGPSessionType string `json:"bgp_session_type,omitempty"`
 
 	// IP The BGP session will be established from this IP address,
@@ -5129,6 +7027,94 @@ func (r RouteServerNetworkFeatureConfigUpdate) PolymorphicType() string {
 	return RouteServerNetworkFeatureConfigUpdateType
 }
 
+// SharedStatisticsConfig Configure sharing of sensitive statistics with
+// other members of the exchange.
+//
+// Choosing `allow` will grant access to the shared
+// statistics to all accounts on the exchange.
+//
+// Accounts can be explicitly prevented from accessing the information,
+// by adding them to the list of account ids in the
+// `accounts_denied` attribute.
+//
+// Choosing `deny` will prevent access to the shared statistics
+// by other accounts on the exchange. However, selective
+// access can be granted by adding them to the list of
+// account ids in the `accounts_allowed` attribute.
+//
+// This affects the visibility of `nsc_available_capacity`
+// and `nsc_available_capacity_change_perc`
+// on the `NetworkServiceConfig` statistics.
+//
+// *(Sensitive Property)*
+type SharedStatisticsConfig interface {
+	Polymorphic
+}
+
+// PolymorphicSharedStatisticsConfig is a polymorphic base
+type PolymorphicSharedStatisticsConfig struct {
+	Policy string `json:"policy"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (s PolymorphicSharedStatisticsConfig) PolymorphicType() string {
+	return s.Policy
+}
+
+// SharedStatisticsConfigAllowType is a polymorphic type value for SharedStatisticsConfigAllow
+const SharedStatisticsConfigAllowType = "allow"
+
+// SharedStatisticsConfigDenyType is a polymorphic type value for SharedStatisticsConfigDeny
+const SharedStatisticsConfigDenyType = "deny"
+
+// SharedStatisticsConfigAllow Shared Statistics Policy: Allow
+type SharedStatisticsConfigAllow struct {
+	// Policy is a policy
+	Policy string `json:"policy,omitempty"`
+
+	// NscAvailableCapacity **DEPRECATION NOTICE**: This field will be removed in
+	// favor of choosing a statistics sharing policy.
+	//
+	// A list of account IDs who can see
+	// `nsc_available_capacity` and `nsc_available_capacity_change_perc`
+	// on the `NetworkServiceConfig` statistics.
+	NscAvailableCapacity []string `json:"nsc_available_capacity,omitempty"`
+
+	// AccountsDenied An optional list of account IDs who may not access
+	// `nsc_available_capacity` and `nsc_available_capacity_change_perc`
+	// on the `NetworkServiceConfig` statistics.
+	AccountsDenied []string `json:"accounts_denied,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (s SharedStatisticsConfigAllow) PolymorphicType() string {
+	return SharedStatisticsConfigAllowType
+}
+
+// SharedStatisticsConfigDeny Shared Statistics Policy: Deny
+type SharedStatisticsConfigDeny struct {
+	// Policy is a policy
+	Policy string `json:"policy,omitempty"`
+
+	// NscAvailableCapacity **DEPRECATION NOTICE**: This field will be removed in
+	// favor of choosing a statistics sharing policy.
+	//
+	// A list of account IDs who can see
+	// `nsc_available_capacity` and `nsc_available_capacity_change_perc`
+	// on the `NetworkServiceConfig` statistics.
+	NscAvailableCapacity []string `json:"nsc_available_capacity,omitempty"`
+
+	// AccountsAllowed An optional list of account IDs who is allowed to access
+	// `nsc_available_capacity` and `nsc_available_capacity_change_perc`
+	// on the `NetworkServiceConfig` statistics.
+	AccountsAllowed []string `json:"accounts_allowed,omitempty"`
+}
+
+// PolymorphicType implements the polymorphic interface
+func (s SharedStatisticsConfigDeny) PolymorphicType() string {
+	return SharedStatisticsConfigDenyType
+}
+
 // VLANConfigDot1Q A Dot1Q vlan configuration
 type VLANConfigDot1Q struct {
 	// VLANType is a vlan_type
@@ -5136,7 +7122,6 @@ type VLANConfigDot1Q struct {
 
 	// VLAN A VLAN tag. If `null`, the IXP will auto-select
 	// a valid vlan-id.
-	//
 	VLAN *int `json:"vlan,omitempty"`
 
 	// VLANEthertype The ethertype of the vlan in hexadecimal notation.
@@ -5167,14 +7152,12 @@ type VLANConfigQinQ struct {
 	// OuterVLAN The outer VLAN id.
 	// If `null`, the IXP will auto-select
 	// a valid vlan-id.
-	//
 	OuterVLAN *int `json:"outer_vlan,omitempty"`
 
 	// OuterVLANEthertype The ethertype of the outer tag in hexadecimal notation.
 	OuterVLANEthertype *string `json:"outer_vlan_ethertype,omitempty"`
 
 	// InnerVLAN The inner VLAN id.
-	//
 	InnerVLAN int `json:"inner_vlan,omitempty"`
 }
 
@@ -5185,6 +7168,10 @@ func (v VLANConfigQinQ) PolymorphicType() string {
 
 // VLANConfig The vlan configuration defines how the service
 // is made available on the connection.
+//
+// Is is **required** when a `connection` is provided.
+//
+// *(Sensitive Property)*
 type VLANConfig interface {
 	Polymorphic
 }
@@ -5213,23 +7200,24 @@ type Account struct {
 	// State is a state
 	State *string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
+
+	// ID The *primary identifier* of the `Account`.
+	ID string `json:"id,omitempty"`
 
 	// ManagingAccount The `id` of a managing account. Can be used for creating
 	// a customer hierachy. *(Sensitive Property)*
-	//
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// Name Name of the account, how it gets represented
 	// in e.g. a "customers list".
-	//
 	Name string `json:"name,omitempty"`
 
 	// LegalName Legal name of the organisation.
 	// Only required when it's different from the account name.
 	// *(Sensitive Property)*
-	//
 	LegalName *string `json:"legal_name,omitempty"`
 
 	// BillingInformation is a billing_information
@@ -5249,32 +7237,33 @@ type Account struct {
 	// MetroAreaNetworkPresence Informal list of `MetroAreaNetwork` ids, indicating the
 	// presence to other accounts.
 	// The list is maintained by the account and can be empty.
-	//
 	MetroAreaNetworkPresence []string `json:"metro_area_network_presence,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// Address is a address
 	Address *Address `json:"address,omitempty"`
+
+	// ASNs List of Autonomous System Numbers (ASNs) associated
+	// with this account through network service or
+	// network feature configurations.
+	ASNs []int `json:"asns,omitempty"`
 }
 
 // AccountPatch Account Update
 type AccountPatch struct {
+	// ID The *primary identifier* of the `Account Update`.
+	ID *string `json:"id,omitempty"`
+
 	// ManagingAccount The `id` of a managing account. Can be used for creating
 	// a customer hierachy. *(Sensitive Property)*
-	//
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// Name Name of the account, how it gets represented
 	// in e.g. a "customers list".
-	//
 	Name *string `json:"name,omitempty"`
 
 	// LegalName Legal name of the organisation.
 	// Only required when it's different from the account name.
 	// *(Sensitive Property)*
-	//
 	LegalName *string `json:"legal_name,omitempty"`
 
 	// BillingInformation is a billing_information
@@ -5294,7 +7283,6 @@ type AccountPatch struct {
 	// MetroAreaNetworkPresence Informal list of `MetroAreaNetwork` ids, indicating the
 	// presence to other accounts.
 	// The list is maintained by the account and can be empty.
-	//
 	MetroAreaNetworkPresence []string `json:"metro_area_network_presence,omitempty"`
 
 	// Address is a address
@@ -5303,20 +7291,20 @@ type AccountPatch struct {
 
 // AccountRequest Account Request
 type AccountRequest struct {
+	// ID The *primary identifier* of the `Account Request`.
+	ID string `json:"id,omitempty"`
+
 	// ManagingAccount The `id` of a managing account. Can be used for creating
 	// a customer hierachy. *(Sensitive Property)*
-	//
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// Name Name of the account, how it gets represented
 	// in e.g. a "customers list".
-	//
 	Name string `json:"name,omitempty"`
 
 	// LegalName Legal name of the organisation.
 	// Only required when it's different from the account name.
 	// *(Sensitive Property)*
-	//
 	LegalName *string `json:"legal_name,omitempty"`
 
 	// BillingInformation is a billing_information
@@ -5336,7 +7324,6 @@ type AccountRequest struct {
 	// MetroAreaNetworkPresence Informal list of `MetroAreaNetwork` ids, indicating the
 	// presence to other accounts.
 	// The list is maintained by the account and can be empty.
-	//
 	MetroAreaNetworkPresence []string `json:"metro_area_network_presence,omitempty"`
 
 	// Address is a address
@@ -5345,20 +7332,20 @@ type AccountRequest struct {
 
 // AccountUpdate Account Update
 type AccountUpdate struct {
+	// ID The *primary identifier* of the `Account Update`.
+	ID string `json:"id,omitempty"`
+
 	// ManagingAccount The `id` of a managing account. Can be used for creating
 	// a customer hierachy. *(Sensitive Property)*
-	//
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// Name Name of the account, how it gets represented
 	// in e.g. a "customers list".
-	//
 	Name string `json:"name,omitempty"`
 
 	// LegalName Legal name of the organisation.
 	// Only required when it's different from the account name.
 	// *(Sensitive Property)*
-	//
 	LegalName *string `json:"legal_name,omitempty"`
 
 	// BillingInformation is a billing_information
@@ -5378,7 +7365,6 @@ type AccountUpdate struct {
 	// MetroAreaNetworkPresence Informal list of `MetroAreaNetwork` ids, indicating the
 	// presence to other accounts.
 	// The list is maintained by the account and can be empty.
-	//
 	MetroAreaNetworkPresence []string `json:"metro_area_network_presence,omitempty"`
 
 	// Address is a address
@@ -5411,7 +7397,6 @@ type Address struct {
 // as a `billing_account`. *(Sensitive Property)*
 type BillingInformation struct {
 	// Name Name of the organisation receiving invoices.
-	//
 	Name string `json:"name,omitempty"`
 
 	// Address is a address
@@ -5419,7 +7404,6 @@ type BillingInformation struct {
 
 	// VatNumber Value-added tax number, required for
 	// european reverse charge system.
-	//
 	VatNumber *string `json:"vat_number,omitempty"`
 }
 
@@ -5427,19 +7411,21 @@ type BillingInformation struct {
 type Contact struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `Contact`.
+	ID string `json:"id,omitempty"`
 
 	// Name A name of a person or an organisation
 	Name *string `json:"name,omitempty"`
@@ -5448,30 +7434,28 @@ type Contact struct {
 	Telephone *string `json:"telephone,omitempty"`
 
 	// Email The email of the legal company entity.
-	//
 	Email *string `json:"email,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 }
 
 // ContactPatch Contact Update
 type ContactPatch struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `Contact Update`.
+	ID *string `json:"id,omitempty"`
 
 	// Name A name of a person or an organisation
 	Name *string `json:"name,omitempty"`
@@ -5480,7 +7464,6 @@ type ContactPatch struct {
 	Telephone *string `json:"telephone,omitempty"`
 
 	// Email The email of the legal company entity.
-	//
 	Email *string `json:"email,omitempty"`
 }
 
@@ -5488,19 +7471,21 @@ type ContactPatch struct {
 type ContactRequest struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `Contact Create Request`.
+	ID string `json:"id,omitempty"`
 
 	// Name A name of a person or an organisation
 	Name *string `json:"name,omitempty"`
@@ -5509,7 +7494,6 @@ type ContactRequest struct {
 	Telephone *string `json:"telephone,omitempty"`
 
 	// Email The email of the legal company entity.
-	//
 	Email *string `json:"email,omitempty"`
 }
 
@@ -5517,19 +7501,21 @@ type ContactRequest struct {
 type ContactUpdate struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `Contact Update`.
+	ID string `json:"id,omitempty"`
 
 	// Name A name of a person or an organisation
 	Name *string `json:"name,omitempty"`
@@ -5538,101 +7524,84 @@ type ContactUpdate struct {
 	Telephone *string `json:"telephone,omitempty"`
 
 	// Email The email of the legal company entity.
-	//
 	Email *string `json:"email,omitempty"`
 }
 
 // Role Role for a Contact
 type Role struct {
 	// Name The name of the role.
-	//
 	Name string `json:"name,omitempty"`
 
 	// RequiredFields A list of required field names.
-	//
 	RequiredFields []string `json:"required_fields,omitempty"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Role for a Contact`.
 	ID string `json:"id,omitempty"`
 }
 
 // RoleAssignment A role assignment for a contact
 type RoleAssignment struct {
 	// Role The `id` of a role the contact is assigned to.
-	//
 	Role string `json:"role,omitempty"`
 
 	// Contact The `id` of a contact the role is assigned to.
-	//
 	Contact string `json:"contact,omitempty"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `A role assignment for a contact`.
 	ID string `json:"id,omitempty"`
 }
 
 // RoleAssignmentPatch A role assignment update
 type RoleAssignmentPatch struct {
 	// Role The `id` of a role the contact is assigned to.
-	//
 	Role *string `json:"role,omitempty"`
 
 	// Contact The `id` of a contact the role is assigned to.
-	//
 	Contact *string `json:"contact,omitempty"`
 }
 
 // RoleAssignmentRequest A role assignment request
 type RoleAssignmentRequest struct {
 	// Role The `id` of a role the contact is assigned to.
-	//
 	Role string `json:"role,omitempty"`
 
 	// Contact The `id` of a contact the role is assigned to.
-	//
 	Contact string `json:"contact,omitempty"`
 }
 
 // RoleAssignmentUpdate A role assignemnt update
 type RoleAssignmentUpdate struct {
 	// Role The `id` of a role the contact is assigned to.
-	//
 	Role string `json:"role,omitempty"`
 
 	// Contact The `id` of a contact the role is assigned to.
-	//
 	Contact string `json:"contact,omitempty"`
 }
 
 // RolePatch Role Update
 type RolePatch struct {
 	// Name The name of the role.
-	//
 	Name *string `json:"name,omitempty"`
 
 	// RequiredFields A list of required field names.
-	//
 	RequiredFields []string `json:"required_fields,omitempty"`
 }
 
 // RoleRequest Create Role
 type RoleRequest struct {
 	// Name The name of the role.
-	//
 	Name string `json:"name,omitempty"`
 
 	// RequiredFields A list of required field names.
-	//
 	RequiredFields []string `json:"required_fields,omitempty"`
 }
 
 // RoleUpdate Role Update
 type RoleUpdate struct {
 	// Name The name of the role.
-	//
 	Name string `json:"name,omitempty"`
 
 	// RequiredFields A list of required field names.
-	//
 	RequiredFields []string `json:"required_fields,omitempty"`
 }
 
@@ -5641,11 +7610,8 @@ type Event struct {
 	// Serial is a serial
 	Serial int `json:"serial,omitempty"`
 
-	// Account is a account
+	// Account The `id` of the related `Account`.
 	Account string `json:"account,omitempty"`
-
-	// Type is a type
-	Type string `json:"type,omitempty"`
 
 	// Payload is a payload
 	Payload map[string]interface{} `json:"payload,omitempty"`
@@ -5659,16 +7625,13 @@ type Status struct {
 	// Severity We are using syslog severity levels: 0 = Emergency,
 	// 1 = Alert, 2 = Critical, 3 = Error, 4 = Warning,
 	// 5 = Notice, 6 = Informational, 7 = Debug.
-	//
 	Severity int `json:"severity,omitempty"`
 
 	// Tag A machine readable message identifier.
-	//
 	Tag string `json:"tag,omitempty"`
 
 	// Message A human readable message, describing the problem
 	// and may contain hints for resolution.
-	//
 	Message string `json:"message,omitempty"`
 
 	// Attrs Optional machine readable key value pairs
@@ -5676,35 +7639,36 @@ type Status struct {
 	//
 	// A custom, detailed or localized error messagen can
 	// be presented to the user, derived from the `tag` and `attrs`.
-	//
 	Attrs map[string]interface{} `json:"attrs,omitempty"`
 
 	// Timestamp The time and date when the event occured.
 	Timestamp time.Time `json:"timestamp,omitempty"`
 }
 
-// APIExtensions Implementation specific API extensions
-type APIExtensions struct {
+// APIExtension Implementation specific API extensions
+type APIExtension struct {
 	// Name Name of the extension.
-	//
 	Name string `json:"name,omitempty"`
 
 	// Publisher Publisher of the extension.
-	//
 	Publisher string `json:"publisher,omitempty"`
 
 	// DocumentationURL URL of the documentation homepage of the extension.
-	//
 	DocumentationURL string `json:"documentation_url,omitempty"`
 
 	// BaseURL Extension endpoints are available under this base url.
-	//
 	BaseURL string `json:"base_url,omitempty"`
 
 	// SpecURL URL of the extensions schema specifications.
 	// The schema format schould be OpenAPI v3.
-	//
 	SpecURL string `json:"spec_url,omitempty"`
+}
+
+// APIFeatures Optional API Features
+type APIFeatures struct {
+	// Pagination The API implementation supports pagination on `list`
+	// operations.
+	Pagination *bool `json:"pagination,omitempty"`
 }
 
 // APIHealth Health Status Response
@@ -5714,11 +7678,9 @@ type APIHealth struct {
 	Status string `json:"status,omitempty"`
 
 	// Version Public version of the service.
-	//
 	Version string `json:"version,omitempty"`
 
 	// Releaseid Release version of the api implementation.
-	//
 	Releaseid string `json:"releaseId,omitempty"`
 
 	// Notes Array of notes relevant to current state of health.
@@ -5756,64 +7718,59 @@ type APIHealth struct {
 // APIImplementation API Implementation
 type APIImplementation struct {
 	// SchemaVersion Version of the implemented IX-API schema.
-	//
 	SchemaVersion string `json:"schema_version,omitempty"`
 
 	// ServiceVersion Version of the API service.
-	//
 	ServiceVersion string `json:"service_version,omitempty"`
 
 	// SupportedNetworkServiceTypes Array of network service types, supported by the IX.
-	//
 	SupportedNetworkServiceTypes []string `json:"supported_network_service_types,omitempty"`
 
 	// SupportedNetworkServiceConfigTypes Array of supported network service config types.
-	//
 	SupportedNetworkServiceConfigTypes []string `json:"supported_network_service_config_types,omitempty"`
 
 	// SupportedNetworkFeatureTypes Array of supported network feature types.
-	//
 	SupportedNetworkFeatureTypes []string `json:"supported_network_feature_types,omitempty"`
 
 	// SupportedNetworkFeatureConfigTypes Array of supported network feature config types.
-	//
 	SupportedNetworkFeatureConfigTypes []string `json:"supported_network_feature_config_types,omitempty"`
 
 	// SupportedOperations Array of implemented operations of the ix-api schema.
-	//
 	SupportedOperations []string `json:"supported_operations,omitempty"`
+
+	// SupportedFeatures is a supported_features
+	SupportedFeatures *APIFeatures `json:"supported_features,omitempty"`
 }
 
 // IPAddress IP-Address
 type IPAddress struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
+	// ID The *primary identifier* of the `IP-Address`.
+	ID string `json:"id,omitempty"`
+
 	// Version The version of the internet protocol.
-	//
 	Version int `json:"version,omitempty"`
 
 	// Address IPv4 or IPv6 Address in the following format:
 	// - IPv4: [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
 	// - IPv6: hexadecimal colon separated notation
-	//
 	Address string `json:"address,omitempty"`
 
 	// PrefixLength The CIDR ip prefix length
-	//
 	PrefixLength int `json:"prefix_length,omitempty"`
 
 	// FQDN is a fqdn
@@ -5824,41 +7781,37 @@ type IPAddress struct {
 
 	// ValidNotAfter is a valid_not_after
 	ValidNotAfter *time.Time `json:"valid_not_after,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 }
 
 // IPAddressPatch IP-Address Update
 type IPAddressPatch struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
+	// ID The *primary identifier* of the `IP-Address Update`.
+	ID *string `json:"id,omitempty"`
+
 	// Version The version of the internet protocol.
-	//
 	Version *int `json:"version,omitempty"`
 
 	// Address IPv4 or IPv6 Address in the following format:
 	// - IPv4: [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
 	// - IPv6: hexadecimal colon separated notation
-	//
 	Address *string `json:"address,omitempty"`
 
 	// PrefixLength The CIDR ip prefix length
-	//
 	PrefixLength *int `json:"prefix_length,omitempty"`
 
 	// FQDN is a fqdn
@@ -5875,32 +7828,31 @@ type IPAddressPatch struct {
 type IPAddressRequest struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
+	// ID The *primary identifier* of the `IP-Address / Prefix allocation Request`.
+	ID string `json:"id,omitempty"`
+
 	// Version The version of the internet protocol.
-	//
 	Version int `json:"version,omitempty"`
 
 	// Address IPv4 or IPv6 Address in the following format:
 	// - IPv4: [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
 	// - IPv6: hexadecimal colon separated notation
-	//
 	Address string `json:"address,omitempty"`
 
 	// PrefixLength The CIDR ip prefix length
-	//
 	PrefixLength int `json:"prefix_length,omitempty"`
 
 	// FQDN is a fqdn
@@ -5913,36 +7865,46 @@ type IPAddressRequest struct {
 	ValidNotAfter *time.Time `json:"valid_not_after,omitempty"`
 }
 
+// IPAddressShort IP-Address
+type IPAddressShort struct {
+	// Version The version of the internet protocol.
+	Version int `json:"version,omitempty"`
+
+	// Address The IP address in the following format:
+	// - IPv4: [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
+	// - IPv6: hexadecimal colon separated notation
+	Address string `json:"address,omitempty"`
+}
+
 // IPAddressUpdate IP-Address Update
 type IPAddressUpdate struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
+	// ID The *primary identifier* of the `IP-Address Update`.
+	ID string `json:"id,omitempty"`
+
 	// Version The version of the internet protocol.
-	//
 	Version int `json:"version,omitempty"`
 
 	// Address IPv4 or IPv6 Address in the following format:
 	// - IPv4: [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
 	// - IPv6: hexadecimal colon separated notation
-	//
 	Address string `json:"address,omitempty"`
 
 	// PrefixLength The CIDR ip prefix length
-	//
 	PrefixLength int `json:"prefix_length,omitempty"`
 
 	// FQDN is a fqdn
@@ -5959,22 +7921,23 @@ type IPAddressUpdate struct {
 type MacAddress struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
+	// ID The *primary identifier* of the `MAC-Address`.
+	ID string `json:"id,omitempty"`
+
 	// Address Unicast MAC address, formatted hexadecimal values with colons.
-	//
 	Address string `json:"address,omitempty"`
 
 	// ValidNotBefore When a mac address is assigned to a NSC, and the current
@@ -5995,31 +7958,29 @@ type MacAddress struct {
 	// If the value is null or the property does not exist, the MAC address
 	// is valid indefinitely. The value may not be in the past.
 	ValidNotAfter *time.Time `json:"valid_not_after,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 }
 
 // MacAddressRequest MAC-Address Request
 type MacAddressRequest struct {
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
+	// ID The *primary identifier* of the `MAC-Address Request`.
+	ID string `json:"id,omitempty"`
+
 	// Address Unicast MAC address, formatted hexadecimal values with colons.
-	//
 	Address string `json:"address,omitempty"`
 
 	// ValidNotBefore When a mac address is assigned to a NSC, and the current
@@ -6042,53 +8003,46 @@ type MacAddressRequest struct {
 	ValidNotAfter *time.Time `json:"valid_not_after,omitempty"`
 }
 
+// Peer MAC-, IP-Address and ASN of the peer.
+type Peer struct {
+	// ASN The ASN of the peer.
+	ASN *int `json:"asn,omitempty"`
+
+	// IP is a ip
+	IP *IPAddressShort `json:"ip,omitempty"`
+
+	// MacAddress Unicast MAC address, formatted hexadecimal values with colons.
+	MacAddress string `json:"mac_address,omitempty"`
+}
+
 // Conflict A conflict is preventing success
 type Conflict struct {
 	// ResourceType The resource type refers to an ix-api resource.
-	//
 	ResourceType string `json:"resource_type,omitempty"`
 
 	// ResourceID The id of the resource which has a conflict with the
 	// request operation on the current resource.
-	//
 	ResourceID string `json:"resource_id,omitempty"`
 
 	// ResourceProperty Indicates the property where the resource is in use.
-	//
-	ResourceProperty string `json:"resource_property,omitempty"`
+	ResourceProperty *string `json:"resource_property,omitempty"`
 
 	// RemoteResourceType The type of the conflicting resource.
-	//
 	RemoteResourceType string `json:"remote_resource_type,omitempty"`
 
 	// RemoteResourceID The id of the conflicting resource. This is in most
 	// cases the id of the current resource.
-	//
 	RemoteResourceID string `json:"remote_resource_id,omitempty"`
 }
 
 // ProblemResponse Encodes a problem into an appropriate response body.
 type ProblemResponse struct {
-	// Type A URI reference (see RFC3986) that identifies the
-	// problem type.
-	//
-	// This specification encourages that, when
-	// dereferenced, it provide human-readable documentation
-	// for the problem type (e.g., using HTML
-	// [W3C.REC-html5-20141028]).
-	//
-	// When this member is not present, its value is assumed
-	// to be "about:blank".
-	//
-	Type string `json:"type,omitempty"`
-
 	// Title A short, human-readable summary of the problem type.
 	//
 	// It SHOULD NOT change from occurrence to
 	// occurrence of the problem, except for purposes
 	// of localization (e.g., using proactive content
 	// negotiation; see [RFC7231], Section 3.4).
-	//
 	Title string `json:"title,omitempty"`
 
 	// Status The HTTP status code ([RFC7231], Section 6)
@@ -6124,22 +8078,23 @@ type ValidationErrorProperty struct {
 // AllowMemberJoiningRule A rule for members joining a private vlan
 type AllowMemberJoiningRule struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account to which access to the
 	// network service should be granted or denied.
-	//
 	ConsumingAccount string `json:"consuming_account,omitempty"`
+
+	// ID The *primary identifier* of the `A rule for members joining a private vlan`.
+	ID string `json:"id,omitempty"`
 
 	// CapacityMin Require an optional minimum capacity to join
 	// the network service.
@@ -6149,10 +8104,7 @@ type AllowMemberJoiningRule struct {
 	// the capacity set in the network service config.
 	CapacityMax *int `json:"capacity_max,omitempty"`
 
-	// ID is a id
-	ID string `json:"id,omitempty"`
-
-	// NetworkService is a network_service
+	// NetworkService The `id` of the related `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
 }
 
@@ -6164,22 +8116,23 @@ func (a AllowMemberJoiningRule) PolymorphicType() string {
 // AllowMemberJoiningRulePatch A vlan member joining rule update
 type AllowMemberJoiningRulePatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account to which access to the
 	// network service should be granted or denied.
-	//
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
+
+	// ID The *primary identifier* of the `A vlan member joining rule update`.
+	ID *string `json:"id,omitempty"`
 
 	// CapacityMin Require an optional minimum capacity to join
 	// the network service.
@@ -6198,22 +8151,23 @@ func (a AllowMemberJoiningRulePatch) PolymorphicType() string {
 // AllowMemberJoiningRuleRequest A new vlan member joining rule
 type AllowMemberJoiningRuleRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account to which access to the
 	// network service should be granted or denied.
-	//
 	ConsumingAccount string `json:"consuming_account,omitempty"`
+
+	// ID The *primary identifier* of the `A new vlan member joining rule`.
+	ID string `json:"id,omitempty"`
 
 	// CapacityMin Require an optional minimum capacity to join
 	// the network service.
@@ -6223,7 +8177,7 @@ type AllowMemberJoiningRuleRequest struct {
 	// the capacity set in the network service config.
 	CapacityMax *int `json:"capacity_max,omitempty"`
 
-	// NetworkService is a network_service
+	// NetworkService The `id` of the related `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
 }
 
@@ -6235,22 +8189,23 @@ func (a AllowMemberJoiningRuleRequest) PolymorphicType() string {
 // AllowMemberJoiningRuleUpdate A vlan member joining rule update
 type AllowMemberJoiningRuleUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account to which access to the
 	// network service should be granted or denied.
-	//
 	ConsumingAccount string `json:"consuming_account,omitempty"`
+
+	// ID The *primary identifier* of the `A vlan member joining rule update`.
+	ID string `json:"id,omitempty"`
 
 	// CapacityMin Require an optional minimum capacity to join
 	// the network service.
@@ -6269,16 +8224,15 @@ func (a AllowMemberJoiningRuleUpdate) PolymorphicType() string {
 // CloudNetworkService Cloud Network Service
 type CloudNetworkService struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// NscRequiredContactRoles The configuration will require at least one of each of the
 	// specified roles assigned to contacts.
@@ -6287,7 +8241,7 @@ type CloudNetworkService struct {
 	// `role_assignments` list property of the network service configuration.
 	NscRequiredContactRoles []string `json:"nsc_required_contact_roles,omitempty"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// DecommissionAt The service will be decommissioned on this date.
@@ -6295,6 +8249,7 @@ type CloudNetworkService struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -6317,34 +8272,34 @@ type CloudNetworkService struct {
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Cloud Network Service`.
+	ID string `json:"id,omitempty"`
 
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
@@ -6370,7 +8325,6 @@ type CloudNetworkService struct {
 	//
 	// The `provider_ref` is managed by the exchange and its
 	// meaning may vary between different cloud services.
-	//
 	ProviderRef string `json:"provider_ref,omitempty"`
 
 	// CloudKey The cloud key is used to specify to which user or
@@ -6382,6 +8336,16 @@ type CloudNetworkService struct {
 	// like Azure, this would be the service key
 	// (Example: `acl9edcf-f11c-4681-9c7b-6d16b2973997`)
 	CloudKey string `json:"cloud_key,omitempty"`
+
+	// AvailabilityZones The availability zones the service can support.
+	AvailabilityZones []string `json:"availability_zones,omitempty"`
+
+	// NetworkFeatures A list of `id`s of the related `NetworkFeature`.
+	NetworkFeatures []string `json:"network_features,omitempty"`
+
+	// NscProductOfferings An optional list of `ProductOffering` which can be used in the
+	// network service configs for this service.
+	NscProductOfferings []string `json:"nsc_product_offerings,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -6392,41 +8356,41 @@ func (c CloudNetworkService) PolymorphicType() string {
 // CloudNetworkServicePatch Cloud Network Service Update
 type CloudNetworkServicePatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering *string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Cloud Network Service Update`.
+	ID *string `json:"id,omitempty"`
 
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
@@ -6454,41 +8418,41 @@ func (c CloudNetworkServicePatch) PolymorphicType() string {
 // CloudNetworkServiceRequest Cloud Network Service Request
 type CloudNetworkServiceRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Cloud Network Service Request`.
+	ID string `json:"id,omitempty"`
 
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
@@ -6513,41 +8477,41 @@ func (c CloudNetworkServiceRequest) PolymorphicType() string {
 // CloudNetworkServiceUpdate Cloud Network Service Update
 type CloudNetworkServiceUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Cloud Network Service Update`.
+	ID string `json:"id,omitempty"`
 
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
@@ -6575,27 +8539,25 @@ func (c CloudNetworkServiceUpdate) PolymorphicType() string {
 // DenyMemberJoiningRule A rule for members joining a private vlan
 type DenyMemberJoiningRule struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account to which access to the
 	// network service should be granted or denied.
-	//
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `A rule for members joining a private vlan`.
 	ID string `json:"id,omitempty"`
 
-	// NetworkService is a network_service
+	// NetworkService The `id` of the related `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
 }
 
@@ -6607,22 +8569,23 @@ func (d DenyMemberJoiningRule) PolymorphicType() string {
 // DenyMemberJoiningRulePatch A vlan member joining rule update
 type DenyMemberJoiningRulePatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account to which access to the
 	// network service should be granted or denied.
-	//
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
+
+	// ID The *primary identifier* of the `A vlan member joining rule update`.
+	ID *string `json:"id,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -6633,24 +8596,25 @@ func (d DenyMemberJoiningRulePatch) PolymorphicType() string {
 // DenyMemberJoiningRuleRequest A new vlan member joining rule
 type DenyMemberJoiningRuleRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account to which access to the
 	// network service should be granted or denied.
-	//
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
-	// NetworkService is a network_service
+	// ID The *primary identifier* of the `A new vlan member joining rule`.
+	ID string `json:"id,omitempty"`
+
+	// NetworkService The `id` of the related `NetworkService`.
 	NetworkService string `json:"network_service,omitempty"`
 }
 
@@ -6662,22 +8626,23 @@ func (d DenyMemberJoiningRuleRequest) PolymorphicType() string {
 // DenyMemberJoiningRuleUpdate A vlan member joining rule update
 type DenyMemberJoiningRuleUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account to which access to the
 	// network service should be granted or denied.
-	//
 	ConsumingAccount string `json:"consuming_account,omitempty"`
+
+	// ID The *primary identifier* of the `A vlan member joining rule update`.
+	ID string `json:"id,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -6688,16 +8653,15 @@ func (d DenyMemberJoiningRuleUpdate) PolymorphicType() string {
 // ExchangeLanNetworkService Exchange Lan Network Service
 type ExchangeLanNetworkService struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// NscRequiredContactRoles The configuration will require at least one of each of the
 	// specified roles assigned to contacts.
@@ -6708,19 +8672,21 @@ type ExchangeLanNetworkService struct {
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// ID The *primary identifier* of the `Exchange Lan Network Service`.
+	ID string `json:"id,omitempty"`
 
 	// Name Exchange-dependent service name, will be shown on the invoice.
 	Name string `json:"name,omitempty"`
@@ -6730,7 +8696,6 @@ type ExchangeLanNetworkService struct {
 	//
 	// Same as `service_metro_area_network` on the related
 	// `ProductOffering`.
-	//
 	MetroAreaNetwork string `json:"metro_area_network,omitempty"`
 
 	// PeeringdbIxid PeeringDB ixid
@@ -6739,16 +8704,14 @@ type ExchangeLanNetworkService struct {
 	// IxfdbIxid id of ixfdb
 	IxfdbIxid *int `json:"ixfdb_ixid,omitempty"`
 
-	// NetworkFeatures is a network_features
+	// NetworkFeatures A list of `id`s of the related `NetworkFeature`.
 	NetworkFeatures []string `json:"network_features,omitempty"`
 
 	// SubnetV4 IPv4 subnet in [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
 	// CIDR notation.
-	//
 	SubnetV4 string `json:"subnet_v4,omitempty"`
 
 	// SubnetV6 IPv6 subnet in hexadecimal colon separated CIDR notation.
-	//
 	SubnetV6 string `json:"subnet_v6,omitempty"`
 
 	// ProductOffering *deprecation notice*
@@ -6763,32 +8726,28 @@ func (e ExchangeLanNetworkService) PolymorphicType() string {
 // IXPSpecificFeatureFlag IXP-Specific Feature Flag
 type IXPSpecificFeatureFlag struct {
 	// Name The name of the feature flag.
-	//
 	Name string `json:"name,omitempty"`
 
 	// Description The description of the feature flag.
-	//
 	Description string `json:"description,omitempty"`
 
 	// Mandatory This feature will always be enabled, even if not provided in
 	// the corresponding config's list of `flags`.
-	//
 	Mandatory bool `json:"mandatory,omitempty"`
 }
 
 // MP2MPNetworkService MP2MP Network Service
 type MP2MPNetworkService struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// NscRequiredContactRoles The configuration will require at least one of each of the
 	// specified roles assigned to contacts.
@@ -6797,10 +8756,10 @@ type MP2MPNetworkService struct {
 	// `role_assignments` list property of the network service configuration.
 	NscRequiredContactRoles []string `json:"nsc_required_contact_roles,omitempty"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
-	// NscProductOfferings An optional list of `ProductOffering`s which can be used in the
+	// NscProductOfferings An optional list of `ProductOffering` which can be used in the
 	// network service configs for this service.
 	NscProductOfferings []string `json:"nsc_product_offerings,omitempty"`
 
@@ -6809,6 +8768,7 @@ type MP2MPNetworkService struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -6831,34 +8791,34 @@ type MP2MPNetworkService struct {
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `MP2MP Network Service`.
+	ID string `json:"id,omitempty"`
 
 	// Public A public mp2mp network service can be joined
 	// by everyone on the exchange unless denied by
@@ -6879,14 +8839,25 @@ type MP2MPNetworkService struct {
 	//
 	// It is intended for humans to make sense of, for example:
 	// "Financial Clearance LAN".
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
-	// MemberJoiningRules is a member_joining_rules
+	// SubnetV4 IPv4 subnet in [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
+	// CIDR notation.
+	SubnetV4 *string `json:"subnet_v4,omitempty"`
+
+	// SubnetV6 IPv6 subnet in hexadecimal colon separated CIDR notation.
+	SubnetV6 *string `json:"subnet_v6,omitempty"`
+
+	// MemberJoiningRules A list of `id`s of the related `MemberJoiningRule`.
 	MemberJoiningRules []string `json:"member_joining_rules,omitempty"`
 
-	// NetworkFeatures is a network_features
+	// NetworkFeatures A list of `id`s of the related `NetworkFeature`.
 	NetworkFeatures []string `json:"network_features,omitempty"`
+
+	// MacAclProtection When enabled, only MAC addresses in the referenced in the network
+	// service config's `macs` property are allowed to send and receive
+	// traffic on this network service.
+	MacAclProtection *bool `json:"mac_acl_protection,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -6897,41 +8868,41 @@ func (m MP2MPNetworkService) PolymorphicType() string {
 // MP2MPNetworkServicePatch MP2MP Network Service Update
 type MP2MPNetworkServicePatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering *string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `MP2MP Network Service Update`.
+	ID *string `json:"id,omitempty"`
 
 	// Public A public mp2mp network service can be joined
 	// by everyone on the exchange unless denied by
@@ -6952,8 +8923,14 @@ type MP2MPNetworkServicePatch struct {
 	//
 	// It is intended for humans to make sense of, for example:
 	// "Financial Clearance LAN".
-	//
 	DisplayName *string `json:"display_name,omitempty"`
+
+	// SubnetV4 IPv4 subnet in [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
+	// CIDR notation.
+	SubnetV4 *string `json:"subnet_v4,omitempty"`
+
+	// SubnetV6 IPv6 subnet in hexadecimal colon separated CIDR notation.
+	SubnetV6 *string `json:"subnet_v6,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -6964,41 +8941,41 @@ func (m MP2MPNetworkServicePatch) PolymorphicType() string {
 // MP2MPNetworkServiceRequest MP2MP Network Service Request
 type MP2MPNetworkServiceRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `MP2MP Network Service Request`.
+	ID string `json:"id,omitempty"`
 
 	// Public A public mp2mp network service can be joined
 	// by everyone on the exchange unless denied by
@@ -7019,8 +8996,14 @@ type MP2MPNetworkServiceRequest struct {
 	//
 	// It is intended for humans to make sense of, for example:
 	// "Financial Clearance LAN".
-	//
 	DisplayName *string `json:"display_name,omitempty"`
+
+	// SubnetV4 IPv4 subnet in [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
+	// CIDR notation.
+	SubnetV4 *string `json:"subnet_v4,omitempty"`
+
+	// SubnetV6 IPv6 subnet in hexadecimal colon separated CIDR notation.
+	SubnetV6 *string `json:"subnet_v6,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -7031,41 +9014,41 @@ func (m MP2MPNetworkServiceRequest) PolymorphicType() string {
 // MP2MPNetworkServiceUpdate MP2MP Network Service Update
 type MP2MPNetworkServiceUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `MP2MP Network Service Update`.
+	ID string `json:"id,omitempty"`
 
 	// Public A public mp2mp network service can be joined
 	// by everyone on the exchange unless denied by
@@ -7086,8 +9069,14 @@ type MP2MPNetworkServiceUpdate struct {
 	//
 	// It is intended for humans to make sense of, for example:
 	// "Financial Clearance LAN".
-	//
 	DisplayName *string `json:"display_name,omitempty"`
+
+	// SubnetV4 IPv4 subnet in [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
+	// CIDR notation.
+	SubnetV4 *string `json:"subnet_v4,omitempty"`
+
+	// SubnetV6 IPv6 subnet in hexadecimal colon separated CIDR notation.
+	SubnetV6 *string `json:"subnet_v6,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -7341,16 +9330,15 @@ const CloudNetworkServiceUpdateType = "cloud_vc"
 // P2MPNetworkService P2MP Network Service
 type P2MPNetworkService struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// NscRequiredContactRoles The configuration will require at least one of each of the
 	// specified roles assigned to contacts.
@@ -7359,10 +9347,10 @@ type P2MPNetworkService struct {
 	// `role_assignments` list property of the network service configuration.
 	NscRequiredContactRoles []string `json:"nsc_required_contact_roles,omitempty"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
-	// NscProductOfferings An optional list of `ProductOffering`s which can be used in the
+	// NscProductOfferings An optional list of `ProductOffering` which can be used in the
 	// network service configs for this service.
 	NscProductOfferings []string `json:"nsc_product_offerings,omitempty"`
 
@@ -7371,6 +9359,7 @@ type P2MPNetworkService struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -7393,34 +9382,34 @@ type P2MPNetworkService struct {
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `P2MP Network Service`.
+	ID string `json:"id,omitempty"`
 
 	// DisplayName Name of the point to multi-point virtual circuit.
 	//
@@ -7428,7 +9417,6 @@ type P2MPNetworkService struct {
 	// to this virtual circuit.
 	//
 	// It is intended for humans to make sense of.
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// Public A public p2mp network service can be joined
@@ -7444,10 +9432,10 @@ type P2MPNetworkService struct {
 	// Other required fields are redacted.
 	Public *bool `json:"public,omitempty"`
 
-	// NetworkFeatures is a network_features
+	// NetworkFeatures A list of `id`s of the related `NetworkFeature`.
 	NetworkFeatures []string `json:"network_features,omitempty"`
 
-	// MemberJoiningRules is a member_joining_rules
+	// MemberJoiningRules A list of `id`s of the related `MemberJoiningRule`.
 	MemberJoiningRules []string `json:"member_joining_rules,omitempty"`
 }
 
@@ -7459,41 +9447,41 @@ func (p P2MPNetworkService) PolymorphicType() string {
 // P2MPNetworkServicePatch P2MP Network Service Update
 type P2MPNetworkServicePatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering *string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `P2MP Network Service Update`.
+	ID *string `json:"id,omitempty"`
 
 	// DisplayName Name of the point to multi-point virtual circuit.
 	//
@@ -7501,7 +9489,6 @@ type P2MPNetworkServicePatch struct {
 	// to this virtual circuit.
 	//
 	// It is intended for humans to make sense of.
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// Public A public p2mp network service can be joined
@@ -7526,41 +9513,41 @@ func (p P2MPNetworkServicePatch) PolymorphicType() string {
 // P2MPNetworkServiceRequest P2MP Network Service Request
 type P2MPNetworkServiceRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `P2MP Network Service Request`.
+	ID string `json:"id,omitempty"`
 
 	// DisplayName Name of the point to multi-point virtual circuit.
 	//
@@ -7568,7 +9555,6 @@ type P2MPNetworkServiceRequest struct {
 	// to this virtual circuit.
 	//
 	// It is intended for humans to make sense of.
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// Public A public p2mp network service can be joined
@@ -7593,41 +9579,41 @@ func (p P2MPNetworkServiceRequest) PolymorphicType() string {
 // P2MPNetworkServiceUpdate P2MP Network Service Update
 type P2MPNetworkServiceUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `P2MP Network Service Update`.
+	ID string `json:"id,omitempty"`
 
 	// DisplayName Name of the point to multi-point virtual circuit.
 	//
@@ -7635,7 +9621,6 @@ type P2MPNetworkServiceUpdate struct {
 	// to this virtual circuit.
 	//
 	// It is intended for humans to make sense of.
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// Public A public p2mp network service can be joined
@@ -7660,16 +9645,15 @@ func (p P2MPNetworkServiceUpdate) PolymorphicType() string {
 // P2PNetworkService P2P Network Service
 type P2PNetworkService struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// State is a state
+	// State The state of the object.
+	// *(Sensitive Property)*
 	State string `json:"state,omitempty"`
 
-	// Status is a status
+	// Status Status information about the object.
+	// *(Sensitive Property)*
 	Status []*Status `json:"status,omitempty"`
-
-	// ID is a id
-	ID string `json:"id,omitempty"`
 
 	// NscRequiredContactRoles The configuration will require at least one of each of the
 	// specified roles assigned to contacts.
@@ -7678,10 +9662,10 @@ type P2PNetworkService struct {
 	// `role_assignments` list property of the network service configuration.
 	NscRequiredContactRoles []string `json:"nsc_required_contact_roles,omitempty"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
-	// NscProductOfferings An optional list of `ProductOffering`s which can be used in the
+	// NscProductOfferings An optional list of `ProductOffering` which can be used in the
 	// network service configs for this service.
 	NscProductOfferings []string `json:"nsc_product_offerings,omitempty"`
 
@@ -7690,6 +9674,7 @@ type P2PNetworkService struct {
 	// This field is only used when
 	// the state is `DECOMMISSION_REQUESTED` or
 	// `DECOMMISSIONED`.
+	// *(Sensitive Property)*
 	DecommissionAt *Date `json:"decommission_at,omitempty"`
 
 	// ChargedUntil The service continues incurring charges until this date.
@@ -7712,34 +9697,34 @@ type P2PNetworkService struct {
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `P2P Network Service`.
+	ID string `json:"id,omitempty"`
 
 	// DisplayName Name of the point to point virtual circuit.
 	//
@@ -7747,12 +9732,13 @@ type P2PNetworkService struct {
 	// to this virtual circuit.
 	//
 	// It is intended for humans to make sense of.
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// JoiningMemberAccount The account of the B-side member joining the virtual circuit.
-	//
 	JoiningMemberAccount string `json:"joining_member_account,omitempty"`
+
+	// AvailabilityZones The availability zones for the service.
+	AvailabilityZones []string `json:"availability_zones,omitempty"`
 
 	// Capacity The capacity of the service in Mbps. When null,
 	// the maximum capacity will be used.
@@ -7767,41 +9753,41 @@ func (p P2PNetworkService) PolymorphicType() string {
 // P2PNetworkServicePatch P2P Network Service Update
 type P2PNetworkServicePatch struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering *string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount *string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount *string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount *string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `P2P Network Service Update`.
+	ID *string `json:"id,omitempty"`
 
 	// DisplayName Name of the point to point virtual circuit.
 	//
@@ -7809,12 +9795,13 @@ type P2PNetworkServicePatch struct {
 	// to this virtual circuit.
 	//
 	// It is intended for humans to make sense of.
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// JoiningMemberAccount The account of the B-side member joining the virtual circuit.
-	//
 	JoiningMemberAccount *string `json:"joining_member_account,omitempty"`
+
+	// AvailabilityZones The availability zones for the service.
+	AvailabilityZones []string `json:"availability_zones,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -7825,41 +9812,41 @@ func (p P2PNetworkServicePatch) PolymorphicType() string {
 // P2PNetworkServiceRequest P2P Network Service Request
 type P2PNetworkServiceRequest struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `P2P Network Service Request`.
+	ID string `json:"id,omitempty"`
 
 	// DisplayName Name of the point to point virtual circuit.
 	//
@@ -7867,12 +9854,13 @@ type P2PNetworkServiceRequest struct {
 	// to this virtual circuit.
 	//
 	// It is intended for humans to make sense of.
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// JoiningMemberAccount The account of the B-side member joining the virtual circuit.
-	//
 	JoiningMemberAccount string `json:"joining_member_account,omitempty"`
+
+	// AvailabilityZones The availability zones for the service.
+	AvailabilityZones []string `json:"availability_zones,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -7883,41 +9871,41 @@ func (p P2PNetworkServiceRequest) PolymorphicType() string {
 // P2PNetworkServiceUpdate P2P Network Service Update
 type P2PNetworkServiceUpdate struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ProductOffering is a product_offering
+	// ProductOffering The `id` of the related `ProductOffering`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
 	// ManagingAccount The `id` of the account responsible for managing the service via
 	// the API. A manager can read and update the state of entities.
-	//
+	// *(Sensitive Property)*
 	ManagingAccount string `json:"managing_account,omitempty"`
 
 	// ConsumingAccount The `id` of the account consuming a service.
 	//
 	// Used to be `owning_customer`.
-	//
+	// *(Sensitive Property)*
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 
 	// ExternalRef Reference field, free to use for the API user.
 	// *(Sensitive Property)*
-	//
 	ExternalRef *string `json:"external_ref,omitempty"`
 
 	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
 	// *(Sensitive Property)*
-	//
 	PurchaseOrder *string `json:"purchase_order,omitempty"`
 
 	// ContractRef A reference to a contract. If no specific contract is used,
 	// a default MAY be chosen by the implementer.
 	// *(Sensitive Property)*
-	//
 	ContractRef *string `json:"contract_ref,omitempty"`
 
 	// BillingAccount An account requires billing_information to be used as a `billing_account`.
 	// *(Sensitive Property)*
 	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `P2P Network Service Update`.
+	ID string `json:"id,omitempty"`
 
 	// DisplayName Name of the point to point virtual circuit.
 	//
@@ -7925,12 +9913,13 @@ type P2PNetworkServiceUpdate struct {
 	// to this virtual circuit.
 	//
 	// It is intended for humans to make sense of.
-	//
 	DisplayName *string `json:"display_name,omitempty"`
 
 	// JoiningMemberAccount The account of the B-side member joining the virtual circuit.
-	//
 	JoiningMemberAccount string `json:"joining_member_account,omitempty"`
+
+	// AvailabilityZones The availability zones for the service.
+	AvailabilityZones []string `json:"availability_zones,omitempty"`
 }
 
 // PolymorphicType implements the polymorphic interface
@@ -7941,9 +9930,9 @@ func (p P2PNetworkServiceUpdate) PolymorphicType() string {
 // RouteServerNetworkFeature Route Server Network Feature
 type RouteServerNetworkFeature struct {
 	// Type is a type
-	Type string `json:"type,omitempty"`
+	Type string `json:"type"`
 
-	// ID is a id
+	// ID The *primary identifier* of the `Route Server Network Feature`.
 	ID string `json:"id,omitempty"`
 
 	// Name is a name
@@ -7951,6 +9940,9 @@ type RouteServerNetworkFeature struct {
 
 	// Required is a required
 	Required bool `json:"required,omitempty"`
+
+	// NetworkService The `id` of the related `NetworkService`.
+	NetworkService string `json:"network_service,omitempty"`
 
 	// NfcRequiredContactRoles The configuration will require at least one of each of the
 	// specified roles assigned to contacts.
@@ -7963,18 +9955,13 @@ type RouteServerNetworkFeature struct {
 	// to see if e.g. RPKI hard filtering is available.
 	Flags []*IXPSpecificFeatureFlag `json:"flags,omitempty"`
 
-	// NetworkService is a network_service
-	NetworkService string `json:"network_service,omitempty"`
-
 	// ASN is a asn
 	ASN int `json:"asn,omitempty"`
 
 	// FQDN The FQDN of the route server.
-	//
 	FQDN string `json:"fqdn,omitempty"`
 
 	// LookingGlassURL The url of the looking glass.
-	//
 	LookingGlassURL *string `json:"looking_glass_url,omitempty"`
 
 	// AddressFamilies When creating a route server feature config, remember
@@ -7988,29 +9975,24 @@ type RouteServerNetworkFeature struct {
 	// If both `af_inet` and `af_inet6` are supported, either
 	// `as_set_v4` or `as_set_v6` is required, but both can be provided
 	// in the network service config.
-	//
 	AddressFamilies []string `json:"address_families,omitempty"`
 
 	// SessionMode When creating a route server feature config, remember
 	// to specify the same session_mode as the route server.
-	//
 	SessionMode string `json:"session_mode,omitempty"`
 
 	// AvailableBGPSessionTypes The route server provides the following session modes.
-	//
 	AvailableBGPSessionTypes []string `json:"available_bgp_session_types,omitempty"`
 
 	// IPV4 IPv4 address in [dot-decimal notation](https://en.wikipedia.org/wiki/Dot-decimal_notation)
 	// notation.
 	//
 	// This field is only set if the `address_families` include `af_inet`.
-	//
 	IPV4 *string `json:"ip_v4,omitempty"`
 
 	// IPV6 IPv6 address in hexadecimal colon separated notation.
 	//
 	// This field is only set if the `address_families` include `af_inet6`.
-	//
 	IPV6 *string `json:"ip_v6,omitempty"`
 }
 
@@ -8019,26 +10001,351 @@ func (r RouteServerNetworkFeature) PolymorphicType() string {
 	return RouteServerNetworkFeatureType
 }
 
+// RoutingFunction Routing Function
+type RoutingFunction struct {
+	// State The state of the object.
+	// *(Sensitive Property)*
+	State string `json:"state,omitempty"`
+
+	// Status Status information about the object.
+	// *(Sensitive Property)*
+	Status []*Status `json:"status,omitempty"`
+
+	// ManagingAccount The `id` of the account responsible for managing the service via
+	// the API. A manager can read and update the state of entities.
+	// *(Sensitive Property)*
+	ManagingAccount string `json:"managing_account,omitempty"`
+
+	// ConsumingAccount The `id` of the account consuming a service.
+	//
+	// Used to be `owning_customer`.
+	// *(Sensitive Property)*
+	ConsumingAccount string `json:"consuming_account,omitempty"`
+
+	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
+	PurchaseOrder *string `json:"purchase_order,omitempty"`
+
+	// ContractRef A reference to a contract. If no specific contract is used,
+	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
+	ContractRef *string `json:"contract_ref,omitempty"`
+
+	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
+	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Routing Function`.
+	ID string `json:"id,omitempty"`
+
+	// ProductOffering The product offering to be used for the
+	// routing function.
+	ProductOffering string `json:"product_offering,omitempty"`
+
+	// ASN Any routing function instance needs to be
+	// assigned a 2-byte or 4-byte ASN of the
+	// customer's choice. There is no restriction on
+	// private or public ASNs.
+	ASN int `json:"asn,omitempty"`
+
+	// Capacity The desired upper bound of the capacity for
+	// the routing function.
+	Capacity *int `json:"capacity,omitempty"`
+}
+
+// RoutingFunctionPatch Routing Function Patch
+type RoutingFunctionPatch struct {
+	// ManagingAccount The `id` of the account responsible for managing the service via
+	// the API. A manager can read and update the state of entities.
+	// *(Sensitive Property)*
+	ManagingAccount *string `json:"managing_account,omitempty"`
+
+	// ConsumingAccount The `id` of the account consuming a service.
+	//
+	// Used to be `owning_customer`.
+	// *(Sensitive Property)*
+	ConsumingAccount *string `json:"consuming_account,omitempty"`
+
+	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
+	PurchaseOrder *string `json:"purchase_order,omitempty"`
+
+	// ContractRef A reference to a contract. If no specific contract is used,
+	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
+	ContractRef *string `json:"contract_ref,omitempty"`
+
+	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
+	BillingAccount *string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Routing Function Patch`.
+	ID *string `json:"id,omitempty"`
+
+	// ProductOffering The product offering to be used for the
+	// routing function.
+	ProductOffering *string `json:"product_offering,omitempty"`
+
+	// ASN Any routing function instance needs to be
+	// assigned a 2-byte or 4-byte ASN of the
+	// customer's choice. There is no restriction on
+	// private or public ASNs.
+	ASN *int `json:"asn,omitempty"`
+
+	// Capacity The desired upper bound of the capacity for
+	// the routing function.
+	Capacity *int `json:"capacity,omitempty"`
+}
+
+// RoutingFunctionRequest Routing Function Request
+type RoutingFunctionRequest struct {
+	// ManagingAccount The `id` of the account responsible for managing the service via
+	// the API. A manager can read and update the state of entities.
+	// *(Sensitive Property)*
+	ManagingAccount string `json:"managing_account,omitempty"`
+
+	// ConsumingAccount The `id` of the account consuming a service.
+	//
+	// Used to be `owning_customer`.
+	// *(Sensitive Property)*
+	ConsumingAccount string `json:"consuming_account,omitempty"`
+
+	// ExternalRef Reference field, free to use for the API user.
+	// *(Sensitive Property)*
+	ExternalRef *string `json:"external_ref,omitempty"`
+
+	// PurchaseOrder Purchase Order ID which will be displayed on the invoice.
+	// *(Sensitive Property)*
+	PurchaseOrder *string `json:"purchase_order,omitempty"`
+
+	// ContractRef A reference to a contract. If no specific contract is used,
+	// a default MAY be chosen by the implementer.
+	// *(Sensitive Property)*
+	ContractRef *string `json:"contract_ref,omitempty"`
+
+	// BillingAccount An account requires billing_information to be used as a `billing_account`.
+	// *(Sensitive Property)*
+	BillingAccount string `json:"billing_account,omitempty"`
+
+	// ID The *primary identifier* of the `Routing Function Request`.
+	ID string `json:"id,omitempty"`
+
+	// ProductOffering The product offering to be used for the
+	// routing function.
+	ProductOffering string `json:"product_offering,omitempty"`
+
+	// ASN Any routing function instance needs to be
+	// assigned a 2-byte or 4-byte ASN of the
+	// customer's choice. There is no restriction on
+	// private or public ASNs.
+	ASN int `json:"asn,omitempty"`
+
+	// Capacity The desired upper bound of the capacity for
+	// the routing function.
+	Capacity *int `json:"capacity,omitempty"`
+}
+
+// NetworkServiceConfigAggregate Statistics for NetworkServiceConfig
+type NetworkServiceConfigAggregate struct {
+	// Aggregates Aggregated statistics for a connection or service configuration.
+	//
+	// For the **property name** the string representation of the
+	// aggregate interval in ISO8601 period notation is recommended.
+	//
+	// For example: `PT5M`, `P1D`, `P30D`,`P1Y`.
+	//
+	// If a window is defined via the `gtart` and `end` query parameter,
+	// the **property name** will be `custom`.
+	//
+	// The available intervals can differ by implementation.
+	Aggregates map[string]interface{} `json:"aggregates,omitempty"`
+}
+
+// NetworkServiceConfigAggregateStatistics AggregateStatistics for NetworkServiceConfig
+type NetworkServiceConfigAggregateStatistics struct {
+	// Title Title of the aggregated statistics.
+	Title string `json:"title,omitempty"`
+
+	// Start Start of the traffic aggregation.
+	Start time.Time `json:"start,omitempty"`
+
+	// End End of the traffic aggregation.
+	End time.Time `json:"end,omitempty"`
+
+	// Accuracy The accuracy is the ratio of *total aggregated samples* to
+	// *expected samples*.
+	//
+	// The expected number of samples is the size of the window
+	// of the aggregate, divided by the aggregation resolution.
+	//
+	// For example: A window of `24 h` with an aggregation resolution
+	// of `5 m` would yield `288` samples.
+	//
+	// If only `275` samples are available for aggregation, the
+	// accuracy would be `0.95`.
+	Accuracy float64 `json:"accuracy,omitempty"`
+
+	// CreatedAt Timestamp when the statistics were created.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+
+	// NextUpdateAt Next update of the statistical data.
+	// This may not correspond to the aggregate interval.
+	NextUpdateAt time.Time `json:"next_update_at,omitempty"`
+
+	// AveragePpsIn Average number of inbound **packets per second**.
+	AveragePpsIn int `json:"average_pps_in,omitempty"`
+
+	// AveragePpsOut Average number outbound **packets per second**.
+	AveragePpsOut int `json:"average_pps_out,omitempty"`
+
+	// AverageOpsIn Average inbound **octets per second**.
+	AverageOpsIn int `json:"average_ops_in,omitempty"`
+
+	// AverageOpsOut Average outbound **octets per second**.
+	AverageOpsOut int `json:"average_ops_out,omitempty"`
+
+	// AverageEpsIn Average **errors per second** inbound.
+	AverageEpsIn *float64 `json:"average_eps_in,omitempty"`
+
+	// AverageEpsOut Averages **errors per second** outbound.
+	AverageEpsOut *float64 `json:"average_eps_out,omitempty"`
+
+	// AverageDpsIn Average **discards per second** inbound.
+	AverageDpsIn *float64 `json:"average_dps_in,omitempty"`
+
+	// AverageDpsOut Averages **discards per second** outbound.
+	AverageDpsOut *float64 `json:"average_dps_out,omitempty"`
+
+	// Percentile95PpsIn 95th percentile of the inbound **octets per second**.
+	Percentile95PpsIn *int `json:"percentile95_pps_in,omitempty"`
+
+	// Percentile95PpsOut 95th percentile of outbound **packets per second**.
+	Percentile95PpsOut *int `json:"percentile95_pps_out,omitempty"`
+
+	// Percentile95OpsOut 95th percentile of outbound **octets per second**.
+	Percentile95OpsOut *int `json:"percentile95_ops_out,omitempty"`
+
+	// MaximumPpsIn Peak inbound **packets per second** during the interval.
+	MaximumPpsIn *int `json:"maximum_pps_in,omitempty"`
+
+	// MaximumPpsOut Peak outbound **packets per second** during the interval.
+	MaximumPpsOut *int `json:"maximum_pps_out,omitempty"`
+
+	// MaximumOpsIn Peak inbound **octets per second** during the interval.
+	MaximumOpsIn *int `json:"maximum_ops_in,omitempty"`
+
+	// MaximumOpsOut Peak outbound **octets per second** during the interval.
+	MaximumOpsOut *int `json:"maximum_ops_out,omitempty"`
+
+	// MaximumInAt Timestamp when the inbound peak occured.
+	MaximumInAt *time.Time `json:"maximum_in_at,omitempty"`
+
+	// MaximumOutAt Timestamp when the outbound peak occured.
+	MaximumOutAt *time.Time `json:"maximum_out_at,omitempty"`
+
+	// NscAvailableCapacity The capacity left on the `NetworkServiceConfig` in
+	// **megabits per second** (Mbps).
+	NscAvailableCapacity *int `json:"nsc_available_capacity,omitempty"`
+
+	// NscAvailableCapacityChangePerc The percentage change of the available capacity since
+	// the last update.
+	NscAvailableCapacityChangePerc *float64 `json:"nsc_available_capacity_change_perc,omitempty"`
+}
+
+// PeerAggregate PeerStatistics
+type PeerAggregate struct {
+	// Aggregates Aggregated statistics for a connection or service configuration.
+	//
+	// For the **property name** the string representation of the
+	// aggregate interval in ISO8601 period notation is recommended.
+	//
+	// For example: `PT5M`, `P1D`, `P30D`,`P1Y`.
+	//
+	// If a window is defined via the `gtart` and `end` query parameter,
+	// the **property name** will be `custom`.
+	//
+	// The available intervals can differ by implementation.
+	Aggregates map[string]interface{} `json:"aggregates,omitempty"`
+
+	// Peer is a peer
+	Peer *Peer `json:"peer,omitempty"`
+}
+
+// PeerRTT Peer RTT Statistics
+type PeerRTT struct {
+	// TimeMs The total duration of the measurement in
+	// milliseconds.
+	TimeMs int `json:"time_ms,omitempty"`
+
+	// Tx The number of probe packets *transmitted*
+	// within the duration of the measurement.
+	Tx int `json:"tx,omitempty"`
+
+	// Rx The number of probe packets *received*
+	// within the duration of the measurement.
+	Rx int `json:"rx,omitempty"`
+
+	// Loss Ratio of *transmitted packets* to *received packets*:
+	// `loss = 1.0 - (rx / tx)`.
+	Loss float64 `json:"loss,omitempty"`
+
+	// RttMinMs The minimum RTT in milliseconds.
+	RttMinMs float64 `json:"rtt_min_ms,omitempty"`
+
+	// RttAvgMs The average RTT in milliseconds.
+	RttAvgMs float64 `json:"rtt_avg_ms,omitempty"`
+
+	// RttMaxMs The maximum RTT in milliseconds.
+	RttMaxMs float64 `json:"rtt_max_ms,omitempty"`
+
+	// RttMdevMs The median RTT in milliseconds.
+	// Standard deviation in milliseconds.
+	RttMdevMs float64 `json:"rtt_mdev_ms,omitempty"`
+
+	// Neighbor The name of the peer.
+	Neighbor string `json:"neighbor,omitempty"`
+
+	// ASN The Autonomous System Number (ASN) of the peer.
+	ASN *int `json:"asn,omitempty"`
+
+	// IP The IP address of the peer.
+	// For IPv6 addresses the canonical form is used.
+	IP string `json:"ip,omitempty"`
+
+	// Timestamp The date and time when the RTT statistic was measured.
+	Timestamp time.Time `json:"timestamp,omitempty"`
+
+	// Serial The `serial` is an incrementing counter. You can use it
+	// to poll for changes.
+	Serial int `json:"serial,omitempty"`
+}
+
 // PortStatistics Port Statistics
 type PortStatistics struct {
-	// Aggregates Aggregated statistics for a connection or service configuration
+	// Aggregates Aggregated statistics for a connection or service configuration.
 	//
-	// For the **property name** the aggregate interval as a
-	// string representation is used. For example: `5m`, `1d`, `30d`,
-	// `1y`.
+	// For the **property name** the string representation of the
+	// aggregate interval in ISO8601 period notation is recommended.
+	//
+	// For example: `PT5M`, `P1D`, `P30D`,`P1Y`.
 	//
 	// If a window is defined via the `start` and `end` query parameter,
 	// the **property name** will be `custom`.
 	//
 	// The available intervals can differ by implementation.
-	//
 	Aggregates map[string]interface{} `json:"aggregates,omitempty"`
 
 	// LightLevelsTx A list of light levels in **dBm** for each channel.
-	//
 	LightLevelsTx []float64 `json:"light_levels_tx,omitempty"`
 
 	// LightLevelsRx A list of light levels in **dBm** for each channel.
-	//
 	LightLevelsRx []float64 `json:"light_levels_rx,omitempty"`
 }

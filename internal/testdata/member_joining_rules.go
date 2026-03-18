@@ -7,8 +7,8 @@ import (
 // NewMemberJoiningRuleAllow creates a member joining rule
 func NewMemberJoiningRuleAllow() *ixapi.AllowMemberJoiningRule {
 	return &ixapi.AllowMemberJoiningRule{
-		Type: ixapi.AllowMemberJoiningRuleType,
-
+		Type:             ixapi.AllowMemberJoiningRuleType,
+		ID:               "allow:42",
 		ManagingAccount:  "managing:123",
 		ConsumingAccount: "consuming:123",
 
@@ -20,8 +20,8 @@ func NewMemberJoiningRuleAllow() *ixapi.AllowMemberJoiningRule {
 // NewMemberJoiningRuleDeny creates a member joining rule
 func NewMemberJoiningRuleDeny() *ixapi.DenyMemberJoiningRule {
 	return &ixapi.DenyMemberJoiningRule{
-		Type: ixapi.DenyMemberJoiningRuleType,
-
+		Type:             ixapi.DenyMemberJoiningRuleType,
+		ID:               "deny:42",
 		ManagingAccount:  "managing:123",
 		ConsumingAccount: "consuming:123",
 
