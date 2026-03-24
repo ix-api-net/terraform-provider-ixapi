@@ -62,28 +62,13 @@ func cloudRouterConfigCloudVCRequestFromResourceData(
 
 func cloudRouterConfigCloudVCPatchFromResourceData(
 	r *schema.ResourceData,
-) (*ixapi.CloudRouterNetworkServiceConfigPatch, error) {
+) *ixapi.CloudRouterNetworkServiceConfigPatch {
 	res := schemas.ResourceDataFrom(r)
-	patch := &ixapi.CloudRouterNetworkServiceConfigPatch{}
-	hasChanges := false
-
-	if res.HasChange("policy_ingress") {
-		patch.PolicyIngress = res.GetStringOpt("policy_ingress")
-		hasChanges = true
+	return &ixapi.CloudRouterNetworkServiceConfigPatch{
+		PolicyIngress: res.GetStringOpt("policy_ingress"),
+		PolicyEgress:  res.GetStringOpt("policy_egress"),
+		AdminStatus:   res.GetStringOpt("admin_status"),
 	}
-	if res.HasChange("policy_egress") {
-		patch.PolicyEgress = res.GetStringOpt("policy_egress")
-		hasChanges = true
-	}
-	if res.HasChange("admin_status") {
-		patch.AdminStatus = res.GetStringOpt("admin_status")
-		hasChanges = true
-	}
-
-	if !hasChanges {
-		return nil, nil
-	}
-	return patch, nil
 }
 
 func cloudRouterConfigCloudVCCreate(
@@ -144,16 +129,9 @@ func cloudRouterConfigCloudVCUpdate(
 	}
 
 	id := res.Id()
-	patch, err := cloudRouterConfigCloudVCPatchFromResourceData(res)
-	if err != nil {
+	patch := cloudRouterConfigCloudVCPatchFromResourceData(res)
+	if _, err := api.CloudRouterNetworkServiceConfigsPatch(ctx, id, patch); err != nil {
 		return err
-	}
-
-	if patch != nil {
-		_, err = api.CloudRouterNetworkServiceConfigsPatch(ctx, id, patch)
-		if err != nil {
-			return err
-		}
 	}
 	return cloudRouterConfigCloudVCRead(ctx, res, api)
 }

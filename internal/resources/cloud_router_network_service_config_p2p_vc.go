@@ -62,28 +62,13 @@ func cloudRouterConfigP2PVCRequestFromResourceData(
 
 func cloudRouterConfigP2PVCPatchFromResourceData(
 	r *schema.ResourceData,
-) (*ixapi.CloudRouterNetworkServiceConfigPatch, error) {
+) *ixapi.CloudRouterNetworkServiceConfigPatch {
 	res := schemas.ResourceDataFrom(r)
-	patch := &ixapi.CloudRouterNetworkServiceConfigPatch{}
-	hasChanges := false
-
-	if res.HasChange("policy_ingress") {
-		patch.PolicyIngress = res.GetStringOpt("policy_ingress")
-		hasChanges = true
+	return &ixapi.CloudRouterNetworkServiceConfigPatch{
+		PolicyIngress: res.GetStringOpt("policy_ingress"),
+		PolicyEgress:  res.GetStringOpt("policy_egress"),
+		AdminStatus:   res.GetStringOpt("admin_status"),
 	}
-	if res.HasChange("policy_egress") {
-		patch.PolicyEgress = res.GetStringOpt("policy_egress")
-		hasChanges = true
-	}
-	if res.HasChange("admin_status") {
-		patch.AdminStatus = res.GetStringOpt("admin_status")
-		hasChanges = true
-	}
-
-	if !hasChanges {
-		return nil, nil
-	}
-	return patch, nil
 }
 
 func cloudRouterConfigP2PVCCreate(
@@ -144,16 +129,9 @@ func cloudRouterConfigP2PVCUpdate(
 	}
 
 	id := res.Id()
-	patch, err := cloudRouterConfigP2PVCPatchFromResourceData(res)
-	if err != nil {
+	patch := cloudRouterConfigP2PVCPatchFromResourceData(res)
+	if _, err := api.CloudRouterNetworkServiceConfigsPatch(ctx, id, patch); err != nil {
 		return err
-	}
-
-	if patch != nil {
-		_, err = api.CloudRouterNetworkServiceConfigsPatch(ctx, id, patch)
-		if err != nil {
-			return err
-		}
 	}
 	return cloudRouterConfigP2PVCRead(ctx, res, api)
 }
