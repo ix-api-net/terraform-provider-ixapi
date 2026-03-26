@@ -66,9 +66,9 @@ func NewProductOfferingsCloudVRFDataSource() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"product_offerings": schemas.IntoDataSourceResultsSchema(
 				cloudRouterProductOfferingSchema()),
-			"limit": schemas.DataSourceQuery(
+			"limit": schemas.DataSourceQueryInt(
 				"Limit the number of results"),
-			"offset": schemas.DataSourceQuery(
+			"offset": schemas.DataSourceQueryInt(
 				"Offset for pagination"),
 			"bandwidth": schemas.DataSourceQueryInt(
 				"Filter by bandwidth in Mbit/s"),
