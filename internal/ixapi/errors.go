@@ -150,16 +150,11 @@ type ValidationErrorProp struct {
 
 // Error implements the error interface
 func (e ValidationError) Error() string {
-	props := ""
-	plen := len(e.Properties) - 1
-	for i, prop := range e.Properties {
-		props += fmt.Sprintf("%s: %s", prop.Name, prop.Reason)
-		if i < plen {
-			props += ", "
-		}
+	parts := []string{e.ProblemResponse.Error()}
+	for _, prop := range e.Properties {
+		parts = append(parts, fmt.Sprintf("%s: %s", prop.Name, prop.Reason))
 	}
-	return fmt.Sprintf("%s %s",
-		e.Title, props)
+	return strings.Join(parts, ", ")
 }
 
 // Error Type Checking
