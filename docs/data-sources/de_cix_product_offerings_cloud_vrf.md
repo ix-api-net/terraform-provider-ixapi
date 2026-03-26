@@ -27,9 +27,9 @@ output "product_offerings" {
 
 - `bandwidth` (Number) Filter by bandwidth in Mbit/s
 - `contract_period` (String) Filter by contract period (e.g., P1M, P1Y)
-- `limit` (String) Limit the number of results
+- `limit` (Number) Limit the number of results
 - `name` (String) Filter by product offering name
-- `offset` (String) Offset for pagination
+- `offset` (Number) Offset for pagination
 - `product_offerings` (Block List) (see [below for nested schema](#nestedblock--product_offerings))
 - `service_metro_area` (String) Filter by service metro area ID
 - `service_metro_area_network` (String) Filter by service metro area network ID
