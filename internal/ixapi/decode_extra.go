@@ -47,6 +47,9 @@ func decodeVLANConfig(data []byte) (VLANConfig, error) {
 		pCfg.PolymorphicType())
 }
 
+// dateOnlyPattern matches JSON date strings in YYYY-MM-DD format.
+// The DE-CIX extension API returns date-only strings for some timestamp fields
+// (e.g. decommission_at), which time.Parse rejects unless normalized to RFC3339.
 var dateOnlyPattern = regexp.MustCompile(`"(\d{4}-\d{2}-\d{2})"`)
 
 func preprocessDateFields(data []byte) []byte {
@@ -59,12 +62,8 @@ func preprocessDateFields(data []byte) []byte {
 	})
 }
 
-func unmarshalWithDateFix(data []byte, v interface{}) error {
-	processed := preprocessDateFields(data)
-	return json.Unmarshal(processed, v)
-}
-
-// UnmarshalProductOffering unmarshals a DE-CIX Cloud Router product offering response, applying date format fixes for extension API compatibility.
+// UnmarshalProductOffering unmarshals a DE-CIX Cloud Router product offering response,
+// normalizing date-only fields to RFC3339 before decoding.
 func UnmarshalProductOffering(data []byte, v interface{}) error {
-	return unmarshalWithDateFix(data, v)
+	return json.Unmarshal(preprocessDateFields(data), v)
 }
