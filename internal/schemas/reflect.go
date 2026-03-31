@@ -127,7 +127,6 @@ func SetResourceData(model any, res ResourceSetter) error {
 			if propValue == nil {
 				continue
 			}
-			// Assume struct on interface??
 			if val.Kind() == reflect.Interface {
 				interfaceValue := reflect.ValueOf(propValue)
 				kind := interfaceValue.Kind()
