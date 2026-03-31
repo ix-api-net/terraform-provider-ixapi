@@ -7,6 +7,7 @@ import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/crud"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
 func NewCloudRouterPrefixListResource() *schema.Resource {
@@ -17,7 +18,7 @@ func NewCloudRouterPrefixListResource() *schema.Resource {
 		ReadContext:   crud.Read(prefixListRead),
 		DeleteContext: crud.Delete(prefixListDelete),
 
-		Schema: schemas.PrefixListSchema(),
+		Schema: decixschemas.PrefixListSchema(),
 
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

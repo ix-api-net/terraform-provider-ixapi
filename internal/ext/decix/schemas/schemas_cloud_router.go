@@ -2,6 +2,7 @@ package schemas
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	coreschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
 
 func CloudRouterSchema() map[string]*schema.Schema {
@@ -19,7 +20,7 @@ func CloudRouterSchema() map[string]*schema.Schema {
 		"status": &schema.Schema{
 			Type:     schema.TypeList,
 			Computed: true,
-			Elem:     &schema.Resource{Schema: StatusSchema()},
+			Elem:     &schema.Resource{Schema: coreschemas.StatusSchema()},
 		},
 
 		"managing_account": &schema.Schema{
@@ -107,7 +108,7 @@ func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 		"status": {
 			Type:     schema.TypeList,
 			Computed: true,
-			Elem:     &schema.Resource{Schema: StatusSchema()},
+			Elem:     &schema.Resource{Schema: coreschemas.StatusSchema()},
 		},
 		"managing_account": {
 			Type:        schema.TypeString,
@@ -176,7 +177,7 @@ func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 			MaxItems:    1,
 			Description: "VLAN configuration for the connection",
 			Elem: &schema.Resource{
-				Schema: VLANConfigSchema(),
+				Schema: coreschemas.VLANConfigSchema(),
 			},
 		},
 		"policy_ingress": {

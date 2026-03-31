@@ -267,5 +267,3 @@ func TestCloudRouterCreate_APIError(t *testing.T) {
 		t.Error("resource ID should not be set on error")
 	}
 }
-
-

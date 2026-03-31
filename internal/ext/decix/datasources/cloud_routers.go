@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
 func NewCloudRoutersDataSource() *schema.Resource {
@@ -21,7 +22,7 @@ func NewCloudRoutersDataSource() *schema.Resource {
 			"external_ref": schemas.DataSourceQuery(
 				"Filter by external reference"),
 			"cloud_routers": schemas.IntoDataSourceResultsSchema(
-				schemas.CloudRouterSchema(),
+				decixschemas.CloudRouterSchema(),
 			),
 		},
 	}
@@ -71,7 +72,7 @@ func NewCloudRouterDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router` data source to get a single DE-CIX Cloud ROUTER (VRF) by ID or external ref",
 		ReadContext: cloudRouterRead,
-		Schema:      schemas.IntoDataSourceSchema(schemas.CloudRouterSchema()),
+		Schema:      schemas.IntoDataSourceSchema(decixschemas.CloudRouterSchema()),
 	}
 }
 

@@ -7,23 +7,27 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-func NewCloudRouterRoutesDataSource() *schema.Resource {
+func NewCloudRouterNetworkServiceConfigReceivedRoutesDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `cloud_router_routes` data source to list routes in the VRF routing table",
-		ReadContext: cloudRouterRoutesRead,
+		Description: "Use the `cloud_router_network_service_config_received_routes` data source to get BGP routes received from peers on a network service config",
+		ReadContext: cloudRouterNetworkServiceConfigReceivedRoutesRead,
 		Schema: map[string]*schema.Schema{
-			"vrf": schemas.DataSourceQuery(
-				"Filter by VRF ID"),
+			"network_service_config_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Network service config ID",
+			},
 			"routes": schemas.IntoDataSourceResultsSchema(
-				schemas.VrfRouteSchema(),
+				decixschemas.BGPRouteSchema(),
 			),
 		},
 	}
 }
 
-func cloudRouterRoutesRead(
+func cloudRouterNetworkServiceConfigReceivedRoutesRead(
 	ctx context.Context,
 	res *schema.ResourceData,
 	meta any,
@@ -34,12 +38,9 @@ func cloudRouterRoutesRead(
 		return diag.FromErr(err)
 	}
 
-	vrfID := ""
-	if v, ok := res.GetOk("vrf"); ok {
-		vrfID = v.(string)
-	}
+	nscID := res.Get("network_service_config_id").(string)
 
-	all, err := api.VrfRoutesList(ctx, vrfID)
+	all, err := api.NetworkServiceConfigReceivedRoutesList(ctx, nscID)
 	if err != nil {
 		return diag.FromErr(err)
 	}

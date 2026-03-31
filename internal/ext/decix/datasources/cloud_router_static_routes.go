@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
 func NewCloudRouterStaticRoutesDataSource() *schema.Resource {
@@ -19,7 +20,7 @@ func NewCloudRouterStaticRoutesDataSource() *schema.Resource {
 			"network_service_config": schemas.DataSourceQuery(
 				"Filter by network service config ID"),
 			"static_routes": schemas.IntoDataSourceResultsSchema(
-				schemas.StaticRouteSchema(),
+				decixschemas.StaticRouteSchema(),
 			),
 		},
 	}
@@ -67,7 +68,7 @@ func NewCloudRouterStaticRouteDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_static_route` data source to get a single static route by ID",
 		ReadContext: cloudRouterStaticRouteRead,
-		Schema:      schemas.IntoDataSourceSchema(schemas.StaticRouteSchema()),
+		Schema:      schemas.IntoDataSourceSchema(decixschemas.StaticRouteSchema()),
 	}
 }
 

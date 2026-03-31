@@ -7,12 +7,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-func NewCloudRouterNetworkServiceConfigReceivedRoutesDataSource() *schema.Resource {
+func NewCloudRouterNetworkServiceConfigAdvertisedRoutesDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `cloud_router_network_service_config_received_routes` data source to get BGP routes received from peers on a network service config",
-		ReadContext: cloudRouterNetworkServiceConfigReceivedRoutesRead,
+		Description: "Use the `cloud_router_network_service_config_advertised_routes` data source to get BGP routes advertised to peers on a network service config",
+		ReadContext: cloudRouterNetworkServiceConfigAdvertisedRoutesRead,
 		Schema: map[string]*schema.Schema{
 			"network_service_config_id": {
 				Type:        schema.TypeString,
@@ -20,13 +21,13 @@ func NewCloudRouterNetworkServiceConfigReceivedRoutesDataSource() *schema.Resour
 				Description: "Network service config ID",
 			},
 			"routes": schemas.IntoDataSourceResultsSchema(
-				schemas.BGPRouteSchema(),
+				decixschemas.BGPRouteSchema(),
 			),
 		},
 	}
 }
 
-func cloudRouterNetworkServiceConfigReceivedRoutesRead(
+func cloudRouterNetworkServiceConfigAdvertisedRoutesRead(
 	ctx context.Context,
 	res *schema.ResourceData,
 	meta any,
@@ -39,7 +40,7 @@ func cloudRouterNetworkServiceConfigReceivedRoutesRead(
 
 	nscID := res.Get("network_service_config_id").(string)
 
-	all, err := api.NetworkServiceConfigReceivedRoutesList(ctx, nscID)
+	all, err := api.NetworkServiceConfigAdvertisedRoutesList(ctx, nscID)
 	if err != nil {
 		return diag.FromErr(err)
 	}

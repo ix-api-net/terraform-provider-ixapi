@@ -7,17 +7,19 @@ import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/crud"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
+	coreresources "github.com/ix-api-net/terraform-provider-ixapi/internal/resources"
 )
 
-func NewCloudRouterNetworkServiceConfigCloudVCResource() *schema.Resource {
+func NewCloudRouterNetworkServiceConfigP2PVCResource() *schema.Resource {
 	return &schema.Resource{
-		Description:   "Use the `ixapi_de_cix_cloud_router_network_service_config_cloud_vc` resource to configure a Cloud ROUTER connection to a cloud virtual circuit network service.",
-		CreateContext: crud.Create(cloudRouterConfigCloudVCCreate),
-		UpdateContext: crud.Update(cloudRouterConfigCloudVCUpdate),
-		ReadContext:   crud.Read(cloudRouterConfigCloudVCRead),
-		DeleteContext: crud.Delete(cloudRouterConfigCloudVCDelete),
+		Description:   "Use the `ixapi_de_cix_cloud_router_network_service_config_p2p_vc` resource to configure a Cloud ROUTER connection to a point-to-point virtual circuit network service.",
+		CreateContext: crud.Create(cloudRouterConfigP2PVCCreate),
+		UpdateContext: crud.Update(cloudRouterConfigP2PVCUpdate),
+		ReadContext:   crud.Read(cloudRouterConfigP2PVCRead),
+		DeleteContext: crud.Delete(cloudRouterConfigP2PVCDelete),
 
-		Schema: schemas.CloudRouterNetworkServiceConfigCloudVCSchema(),
+		Schema: decixschemas.CloudRouterNetworkServiceConfigP2PVCSchema(),
 
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -25,17 +27,17 @@ func NewCloudRouterNetworkServiceConfigCloudVCResource() *schema.Resource {
 	}
 }
 
-func cloudRouterConfigCloudVCRequestFromResourceData(
+func cloudRouterConfigP2PVCRequestFromResourceData(
 	r *schema.ResourceData,
 ) (*ixapi.CloudRouterNetworkServiceConfigRequest, error) {
-	vlanConfig, err := vlanConfigFromResourceData(r)
+	vlanConfig, err := coreresources.VlanConfigFromResourceData(r)
 	if err != nil {
 		return nil, err
 	}
 
 	res := schemas.ResourceDataFrom(r)
 	req := &ixapi.CloudRouterNetworkServiceConfigRequest{
-		Type:                  "cloud_vc",
+		Type:                  "p2p_vc",
 		ManagingAccount:       res.GetString("managing_account"),
 		BillingAccount:        res.GetString("billing_account"),
 		ConsumingAccount:      res.GetString("consuming_account"),
@@ -51,16 +53,16 @@ func cloudRouterConfigCloudVCRequestFromResourceData(
 		PolicyEgress:          res.GetStringOpt("policy_egress"),
 		AdminStatus:           res.GetString("admin_status"),
 		BFDEnabled:            res.GetBool("bfd_enabled"),
-		CloudVLAN:             res.GetIntOpt("cloud_vlan"),
-		Handover:              res.GetIntOpt("handover"),
-		Connection:            nil,
+		CloudVLAN:             nil,
+		Handover:              nil,
+		Connection:            res.GetStringOpt("network_connection"),
 		PurchaseOrder:         res.GetStringOpt("purchase_order"),
 		NetworkFeatureConfigs: res.GetStringList("network_feature_configs"),
 	}
 	return req, nil
 }
 
-func cloudRouterConfigCloudVCPatchFromResourceData(
+func cloudRouterConfigP2PVCPatchFromResourceData(
 	r *schema.ResourceData,
 ) *ixapi.CloudRouterNetworkServiceConfigPatch {
 	res := schemas.ResourceDataFrom(r)
@@ -71,7 +73,7 @@ func cloudRouterConfigCloudVCPatchFromResourceData(
 	}
 }
 
-func cloudRouterConfigCloudVCCreate(
+func cloudRouterConfigP2PVCCreate(
 	ctx context.Context,
 	res *schema.ResourceData,
 	api *ixapi.Client,
@@ -80,7 +82,7 @@ func cloudRouterConfigCloudVCCreate(
 		return err
 	}
 
-	req, err := cloudRouterConfigCloudVCRequestFromResourceData(res)
+	req, err := cloudRouterConfigP2PVCRequestFromResourceData(res)
 	if err != nil {
 		return err
 	}
@@ -91,10 +93,10 @@ func cloudRouterConfigCloudVCCreate(
 	}
 	res.SetId(config.ID)
 
-	return cloudRouterConfigCloudVCRead(ctx, res, api)
+	return cloudRouterConfigP2PVCRead(ctx, res, api)
 }
 
-func cloudRouterConfigCloudVCRead(
+func cloudRouterConfigP2PVCRead(
 	ctx context.Context,
 	res *schema.ResourceData,
 	api *ixapi.Client,
@@ -119,7 +121,7 @@ func cloudRouterConfigCloudVCRead(
 	return nil
 }
 
-func cloudRouterConfigCloudVCUpdate(
+func cloudRouterConfigP2PVCUpdate(
 	ctx context.Context,
 	res *schema.ResourceData,
 	api *ixapi.Client,
@@ -129,14 +131,14 @@ func cloudRouterConfigCloudVCUpdate(
 	}
 
 	id := res.Id()
-	patch := cloudRouterConfigCloudVCPatchFromResourceData(res)
+	patch := cloudRouterConfigP2PVCPatchFromResourceData(res)
 	if _, err := api.CloudRouterNetworkServiceConfigsPatch(ctx, id, patch); err != nil {
 		return err
 	}
-	return cloudRouterConfigCloudVCRead(ctx, res, api)
+	return cloudRouterConfigP2PVCRead(ctx, res, api)
 }
 
-func cloudRouterConfigCloudVCDelete(
+func cloudRouterConfigP2PVCDelete(
 	ctx context.Context,
 	res *schema.ResourceData,
 	api *ixapi.Client,
@@ -167,5 +169,5 @@ func cloudRouterConfigCloudVCDelete(
 	if err != nil && !ixapi.IsErrNotFound(err) {
 		return err
 	}
-	return cloudRouterConfigCloudVCRead(ctx, res, api)
+	return cloudRouterConfigP2PVCRead(ctx, res, api)
 }

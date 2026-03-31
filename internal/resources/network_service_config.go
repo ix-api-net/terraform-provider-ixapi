@@ -9,7 +9,7 @@ import (
 )
 
 // Create polymorphic VLanConfig from resource data
-func vlanConfigFromResourceData(r *schema.ResourceData) (ixapi.VLANConfig, error) {
+func VlanConfigFromResourceData(r *schema.ResourceData) (ixapi.VLANConfig, error) {
 	res := schemas.ResourceData{ResourceData: r}
 	c := res.GetResource("vlan_config")
 	if c == nil {

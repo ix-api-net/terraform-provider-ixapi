@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
 func NewCloudRouterArpTableDataSource() *schema.Resource {
@@ -19,7 +20,7 @@ func NewCloudRouterArpTableDataSource() *schema.Resource {
 			"network_service_config": schemas.DataSourceQuery(
 				"Filter by network service config ID"),
 			"arp_entries": schemas.IntoDataSourceResultsSchema(
-				schemas.ArpEntrySchema(),
+				decixschemas.ArpEntrySchema(),
 			),
 		},
 	}

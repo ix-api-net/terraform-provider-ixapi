@@ -7,23 +7,24 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-func NewCloudRouterPrefixListsDataSource() *schema.Resource {
+func NewCloudRouterPoliciesDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `cloud_router_prefix_lists` data source to find available prefix lists",
-		ReadContext: cloudRouterPrefixListsRead,
+		Description: "Use the `cloud_router_policies` data source to find available policies",
+		ReadContext: cloudRouterPoliciesRead,
 		Schema: map[string]*schema.Schema{
 			"managing_account": schemas.DataSourceQuery(
 				"Filter by managing account ID"),
-			"prefix_lists": schemas.IntoDataSourceResultsSchema(
-				schemas.PrefixListSchema(),
+			"policies": schemas.IntoDataSourceResultsSchema(
+				decixschemas.PolicySchema(),
 			),
 		},
 	}
 }
 
-func cloudRouterPrefixListsRead(
+func cloudRouterPoliciesRead(
 	ctx context.Context,
 	res *schema.ResourceData,
 	meta any,
@@ -39,7 +40,7 @@ func cloudRouterPrefixListsRead(
 		managingAccount = ma.(string)
 	}
 
-	all, err := api.PrefixListsList(ctx, managingAccount)
+	all, err := api.PoliciesList(ctx, managingAccount)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -49,7 +50,7 @@ func cloudRouterPrefixListsRead(
 		return diag.FromErr(err)
 	}
 
-	if err := res.Set("prefix_lists", flat); err != nil {
+	if err := res.Set("policies", flat); err != nil {
 		return diag.FromErr(err)
 	}
 	res.SetId(schemas.Timestamp())
@@ -57,15 +58,15 @@ func cloudRouterPrefixListsRead(
 	return nil
 }
 
-func NewCloudRouterPrefixListDataSource() *schema.Resource {
+func NewCloudRouterPolicyDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `cloud_router_prefix_list` data source to get a single prefix list by ID or name",
-		ReadContext: cloudRouterPrefixListRead,
-		Schema:      schemas.IntoDataSourceSchema(schemas.PrefixListSchema()),
+		Description: "Use the `cloud_router_policy` data source to get a single policy by ID or name",
+		ReadContext: cloudRouterPolicyRead,
+		Schema:      schemas.IntoDataSourceSchema(decixschemas.PolicySchema()),
 	}
 }
 
-func cloudRouterPrefixListRead(
+func cloudRouterPolicyRead(
 	ctx context.Context,
 	res *schema.ResourceData,
 	meta any,
@@ -83,42 +84,42 @@ func cloudRouterPrefixListRead(
 		return diag.Errorf("either `id` or `name` is required")
 	}
 
-	var prefixList *ixapi.PrefixList
+	var policy *ixapi.Policy
 	if hasID {
-		pl, err := api.PrefixListsRead(ctx, id.(string))
+		p, err := api.PoliciesRead(ctx, id.(string))
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		prefixList = pl
+		policy = p
 	} else {
 		managingAccount := ""
 		if ma, ok := res.GetOk("managing_account"); ok {
 			managingAccount = ma.(string)
 		}
 
-		result, err := api.PrefixListsList(ctx, managingAccount)
+		result, err := api.PoliciesList(ctx, managingAccount)
 		if err != nil {
 			return diag.FromErr(err)
 		}
 
-		var found *ixapi.PrefixList
-		for _, pl := range result {
-			if pl.Name == name.(string) {
-				found = pl
+		var found *ixapi.Policy
+		for _, p := range result {
+			if p.Name == name.(string) {
+				found = p
 				break
 			}
 		}
 
 		if found == nil {
-			return diag.Errorf("no prefix list found with name %s", name.(string))
+			return diag.Errorf("no policy found with name %s", name.(string))
 		}
-		prefixList = found
+		policy = found
 	}
 
-	if err := schemas.SetResourceData(prefixList, res); err != nil {
+	if err := schemas.SetResourceData(policy, res); err != nil {
 		return diag.FromErr(err)
 	}
-	res.SetId(prefixList.ID)
+	res.SetId(policy.ID)
 
 	return nil
 }

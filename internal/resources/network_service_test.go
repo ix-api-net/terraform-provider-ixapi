@@ -15,7 +15,7 @@ func TestVLanConfigFromResourceDataPort(t *testing.T) {
 	}
 	res.Set("vlan_config", []any{vlanConfig})
 
-	config, err := vlanConfigFromResourceData(res)
+	config, err := VlanConfigFromResourceData(res)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -36,7 +36,7 @@ func TestVLanConfigFromResourceDataDot1Q(t *testing.T) {
 	}
 	res.Set("vlan_config", []any{vlanConfig})
 
-	config, err := vlanConfigFromResourceData(res)
+	config, err := VlanConfigFromResourceData(res)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func TestVLanConfigFromResourceDataQinQ(t *testing.T) {
 	}
 	res.Set("vlan_config", []any{vlanConfig})
 
-	config, err := vlanConfigFromResourceData(res)
+	config, err := VlanConfigFromResourceData(res)
 	if err != nil {
 		t.Fatal(err)
 	}

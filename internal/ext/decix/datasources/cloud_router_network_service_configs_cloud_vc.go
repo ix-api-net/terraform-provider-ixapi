@@ -7,12 +7,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-func NewCloudRouterNetworkServiceConfigsP2PVCDataSource() *schema.Resource {
+func NewCloudRouterNetworkServiceConfigsCloudVCDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `cloud_router_network_service_configs_p2p_vc` data source to find Cloud ROUTER NSCs of type p2p_vc",
-		ReadContext: cloudRouterNetworkServiceConfigsP2PVCRead,
+		Description: "Use the `cloud_router_network_service_configs_cloud_vc` data source to find Cloud ROUTER NSCs of type cloud_vc",
+		ReadContext: cloudRouterNetworkServiceConfigsCloudVCRead,
 		Schema: map[string]*schema.Schema{
 			"bgp_password": {
 				Type:        schema.TypeString,
@@ -36,13 +37,13 @@ func NewCloudRouterNetworkServiceConfigsP2PVCDataSource() *schema.Resource {
 				Description: "Offset for pagination",
 			},
 			"cloud_router_network_service_configs": schemas.IntoDataSourceResultsSchema(
-				schemas.CloudRouterNetworkServiceConfigP2PVCSchema(),
+				decixschemas.CloudRouterNetworkServiceConfigCloudVCSchema(),
 			),
 		},
 	}
 }
 
-func cloudRouterNetworkServiceConfigsP2PVCRead(
+func cloudRouterNetworkServiceConfigsCloudVCRead(
 	ctx context.Context,
 	res *schema.ResourceData,
 	meta any,
@@ -54,7 +55,7 @@ func cloudRouterNetworkServiceConfigsP2PVCRead(
 	}
 
 	qry := &ixapi.CloudRouterNetworkServiceConfigsListQuery{
-		Type: "p2p_vc",
+		Type: "cloud_vc",
 	}
 
 	if bgpPassword, ok := res.GetOk("bgp_password"); ok {
@@ -92,15 +93,15 @@ func cloudRouterNetworkServiceConfigsP2PVCRead(
 	return nil
 }
 
-func NewCloudRouterNetworkServiceConfigP2PVCDataSource() *schema.Resource {
+func NewCloudRouterNetworkServiceConfigCloudVCDataSource() *schema.Resource {
 	return &schema.Resource{
-		Description: "Use the `cloud_router_network_service_config_p2p_vc` data source to get a single Cloud ROUTER NSC of type p2p_vc by ID",
-		ReadContext: cloudRouterNetworkServiceConfigP2PVCDataRead,
-		Schema:      schemas.IntoDataSourceSchema(schemas.CloudRouterNetworkServiceConfigP2PVCSchema()),
+		Description: "Use the `cloud_router_network_service_config_cloud_vc` data source to get a single Cloud ROUTER NSC of type cloud_vc by ID",
+		ReadContext: cloudRouterNetworkServiceConfigCloudVCDataRead,
+		Schema:      schemas.IntoDataSourceSchema(decixschemas.CloudRouterNetworkServiceConfigCloudVCSchema()),
 	}
 }
 
-func cloudRouterNetworkServiceConfigP2PVCDataRead(
+func cloudRouterNetworkServiceConfigCloudVCDataRead(
 	ctx context.Context,
 	res *schema.ResourceData,
 	meta any,
@@ -114,7 +115,7 @@ func cloudRouterNetworkServiceConfigP2PVCDataRead(
 	id, hasID := res.GetOk("id")
 
 	if !hasID {
-		return diag.Errorf("the cloud_router_network_service_config_p2p_vc `id` is required")
+		return diag.Errorf("the cloud_router_network_service_config_cloud_vc `id` is required")
 	}
 
 	config, err := api.CloudRouterNetworkServiceConfigsRead(ctx, id.(string))

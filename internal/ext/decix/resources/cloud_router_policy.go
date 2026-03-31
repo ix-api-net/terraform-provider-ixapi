@@ -7,6 +7,7 @@ import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/crud"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
 func NewCloudRouterPolicyResource() *schema.Resource {
@@ -17,7 +18,7 @@ func NewCloudRouterPolicyResource() *schema.Resource {
 		ReadContext:   crud.Read(policyRead),
 		DeleteContext: crud.Delete(policyDelete),
 
-		Schema: schemas.PolicySchema(),
+		Schema: decixschemas.PolicySchema(),
 
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
