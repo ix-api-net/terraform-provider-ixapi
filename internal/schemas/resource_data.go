@@ -7,6 +7,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// dateLayout is Go's reference time for a date-only format (year-month-day).
+// Go requires format strings to use the specific reference moment Mon Jan 2 15:04:05 MST 2006,
+// so 2006=year, 01=month, 02=day — these exact values are mandatory.
+const dateLayout = "2006-01-02"
+
 // ResourceSetter is an interface, which resource data
 // and flatable resource data implements.
 type ResourceSetter interface {
@@ -97,7 +102,7 @@ func (res *ResourceData) GetTimeOpt(key string) (*time.Time, error) {
 		return &t, nil
 	}
 
-	t, err = time.Parse("2006-01-02", sval)
+	t, err = time.Parse(dateLayout, sval)
 	if err == nil {
 		return &t, nil
 	}
