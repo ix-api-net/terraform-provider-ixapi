@@ -2367,6 +2367,8 @@ func (c *Client) StaticRoutesDelete(
 	return nil, res
 }
 
+// NSC Routes
+
 // NetworkServiceConfigReceivedRoutesList fetches BGP routes received from peers on a given network service config.
 func (c *Client) NetworkServiceConfigReceivedRoutesList(
 	ctx context.Context,
