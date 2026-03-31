@@ -154,11 +154,11 @@ provider "ixapi" {
   api        = "https://ixapi.example.com/api/v2"
   api_key    = var.api_key
   api_secret = var.api_secret
-  de_cix_cloud_router_extension_enabled = true
+  extension_de_cix_cloud_router_enabled = true
 }
 ```
 
-When `de_cix_cloud_router_extension_enabled` is `false` (the default), any attempt to use a
+When `extension_de_cix_cloud_router_enabled` is `false` (the default), any attempt to use a
 `de_cix_*` resource or data source will return an error. This prevents accidental use against
 an IX-API endpoint that does not support the extension.
 

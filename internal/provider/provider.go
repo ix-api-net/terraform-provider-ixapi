@@ -100,7 +100,7 @@ func New(version string) func() *schema.Provider {
 					DefaultFunc: schema.EnvDefaultFunc(EnvOAuth2Scopes, "ix-api"),
 					Description: "The OAuth2 scopes to request.",
 				},
-				"de_cix_cloud_router_extension_enabled": &schema.Schema{
+				"extension_de_cix_cloud_router_enabled": &schema.Schema{
 					Type:        schema.TypeBool,
 					Optional:    true,
 					Default:     false,
@@ -285,7 +285,7 @@ func configure(
 		return nil, diag.FromErr(err)
 	}
 
-	cloudRouterEnabled := res.Get("de_cix_cloud_router_extension_enabled").(bool)
+	cloudRouterEnabled := res.Get("extension_de_cix_cloud_router_enabled").(bool)
 	client.CloudRouterEnabled = cloudRouterEnabled
 	ixapi.SetFlexibleParsing(cloudRouterEnabled)
 

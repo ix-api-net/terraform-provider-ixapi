@@ -118,7 +118,7 @@ func (c *Client) RequireCloudRouterExtension() error {
 	if !c.CloudRouterEnabled {
 		return fmt.Errorf(
 			"CloudRouter extension is not enabled. " +
-				"Add 'de_cix_cloud_router_extension_enabled = true' to your provider configuration to use CloudRouter features",
+				"Add 'extension_de_cix_cloud_router_enabled = true' to your provider configuration to use CloudRouter features",
 		)
 	}
 	return nil
