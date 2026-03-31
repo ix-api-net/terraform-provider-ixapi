@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterPrefixListResource returns the schema.Resource for managing a prefix list for BGP route filtering.
 func NewCloudRouterPrefixListResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_prefix_list` resource to manage a prefix list for BGP route filtering.",

@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRoutersDataSource returns the schema.Resource for listing DE-CIX Cloud Routers.
 func NewCloudRoutersDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_routers` data source to find available DE-CIX Cloud ROUTER (VRF) instances",
@@ -68,6 +69,7 @@ func cloudRoutersRead(
 	return nil
 }
 
+// NewCloudRouterDataSource returns the schema.Resource for reading a single DE-CIX Cloud Router by ID or external ref.
 func NewCloudRouterDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router` data source to get a single DE-CIX Cloud ROUTER (VRF) by ID or external ref",

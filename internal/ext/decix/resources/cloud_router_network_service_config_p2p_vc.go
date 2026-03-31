@@ -11,6 +11,7 @@ import (
 	coreresources "github.com/ix-api-net/terraform-provider-ixapi/internal/resources"
 )
 
+// NewCloudRouterNetworkServiceConfigP2PVCResource returns the schema.Resource for managing a Cloud Router connection to a point-to-point virtual circuit network service.
 func NewCloudRouterNetworkServiceConfigP2PVCResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_network_service_config_p2p_vc` resource to configure a Cloud ROUTER connection to a point-to-point virtual circuit network service.",

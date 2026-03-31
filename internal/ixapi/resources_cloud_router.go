@@ -10,12 +10,14 @@ import (
 	"net/url"
 )
 
+// CloudRoutersListQuery holds query parameters for listing Cloud Router resources.
 type CloudRoutersListQuery struct {
 	ManagingAccount  string `json:"managing_account,omitempty"`
 	ConsumingAccount string `json:"consuming_account,omitempty"`
 	ExternalRef      string `json:"external_ref,omitempty"`
 }
 
+// RawQuery encodes the query parameters as a URL query string.
 func (q *CloudRoutersListQuery) RawQuery() string {
 	qry := url.Values{}
 	if q.ManagingAccount != "" {
@@ -30,6 +32,7 @@ func (q *CloudRoutersListQuery) RawQuery() string {
 	return qry.Encode()
 }
 
+// CloudRoutersList fetches all Cloud Routers, optionally filtered by query parameters.
 func (c *Client) CloudRoutersList(
 	ctx context.Context,
 	qry ...*CloudRoutersListQuery,
@@ -110,6 +113,7 @@ func (c *Client) CloudRoutersList(
 	return nil, res
 }
 
+// CloudRoutersCreate creates a new Cloud Router and returns the created resource.
 func (c *Client) CloudRoutersCreate(
 	ctx context.Context,
 	req *CloudRouterRequest,
@@ -189,6 +193,7 @@ func (c *Client) CloudRoutersCreate(
 	return nil, res
 }
 
+// CloudRoutersRead fetches a single Cloud Router by ID.
 func (c *Client) CloudRoutersRead(
 	ctx context.Context,
 	id string,
@@ -261,6 +266,7 @@ func (c *Client) CloudRoutersRead(
 	return nil, res
 }
 
+// CloudRoutersDestroy deletes a Cloud Router by ID.
 func (c *Client) CloudRoutersDestroy(
 	ctx context.Context,
 	id string,
@@ -329,6 +335,7 @@ func (c *Client) CloudRoutersDestroy(
 	return res
 }
 
+// CloudRouterNetworkServiceConfigsListQuery holds query parameters for listing Cloud Router network service configs.
 type CloudRouterNetworkServiceConfigsListQuery struct {
 	Type        string `json:"type,omitempty"`
 	BGPPassword string `json:"bgp_password,omitempty"`
@@ -337,6 +344,7 @@ type CloudRouterNetworkServiceConfigsListQuery struct {
 	Offset      int    `json:"offset,omitempty"`
 }
 
+// RawQuery encodes the query parameters as a URL query string.
 func (q *CloudRouterNetworkServiceConfigsListQuery) RawQuery() string {
 	qry := url.Values{}
 	if q.Type != "" {
@@ -361,6 +369,7 @@ func (q *CloudRouterNetworkServiceConfigsListQuery) RawQuery() string {
 	return qry.Encode()
 }
 
+// CloudRouterNetworkServiceConfigsList fetches all Cloud Router network service configs, optionally filtered by query parameters.
 func (c *Client) CloudRouterNetworkServiceConfigsList(
 	ctx context.Context,
 	qry ...*CloudRouterNetworkServiceConfigsListQuery,
@@ -448,6 +457,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsList(
 	return nil, res
 }
 
+// CloudRouterNetworkServiceConfigsCreate creates a new Cloud Router network service config and returns the created resource.
 func (c *Client) CloudRouterNetworkServiceConfigsCreate(
 	ctx context.Context,
 	req *CloudRouterNetworkServiceConfigRequest,
@@ -532,6 +542,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsCreate(
 	return nil, res
 }
 
+// CloudRouterNetworkServiceConfigsRead fetches a single Cloud Router network service config by ID.
 func (c *Client) CloudRouterNetworkServiceConfigsRead(
 	ctx context.Context,
 	id string,
@@ -609,6 +620,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsRead(
 	return nil, res
 }
 
+// CloudRouterNetworkServiceConfigsPatch partially updates a Cloud Router network service config by ID.
 func (c *Client) CloudRouterNetworkServiceConfigsPatch(
 	ctx context.Context,
 	id string,
@@ -694,6 +706,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsPatch(
 	return nil, res
 }
 
+// CloudRouterNetworkServiceConfigsDestroy deletes a Cloud Router network service config by ID.
 func (c *Client) CloudRouterNetworkServiceConfigsDestroy(
 	ctx context.Context,
 	id string,
@@ -762,6 +775,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsDestroy(
 	return res
 }
 
+// CloudRouterProductOfferingsListQuery holds query parameters for listing Cloud Router product offerings.
 type CloudRouterProductOfferingsListQuery struct {
 	Limit                    int    `json:"limit,omitempty"`
 	Offset                   int    `json:"offset,omitempty"`
@@ -773,6 +787,7 @@ type CloudRouterProductOfferingsListQuery struct {
 	ContractPeriod           string `json:"contract_period,omitempty"`
 }
 
+// RawQuery encodes the query parameters as a URL query string.
 func (q *CloudRouterProductOfferingsListQuery) RawQuery() string {
 	qry := url.Values{}
 	if q.Limit > 0 {
@@ -802,6 +817,7 @@ func (q *CloudRouterProductOfferingsListQuery) RawQuery() string {
 	return qry.Encode()
 }
 
+// CloudRouterProductOfferingsList fetches all Cloud Router product offerings, optionally filtered by query parameters.
 func (c *Client) CloudRouterProductOfferingsList(
 	ctx context.Context,
 	qry ...*CloudRouterProductOfferingsListQuery,
@@ -882,6 +898,7 @@ func (c *Client) CloudRouterProductOfferingsList(
 	return nil, res
 }
 
+// CloudRouterProductOfferingsRead fetches a single Cloud Router product offering by ID.
 func (c *Client) CloudRouterProductOfferingsRead(
 	ctx context.Context,
 	id string,
@@ -954,6 +971,7 @@ func (c *Client) CloudRouterProductOfferingsRead(
 	return nil, res
 }
 
+// CloudRouterNetworkServiceConfigGetBGPState fetches the BGP session state for a given network service config ID.
 func (c *Client) CloudRouterNetworkServiceConfigGetBGPState(
 	ctx context.Context,
 	id string,
@@ -1020,6 +1038,7 @@ func (c *Client) CloudRouterNetworkServiceConfigGetBGPState(
 	return nil, res
 }
 
+// CloudRouterNetworkServiceConfigGetBFDState fetches the BFD session state for a given network service config ID.
 func (c *Client) CloudRouterNetworkServiceConfigGetBFDState(
 	ctx context.Context,
 	id string,
@@ -1088,6 +1107,7 @@ func (c *Client) CloudRouterNetworkServiceConfigGetBFDState(
 
 // Prefix Lists
 
+// PrefixListsList fetches all prefix lists, optionally filtered by managing account.
 func (c *Client) PrefixListsList(
 	ctx context.Context,
 	managingAccount string,
@@ -1165,6 +1185,7 @@ func (c *Client) PrefixListsList(
 	return nil, res
 }
 
+// PrefixListsCreate creates a new prefix list and returns the created resource.
 func (c *Client) PrefixListsCreate(
 	ctx context.Context,
 	req *PrefixListRequest,
@@ -1244,6 +1265,7 @@ func (c *Client) PrefixListsCreate(
 	return nil, res
 }
 
+// PrefixListsRead fetches a single prefix list by ID.
 func (c *Client) PrefixListsRead(
 	ctx context.Context,
 	id string,
@@ -1308,6 +1330,7 @@ func (c *Client) PrefixListsRead(
 	return nil, res
 }
 
+// PrefixListsUpdate replaces a prefix list by ID and returns the updated resource.
 func (c *Client) PrefixListsUpdate(
 	ctx context.Context,
 	id string,
@@ -1388,6 +1411,7 @@ func (c *Client) PrefixListsUpdate(
 	return nil, res
 }
 
+// PrefixListsDelete deletes a prefix list by ID and returns the deleted resource.
 func (c *Client) PrefixListsDelete(
 	ctx context.Context,
 	id string,
@@ -1454,6 +1478,7 @@ func (c *Client) PrefixListsDelete(
 
 // Policies
 
+// PoliciesList fetches all routing policies, optionally filtered by managing account.
 func (c *Client) PoliciesList(
 	ctx context.Context,
 	managingAccount string,
@@ -1531,6 +1556,7 @@ func (c *Client) PoliciesList(
 	return nil, res
 }
 
+// PoliciesCreate creates a new routing policy and returns the created resource.
 func (c *Client) PoliciesCreate(
 	ctx context.Context,
 	req *PolicyRequest,
@@ -1610,6 +1636,7 @@ func (c *Client) PoliciesCreate(
 	return nil, res
 }
 
+// PoliciesRead fetches a single routing policy by ID.
 func (c *Client) PoliciesRead(
 	ctx context.Context,
 	id string,
@@ -1674,6 +1701,7 @@ func (c *Client) PoliciesRead(
 	return nil, res
 }
 
+// PoliciesUpdate replaces a routing policy by ID and returns the updated resource.
 func (c *Client) PoliciesUpdate(
 	ctx context.Context,
 	id string,
@@ -1754,6 +1782,7 @@ func (c *Client) PoliciesUpdate(
 	return nil, res
 }
 
+// PoliciesDelete deletes a routing policy by ID and returns the deleted resource.
 func (c *Client) PoliciesDelete(
 	ctx context.Context,
 	id string,
@@ -1820,6 +1849,7 @@ func (c *Client) PoliciesDelete(
 
 // VRF ARP Table
 
+// ArpTableList fetches ARP table entries, optionally filtered by VRF ID and network service config ID.
 func (c *Client) ArpTableList(
 	ctx context.Context,
 	vrfID string,
@@ -1899,6 +1929,7 @@ func (c *Client) ArpTableList(
 
 // Static Routes
 
+// VrfRoutesList fetches routes from a VRF routing table, optionally filtered by VRF ID.
 func (c *Client) VrfRoutesList(
 	ctx context.Context,
 	vrfID string,
@@ -1972,6 +2003,7 @@ func (c *Client) VrfRoutesList(
 	return nil, res
 }
 
+// StaticRoutesList fetches static routes, optionally filtered by VRF ID and network service config ID.
 func (c *Client) StaticRoutesList(
 	ctx context.Context,
 	vrfID string,
@@ -2057,6 +2089,7 @@ func (c *Client) StaticRoutesList(
 	return nil, res
 }
 
+// StaticRoutesCreate creates a new static route and returns the created resource.
 func (c *Client) StaticRoutesCreate(
 	ctx context.Context,
 	req *StaticRouteRequest,
@@ -2136,6 +2169,7 @@ func (c *Client) StaticRoutesCreate(
 	return nil, res
 }
 
+// StaticRoutesRead fetches a single static route by ID.
 func (c *Client) StaticRoutesRead(
 	ctx context.Context,
 	id string,
@@ -2200,6 +2234,7 @@ func (c *Client) StaticRoutesRead(
 	return nil, res
 }
 
+// StaticRoutesUpdate replaces a static route by ID and returns the updated resource.
 func (c *Client) StaticRoutesUpdate(
 	ctx context.Context,
 	id string,
@@ -2280,6 +2315,7 @@ func (c *Client) StaticRoutesUpdate(
 	return nil, res
 }
 
+// StaticRoutesDelete deletes a static route by ID and returns the deleted resource.
 func (c *Client) StaticRoutesDelete(
 	ctx context.Context,
 	id string,
@@ -2344,6 +2380,7 @@ func (c *Client) StaticRoutesDelete(
 	return nil, res
 }
 
+// NetworkServiceConfigReceivedRoutesList fetches BGP routes received from peers on a given network service config.
 func (c *Client) NetworkServiceConfigReceivedRoutesList(
 	ctx context.Context,
 	nscID string,
@@ -2400,6 +2437,7 @@ func (c *Client) NetworkServiceConfigReceivedRoutesList(
 	return nil, res
 }
 
+// NetworkServiceConfigAdvertisedRoutesList fetches BGP routes advertised to peers on a given network service config.
 func (c *Client) NetworkServiceConfigAdvertisedRoutesList(
 	ctx context.Context,
 	nscID string,

@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterNetworkServiceConfigAdvertisedRoutesDataSource returns the schema.Resource for listing BGP routes advertised by a Cloud Router network service config.
 func NewCloudRouterNetworkServiceConfigAdvertisedRoutesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_network_service_config_advertised_routes` data source to get BGP routes advertised to peers on a network service config",

@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterNetworkServiceConfigReceivedRoutesDataSource returns the schema.Resource for listing BGP routes received by a Cloud Router network service config.
 func NewCloudRouterNetworkServiceConfigReceivedRoutesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_network_service_config_received_routes` data source to get BGP routes received from peers on a network service config",

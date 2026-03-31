@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterResource returns the schema.Resource for managing a DE-CIX Cloud Router (VRF) instance.
 func NewCloudRouterResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router` resource to create and manage a DE-CIX Cloud ROUTER (VRF) instance.",

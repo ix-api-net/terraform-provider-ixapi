@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterPoliciesDataSource returns the schema.Resource for listing BGP routing policies.
 func NewCloudRouterPoliciesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_policies` data source to find available policies",
@@ -58,6 +59,7 @@ func cloudRouterPoliciesRead(
 	return nil
 }
 
+// NewCloudRouterPolicyDataSource returns the schema.Resource for reading a single BGP routing policy by ID or name.
 func NewCloudRouterPolicyDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_policy` data source to get a single policy by ID or name",

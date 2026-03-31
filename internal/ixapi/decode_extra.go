@@ -64,6 +64,7 @@ func unmarshalWithDateFix(data []byte, v interface{}) error {
 	return json.Unmarshal(processed, v)
 }
 
+// UnmarshalProductOffering unmarshals a DE-CIX Cloud Router product offering response, applying date format fixes for extension API compatibility.
 func UnmarshalProductOffering(data []byte, v interface{}) error {
 	return unmarshalWithDateFix(data, v)
 }

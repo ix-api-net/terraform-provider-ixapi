@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterStaticRoutesDataSource returns the schema.Resource for listing static routes attached to a Cloud Router.
 func NewCloudRouterStaticRoutesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_static_routes` data source to list static routes, optionally filtered by VRF or network service config",
@@ -64,6 +65,7 @@ func cloudRouterStaticRoutesRead(
 	return nil
 }
 
+// NewCloudRouterStaticRouteDataSource returns the schema.Resource for reading a single static route by ID.
 func NewCloudRouterStaticRouteDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_static_route` data source to get a single static route by ID",

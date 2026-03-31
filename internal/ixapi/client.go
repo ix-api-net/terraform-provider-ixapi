@@ -114,6 +114,7 @@ func (c *Client) Authenticate(
 	return auth.authenticate(ctx, c)
 }
 
+// RequireCloudRouterExtension returns an error if the DE-CIX Cloud Router extension is not enabled in the provider configuration.
 func (c *Client) RequireCloudRouterExtension() error {
 	if !c.CloudRouterEnabled {
 		return fmt.Errorf(

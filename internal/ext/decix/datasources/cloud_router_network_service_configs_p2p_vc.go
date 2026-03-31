@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterNetworkServiceConfigsP2PVCDataSource returns the schema.Resource for listing Cloud Router network service configs of type p2p_vc.
 func NewCloudRouterNetworkServiceConfigsP2PVCDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_network_service_configs_p2p_vc` data source to find Cloud ROUTER NSCs of type p2p_vc",
@@ -93,6 +94,7 @@ func cloudRouterNetworkServiceConfigsP2PVCRead(
 	return nil
 }
 
+// NewCloudRouterNetworkServiceConfigP2PVCDataSource returns the schema.Resource for reading a single Cloud Router network service config of type p2p_vc by ID.
 func NewCloudRouterNetworkServiceConfigP2PVCDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_network_service_config_p2p_vc` data source to get a single Cloud ROUTER NSC of type p2p_vc by ID",

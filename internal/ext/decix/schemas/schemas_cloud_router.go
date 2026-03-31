@@ -5,6 +5,7 @@ import (
 	coreschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
 
+// CloudRouterSchema returns the Terraform schema for a DE-CIX Cloud Router (VRF) resource.
 func CloudRouterSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": &schema.Schema{
@@ -95,6 +96,7 @@ func CloudRouterSchema() map[string]*schema.Schema {
 	}
 }
 
+// CloudRouterNetworkServiceConfigCommonSchema returns the shared Terraform schema fields for all Cloud Router network service config types.
 func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": {
@@ -226,6 +228,7 @@ func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 	}
 }
 
+// CloudRouterNetworkServiceConfigCloudVCSchema returns the Terraform schema for a Cloud Router network service config of type cloud_vc.
 func CloudRouterNetworkServiceConfigCloudVCSchema() map[string]*schema.Schema {
 	s := CloudRouterNetworkServiceConfigCommonSchema()
 
@@ -250,6 +253,7 @@ func CloudRouterNetworkServiceConfigCloudVCSchema() map[string]*schema.Schema {
 	return s
 }
 
+// CloudRouterNetworkServiceConfigP2PVCSchema returns the Terraform schema for a Cloud Router network service config of type p2p_vc.
 func CloudRouterNetworkServiceConfigP2PVCSchema() map[string]*schema.Schema {
 	s := CloudRouterNetworkServiceConfigCommonSchema()
 
@@ -268,6 +272,7 @@ func CloudRouterNetworkServiceConfigP2PVCSchema() map[string]*schema.Schema {
 	return s
 }
 
+// PrefixListSchema returns the Terraform schema for a prefix list.
 func PrefixListSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": &schema.Schema{
@@ -322,6 +327,7 @@ func PrefixListSchema() map[string]*schema.Schema {
 	}
 }
 
+// PolicySchema returns the Terraform schema for a BGP routing policy.
 func PolicySchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": &schema.Schema{
@@ -411,6 +417,7 @@ func PolicySchema() map[string]*schema.Schema {
 	}
 }
 
+// ArpEntrySchema returns the Terraform schema for an ARP table entry.
 func ArpEntrySchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"vrf": &schema.Schema{
@@ -451,6 +458,7 @@ func ArpEntrySchema() map[string]*schema.Schema {
 	}
 }
 
+// StaticRouteSchema returns the Terraform schema for a static route.
 func StaticRouteSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": &schema.Schema{
@@ -491,6 +499,7 @@ func StaticRouteSchema() map[string]*schema.Schema {
 	}
 }
 
+// VrfRouteSchema returns the Terraform schema for a VRF routing table entry.
 func VrfRouteSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"vrf": {
@@ -541,6 +550,7 @@ func VrfRouteSchema() map[string]*schema.Schema {
 	}
 }
 
+// BGPRouteSchema returns the Terraform schema for a BGP route entry.
 func BGPRouteSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"prefix": {

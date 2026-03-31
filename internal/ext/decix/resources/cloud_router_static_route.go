@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterStaticRouteResource returns the schema.Resource for managing a static route attached to a Cloud Router VRF.
 func NewCloudRouterStaticRouteResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_static_route` resource to manage a static route attached to a cloud router VRF.",

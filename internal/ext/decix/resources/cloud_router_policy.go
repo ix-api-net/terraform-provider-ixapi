@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterPolicyResource returns the schema.Resource for managing a BGP routing policy.
 func NewCloudRouterPolicyResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_policy` resource to manage a BGP routing policy.",

@@ -10,6 +10,7 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
+// NewCloudRouterPrefixListsDataSource returns the schema.Resource for listing prefix lists.
 func NewCloudRouterPrefixListsDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_prefix_lists` data source to find available prefix lists",
@@ -58,6 +59,7 @@ func cloudRouterPrefixListsRead(
 	return nil
 }
 
+// NewCloudRouterPrefixListDataSource returns the schema.Resource for reading a single prefix list by ID or name.
 func NewCloudRouterPrefixListDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_prefix_list` data source to get a single prefix list by ID or name",

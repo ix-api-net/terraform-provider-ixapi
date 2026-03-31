@@ -11,6 +11,7 @@ import (
 	coreresources "github.com/ix-api-net/terraform-provider-ixapi/internal/resources"
 )
 
+// NewCloudRouterNetworkServiceConfigCloudVCResource returns the schema.Resource for managing a Cloud Router connection to a cloud virtual circuit network service.
 func NewCloudRouterNetworkServiceConfigCloudVCResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_network_service_config_cloud_vc` resource to configure a Cloud ROUTER connection to a cloud virtual circuit network service.",

@@ -10,12 +10,15 @@ import (
 
 var flexibleParsingEnabled bool
 
+// SetFlexibleParsing enables or disables lenient JSON parsing for DE-CIX extension API responses.
 func SetFlexibleParsing(enabled bool) {
 	flexibleParsingEnabled = enabled
 }
 
+// FlexibleString is a string type that can unmarshal both JSON strings and JSON arrays into a single string value.
 type FlexibleString string
 
+// UnmarshalJSON implements json.Unmarshaler, accepting either a JSON string or a JSON array.
 func (fs *FlexibleString) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err == nil {
@@ -43,10 +46,12 @@ func (fs FlexibleString) String() string {
 	return string(fs)
 }
 
+// FlexibleTime is a time.Time wrapper that can unmarshal multiple date formats returned by the DE-CIX extension API.
 type FlexibleTime struct {
 	time.Time
 }
 
+// UnmarshalJSON implements json.Unmarshaler, accepting RFC3339, datetime with offset, and date-only formats.
 func (ft *FlexibleTime) UnmarshalJSON(data []byte) error {
 	if string(data) == "null" || len(data) == 0 {
 		return nil
@@ -85,6 +90,7 @@ func (ft *FlexibleTime) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON implements json.Marshaler, serializing to RFC3339 or null if zero.
 func (ft FlexibleTime) MarshalJSON() ([]byte, error) {
 	if ft.Time.IsZero() {
 		return []byte("null"), nil
@@ -92,6 +98,7 @@ func (ft FlexibleTime) MarshalJSON() ([]byte, error) {
 	return []byte(`"` + ft.Time.Format(time.RFC3339) + `"`), nil
 }
 
+// NewFlexibleTime wraps a *time.Time in a FlexibleTime, returning nil if the input is nil.
 func NewFlexibleTime(t *time.Time) *FlexibleTime {
 	if t == nil {
 		return nil
@@ -99,6 +106,7 @@ func NewFlexibleTime(t *time.Time) *FlexibleTime {
 	return &FlexibleTime{Time: *t}
 }
 
+// ToTime returns the underlying *time.Time, or nil if the receiver is nil or zero.
 func (ft *FlexibleTime) ToTime() *time.Time {
 	if ft == nil || ft.Time.IsZero() {
 		return nil

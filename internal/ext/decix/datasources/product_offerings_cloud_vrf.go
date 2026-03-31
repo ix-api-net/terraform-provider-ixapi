@@ -59,6 +59,7 @@ func cloudRouterProductOfferingSchema() map[string]*schema.Schema {
 	}
 }
 
+// NewProductOfferingsCloudVRFDataSource returns the schema.Resource for listing Cloud Router (VRF) product offerings.
 func NewProductOfferingsCloudVRFDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "This data source can be used to find product offerings for DE-CIX Cloud ROUTER (VRF).",
@@ -132,6 +133,7 @@ func productOfferingsCloudVRFRead(
 	return nil
 }
 
+// NewProductOfferingCloudVRFDataSource returns the schema.Resource for reading a single Cloud Router (VRF) product offering.
 func NewProductOfferingCloudVRFDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use this data source to reference a single Cloud ROUTER (VRF) product offering.",
