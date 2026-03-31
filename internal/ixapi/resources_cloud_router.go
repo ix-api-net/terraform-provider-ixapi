@@ -10,6 +10,15 @@ import (
 	"net/url"
 )
 
+// cloudRouterURL builds an absolute URL for a DE-CIX extension API path,
+// appending the query string as a separate argument to avoid in-band concatenation.
+func (c *Client) cloudRouterURL(path, query string) string {
+	if query != "" {
+		return c.resourceURL(path + "?" + query)
+	}
+	return c.resourceURL(path)
+}
+
 // CloudRoutersListQuery holds query parameters for listing Cloud Router resources.
 type CloudRoutersListQuery struct {
 	ManagingAccount  string `json:"managing_account,omitempty"`
@@ -41,11 +50,8 @@ func (c *Client) CloudRoutersList(
 	if len(qry) > 0 && qry[0] != nil {
 		params = qry[0].RawQuery()
 	}
-	if params != "" {
-		params = "?" + params
-	}
 
-	url := c.resourceURL("/api/v3/decix-vrf-v1/vrfs" + params)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/vrfs", params)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -378,11 +384,8 @@ func (c *Client) CloudRouterNetworkServiceConfigsList(
 	if len(qry) > 0 && qry[0] != nil {
 		params = qry[0].RawQuery()
 	}
-	if params != "" {
-		params = "?" + params
-	}
 
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs" + params)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs", params)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -826,11 +829,8 @@ func (c *Client) CloudRouterProductOfferingsList(
 	if len(qry) > 0 && qry[0] != nil {
 		params = qry[0].RawQuery()
 	}
-	if params != "" {
-		params = "?" + params
-	}
 
-	url := c.resourceURL("/api/v3/decix-vrf-v1/product-offerings" + params)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/product-offerings", params)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -1114,11 +1114,11 @@ func (c *Client) PrefixListsList(
 ) ([]*PrefixList, error) {
 	params := ""
 	if managingAccount != "" {
-		params = fmt.Sprintf("?managing_account=%s", managingAccount)
+		params = "managing_account=" + url.QueryEscape(managingAccount)
 	}
 
-	url := c.resourceURL("/api/v3/decix-vrf-v1/prefix-lists" + params)
-	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists", params)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1485,11 +1485,11 @@ func (c *Client) PoliciesList(
 ) ([]*Policy, error) {
 	params := ""
 	if managingAccount != "" {
-		params = fmt.Sprintf("?managing_account=%s", managingAccount)
+		params = "managing_account=" + url.QueryEscape(managingAccount)
 	}
 
-	url := c.resourceURL("/api/v3/decix-vrf-v1/policies" + params)
-	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies", params)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1862,12 +1862,7 @@ func (c *Client) ArpTableList(
 	if nscID != "" {
 		params.Set("network_service_config", nscID)
 	}
-	queryString := ""
-	if len(params) > 0 {
-		queryString = "?" + params.Encode()
-	}
-
-	u := c.resourceURL("/api/v3/decix-vrf-v1/arp-table" + queryString)
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/arp-table", params.Encode())
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
@@ -1938,12 +1933,7 @@ func (c *Client) VrfRoutesList(
 	if vrfID != "" {
 		params.Set("vrf", vrfID)
 	}
-	queryString := ""
-	if len(params) > 0 {
-		queryString = "?" + params.Encode()
-	}
-
-	u := c.resourceURL("/api/v3/decix-vrf-v1/routes" + queryString)
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/routes", params.Encode())
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
@@ -2016,12 +2006,7 @@ func (c *Client) StaticRoutesList(
 	if nscID != "" {
 		params.Set("network_service_config", nscID)
 	}
-	queryString := ""
-	if len(params) > 0 {
-		queryString = "?" + params.Encode()
-	}
-
-	u := c.resourceURL("/api/v3/decix-vrf-v1/static-routes" + queryString)
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes", params.Encode())
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err

@@ -85,13 +85,25 @@ func NewClient(server string) *Client {
 	}
 }
 
-// Private resourceURL concatinates the api base with the resource
+// hostBase extracts only the scheme and host from a URL, stripping any path component.
+// This is needed because DE-CIX extension API paths are absolute from the server root (e.g. /api/v3/decix-vrf-v1/...),
+// while the configured APIURL may include a versioned path suffix (e.g. https://host/v2).
+func hostBase(apiURL string) string {
+	if u, err := url.Parse(apiURL); err == nil && u.Scheme != "" {
+		return u.Scheme + "://" + u.Host
+	}
+	return strings.TrimSuffix(apiURL, "/")
+}
+
+// resourceURL concatenates the API base with the resource path, substituting {id} if provided.
+// Paths starting with /api/ are treated as absolute from the host root and bypass any base path,
+// since the DE-CIX extension API is mounted at the root rather than under the IX-API version prefix.
 func (c *Client) resourceURL(res string, params ...string) string {
-	base := strings.TrimSuffix(c.APIURL, "/")
+	var base string
 	if strings.HasPrefix(res, "/api/") {
-		if u, err := url.Parse(c.APIURL); err == nil && u.Scheme != "" {
-			base = u.Scheme + "://" + u.Host
-		}
+		base = hostBase(c.APIURL)
+	} else {
+		base = strings.TrimSuffix(c.APIURL, "/")
 	}
 	p := base + res
 	if len(params) > 0 {
