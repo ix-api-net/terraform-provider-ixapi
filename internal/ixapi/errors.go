@@ -5,14 +5,17 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync/atomic"
 	"time"
 )
 
-var flexibleParsingEnabled bool
+// flexibleParsingEnabled controls whether lenient JSON parsing is active.
+// It is set atomically so it is safe to call SetFlexibleParsing concurrently.
+var flexibleParsingEnabled atomic.Bool
 
 // SetFlexibleParsing enables or disables lenient JSON parsing for DE-CIX extension API responses.
 func SetFlexibleParsing(enabled bool) {
-	flexibleParsingEnabled = enabled
+	flexibleParsingEnabled.Store(enabled)
 }
 
 // FlexibleString is a string type that can unmarshal both JSON strings and JSON arrays into a single string value.
@@ -25,7 +28,7 @@ func (fs *FlexibleString) UnmarshalJSON(data []byte) error {
 		*fs = FlexibleString(str)
 		return nil
 	}
-	if !flexibleParsingEnabled {
+	if !flexibleParsingEnabled.Load() {
 		return fmt.Errorf("detail field must be a string, got: %s", string(data))
 	}
 
@@ -71,7 +74,7 @@ func (ft *FlexibleTime) UnmarshalJSON(data []byte) error {
 		ft.Time = t
 		return nil
 	}
-	if !flexibleParsingEnabled {
+	if !flexibleParsingEnabled.Load() {
 		return err
 	}
 
