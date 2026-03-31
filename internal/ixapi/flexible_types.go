@@ -17,17 +17,17 @@ func SetFlexibleParsing(enabled bool) {
 	flexibleParsingEnabled.Store(enabled)
 }
 
-// FlexibleString is a string type used for fields that the DE-CIX extension API
+// DetailString is a string type used for fields that the DE-CIX extension API
 // may return as either a JSON string or a JSON array of strings — an inconsistency
 // in the extension API that does not exist in the core IX-API. When flexible parsing
 // is disabled (the default), only a JSON string is accepted.
-type FlexibleString string
+type DetailString string
 
 // UnmarshalJSON implements json.Unmarshaler, accepting either a JSON string or a JSON array.
-func (fs *FlexibleString) UnmarshalJSON(data []byte) error {
+func (fs *DetailString) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err == nil {
-		*fs = FlexibleString(str)
+		*fs = DetailString(str)
 		return nil
 	}
 	if !flexibleParsingEnabled.Load() {
@@ -40,14 +40,14 @@ func (fs *FlexibleString) UnmarshalJSON(data []byte) error {
 		for i, v := range arr {
 			parts[i] = fmt.Sprintf("%v", v)
 		}
-		*fs = FlexibleString(strings.Join(parts, "; "))
+		*fs = DetailString(strings.Join(parts, "; "))
 		return nil
 	}
 
 	return fmt.Errorf("detail field must be string or array, got: %s", string(data))
 }
 
-func (fs FlexibleString) String() string {
+func (fs DetailString) String() string {
 	return string(fs)
 }
 

@@ -6098,7 +6098,7 @@ type ProblemResponse struct {
 
 	// Detail A human-readable explanation specific to this
 	// occurrence of the problem.
-	Detail FlexibleString `json:"detail,omitempty"`
+	Detail DetailString `json:"detail,omitempty"`
 
 	// Instance A URI reference that identifies the specific
 	// occurrence of the problem.  It may or may not yield

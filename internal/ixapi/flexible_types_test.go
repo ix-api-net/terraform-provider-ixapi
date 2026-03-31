@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-func TestFlexibleString_UnmarshalJSON_String(t *testing.T) {
-	var fs FlexibleString
+func TestDetailString_UnmarshalJSON_String(t *testing.T) {
+	var fs DetailString
 	err := json.Unmarshal([]byte(`"simple string"`), &fs)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -17,10 +17,10 @@ func TestFlexibleString_UnmarshalJSON_String(t *testing.T) {
 	}
 }
 
-func TestFlexibleString_UnmarshalJSON_Array(t *testing.T) {
+func TestDetailString_UnmarshalJSON_Array(t *testing.T) {
 	SetFlexibleParsing(true)
 	t.Cleanup(func() { SetFlexibleParsing(false) })
-	var fs FlexibleString
+	var fs DetailString
 	err := json.Unmarshal([]byte(`["error one", "error two", "error three"]`), &fs)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -31,10 +31,10 @@ func TestFlexibleString_UnmarshalJSON_Array(t *testing.T) {
 	}
 }
 
-func TestFlexibleString_UnmarshalJSON_MixedArray(t *testing.T) {
+func TestDetailString_UnmarshalJSON_MixedArray(t *testing.T) {
 	SetFlexibleParsing(true)
 	t.Cleanup(func() { SetFlexibleParsing(false) })
-	var fs FlexibleString
+	var fs DetailString
 	err := json.Unmarshal([]byte(`["string", 123, true]`), &fs)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -45,8 +45,8 @@ func TestFlexibleString_UnmarshalJSON_MixedArray(t *testing.T) {
 	}
 }
 
-func TestFlexibleString_UnmarshalJSON_Invalid(t *testing.T) {
-	var fs FlexibleString
+func TestDetailString_UnmarshalJSON_Invalid(t *testing.T) {
+	var fs DetailString
 	err := json.Unmarshal([]byte(`{"invalid": "object"}`), &fs)
 	if err == nil {
 		t.Fatal("expected error for invalid JSON type")
@@ -125,11 +125,11 @@ func TestFlexibleTime_MarshalJSON_Zero(t *testing.T) {
 	}
 }
 
-func TestProblemResponse_Error_WithFlexibleString(t *testing.T) {
+func TestProblemResponse_Error_WithDetailString(t *testing.T) {
 	pr := ProblemResponse{
 		Title:  "Validation Error",
 		Status: 400,
-		Detail: FlexibleString("Invalid input provided"),
+		Detail: DetailString("Invalid input provided"),
 	}
 	expected := "Validation Error (400), Invalid input provided"
 	if pr.Error() != expected {
