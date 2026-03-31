@@ -1922,7 +1922,7 @@ func (c *Client) ArpTableList(
 	return nil, res
 }
 
-// Static Routes
+// VRF Routes
 
 // VrfRoutesList fetches routes from a VRF routing table, optionally filtered by VRF ID.
 func (c *Client) VrfRoutesList(
@@ -1992,6 +1992,8 @@ func (c *Client) VrfRoutesList(
 	res.Status = ret.StatusCode
 	return nil, res
 }
+
+// Static Routes
 
 // StaticRoutesList fetches static routes, optionally filtered by VRF ID and network service config ID.
 func (c *Client) StaticRoutesList(
