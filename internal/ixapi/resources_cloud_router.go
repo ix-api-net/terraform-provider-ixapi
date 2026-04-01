@@ -8,15 +8,22 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
-// cloudRouterURL builds an absolute URL for a DE-CIX extension API path,
-// appending the query string as a separate argument to avoid in-band concatenation.
-func (c *Client) cloudRouterURL(path, query string) string {
-	if query != "" {
-		return c.resourceURL(path + "?" + query)
+// cloudRouterURL builds an absolute URL for a DE-CIX extension API path.
+// It uses the host base of the configured API URL because the extension API is mounted
+// at the server root (e.g. /api/v3/decix-vrf-v1/...) rather than under the versioned IX-API prefix.
+// An optional id substitutes {id} in the path; an optional query string is appended if non-empty.
+func (c *Client) cloudRouterURL(path, query string, id ...string) string {
+	if len(id) > 0 {
+		path = strings.ReplaceAll(path, "{id}", id[0])
 	}
-	return c.resourceURL(path)
+	u := hostBase(c.APIURL) + path
+	if query != "" {
+		u += "?" + query
+	}
+	return u
 }
 
 // CloudRoutersListQuery holds query parameters for listing Cloud Router resources.
@@ -124,7 +131,7 @@ func (c *Client) CloudRoutersCreate(
 	ctx context.Context,
 	req *CloudRouterRequest,
 ) (*CloudRouter, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/vrfs")
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/vrfs", "")
 	data, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -204,7 +211,7 @@ func (c *Client) CloudRoutersRead(
 	ctx context.Context,
 	id string,
 ) (*CloudRouter, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/vrfs/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/vrfs/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -277,7 +284,7 @@ func (c *Client) CloudRoutersDestroy(
 	ctx context.Context,
 	id string,
 ) error {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/vrfs/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/vrfs/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {
 		return err
@@ -465,7 +472,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsCreate(
 	ctx context.Context,
 	req *CloudRouterNetworkServiceConfigRequest,
 ) (*CloudRouterNetworkServiceConfig, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs")
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs", "")
 	data, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -550,7 +557,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsRead(
 	ctx context.Context,
 	id string,
 ) (*CloudRouterNetworkServiceConfig, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -629,7 +636,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsPatch(
 	id string,
 	patch *CloudRouterNetworkServiceConfigPatch,
 ) (*CloudRouterNetworkServiceConfig, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", "", id)
 	data, err := json.Marshal(patch)
 	if err != nil {
 		return nil, err
@@ -714,7 +721,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsDestroy(
 	ctx context.Context,
 	id string,
 ) error {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {
 		return err
@@ -903,7 +910,7 @@ func (c *Client) CloudRouterProductOfferingsRead(
 	ctx context.Context,
 	id string,
 ) (*CloudRouterProductOffering, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/product-offerings/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/product-offerings/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -976,7 +983,7 @@ func (c *Client) CloudRouterNetworkServiceConfigGetBGPState(
 	ctx context.Context,
 	id string,
 ) (*BGPStateResponse, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/bgp-state", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/bgp-state", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -1043,7 +1050,7 @@ func (c *Client) CloudRouterNetworkServiceConfigGetBFDState(
 	ctx context.Context,
 	id string,
 ) (*BFDStateResponse, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/bfd-state", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/bfd-state", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -1190,7 +1197,7 @@ func (c *Client) PrefixListsCreate(
 	ctx context.Context,
 	req *PrefixListRequest,
 ) (*PrefixList, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/prefix-lists")
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists", "")
 	data, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -1270,7 +1277,7 @@ func (c *Client) PrefixListsRead(
 	ctx context.Context,
 	id string,
 ) (*PrefixList, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -1336,7 +1343,7 @@ func (c *Client) PrefixListsUpdate(
 	id string,
 	req *PrefixListRequest,
 ) (*PrefixList, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", "", id)
 	data, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -1416,7 +1423,7 @@ func (c *Client) PrefixListsDelete(
 	ctx context.Context,
 	id string,
 ) (*PrefixList, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {
 		return nil, err
@@ -1561,7 +1568,7 @@ func (c *Client) PoliciesCreate(
 	ctx context.Context,
 	req *PolicyRequest,
 ) (*Policy, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/policies")
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies", "")
 	data, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -1641,7 +1648,7 @@ func (c *Client) PoliciesRead(
 	ctx context.Context,
 	id string,
 ) (*Policy, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/policies/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -1707,7 +1714,7 @@ func (c *Client) PoliciesUpdate(
 	id string,
 	req *PolicyRequest,
 ) (*Policy, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/policies/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies/{id}", "", id)
 	data, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -1787,7 +1794,7 @@ func (c *Client) PoliciesDelete(
 	ctx context.Context,
 	id string,
 ) (*Policy, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/policies/{id}", id)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {
 		return nil, err
@@ -2081,7 +2088,7 @@ func (c *Client) StaticRoutesCreate(
 	ctx context.Context,
 	req *StaticRouteRequest,
 ) (*StaticRoute, error) {
-	u := c.resourceURL("/api/v3/decix-vrf-v1/static-routes")
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes", "")
 	data, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -2161,7 +2168,7 @@ func (c *Client) StaticRoutesRead(
 	ctx context.Context,
 	id string,
 ) (*StaticRoute, error) {
-	u := c.resourceURL("/api/v3/decix-vrf-v1/static-routes/{id}", id)
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
@@ -2227,7 +2234,7 @@ func (c *Client) StaticRoutesUpdate(
 	id string,
 	req *StaticRouteRequest,
 ) (*StaticRoute, error) {
-	u := c.resourceURL("/api/v3/decix-vrf-v1/static-routes/{id}", id)
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes/{id}", "", id)
 	data, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -2307,7 +2314,7 @@ func (c *Client) StaticRoutesDelete(
 	ctx context.Context,
 	id string,
 ) (*StaticRoute, error) {
-	u := c.resourceURL("/api/v3/decix-vrf-v1/static-routes/{id}", id)
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes/{id}", "", id)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, u, nil)
 	if err != nil {
 		return nil, err
@@ -2374,7 +2381,7 @@ func (c *Client) NetworkServiceConfigReceivedRoutesList(
 	ctx context.Context,
 	nscID string,
 ) ([]*BGPRoute, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/received-routes", nscID)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/received-routes", "", nscID)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -2431,7 +2438,7 @@ func (c *Client) NetworkServiceConfigAdvertisedRoutesList(
 	ctx context.Context,
 	nscID string,
 ) ([]*BGPRoute, error) {
-	url := c.resourceURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/advertised-routes", nscID)
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/advertised-routes", "", nscID)
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err

@@ -96,16 +96,8 @@ func hostBase(apiURL string) string {
 }
 
 // resourceURL concatenates the API base with the resource path, substituting {id} if provided.
-// Paths starting with /api/ are treated as absolute from the host root and bypass any base path,
-// since the DE-CIX extension API is mounted at the root rather than under the IX-API version prefix.
 func (c *Client) resourceURL(res string, params ...string) string {
-	var base string
-	if strings.HasPrefix(res, "/api/") {
-		base = hostBase(c.APIURL)
-	} else {
-		base = strings.TrimSuffix(c.APIURL, "/")
-	}
-	p := base + res
+	p := strings.TrimSuffix(c.APIURL, "/") + res
 	if len(params) > 0 {
 		p = strings.ReplaceAll(p, "{id}", params[0])
 	}
