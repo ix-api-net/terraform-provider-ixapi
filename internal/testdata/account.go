@@ -34,7 +34,7 @@ func NewStatus() []*ixapi.Status {
 			Severity:  6,
 			Tag:       "info",
 			Message:   "message",
-			Timestamp: ixapi.ApiTimestamp{Time: time.Now().UTC()},
+			Timestamp: ixapi.APITimestamp{Time: time.Now().UTC()},
 		},
 	}
 }

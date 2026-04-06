@@ -51,8 +51,8 @@ func (fs DetailString) String() string {
 	return string(fs)
 }
 
-// ApiTimestamp is a time.Time wrapper that can unmarshal multiple date formats returned by the DE-CIX extension API.
-type ApiTimestamp struct {
+// APITimestamp is a time.Time wrapper that can unmarshal multiple date formats returned by the DE-CIX extension API.
+type APITimestamp struct {
 	time.Time
 }
 
@@ -63,7 +63,7 @@ type ApiTimestamp struct {
 //     offset instead of 'Z'. Only attempted when flexible parsing is enabled.
 //  3. "2006-01-02" — date-only values returned for fields such as decommission_at when no
 //     time component is set. Only attempted when flexible parsing is enabled.
-func (ft *ApiTimestamp) UnmarshalJSON(data []byte) error {
+func (ft *APITimestamp) UnmarshalJSON(data []byte) error {
 	if string(data) == "null" || len(data) == 0 {
 		return nil
 	}
@@ -102,23 +102,23 @@ func (ft *ApiTimestamp) UnmarshalJSON(data []byte) error {
 }
 
 // MarshalJSON implements json.Marshaler, serializing to RFC3339 or null if zero.
-func (ft ApiTimestamp) MarshalJSON() ([]byte, error) {
+func (ft APITimestamp) MarshalJSON() ([]byte, error) {
 	if ft.Time.IsZero() {
 		return []byte("null"), nil
 	}
 	return []byte(`"` + ft.Time.Format(time.RFC3339) + `"`), nil
 }
 
-// NewApiTimestamp wraps a *time.Time in a ApiTimestamp, returning nil if the input is nil.
-func NewApiTimestamp(t *time.Time) *ApiTimestamp {
+// NewAPITimestamp wraps a *time.Time in a APITimestamp, returning nil if the input is nil.
+func NewAPITimestamp(t *time.Time) *APITimestamp {
 	if t == nil {
 		return nil
 	}
-	return &ApiTimestamp{Time: *t}
+	return &APITimestamp{Time: *t}
 }
 
 // ToTime returns the underlying *time.Time, or nil if the receiver is nil or zero.
-func (ft *ApiTimestamp) ToTime() *time.Time {
+func (ft *APITimestamp) ToTime() *time.Time {
 	if ft == nil || ft.Time.IsZero() {
 		return nil
 	}

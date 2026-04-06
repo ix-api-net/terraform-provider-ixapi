@@ -180,11 +180,11 @@ type CloudNetworkProductOffering struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -335,11 +335,11 @@ type CloudNetworkProductOfferingPatch struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -490,11 +490,11 @@ type ConnectionProductOffering struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -602,11 +602,11 @@ type ConnectionProductOfferingPatch struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -767,11 +767,11 @@ type ExchangeLanNetworkProductOffering struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -888,11 +888,11 @@ type ExchangeLanNetworkProductOfferingPatch struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -1059,11 +1059,11 @@ type MP2MPNetworkProductOffering struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -1177,11 +1177,11 @@ type MP2MPNetworkProductOfferingPatch struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -1342,11 +1342,11 @@ type P2MPNetworkProductOffering struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -1460,11 +1460,11 @@ type P2MPNetworkProductOfferingPatch struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -1578,11 +1578,11 @@ type P2PNetworkProductOffering struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -1696,11 +1696,11 @@ type P2PNetworkProductOfferingPatch struct {
 
 	// OrderableNotBefore This product offering becomes available for ordering after
 	// this point in time.
-	OrderableNotBefore *ApiTimestamp `json:"orderable_not_before,omitempty"`
+	OrderableNotBefore *APITimestamp `json:"orderable_not_before,omitempty"`
 
 	// OrderableNotAfter This product offering will become unavailable for ordering after
 	// this point in time.
-	OrderableNotAfter *ApiTimestamp `json:"orderable_not_after,omitempty"`
+	OrderableNotAfter *APITimestamp `json:"orderable_not_after,omitempty"`
 
 	// ContractTerms The contract terms informally describe the contract period and
 	// renewals.
@@ -5651,7 +5651,7 @@ type Event struct {
 	Payload map[string]interface{} `json:"payload,omitempty"`
 
 	// Timestamp is a timestamp
-	Timestamp ApiTimestamp `json:"timestamp,omitempty"`
+	Timestamp APITimestamp `json:"timestamp,omitempty"`
 }
 
 // Status Status Message
@@ -5680,7 +5680,7 @@ type Status struct {
 	Attrs map[string]interface{} `json:"attrs,omitempty"`
 
 	// Timestamp The time and date when the event occured.
-	Timestamp ApiTimestamp `json:"timestamp,omitempty"`
+	Timestamp APITimestamp `json:"timestamp,omitempty"`
 }
 
 // APIExtensions Implementation specific API extensions
@@ -5820,10 +5820,10 @@ type IPAddress struct {
 	FQDN *string `json:"fqdn,omitempty"`
 
 	// ValidNotBefore is a valid_not_before
-	ValidNotBefore *ApiTimestamp `json:"valid_not_before,omitempty"`
+	ValidNotBefore *APITimestamp `json:"valid_not_before,omitempty"`
 
 	// ValidNotAfter is a valid_not_after
-	ValidNotAfter *ApiTimestamp `json:"valid_not_after,omitempty"`
+	ValidNotAfter *APITimestamp `json:"valid_not_after,omitempty"`
 
 	// ID is a id
 	ID string `json:"id,omitempty"`
@@ -5865,10 +5865,10 @@ type IPAddressPatch struct {
 	FQDN *string `json:"fqdn,omitempty"`
 
 	// ValidNotBefore is a valid_not_before
-	ValidNotBefore *ApiTimestamp `json:"valid_not_before,omitempty"`
+	ValidNotBefore *APITimestamp `json:"valid_not_before,omitempty"`
 
 	// ValidNotAfter is a valid_not_after
-	ValidNotAfter *ApiTimestamp `json:"valid_not_after,omitempty"`
+	ValidNotAfter *APITimestamp `json:"valid_not_after,omitempty"`
 }
 
 // IPAddressRequest IP-Address / Prefix allocation Request
@@ -5907,10 +5907,10 @@ type IPAddressRequest struct {
 	FQDN *string `json:"fqdn,omitempty"`
 
 	// ValidNotBefore is a valid_not_before
-	ValidNotBefore *ApiTimestamp `json:"valid_not_before,omitempty"`
+	ValidNotBefore *APITimestamp `json:"valid_not_before,omitempty"`
 
 	// ValidNotAfter is a valid_not_after
-	ValidNotAfter *ApiTimestamp `json:"valid_not_after,omitempty"`
+	ValidNotAfter *APITimestamp `json:"valid_not_after,omitempty"`
 }
 
 // IPAddressUpdate IP-Address Update
@@ -5949,10 +5949,10 @@ type IPAddressUpdate struct {
 	FQDN *string `json:"fqdn,omitempty"`
 
 	// ValidNotBefore is a valid_not_before
-	ValidNotBefore *ApiTimestamp `json:"valid_not_before,omitempty"`
+	ValidNotBefore *APITimestamp `json:"valid_not_before,omitempty"`
 
 	// ValidNotAfter is a valid_not_after
-	ValidNotAfter *ApiTimestamp `json:"valid_not_after,omitempty"`
+	ValidNotAfter *APITimestamp `json:"valid_not_after,omitempty"`
 }
 
 // MacAddress MAC-Address
@@ -5984,7 +5984,7 @@ type MacAddress struct {
 	// Afterwards, it is supposed to be available. If the value is
 	// `null` or the property does not exist, the mac address is
 	// valid from the creation date.
-	ValidNotBefore *ApiTimestamp `json:"valid_not_before,omitempty"`
+	ValidNotBefore *APITimestamp `json:"valid_not_before,omitempty"`
 
 	// ValidNotAfter When a mac address is assigned to an NSC, and the current datetime
 	// is before this value, the MAC address *can* be used on the peering platform.
@@ -5994,7 +5994,7 @@ type MacAddress struct {
 	//
 	// If the value is null or the property does not exist, the MAC address
 	// is valid indefinitely. The value may not be in the past.
-	ValidNotAfter *ApiTimestamp `json:"valid_not_after,omitempty"`
+	ValidNotAfter *APITimestamp `json:"valid_not_after,omitempty"`
 
 	// ID is a id
 	ID string `json:"id,omitempty"`
@@ -6029,7 +6029,7 @@ type MacAddressRequest struct {
 	// Afterwards, it is supposed to be available. If the value is
 	// `null` or the property does not exist, the mac address is
 	// valid from the creation date.
-	ValidNotBefore *ApiTimestamp `json:"valid_not_before,omitempty"`
+	ValidNotBefore *APITimestamp `json:"valid_not_before,omitempty"`
 
 	// ValidNotAfter When a mac address is assigned to an NSC, and the current datetime
 	// is before this value, the MAC address *can* be used on the peering platform.
@@ -6039,7 +6039,7 @@ type MacAddressRequest struct {
 	//
 	// If the value is null or the property does not exist, the MAC address
 	// is valid indefinitely. The value may not be in the past.
-	ValidNotAfter *ApiTimestamp `json:"valid_not_after,omitempty"`
+	ValidNotAfter *APITimestamp `json:"valid_not_after,omitempty"`
 }
 
 // Conflict A conflict is preventing success
