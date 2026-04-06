@@ -89,6 +89,45 @@ func TestCloudRouterNetworkServiceConfigsP2PVCDataSourceReadWithBFDFilter(t *tes
 	}
 }
 
+func TestCloudRouterNetworkServiceConfigP2PVCDataSourceReadByID(t *testing.T) {
+	dataSource := NewDecixCloudRouterNetworkServiceConfigP2PVCDataSource()
+	res := dataSource.TestResourceData()
+	res.Set("id", "2")
+
+	config := &ixapi.CloudRouterNetworkServiceConfig{
+		ID:               "2",
+		Type:             "p2p_vc",
+		ManagingAccount:  "100",
+		BillingAccount:   "100",
+		ConsumingAccount: "100",
+		CloudRouter:      "274",
+		NetworkService:   "501",
+		Address:          "192.0.2.5/30",
+		BGPNeighbor:      "192.0.2.6",
+		BGPNeighborASN:   65100,
+		AdminStatus:      "enabled",
+		BFDEnabled:       false,
+	}
+
+	api := ixapi.NewTestClient(map[string]any{
+		"/api/v3/decix-vrf-v1/network-service-configs/2": config,
+	})
+	api.CloudRouterEnabled = true
+
+	ctx := context.Background()
+	diag := cloudRouterNetworkServiceConfigP2PVCDataRead(ctx, res, api)
+	if diag.HasError() {
+		t.Fatal(diag)
+	}
+
+	if res.Id() != "2" {
+		t.Errorf("expected ID to be 2, got %s", res.Id())
+	}
+	if res.Get("bgp_neighbor_asn").(int) != 65100 {
+		t.Errorf("unexpected bgp_neighbor_asn: %v", res.Get("bgp_neighbor_asn"))
+	}
+}
+
 func TestCloudRouterNetworkServiceConfigsP2PVCDataSourceReadWithLimitOffset(t *testing.T) {
 	dataSource := NewDecixCloudRouterNetworkServiceConfigsP2PVCDataSource()
 	res := dataSource.TestResourceData()
