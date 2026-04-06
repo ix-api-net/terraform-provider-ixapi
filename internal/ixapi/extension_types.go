@@ -117,6 +117,11 @@ func NewAPITimestamp(t *time.Time) *APITimestamp {
 	return &APITimestamp{Time: *t}
 }
 
+// APITimestampNowUTC returns an APITimestamp set to the current UTC time.
+func APITimestampNowUTC() APITimestamp {
+	return APITimestamp{Time: time.Now().UTC()}
+}
+
 // ToTime returns the underlying *time.Time, or nil if the receiver is nil or zero.
 func (ft *APITimestamp) ToTime() *time.Time {
 	if ft == nil || ft.Time.IsZero() {

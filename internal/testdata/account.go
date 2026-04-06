@@ -1,8 +1,6 @@
 package testdata
 
 import (
-	"time"
-
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
@@ -35,7 +33,7 @@ func NewStatus() []*ixapi.Status {
 			Severity:  6,
 			Tag:       "info",
 			Message:   "message",
-			Timestamp: ixapi.APITimestamp{Time: time.Now().UTC()},
+			Timestamp: ixapi.APITimestampNowUTC(),
 		},
 	}
 }
