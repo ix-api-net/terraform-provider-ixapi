@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 func TestPrefixListRequestFromResourceData(t *testing.T) {
@@ -70,7 +71,7 @@ func TestPrefixListRead(t *testing.T) {
 		MatchList: []ixapi.PrefixMatch{
 			{
 				Prefix:    "192.168.0.0/16",
-				MaxLength: intPtrResource(24),
+				MaxLength: ptr.Of(24),
 			},
 		},
 	}
@@ -230,8 +231,4 @@ func TestPrefixListDelete_OtherErrorFails(t *testing.T) {
 	if err == nil {
 		t.Error("delete should fail on non-404 errors")
 	}
-}
-
-func intPtrResource(i int) *int {
-	return &i
 }

@@ -2,6 +2,7 @@ package testdata
 
 import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 // NewMemberJoiningRuleAllow creates a member joining rule
@@ -12,7 +13,7 @@ func NewMemberJoiningRuleAllow() *ixapi.AllowMemberJoiningRule {
 		ManagingAccount:  "managing:123",
 		ConsumingAccount: "consuming:123",
 
-		CapacityMax:    NewOptInt(2300),
+		CapacityMax:    ptr.Of(2300),
 		NetworkService: "ns:23",
 	}
 }

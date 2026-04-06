@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
@@ -20,16 +21,16 @@ func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
 			Entries: []ixapi.PolicyEntry{
 				{
 					SequenceNumber:  10,
-					MatchPrefixList: stringPtr("rfc1918-private"),
+					MatchPrefixList: ptr.Of("rfc1918-private"),
 					Action: ixapi.PolicyAction{
-						Filter:          stringPtr("accept"),
-						LocalPreference: intPtrPolicy(100),
+						Filter:          ptr.Of("accept"),
+						LocalPreference: ptr.Of(100),
 					},
 				},
 				{
 					SequenceNumber: 20,
 					Action: ixapi.PolicyAction{
-						Filter: stringPtr("reject"),
+						Filter: ptr.Of("reject"),
 					},
 				},
 			},
@@ -42,9 +43,9 @@ func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
 			Entries: []ixapi.PolicyEntry{
 				{
 					SequenceNumber:  10,
-					MatchPrefixList: stringPtr("customer-networks"),
+					MatchPrefixList: ptr.Of("customer-networks"),
 					Action: ixapi.PolicyAction{
-						Filter: stringPtr("reject"),
+						Filter: ptr.Of("reject"),
 						ASPathPrepend: &ixapi.ASPathPrepend{
 							Count: 3,
 						},
@@ -86,8 +87,8 @@ func TestCloudRouterPoliciesDataSourceReadWithFilter(t *testing.T) {
 				{
 					SequenceNumber: 10,
 					Action: ixapi.PolicyAction{
-						Filter:          stringPtr("accept"),
-						LocalPreference: intPtrPolicy(100),
+						Filter:          ptr.Of("accept"),
+						LocalPreference: ptr.Of(100),
 					},
 				},
 			},
@@ -116,13 +117,6 @@ func TestCloudRouterPoliciesDataSourceReadWithFilter(t *testing.T) {
 	}
 }
 
-func stringPtr(s string) *string {
-	return &s
-}
-
-func intPtrPolicy(i int) *int {
-	return &i
-}
 
 func TestCloudRouterPolicyDataSourceReadByID(t *testing.T) {
 	dataSource := NewDecixCloudRouterPolicyDataSource()
@@ -138,8 +132,8 @@ func TestCloudRouterPolicyDataSourceReadByID(t *testing.T) {
 			{
 				SequenceNumber: 10,
 				Action: ixapi.PolicyAction{
-					Filter:          stringPtr("accept"),
-					LocalPreference: intPtrPolicy(100),
+					Filter:          ptr.Of("accept"),
+					LocalPreference: ptr.Of(100),
 				},
 			},
 		},
@@ -177,8 +171,8 @@ func TestCloudRouterPolicyDataSourceReadByName(t *testing.T) {
 				{
 					SequenceNumber: 10,
 					Action: ixapi.PolicyAction{
-						Filter:          stringPtr("accept"),
-						LocalPreference: intPtrPolicy(100),
+						Filter:          ptr.Of("accept"),
+						LocalPreference: ptr.Of(100),
 					},
 				},
 			},
