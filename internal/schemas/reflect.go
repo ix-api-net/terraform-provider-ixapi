@@ -80,12 +80,12 @@ func SetResourceData(model any, res ResourceSetter) error {
 			res.Set(propName, val.Interface().(*ixapi.Date).String())
 			continue
 		}
-		if fType.String() == "*ixapi.FlexibleTime" {
-			res.Set(propName, val.Interface().(*ixapi.FlexibleTime).Time.Format(time.RFC3339))
+		if fType.String() == "*ixapi.ApiTimestamp" {
+			res.Set(propName, val.Interface().(*ixapi.ApiTimestamp).Time.Format(time.RFC3339))
 			continue
 		}
-		if fType.String() == "ixapi.FlexibleTime" {
-			res.Set(propName, val.Interface().(ixapi.FlexibleTime).Time.Format(time.RFC3339))
+		if fType.String() == "ixapi.ApiTimestamp" {
+			res.Set(propName, val.Interface().(ixapi.ApiTimestamp).Time.Format(time.RFC3339))
 			continue
 		}
 		if fType.String() == "*time.Time" {

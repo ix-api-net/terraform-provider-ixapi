@@ -53,8 +53,8 @@ func TestDetailString_UnmarshalJSON_Invalid(t *testing.T) {
 	}
 }
 
-func TestFlexibleTime_UnmarshalJSON_RFC3339(t *testing.T) {
-	var ft FlexibleTime
+func TestApiTimestamp_UnmarshalJSON_RFC3339(t *testing.T) {
+	var ft ApiTimestamp
 	err := json.Unmarshal([]byte(`"2024-08-01T14:30:00Z"`), &ft)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -65,10 +65,10 @@ func TestFlexibleTime_UnmarshalJSON_RFC3339(t *testing.T) {
 	}
 }
 
-func TestFlexibleTime_UnmarshalJSON_DateOnly(t *testing.T) {
+func TestApiTimestamp_UnmarshalJSON_DateOnly(t *testing.T) {
 	SetFlexibleParsing(true)
 	t.Cleanup(func() { SetFlexibleParsing(false) })
-	var ft FlexibleTime
+	var ft ApiTimestamp
 	err := json.Unmarshal([]byte(`"2024-08-01"`), &ft)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -79,8 +79,8 @@ func TestFlexibleTime_UnmarshalJSON_DateOnly(t *testing.T) {
 	}
 }
 
-func TestFlexibleTime_UnmarshalJSON_Null(t *testing.T) {
-	var ft FlexibleTime
+func TestApiTimestamp_UnmarshalJSON_Null(t *testing.T) {
+	var ft ApiTimestamp
 	err := json.Unmarshal([]byte(`null`), &ft)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -90,8 +90,8 @@ func TestFlexibleTime_UnmarshalJSON_Null(t *testing.T) {
 	}
 }
 
-func TestFlexibleTime_UnmarshalJSON_EmptyString(t *testing.T) {
-	var ft FlexibleTime
+func TestApiTimestamp_UnmarshalJSON_EmptyString(t *testing.T) {
+	var ft ApiTimestamp
 	err := json.Unmarshal([]byte(`""`), &ft)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -101,8 +101,8 @@ func TestFlexibleTime_UnmarshalJSON_EmptyString(t *testing.T) {
 	}
 }
 
-func TestFlexibleTime_MarshalJSON(t *testing.T) {
-	ft := FlexibleTime{Time: time.Date(2024, 8, 1, 14, 30, 0, 0, time.UTC)}
+func TestApiTimestamp_MarshalJSON(t *testing.T) {
+	ft := ApiTimestamp{Time: time.Date(2024, 8, 1, 14, 30, 0, 0, time.UTC)}
 	data, err := json.Marshal(ft)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -113,8 +113,8 @@ func TestFlexibleTime_MarshalJSON(t *testing.T) {
 	}
 }
 
-func TestFlexibleTime_MarshalJSON_Zero(t *testing.T) {
-	ft := FlexibleTime{}
+func TestApiTimestamp_MarshalJSON_Zero(t *testing.T) {
+	ft := ApiTimestamp{}
 	data, err := json.Marshal(ft)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
