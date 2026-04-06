@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterResource returns the schema.Resource for managing a DE-CIX Cloud Router (VRF) instance.
-func NewCloudRouterResource() *schema.Resource {
+// NewDecixCloudRouterResource returns the schema.Resource for managing a DE-CIX Cloud Router (VRF) instance.
+func NewDecixCloudRouterResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router` resource to create and manage a DE-CIX Cloud ROUTER (VRF) instance.",
 		CreateContext: crud.Create(cloudRouterCreate),
@@ -56,7 +56,7 @@ func cloudRouterCreate(
 		return err
 	}
 
-	cr, err := api.CloudRoutersCreate(ctx, req)
+	cr, err := api.DecixCloudRoutersCreate(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func cloudRouterRead(
 	}
 
 	id := res.Id()
-	cr, err := api.CloudRoutersRead(ctx, id)
+	cr, err := api.DecixCloudRoutersRead(ctx, id)
 	if err != nil && ixapi.IsErrNotFound(err) {
 		res.SetId("")
 		return nil
@@ -100,7 +100,7 @@ func cloudRouterDelete(
 	}
 
 	id := res.Id()
-	err := api.CloudRoutersDestroy(ctx, id)
+	err := api.DecixCloudRoutersDestroy(ctx, id)
 	if err != nil && !ixapi.IsErrNotFound(err) {
 		return err
 	}

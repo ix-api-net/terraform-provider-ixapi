@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRoutersDataSourceRead(t *testing.T) {
-	dataSource := NewCloudRoutersDataSource()
+	dataSource := NewDecixCloudRoutersDataSource()
 	res := dataSource.TestResourceData()
 
 	externalRef := "router-ref-1"
@@ -56,7 +56,7 @@ func TestCloudRoutersDataSourceRead(t *testing.T) {
 }
 
 func TestCloudRoutersDataSourceReadWithFilter(t *testing.T) {
-	dataSource := NewCloudRoutersDataSource()
+	dataSource := NewDecixCloudRoutersDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("managing_account", "100")
 
@@ -96,7 +96,7 @@ func TestCloudRoutersDataSourceReadWithFilter(t *testing.T) {
 }
 
 func TestCloudRouterDataSourceReadByID(t *testing.T) {
-	dataSource := NewCloudRouterDataSource()
+	dataSource := NewDecixCloudRouterDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("id", "274")
 
@@ -135,7 +135,7 @@ func TestCloudRouterDataSourceReadByID(t *testing.T) {
 }
 
 func TestCloudRouterDataSourceReadByExternalRef(t *testing.T) {
-	dataSource := NewCloudRouterDataSource()
+	dataSource := NewDecixCloudRouterDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("external_ref", "my-router-ref")
 
@@ -171,7 +171,7 @@ func TestCloudRouterDataSourceReadByExternalRef(t *testing.T) {
 }
 
 func TestCloudRouterDataSourceRead_MultipleResultsError(t *testing.T) {
-	dataSource := NewCloudRouterDataSource()
+	dataSource := NewDecixCloudRouterDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("external_ref", "shared-ref")
 

@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterPolicyResource returns the schema.Resource for managing a BGP routing policy.
-func NewCloudRouterPolicyResource() *schema.Resource {
+// NewDecixCloudRouterPolicyResource returns the schema.Resource for managing a BGP routing policy.
+func NewDecixCloudRouterPolicyResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_policy` resource to manage a BGP routing policy.",
 		CreateContext: crud.Create(policyCreate),
@@ -95,7 +95,7 @@ func policyCreate(
 		return err
 	}
 
-	policy, err := api.PoliciesCreate(ctx, req)
+	policy, err := api.DecixCloudRouterPoliciesCreate(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -114,7 +114,7 @@ func policyRead(
 	}
 
 	id := res.Id()
-	policy, err := api.PoliciesRead(ctx, id)
+	policy, err := api.DecixCloudRouterPoliciesRead(ctx, id)
 	if err != nil && ixapi.IsErrNotFound(err) {
 		res.SetId("")
 		return nil
@@ -144,7 +144,7 @@ func policyUpdate(
 		return err
 	}
 
-	_, err = api.PoliciesUpdate(ctx, id, req)
+	_, err = api.DecixCloudRouterPoliciesUpdate(ctx, id, req)
 	if err != nil {
 		return err
 	}
@@ -161,7 +161,7 @@ func policyDelete(
 	}
 
 	id := res.Id()
-	_, err := api.PoliciesDelete(ctx, id)
+	_, err := api.DecixCloudRouterPoliciesDelete(ctx, id)
 	if err != nil && !ixapi.IsErrNotFound(err) {
 		return err
 	}

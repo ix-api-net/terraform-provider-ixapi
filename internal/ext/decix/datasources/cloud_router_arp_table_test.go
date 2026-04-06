@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterArpTableDataSourceRead(t *testing.T) {
-	dataSource := NewCloudRouterArpTableDataSource()
+	dataSource := NewDecixCloudRouterArpTableDataSource()
 	res := dataSource.TestResourceData()
 
 	entries := []*ixapi.ArpEntry{
@@ -50,7 +50,7 @@ func TestCloudRouterArpTableDataSourceRead(t *testing.T) {
 }
 
 func TestCloudRouterArpTableDataSourceReadEmpty(t *testing.T) {
-	dataSource := NewCloudRouterArpTableDataSource()
+	dataSource := NewDecixCloudRouterArpTableDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("vrf", "vrf-1")
 

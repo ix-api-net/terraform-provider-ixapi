@@ -8,8 +8,8 @@ import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 )
 
-// NewCloudRouterBGPStateDataSource returns the schema.Resource for reading the BGP session state of a Cloud Router network service config.
-func NewCloudRouterBGPStateDataSource() *schema.Resource {
+// NewDecixCloudRouterBGPStateDataSource returns the schema.Resource for reading the BGP session state of a Cloud Router network service config.
+func NewDecixCloudRouterBGPStateDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `ixapi_de_cix_cloud_router_bgp_state` data source to fetch the BGP session state for a cloud router network service config.",
 		ReadContext: cloudRouterBGPStateRead,
@@ -47,7 +47,7 @@ func cloudRouterBGPStateRead(
 
 	nscID := d.Get("nsc_id").(string)
 
-	bgpState, err := api.CloudRouterNetworkServiceConfigGetBGPState(ctx, nscID)
+	bgpState, err := api.DecixCloudRouterNetworkServiceConfigGetBGPState(ctx, nscID)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterNetworkServiceConfigsP2PVCDataSourceRead(t *testing.T) {
-	dataSource := NewCloudRouterNetworkServiceConfigsP2PVCDataSource()
+	dataSource := NewDecixCloudRouterNetworkServiceConfigsP2PVCDataSource()
 	res := dataSource.TestResourceData()
 
 	configs := []*ixapi.CloudRouterNetworkServiceConfig{
@@ -46,7 +46,7 @@ func TestCloudRouterNetworkServiceConfigsP2PVCDataSourceRead(t *testing.T) {
 }
 
 func TestCloudRouterNetworkServiceConfigsP2PVCDataSourceReadWithBFDFilter(t *testing.T) {
-	dataSource := NewCloudRouterNetworkServiceConfigsP2PVCDataSource()
+	dataSource := NewDecixCloudRouterNetworkServiceConfigsP2PVCDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("bfd_enabled", true)
 
@@ -90,7 +90,7 @@ func TestCloudRouterNetworkServiceConfigsP2PVCDataSourceReadWithBFDFilter(t *tes
 }
 
 func TestCloudRouterNetworkServiceConfigsP2PVCDataSourceReadWithLimitOffset(t *testing.T) {
-	dataSource := NewCloudRouterNetworkServiceConfigsP2PVCDataSource()
+	dataSource := NewDecixCloudRouterNetworkServiceConfigsP2PVCDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("limit", 1)
 	res.Set("offset", 1)

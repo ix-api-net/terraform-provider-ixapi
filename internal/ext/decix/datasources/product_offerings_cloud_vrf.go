@@ -59,8 +59,8 @@ func cloudRouterProductOfferingSchema() map[string]*schema.Schema {
 	}
 }
 
-// NewProductOfferingsCloudVRFDataSource returns the schema.Resource for listing Cloud Router (VRF) product offerings.
-func NewProductOfferingsCloudVRFDataSource() *schema.Resource {
+// NewDecixCloudRouterProductOfferingsCloudVRFDataSource returns the schema.Resource for listing Cloud Router (VRF) product offerings.
+func NewDecixCloudRouterProductOfferingsCloudVRFDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "This data source can be used to find product offerings for DE-CIX Cloud ROUTER (VRF).",
 		ReadContext: crud.Read(productOfferingsCloudVRFRead),
@@ -117,7 +117,7 @@ func productOfferingsCloudVRFRead(
 		qry.ContractPeriod = contractPeriod.(string)
 	}
 
-	offerings, err := api.CloudRouterProductOfferingsList(ctx, qry)
+	offerings, err := api.DecixCloudRouterProductOfferingsList(ctx, qry)
 	if err != nil {
 		return err
 	}
@@ -133,8 +133,8 @@ func productOfferingsCloudVRFRead(
 	return nil
 }
 
-// NewProductOfferingCloudVRFDataSource returns the schema.Resource for reading a single Cloud Router (VRF) product offering.
-func NewProductOfferingCloudVRFDataSource() *schema.Resource {
+// NewDecixCloudRouterProductOfferingCloudVRFDataSource returns the schema.Resource for reading a single Cloud Router (VRF) product offering.
+func NewDecixCloudRouterProductOfferingCloudVRFDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use this data source to reference a single Cloud ROUTER (VRF) product offering.",
 		ReadContext: crud.Read(productOfferingCloudVRFRead),
@@ -155,7 +155,7 @@ func productOfferingCloudVRFRead(
 
 	var offering *ixapi.CloudRouterProductOffering
 	if hasID {
-		result, err := api.CloudRouterProductOfferingsRead(ctx, id.(string))
+		result, err := api.DecixCloudRouterProductOfferingsRead(ctx, id.(string))
 		if err != nil {
 			return err
 		}
@@ -179,7 +179,7 @@ func productOfferingCloudVRFRead(
 			qry.ContractPeriod = contractPeriod.(string)
 		}
 
-		offerings, err := api.CloudRouterProductOfferingsList(ctx, qry)
+		offerings, err := api.DecixCloudRouterProductOfferingsList(ctx, qry)
 		if err != nil {
 			return err
 		}

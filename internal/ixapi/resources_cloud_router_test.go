@@ -60,7 +60,7 @@ func TestCloudRoutersCreate(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	result, err := client.CloudRoutersCreate(ctx, expectedReq)
+	result, err := client.DecixCloudRoutersCreate(ctx, expectedReq)
 	if err != nil {
 		t.Fatalf("CloudRoutersCreate failed: %v", err)
 	}
@@ -103,7 +103,7 @@ func TestCloudRoutersRead(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	result, err := client.CloudRoutersRead(ctx, "vrf-1")
+	result, err := client.DecixCloudRoutersRead(ctx, "vrf-1")
 	if err != nil {
 		t.Fatalf("CloudRoutersRead failed: %v", err)
 	}
@@ -132,7 +132,7 @@ func TestCloudRoutersDestroy(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	err := client.CloudRoutersDestroy(ctx, "vrf-1")
+	err := client.DecixCloudRoutersDestroy(ctx, "vrf-1")
 	if err != nil {
 		t.Fatalf("CloudRoutersDestroy failed: %v", err)
 	}
@@ -174,7 +174,7 @@ func TestCloudRoutersList(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	result, err := client.CloudRoutersList(ctx)
+	result, err := client.DecixCloudRoutersList(ctx)
 	if err != nil {
 		t.Fatalf("CloudRoutersList failed: %v", err)
 	}
@@ -222,7 +222,7 @@ func TestCloudRoutersListWithQuery(t *testing.T) {
 	qry := &CloudRoutersListQuery{
 		ManagingAccount: "acc-1",
 	}
-	result, err := client.CloudRoutersList(ctx, qry)
+	result, err := client.DecixCloudRoutersList(ctx, qry)
 	if err != nil {
 		t.Fatalf("CloudRoutersList failed: %v", err)
 	}
@@ -282,7 +282,7 @@ func TestPrefixListsCreate(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	result, err := client.PrefixListsCreate(ctx, expectedReq)
+	result, err := client.DecixCloudRouterPrefixListsCreate(ctx, expectedReq)
 	if err != nil {
 		t.Fatalf("PrefixListsCreate failed: %v", err)
 	}
@@ -322,7 +322,7 @@ func TestPrefixListsRead(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	result, err := client.PrefixListsRead(ctx, "pl-1")
+	result, err := client.DecixCloudRouterPrefixListsRead(ctx, "pl-1")
 	if err != nil {
 		t.Fatalf("PrefixListsRead failed: %v", err)
 	}
@@ -349,7 +349,7 @@ func TestPrefixListsDelete(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	_, err := client.PrefixListsDelete(ctx, "pl-1")
+	_, err := client.DecixCloudRouterPrefixListsDelete(ctx, "pl-1")
 	if err != nil {
 		t.Fatalf("PrefixListsDelete failed: %v", err)
 	}
@@ -425,7 +425,7 @@ func TestPoliciesCreate(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	result, err := client.PoliciesCreate(ctx, expectedReq)
+	result, err := client.DecixCloudRouterPoliciesCreate(ctx, expectedReq)
 	if err != nil {
 		t.Fatalf("PoliciesCreate failed: %v", err)
 	}
@@ -473,7 +473,7 @@ func TestPoliciesRead(t *testing.T) {
 	client := NewClient(server.URL)
 	ctx := context.Background()
 
-	result, err := client.PoliciesRead(ctx, "pol-1")
+	result, err := client.DecixCloudRouterPoliciesRead(ctx, "pol-1")
 	if err != nil {
 		t.Fatalf("PoliciesRead failed: %v", err)
 	}

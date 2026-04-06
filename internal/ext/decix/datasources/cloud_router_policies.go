@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterPoliciesDataSource returns the schema.Resource for listing BGP routing policies.
-func NewCloudRouterPoliciesDataSource() *schema.Resource {
+// NewDecixCloudRouterPoliciesDataSource returns the schema.Resource for listing BGP routing policies.
+func NewDecixCloudRouterPoliciesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_policies` data source to find available policies",
 		ReadContext: cloudRouterPoliciesRead,
@@ -41,7 +41,7 @@ func cloudRouterPoliciesRead(
 		managingAccount = ma.(string)
 	}
 
-	all, err := api.PoliciesList(ctx, managingAccount)
+	all, err := api.DecixCloudRouterPoliciesList(ctx, managingAccount)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -59,8 +59,8 @@ func cloudRouterPoliciesRead(
 	return nil
 }
 
-// NewCloudRouterPolicyDataSource returns the schema.Resource for reading a single BGP routing policy by ID or name.
-func NewCloudRouterPolicyDataSource() *schema.Resource {
+// NewDecixCloudRouterPolicyDataSource returns the schema.Resource for reading a single BGP routing policy by ID or name.
+func NewDecixCloudRouterPolicyDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_policy` data source to get a single policy by ID or name",
 		ReadContext: cloudRouterPolicyRead,
@@ -88,7 +88,7 @@ func cloudRouterPolicyRead(
 
 	var policy *ixapi.Policy
 	if hasID {
-		p, err := api.PoliciesRead(ctx, id.(string))
+		p, err := api.DecixCloudRouterPoliciesRead(ctx, id.(string))
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -99,7 +99,7 @@ func cloudRouterPolicyRead(
 			managingAccount = ma.(string)
 		}
 
-		result, err := api.PoliciesList(ctx, managingAccount)
+		result, err := api.DecixCloudRouterPoliciesList(ctx, managingAccount)
 		if err != nil {
 			return diag.FromErr(err)
 		}

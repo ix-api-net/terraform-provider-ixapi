@@ -11,8 +11,8 @@ import (
 	coreresources "github.com/ix-api-net/terraform-provider-ixapi/internal/resources"
 )
 
-// NewCloudRouterNetworkServiceConfigP2PVCResource returns the schema.Resource for managing a Cloud Router connection to a point-to-point virtual circuit network service.
-func NewCloudRouterNetworkServiceConfigP2PVCResource() *schema.Resource {
+// NewDecixCloudRouterNetworkServiceConfigP2PVCResource returns the schema.Resource for managing a Cloud Router connection to a point-to-point virtual circuit network service.
+func NewDecixCloudRouterNetworkServiceConfigP2PVCResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_network_service_config_p2p_vc` resource to configure a Cloud ROUTER connection to a point-to-point virtual circuit network service.",
 		CreateContext: crud.Create(cloudRouterConfigP2PVCCreate),
@@ -88,7 +88,7 @@ func cloudRouterConfigP2PVCCreate(
 		return err
 	}
 
-	config, err := api.CloudRouterNetworkServiceConfigsCreate(ctx, req)
+	config, err := api.DecixCloudRouterNetworkServiceConfigsCreate(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -107,7 +107,7 @@ func cloudRouterConfigP2PVCRead(
 	}
 
 	id := res.Id()
-	config, err := api.CloudRouterNetworkServiceConfigsRead(ctx, id)
+	config, err := api.DecixCloudRouterNetworkServiceConfigsRead(ctx, id)
 	if err != nil && ixapi.IsErrNotFound(err) {
 		res.SetId("")
 		return nil
@@ -133,7 +133,7 @@ func cloudRouterConfigP2PVCUpdate(
 
 	id := res.Id()
 	patch := cloudRouterConfigP2PVCPatchFromResourceData(res)
-	if _, err := api.CloudRouterNetworkServiceConfigsPatch(ctx, id, patch); err != nil {
+	if _, err := api.DecixCloudRouterNetworkServiceConfigsPatch(ctx, id, patch); err != nil {
 		return err
 	}
 	return cloudRouterConfigP2PVCRead(ctx, res, api)
@@ -161,12 +161,12 @@ func cloudRouterConfigP2PVCDelete(
 		if policyEgress != "" {
 			patch.PolicyEgress = &empty
 		}
-		if _, err := api.CloudRouterNetworkServiceConfigsPatch(ctx, id, patch); err != nil {
+		if _, err := api.DecixCloudRouterNetworkServiceConfigsPatch(ctx, id, patch); err != nil {
 			return err
 		}
 	}
 
-	err := api.CloudRouterNetworkServiceConfigsDestroy(ctx, id)
+	err := api.DecixCloudRouterNetworkServiceConfigsDestroy(ctx, id)
 	if err != nil && !ixapi.IsErrNotFound(err) {
 		return err
 	}

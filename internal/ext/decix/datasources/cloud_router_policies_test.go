@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
-	dataSource := NewCloudRouterPoliciesDataSource()
+	dataSource := NewDecixCloudRouterPoliciesDataSource()
 	res := dataSource.TestResourceData()
 
 	policies := []*ixapi.Policy{
@@ -72,7 +72,7 @@ func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
 }
 
 func TestCloudRouterPoliciesDataSourceReadWithFilter(t *testing.T) {
-	dataSource := NewCloudRouterPoliciesDataSource()
+	dataSource := NewDecixCloudRouterPoliciesDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("managing_account", "100")
 
@@ -125,7 +125,7 @@ func intPtrPolicy(i int) *int {
 }
 
 func TestCloudRouterPolicyDataSourceReadByID(t *testing.T) {
-	dataSource := NewCloudRouterPolicyDataSource()
+	dataSource := NewDecixCloudRouterPolicyDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("id", "1")
 
@@ -162,7 +162,7 @@ func TestCloudRouterPolicyDataSourceReadByID(t *testing.T) {
 }
 
 func TestCloudRouterPolicyDataSourceReadByName(t *testing.T) {
-	dataSource := NewCloudRouterPolicyDataSource()
+	dataSource := NewDecixCloudRouterPolicyDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("name", "accept-rfc1918")
 	res.Set("managing_account", "100")

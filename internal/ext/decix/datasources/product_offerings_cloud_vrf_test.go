@@ -8,7 +8,7 @@ import (
 )
 
 func TestProductOfferingsCloudVRFRead(t *testing.T) {
-	dataSource := NewProductOfferingsCloudVRFDataSource()
+	dataSource := NewDecixCloudRouterProductOfferingsCloudVRFDataSource()
 	res := dataSource.TestResourceData()
 
 	offerings := []*ixapi.CloudRouterProductOffering{
@@ -56,7 +56,7 @@ func TestProductOfferingsCloudVRFRead(t *testing.T) {
 }
 
 func TestProductOfferingsCloudVRFReadWithFilter(t *testing.T) {
-	dataSource := NewProductOfferingsCloudVRFDataSource()
+	dataSource := NewDecixCloudRouterProductOfferingsCloudVRFDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("contract_period", "P1Y")
 
@@ -92,7 +92,7 @@ func TestProductOfferingsCloudVRFReadWithFilter(t *testing.T) {
 }
 
 func TestProductOfferingCloudVRFReadByID(t *testing.T) {
-	dataSource := NewProductOfferingCloudVRFDataSource()
+	dataSource := NewDecixCloudRouterProductOfferingCloudVRFDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("id", "po-1")
 
@@ -126,7 +126,7 @@ func TestProductOfferingCloudVRFReadByID(t *testing.T) {
 }
 
 func TestProductOfferingCloudVRFRead_UniqueFilter(t *testing.T) {
-	dataSource := NewProductOfferingCloudVRFDataSource()
+	dataSource := NewDecixCloudRouterProductOfferingCloudVRFDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("name", "cloud-router-1g")
 
@@ -156,7 +156,7 @@ func TestProductOfferingCloudVRFRead_UniqueFilter(t *testing.T) {
 }
 
 func TestProductOfferingCloudVRFRead_AmbiguousFilter(t *testing.T) {
-	dataSource := NewProductOfferingCloudVRFDataSource()
+	dataSource := NewDecixCloudRouterProductOfferingCloudVRFDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("service_metro_area", "de-fra")
 

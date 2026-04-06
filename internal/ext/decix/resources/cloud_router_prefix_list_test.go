@@ -8,7 +8,7 @@ import (
 )
 
 func TestPrefixListRequestFromResourceData(t *testing.T) {
-	resource := NewCloudRouterPrefixListResource()
+	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
 	res.Set("name", "test-list")
 	res.Set("managing_account", "100")
@@ -58,7 +58,7 @@ func TestPrefixListRequestFromResourceData(t *testing.T) {
 }
 
 func TestPrefixListRead(t *testing.T) {
-	resource := NewCloudRouterPrefixListResource()
+	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
 	res.SetId("1")
 
@@ -99,7 +99,7 @@ func TestPrefixListRead(t *testing.T) {
 }
 
 func TestPrefixListCreate(t *testing.T) {
-	resource := NewCloudRouterPrefixListResource()
+	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
 	res.Set("name", "rfc1918-private")
 	res.Set("managing_account", "100")
@@ -145,7 +145,7 @@ func TestPrefixListCreate(t *testing.T) {
 }
 
 func TestPrefixListUpdate(t *testing.T) {
-	resource := NewCloudRouterPrefixListResource()
+	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
 	res.SetId("42")
 	res.Set("name", "updated-list")
@@ -188,7 +188,7 @@ func TestPrefixListUpdate(t *testing.T) {
 }
 
 func TestPrefixListDelete_404Success(t *testing.T) {
-	resource := NewCloudRouterPrefixListResource()
+	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
 	res.SetId("42")
 
@@ -207,7 +207,7 @@ func TestPrefixListDelete_404Success(t *testing.T) {
 }
 
 func TestPrefixListDelete_OtherErrorFails(t *testing.T) {
-	resource := NewCloudRouterPrefixListResource()
+	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
 	res.SetId("42")
 

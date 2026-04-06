@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterConfigP2PVCRequestFromResourceData(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigP2PVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 	res := resource.Data(nil)
 	res.Set("managing_account", "100")
 	res.Set("billing_account", "200")
@@ -48,7 +48,7 @@ func TestCloudRouterConfigP2PVCRequestFromResourceData(t *testing.T) {
 }
 
 func TestCloudRouterConfigP2PVCRead(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigP2PVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 	res := resource.Data(nil)
 	res.SetId("20")
 
@@ -90,7 +90,7 @@ func TestCloudRouterConfigP2PVCRead(t *testing.T) {
 }
 
 func TestCloudRouterConfigP2PVCCreate(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigP2PVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 	res := resource.Data(nil)
 	res.Set("managing_account", "100")
 	res.Set("billing_account", "200")
@@ -141,7 +141,7 @@ func TestCloudRouterConfigP2PVCCreate(t *testing.T) {
 }
 
 func TestCloudRouterConfigP2PVCPatchFromResourceData(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigP2PVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 
 	t.Run("set fields are included", func(t *testing.T) {
 		res := resource.Data(nil)
@@ -179,7 +179,7 @@ func TestCloudRouterConfigP2PVCPatchFromResourceData(t *testing.T) {
 }
 
 func TestCloudRouterConfigP2PVCUpdate(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigP2PVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 	res := resource.Data(nil)
 	res.SetId("20")
 	res.Set("managing_account", "100")
@@ -232,7 +232,7 @@ func TestCloudRouterConfigP2PVCUpdate(t *testing.T) {
 }
 
 func TestCloudRouterConfigP2PVCDelete_404Success(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigP2PVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 	res := resource.Data(nil)
 	res.SetId("20")
 

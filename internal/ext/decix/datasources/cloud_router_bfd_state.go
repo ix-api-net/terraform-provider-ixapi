@@ -8,8 +8,8 @@ import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 )
 
-// NewCloudRouterBFDStateDataSource returns the schema.Resource for reading the BFD session state of a Cloud Router network service config.
-func NewCloudRouterBFDStateDataSource() *schema.Resource {
+// NewDecixCloudRouterBFDStateDataSource returns the schema.Resource for reading the BFD session state of a Cloud Router network service config.
+func NewDecixCloudRouterBFDStateDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `ixapi_de_cix_cloud_router_bfd_state` data source to fetch the BFD session state for a cloud router network service config.",
 		ReadContext: cloudRouterBFDStateRead,
@@ -47,7 +47,7 @@ func cloudRouterBFDStateRead(
 
 	nscID := d.Get("nsc_id").(string)
 
-	bfdState, err := api.CloudRouterNetworkServiceConfigGetBFDState(ctx, nscID)
+	bfdState, err := api.DecixCloudRouterNetworkServiceConfigGetBFDState(ctx, nscID)
 	if err != nil {
 		return diag.FromErr(err)
 	}

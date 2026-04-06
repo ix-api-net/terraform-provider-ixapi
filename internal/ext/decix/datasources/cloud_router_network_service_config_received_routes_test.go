@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterNetworkServiceConfigReceivedRoutesDataSourceRead(t *testing.T) {
-	dataSource := NewCloudRouterNetworkServiceConfigReceivedRoutesDataSource()
+	dataSource := NewDecixCloudRouterNetworkServiceConfigReceivedRoutesDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("network_service_config_id", "123")
 
@@ -45,7 +45,7 @@ func TestCloudRouterNetworkServiceConfigReceivedRoutesDataSourceRead(t *testing.
 }
 
 func TestCloudRouterNetworkServiceConfigReceivedRoutesDataSourceReadEmpty(t *testing.T) {
-	dataSource := NewCloudRouterNetworkServiceConfigReceivedRoutesDataSource()
+	dataSource := NewDecixCloudRouterNetworkServiceConfigReceivedRoutesDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("network_service_config_id", "456")
 

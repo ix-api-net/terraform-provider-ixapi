@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterBFDStateRead(t *testing.T) {
-	dataSource := NewCloudRouterBFDStateDataSource()
+	dataSource := NewDecixCloudRouterBFDStateDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("nsc_id", "123")
 
@@ -36,7 +36,7 @@ func TestCloudRouterBFDStateRead(t *testing.T) {
 }
 
 func TestCloudRouterBFDStateRead_NotFound(t *testing.T) {
-	dataSource := NewCloudRouterBFDStateDataSource()
+	dataSource := NewDecixCloudRouterBFDStateDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("nsc_id", "456")
 

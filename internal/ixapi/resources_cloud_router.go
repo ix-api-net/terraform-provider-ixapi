@@ -49,7 +49,7 @@ func (q *CloudRoutersListQuery) RawQuery() string {
 }
 
 // CloudRoutersList fetches all Cloud Routers, optionally filtered by query parameters.
-func (c *Client) CloudRoutersList(
+func (c *Client) DecixCloudRoutersList(
 	ctx context.Context,
 	qry ...*CloudRoutersListQuery,
 ) ([]*CloudRouter, error) {
@@ -127,7 +127,7 @@ func (c *Client) CloudRoutersList(
 }
 
 // CloudRoutersCreate creates a new Cloud Router and returns the created resource.
-func (c *Client) CloudRoutersCreate(
+func (c *Client) DecixCloudRoutersCreate(
 	ctx context.Context,
 	req *CloudRouterRequest,
 ) (*CloudRouter, error) {
@@ -207,7 +207,7 @@ func (c *Client) CloudRoutersCreate(
 }
 
 // CloudRoutersRead fetches a single Cloud Router by ID.
-func (c *Client) CloudRoutersRead(
+func (c *Client) DecixCloudRoutersRead(
 	ctx context.Context,
 	id string,
 ) (*CloudRouter, error) {
@@ -280,7 +280,7 @@ func (c *Client) CloudRoutersRead(
 }
 
 // CloudRoutersDestroy deletes a Cloud Router by ID.
-func (c *Client) CloudRoutersDestroy(
+func (c *Client) DecixCloudRoutersDestroy(
 	ctx context.Context,
 	id string,
 ) error {
@@ -383,7 +383,7 @@ func (q *CloudRouterNetworkServiceConfigsListQuery) RawQuery() string {
 }
 
 // CloudRouterNetworkServiceConfigsList fetches all Cloud Router network service configs, optionally filtered by query parameters.
-func (c *Client) CloudRouterNetworkServiceConfigsList(
+func (c *Client) DecixCloudRouterNetworkServiceConfigsList(
 	ctx context.Context,
 	qry ...*CloudRouterNetworkServiceConfigsListQuery,
 ) ([]*CloudRouterNetworkServiceConfig, error) {
@@ -468,7 +468,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsList(
 }
 
 // CloudRouterNetworkServiceConfigsCreate creates a new Cloud Router network service config and returns the created resource.
-func (c *Client) CloudRouterNetworkServiceConfigsCreate(
+func (c *Client) DecixCloudRouterNetworkServiceConfigsCreate(
 	ctx context.Context,
 	req *CloudRouterNetworkServiceConfigRequest,
 ) (*CloudRouterNetworkServiceConfig, error) {
@@ -553,7 +553,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsCreate(
 }
 
 // CloudRouterNetworkServiceConfigsRead fetches a single Cloud Router network service config by ID.
-func (c *Client) CloudRouterNetworkServiceConfigsRead(
+func (c *Client) DecixCloudRouterNetworkServiceConfigsRead(
 	ctx context.Context,
 	id string,
 ) (*CloudRouterNetworkServiceConfig, error) {
@@ -631,7 +631,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsRead(
 }
 
 // CloudRouterNetworkServiceConfigsPatch partially updates a Cloud Router network service config by ID.
-func (c *Client) CloudRouterNetworkServiceConfigsPatch(
+func (c *Client) DecixCloudRouterNetworkServiceConfigsPatch(
 	ctx context.Context,
 	id string,
 	patch *CloudRouterNetworkServiceConfigPatch,
@@ -717,7 +717,7 @@ func (c *Client) CloudRouterNetworkServiceConfigsPatch(
 }
 
 // CloudRouterNetworkServiceConfigsDestroy deletes a Cloud Router network service config by ID.
-func (c *Client) CloudRouterNetworkServiceConfigsDestroy(
+func (c *Client) DecixCloudRouterNetworkServiceConfigsDestroy(
 	ctx context.Context,
 	id string,
 ) error {
@@ -828,7 +828,7 @@ func (q *CloudRouterProductOfferingsListQuery) RawQuery() string {
 }
 
 // CloudRouterProductOfferingsList fetches all Cloud Router product offerings, optionally filtered by query parameters.
-func (c *Client) CloudRouterProductOfferingsList(
+func (c *Client) DecixCloudRouterProductOfferingsList(
 	ctx context.Context,
 	qry ...*CloudRouterProductOfferingsListQuery,
 ) ([]*CloudRouterProductOffering, error) {
@@ -906,7 +906,7 @@ func (c *Client) CloudRouterProductOfferingsList(
 }
 
 // CloudRouterProductOfferingsRead fetches a single Cloud Router product offering by ID.
-func (c *Client) CloudRouterProductOfferingsRead(
+func (c *Client) DecixCloudRouterProductOfferingsRead(
 	ctx context.Context,
 	id string,
 ) (*CloudRouterProductOffering, error) {
@@ -979,7 +979,7 @@ func (c *Client) CloudRouterProductOfferingsRead(
 }
 
 // CloudRouterNetworkServiceConfigGetBGPState fetches the BGP session state for a given network service config ID.
-func (c *Client) CloudRouterNetworkServiceConfigGetBGPState(
+func (c *Client) DecixCloudRouterNetworkServiceConfigGetBGPState(
 	ctx context.Context,
 	id string,
 ) (*BGPStateResponse, error) {
@@ -1046,7 +1046,7 @@ func (c *Client) CloudRouterNetworkServiceConfigGetBGPState(
 }
 
 // CloudRouterNetworkServiceConfigGetBFDState fetches the BFD session state for a given network service config ID.
-func (c *Client) CloudRouterNetworkServiceConfigGetBFDState(
+func (c *Client) DecixCloudRouterNetworkServiceConfigGetBFDState(
 	ctx context.Context,
 	id string,
 ) (*BFDStateResponse, error) {
@@ -1115,7 +1115,7 @@ func (c *Client) CloudRouterNetworkServiceConfigGetBFDState(
 // Prefix Lists
 
 // PrefixListsList fetches all prefix lists, optionally filtered by managing account.
-func (c *Client) PrefixListsList(
+func (c *Client) DecixCloudRouterPrefixListsList(
 	ctx context.Context,
 	managingAccount string,
 ) ([]*PrefixList, error) {
@@ -1193,7 +1193,7 @@ func (c *Client) PrefixListsList(
 }
 
 // PrefixListsCreate creates a new prefix list and returns the created resource.
-func (c *Client) PrefixListsCreate(
+func (c *Client) DecixCloudRouterPrefixListsCreate(
 	ctx context.Context,
 	req *PrefixListRequest,
 ) (*PrefixList, error) {
@@ -1273,7 +1273,7 @@ func (c *Client) PrefixListsCreate(
 }
 
 // PrefixListsRead fetches a single prefix list by ID.
-func (c *Client) PrefixListsRead(
+func (c *Client) DecixCloudRouterPrefixListsRead(
 	ctx context.Context,
 	id string,
 ) (*PrefixList, error) {
@@ -1338,7 +1338,7 @@ func (c *Client) PrefixListsRead(
 }
 
 // PrefixListsUpdate replaces a prefix list by ID and returns the updated resource.
-func (c *Client) PrefixListsUpdate(
+func (c *Client) DecixCloudRouterPrefixListsUpdate(
 	ctx context.Context,
 	id string,
 	req *PrefixListRequest,
@@ -1419,7 +1419,7 @@ func (c *Client) PrefixListsUpdate(
 }
 
 // PrefixListsDelete deletes a prefix list by ID and returns the deleted resource.
-func (c *Client) PrefixListsDelete(
+func (c *Client) DecixCloudRouterPrefixListsDelete(
 	ctx context.Context,
 	id string,
 ) (*PrefixList, error) {
@@ -1486,7 +1486,7 @@ func (c *Client) PrefixListsDelete(
 // Policies
 
 // PoliciesList fetches all routing policies, optionally filtered by managing account.
-func (c *Client) PoliciesList(
+func (c *Client) DecixCloudRouterPoliciesList(
 	ctx context.Context,
 	managingAccount string,
 ) ([]*Policy, error) {
@@ -1564,7 +1564,7 @@ func (c *Client) PoliciesList(
 }
 
 // PoliciesCreate creates a new routing policy and returns the created resource.
-func (c *Client) PoliciesCreate(
+func (c *Client) DecixCloudRouterPoliciesCreate(
 	ctx context.Context,
 	req *PolicyRequest,
 ) (*Policy, error) {
@@ -1644,7 +1644,7 @@ func (c *Client) PoliciesCreate(
 }
 
 // PoliciesRead fetches a single routing policy by ID.
-func (c *Client) PoliciesRead(
+func (c *Client) DecixCloudRouterPoliciesRead(
 	ctx context.Context,
 	id string,
 ) (*Policy, error) {
@@ -1709,7 +1709,7 @@ func (c *Client) PoliciesRead(
 }
 
 // PoliciesUpdate replaces a routing policy by ID and returns the updated resource.
-func (c *Client) PoliciesUpdate(
+func (c *Client) DecixCloudRouterPoliciesUpdate(
 	ctx context.Context,
 	id string,
 	req *PolicyRequest,
@@ -1790,7 +1790,7 @@ func (c *Client) PoliciesUpdate(
 }
 
 // PoliciesDelete deletes a routing policy by ID and returns the deleted resource.
-func (c *Client) PoliciesDelete(
+func (c *Client) DecixCloudRouterPoliciesDelete(
 	ctx context.Context,
 	id string,
 ) (*Policy, error) {
@@ -1857,7 +1857,7 @@ func (c *Client) PoliciesDelete(
 // VRF ARP Table
 
 // ArpTableList fetches ARP table entries, optionally filtered by VRF ID and network service config ID.
-func (c *Client) ArpTableList(
+func (c *Client) DecixCloudRouterArpTableList(
 	ctx context.Context,
 	vrfID string,
 	nscID string,
@@ -1932,7 +1932,7 @@ func (c *Client) ArpTableList(
 // VRF Routes
 
 // VrfRoutesList fetches routes from a VRF routing table, optionally filtered by VRF ID.
-func (c *Client) VrfRoutesList(
+func (c *Client) DecixCloudRouterVrfRoutesList(
 	ctx context.Context,
 	vrfID string,
 ) ([]*VrfRoute, error) {
@@ -2003,7 +2003,7 @@ func (c *Client) VrfRoutesList(
 // Static Routes
 
 // StaticRoutesList fetches static routes, optionally filtered by VRF ID and network service config ID.
-func (c *Client) StaticRoutesList(
+func (c *Client) DecixCloudRouterStaticRoutesList(
 	ctx context.Context,
 	vrfID string,
 	nscID string,
@@ -2084,7 +2084,7 @@ func (c *Client) StaticRoutesList(
 }
 
 // StaticRoutesCreate creates a new static route and returns the created resource.
-func (c *Client) StaticRoutesCreate(
+func (c *Client) DecixCloudRouterStaticRoutesCreate(
 	ctx context.Context,
 	req *StaticRouteRequest,
 ) (*StaticRoute, error) {
@@ -2164,7 +2164,7 @@ func (c *Client) StaticRoutesCreate(
 }
 
 // StaticRoutesRead fetches a single static route by ID.
-func (c *Client) StaticRoutesRead(
+func (c *Client) DecixCloudRouterStaticRoutesRead(
 	ctx context.Context,
 	id string,
 ) (*StaticRoute, error) {
@@ -2229,7 +2229,7 @@ func (c *Client) StaticRoutesRead(
 }
 
 // StaticRoutesUpdate replaces a static route by ID and returns the updated resource.
-func (c *Client) StaticRoutesUpdate(
+func (c *Client) DecixCloudRouterStaticRoutesUpdate(
 	ctx context.Context,
 	id string,
 	req *StaticRouteRequest,
@@ -2310,7 +2310,7 @@ func (c *Client) StaticRoutesUpdate(
 }
 
 // StaticRoutesDelete deletes a static route by ID and returns the deleted resource.
-func (c *Client) StaticRoutesDelete(
+func (c *Client) DecixCloudRouterStaticRoutesDelete(
 	ctx context.Context,
 	id string,
 ) (*StaticRoute, error) {
@@ -2377,7 +2377,7 @@ func (c *Client) StaticRoutesDelete(
 // NSC Routes
 
 // NetworkServiceConfigReceivedRoutesList fetches BGP routes received from peers on a given network service config.
-func (c *Client) NetworkServiceConfigReceivedRoutesList(
+func (c *Client) DecixCloudRouterNetworkServiceConfigReceivedRoutesList(
 	ctx context.Context,
 	nscID string,
 ) ([]*BGPRoute, error) {
@@ -2434,7 +2434,7 @@ func (c *Client) NetworkServiceConfigReceivedRoutesList(
 }
 
 // NetworkServiceConfigAdvertisedRoutesList fetches BGP routes advertised to peers on a given network service config.
-func (c *Client) NetworkServiceConfigAdvertisedRoutesList(
+func (c *Client) DecixCloudRouterNetworkServiceConfigAdvertisedRoutesList(
 	ctx context.Context,
 	nscID string,
 ) ([]*BGPRoute, error) {

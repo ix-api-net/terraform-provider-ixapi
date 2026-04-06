@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterArpTableDataSource returns the schema.Resource for reading the ARP table of a Cloud Router.
-func NewCloudRouterArpTableDataSource() *schema.Resource {
+// NewDecixCloudRouterArpTableDataSource returns the schema.Resource for reading the ARP table of a Cloud Router.
+func NewDecixCloudRouterArpTableDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_arp_table` data source to list ARP entries for a cloud router VRF",
 		ReadContext: cloudRouterArpTableRead,
@@ -47,7 +47,7 @@ func cloudRouterArpTableRead(
 		nscID = v.(string)
 	}
 
-	all, err := api.ArpTableList(ctx, vrfID, nscID)
+	all, err := api.DecixCloudRouterArpTableList(ctx, vrfID, nscID)
 	if err != nil {
 		return diag.FromErr(err)
 	}

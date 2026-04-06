@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterRoutesDataSource returns the schema.Resource for listing routes in a Cloud Router VRF routing table.
-func NewCloudRouterRoutesDataSource() *schema.Resource {
+// NewDecixCloudRouterRoutesDataSource returns the schema.Resource for listing routes in a Cloud Router VRF routing table.
+func NewDecixCloudRouterRoutesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_routes` data source to list routes in the VRF routing table",
 		ReadContext: cloudRouterRoutesRead,
@@ -41,7 +41,7 @@ func cloudRouterRoutesRead(
 		vrfID = v.(string)
 	}
 
-	all, err := api.VrfRoutesList(ctx, vrfID)
+	all, err := api.DecixCloudRouterVrfRoutesList(ctx, vrfID)
 	if err != nil {
 		return diag.FromErr(err)
 	}

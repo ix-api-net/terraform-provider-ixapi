@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterStaticRouteResource returns the schema.Resource for managing a static route attached to a Cloud Router VRF.
-func NewCloudRouterStaticRouteResource() *schema.Resource {
+// NewDecixCloudRouterStaticRouteResource returns the schema.Resource for managing a static route attached to a Cloud Router VRF.
+func NewDecixCloudRouterStaticRouteResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_static_route` resource to manage a static route attached to a cloud router VRF.",
 		CreateContext: crud.Create(staticRouteCreate),
@@ -61,7 +61,7 @@ func staticRouteCreate(
 		return err
 	}
 
-	route, err := api.StaticRoutesCreate(ctx, req)
+	route, err := api.DecixCloudRouterStaticRoutesCreate(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func staticRouteRead(
 	}
 
 	id := res.Id()
-	route, err := api.StaticRoutesRead(ctx, id)
+	route, err := api.DecixCloudRouterStaticRoutesRead(ctx, id)
 	if err != nil && ixapi.IsErrNotFound(err) {
 		res.SetId("")
 		return nil
@@ -110,7 +110,7 @@ func staticRouteUpdate(
 		return err
 	}
 
-	_, err = api.StaticRoutesUpdate(ctx, id, req)
+	_, err = api.DecixCloudRouterStaticRoutesUpdate(ctx, id, req)
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func staticRouteDelete(
 	}
 
 	id := res.Id()
-	_, err := api.StaticRoutesDelete(ctx, id)
+	_, err := api.DecixCloudRouterStaticRoutesDelete(ctx, id)
 	if err != nil && !ixapi.IsErrNotFound(err) {
 		return err
 	}

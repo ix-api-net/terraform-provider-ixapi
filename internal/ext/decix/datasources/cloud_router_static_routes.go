@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterStaticRoutesDataSource returns the schema.Resource for listing static routes attached to a Cloud Router.
-func NewCloudRouterStaticRoutesDataSource() *schema.Resource {
+// NewDecixCloudRouterStaticRoutesDataSource returns the schema.Resource for listing static routes attached to a Cloud Router.
+func NewDecixCloudRouterStaticRoutesDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_static_routes` data source to list static routes, optionally filtered by VRF or network service config",
 		ReadContext: cloudRouterStaticRoutesRead,
@@ -47,7 +47,7 @@ func cloudRouterStaticRoutesRead(
 		nscID = v.(string)
 	}
 
-	all, err := api.StaticRoutesList(ctx, vrfID, nscID)
+	all, err := api.DecixCloudRouterStaticRoutesList(ctx, vrfID, nscID)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -65,8 +65,8 @@ func cloudRouterStaticRoutesRead(
 	return nil
 }
 
-// NewCloudRouterStaticRouteDataSource returns the schema.Resource for reading a single static route by ID.
-func NewCloudRouterStaticRouteDataSource() *schema.Resource {
+// NewDecixCloudRouterStaticRouteDataSource returns the schema.Resource for reading a single static route by ID.
+func NewDecixCloudRouterStaticRouteDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_static_route` data source to get a single static route by ID",
 		ReadContext: cloudRouterStaticRouteRead,
@@ -90,7 +90,7 @@ func cloudRouterStaticRouteRead(
 		return diag.Errorf("`id` is required")
 	}
 
-	route, err := api.StaticRoutesRead(ctx, id.(string))
+	route, err := api.DecixCloudRouterStaticRoutesRead(ctx, id.(string))
 	if err != nil {
 		return diag.FromErr(err)
 	}

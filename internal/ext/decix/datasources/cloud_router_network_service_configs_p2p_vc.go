@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterNetworkServiceConfigsP2PVCDataSource returns the schema.Resource for listing Cloud Router network service configs of type p2p_vc.
-func NewCloudRouterNetworkServiceConfigsP2PVCDataSource() *schema.Resource {
+// NewDecixCloudRouterNetworkServiceConfigsP2PVCDataSource returns the schema.Resource for listing Cloud Router network service configs of type p2p_vc.
+func NewDecixCloudRouterNetworkServiceConfigsP2PVCDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_network_service_configs_p2p_vc` data source to find Cloud ROUTER NSCs of type p2p_vc",
 		ReadContext: cloudRouterNetworkServiceConfigsP2PVCRead,
@@ -76,7 +76,7 @@ func cloudRouterNetworkServiceConfigsP2PVCRead(
 		qry.Offset = offset.(int)
 	}
 
-	all, err := api.CloudRouterNetworkServiceConfigsList(ctx, qry)
+	all, err := api.DecixCloudRouterNetworkServiceConfigsList(ctx, qry)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -94,8 +94,8 @@ func cloudRouterNetworkServiceConfigsP2PVCRead(
 	return nil
 }
 
-// NewCloudRouterNetworkServiceConfigP2PVCDataSource returns the schema.Resource for reading a single Cloud Router network service config of type p2p_vc by ID.
-func NewCloudRouterNetworkServiceConfigP2PVCDataSource() *schema.Resource {
+// NewDecixCloudRouterNetworkServiceConfigP2PVCDataSource returns the schema.Resource for reading a single Cloud Router network service config of type p2p_vc by ID.
+func NewDecixCloudRouterNetworkServiceConfigP2PVCDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_network_service_config_p2p_vc` data source to get a single Cloud ROUTER NSC of type p2p_vc by ID",
 		ReadContext: cloudRouterNetworkServiceConfigP2PVCDataRead,
@@ -120,7 +120,7 @@ func cloudRouterNetworkServiceConfigP2PVCDataRead(
 		return diag.Errorf("the cloud_router_network_service_config_p2p_vc `id` is required")
 	}
 
-	config, err := api.CloudRouterNetworkServiceConfigsRead(ctx, id.(string))
+	config, err := api.DecixCloudRouterNetworkServiceConfigsRead(ctx, id.(string))
 	if err != nil {
 		return diag.FromErr(err)
 	}

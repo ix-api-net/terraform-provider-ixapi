@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterPrefixListsDataSource returns the schema.Resource for listing prefix lists.
-func NewCloudRouterPrefixListsDataSource() *schema.Resource {
+// NewDecixCloudRouterPrefixListsDataSource returns the schema.Resource for listing prefix lists.
+func NewDecixCloudRouterPrefixListsDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_prefix_lists` data source to find available prefix lists",
 		ReadContext: cloudRouterPrefixListsRead,
@@ -41,7 +41,7 @@ func cloudRouterPrefixListsRead(
 		managingAccount = ma.(string)
 	}
 
-	all, err := api.PrefixListsList(ctx, managingAccount)
+	all, err := api.DecixCloudRouterPrefixListsList(ctx, managingAccount)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -59,8 +59,8 @@ func cloudRouterPrefixListsRead(
 	return nil
 }
 
-// NewCloudRouterPrefixListDataSource returns the schema.Resource for reading a single prefix list by ID or name.
-func NewCloudRouterPrefixListDataSource() *schema.Resource {
+// NewDecixCloudRouterPrefixListDataSource returns the schema.Resource for reading a single prefix list by ID or name.
+func NewDecixCloudRouterPrefixListDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router_prefix_list` data source to get a single prefix list by ID or name",
 		ReadContext: cloudRouterPrefixListRead,
@@ -88,7 +88,7 @@ func cloudRouterPrefixListRead(
 
 	var prefixList *ixapi.PrefixList
 	if hasID {
-		pl, err := api.PrefixListsRead(ctx, id.(string))
+		pl, err := api.DecixCloudRouterPrefixListsRead(ctx, id.(string))
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -99,7 +99,7 @@ func cloudRouterPrefixListRead(
 			managingAccount = ma.(string)
 		}
 
-		result, err := api.PrefixListsList(ctx, managingAccount)
+		result, err := api.DecixCloudRouterPrefixListsList(ctx, managingAccount)
 		if err != nil {
 			return diag.FromErr(err)
 		}

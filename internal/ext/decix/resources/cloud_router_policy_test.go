@@ -8,7 +8,7 @@ import (
 )
 
 func TestPolicyRequestFromResourceData(t *testing.T) {
-	resource := NewCloudRouterPolicyResource()
+	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
 	res.Set("name", "accept-rfc1918")
 	res.Set("managing_account", "100")
@@ -70,7 +70,7 @@ func TestPolicyRequestFromResourceData(t *testing.T) {
 }
 
 func TestPolicyRequestFromResourceData_WithASPathPrepend(t *testing.T) {
-	resource := NewCloudRouterPolicyResource()
+	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
 	res.Set("name", "prepend-policy")
 	res.Set("managing_account", "100")
@@ -114,7 +114,7 @@ func TestPolicyRequestFromResourceData_WithASPathPrepend(t *testing.T) {
 }
 
 func TestPolicyRead(t *testing.T) {
-	resource := NewCloudRouterPolicyResource()
+	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
 	res.SetId("1")
 
@@ -157,7 +157,7 @@ func TestPolicyRead(t *testing.T) {
 }
 
 func TestPolicyCreate(t *testing.T) {
-	resource := NewCloudRouterPolicyResource()
+	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
 	res.Set("name", "accept-rfc1918")
 	res.Set("managing_account", "100")
@@ -213,7 +213,7 @@ func TestPolicyCreate(t *testing.T) {
 }
 
 func TestPolicyUpdate(t *testing.T) {
-	resource := NewCloudRouterPolicyResource()
+	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
 	res.SetId("55")
 	res.Set("name", "updated-policy")
@@ -266,7 +266,7 @@ func TestPolicyUpdate(t *testing.T) {
 }
 
 func TestPolicyDelete_404Success(t *testing.T) {
-	resource := NewCloudRouterPolicyResource()
+	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
 	res.SetId("55")
 
@@ -285,7 +285,7 @@ func TestPolicyDelete_404Success(t *testing.T) {
 }
 
 func TestPolicyDelete_OtherErrorFails(t *testing.T) {
-	resource := NewCloudRouterPolicyResource()
+	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
 	res.SetId("55")
 

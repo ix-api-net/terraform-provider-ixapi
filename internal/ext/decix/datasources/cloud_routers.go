@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRoutersDataSource returns the schema.Resource for listing DE-CIX Cloud Routers.
-func NewCloudRoutersDataSource() *schema.Resource {
+// NewDecixCloudRoutersDataSource returns the schema.Resource for listing DE-CIX Cloud Routers.
+func NewDecixCloudRoutersDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_routers` data source to find available DE-CIX Cloud ROUTER (VRF) instances",
 		ReadContext: cloudRoutersRead,
@@ -51,7 +51,7 @@ func cloudRoutersRead(
 		qry.ExternalRef = externalRef.(string)
 	}
 
-	all, err := api.CloudRoutersList(ctx, qry)
+	all, err := api.DecixCloudRoutersList(ctx, qry)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -69,8 +69,8 @@ func cloudRoutersRead(
 	return nil
 }
 
-// NewCloudRouterDataSource returns the schema.Resource for reading a single DE-CIX Cloud Router by ID or external ref.
-func NewCloudRouterDataSource() *schema.Resource {
+// NewDecixCloudRouterDataSource returns the schema.Resource for reading a single DE-CIX Cloud Router by ID or external ref.
+func NewDecixCloudRouterDataSource() *schema.Resource {
 	return &schema.Resource{
 		Description: "Use the `cloud_router` data source to get a single DE-CIX Cloud ROUTER (VRF) by ID or external ref",
 		ReadContext: cloudRouterRead,
@@ -98,7 +98,7 @@ func cloudRouterRead(
 
 	var cloudRouter *ixapi.CloudRouter
 	if hasID {
-		cr, err := api.CloudRoutersRead(ctx, id.(string))
+		cr, err := api.DecixCloudRoutersRead(ctx, id.(string))
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -107,7 +107,7 @@ func cloudRouterRead(
 		qry := &ixapi.CloudRoutersListQuery{
 			ExternalRef: ref.(string),
 		}
-		result, err := api.CloudRoutersList(ctx, qry)
+		result, err := api.DecixCloudRoutersList(ctx, qry)
 		if err != nil {
 			return diag.FromErr(err)
 		}

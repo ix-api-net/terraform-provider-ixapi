@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterConfigCloudVCRequestFromResourceData(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigCloudVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 	res := resource.Data(nil)
 	res.Set("managing_account", "100")
 	res.Set("billing_account", "200")
@@ -57,7 +57,7 @@ func TestCloudRouterConfigCloudVCRequestFromResourceData(t *testing.T) {
 }
 
 func TestCloudRouterConfigCloudVCRead(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigCloudVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 	res := resource.Data(nil)
 	res.SetId("10")
 
@@ -104,7 +104,7 @@ func TestCloudRouterConfigCloudVCRead(t *testing.T) {
 }
 
 func TestCloudRouterConfigCloudVCCreate(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigCloudVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 	res := resource.Data(nil)
 	res.Set("managing_account", "100")
 	res.Set("billing_account", "200")
@@ -153,7 +153,7 @@ func TestCloudRouterConfigCloudVCCreate(t *testing.T) {
 }
 
 func TestCloudRouterConfigCloudVCPatchFromResourceData(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigCloudVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 
 	t.Run("set fields are included", func(t *testing.T) {
 		res := resource.Data(nil)
@@ -191,7 +191,7 @@ func TestCloudRouterConfigCloudVCPatchFromResourceData(t *testing.T) {
 }
 
 func TestCloudRouterConfigCloudVCUpdate(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigCloudVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 	res := resource.Data(nil)
 	res.SetId("10")
 	res.Set("managing_account", "100")
@@ -244,7 +244,7 @@ func TestCloudRouterConfigCloudVCUpdate(t *testing.T) {
 }
 
 func TestCloudRouterConfigCloudVCDelete_404Success(t *testing.T) {
-	resource := NewCloudRouterNetworkServiceConfigCloudVCResource()
+	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 	res := resource.Data(nil)
 	res.SetId("10")
 

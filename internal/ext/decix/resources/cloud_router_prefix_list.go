@@ -10,8 +10,8 @@ import (
 	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
 )
 
-// NewCloudRouterPrefixListResource returns the schema.Resource for managing a prefix list for BGP route filtering.
-func NewCloudRouterPrefixListResource() *schema.Resource {
+// NewDecixCloudRouterPrefixListResource returns the schema.Resource for managing a prefix list for BGP route filtering.
+func NewDecixCloudRouterPrefixListResource() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Use the `ixapi_de_cix_cloud_router_prefix_list` resource to manage a prefix list for BGP route filtering.",
 		CreateContext: crud.Create(prefixListCreate),
@@ -71,7 +71,7 @@ func prefixListCreate(
 		return err
 	}
 
-	prefixList, err := api.PrefixListsCreate(ctx, req)
+	prefixList, err := api.DecixCloudRouterPrefixListsCreate(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -90,7 +90,7 @@ func prefixListRead(
 	}
 
 	id := res.Id()
-	prefixList, err := api.PrefixListsRead(ctx, id)
+	prefixList, err := api.DecixCloudRouterPrefixListsRead(ctx, id)
 	if err != nil && ixapi.IsErrNotFound(err) {
 		res.SetId("")
 		return nil
@@ -120,7 +120,7 @@ func prefixListUpdate(
 		return err
 	}
 
-	_, err = api.PrefixListsUpdate(ctx, id, req)
+	_, err = api.DecixCloudRouterPrefixListsUpdate(ctx, id, req)
 	if err != nil {
 		return err
 	}
@@ -137,7 +137,7 @@ func prefixListDelete(
 	}
 
 	id := res.Id()
-	_, err := api.PrefixListsDelete(ctx, id)
+	_, err := api.DecixCloudRouterPrefixListsDelete(ctx, id)
 	if err != nil && !ixapi.IsErrNotFound(err) {
 		return err
 	}

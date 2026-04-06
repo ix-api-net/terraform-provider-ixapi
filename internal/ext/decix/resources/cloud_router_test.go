@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterRequestFromResourceData(t *testing.T) {
-	resource := NewCloudRouterResource()
+	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
 	res.Set("managing_account", "100")
 	res.Set("consuming_account", "200")
@@ -47,7 +47,7 @@ func TestCloudRouterRequestFromResourceData(t *testing.T) {
 }
 
 func TestCloudRouterRead(t *testing.T) {
-	resource := NewCloudRouterResource()
+	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
 	res.SetId("274")
 
@@ -88,7 +88,7 @@ func TestCloudRouterRead(t *testing.T) {
 }
 
 func TestCloudRouterDelete_404Success(t *testing.T) {
-	resource := NewCloudRouterResource()
+	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
 	res.SetId("274")
 
@@ -108,7 +108,7 @@ func TestCloudRouterDelete_404Success(t *testing.T) {
 }
 
 func TestCloudRouterDelete_OtherErrorFails(t *testing.T) {
-	resource := NewCloudRouterResource()
+	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
 	res.SetId("274")
 
@@ -138,7 +138,7 @@ func TestCloudRouterDelete_OtherErrorFails(t *testing.T) {
 }
 
 func TestCloudRouterCreate(t *testing.T) {
-	resource := NewCloudRouterResource()
+	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
 	res.Set("managing_account", "100")
 	res.Set("consuming_account", "200")
@@ -187,7 +187,7 @@ func TestCloudRouterCreate(t *testing.T) {
 }
 
 func TestCloudRouterCreate_WithExternalRef(t *testing.T) {
-	resource := NewCloudRouterResource()
+	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
 	res.Set("managing_account", "100")
 	res.Set("consuming_account", "200")
@@ -234,7 +234,7 @@ func TestCloudRouterCreate_WithExternalRef(t *testing.T) {
 }
 
 func TestCloudRouterCreate_APIError(t *testing.T) {
-	resource := NewCloudRouterResource()
+	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
 	res.Set("managing_account", "100")
 	res.Set("consuming_account", "200")

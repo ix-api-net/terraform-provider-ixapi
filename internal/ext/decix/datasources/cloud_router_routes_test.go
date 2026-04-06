@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterRoutesDataSourceRead(t *testing.T) {
-	dataSource := NewCloudRouterRoutesDataSource()
+	dataSource := NewDecixCloudRouterRoutesDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("vrf", "vrf-1")
 
@@ -54,7 +54,7 @@ func TestCloudRouterRoutesDataSourceRead(t *testing.T) {
 }
 
 func TestCloudRouterRoutesDataSourceReadEmpty(t *testing.T) {
-	dataSource := NewCloudRouterRoutesDataSource()
+	dataSource := NewDecixCloudRouterRoutesDataSource()
 	res := dataSource.TestResourceData()
 
 	api := ixapi.NewTestClient(map[string]any{

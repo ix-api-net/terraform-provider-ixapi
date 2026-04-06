@@ -8,7 +8,7 @@ import (
 )
 
 func TestCloudRouterBGPStateRead(t *testing.T) {
-	dataSource := NewCloudRouterBGPStateDataSource()
+	dataSource := NewDecixCloudRouterBGPStateDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("nsc_id", "123")
 
@@ -36,7 +36,7 @@ func TestCloudRouterBGPStateRead(t *testing.T) {
 }
 
 func TestCloudRouterBGPStateRead_NotFound(t *testing.T) {
-	dataSource := NewCloudRouterBGPStateDataSource()
+	dataSource := NewDecixCloudRouterBGPStateDataSource()
 	res := dataSource.TestResourceData()
 	res.Set("nsc_id", "456")
 

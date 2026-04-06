@@ -8,7 +8,7 @@ import (
 )
 
 func TestStaticRouteRequestFromResourceData(t *testing.T) {
-	resource := NewCloudRouterStaticRouteResource()
+	resource := NewDecixCloudRouterStaticRouteResource()
 	res := resource.Data(nil)
 	res.Set("name", "test-route")
 	res.Set("prefix", "10.0.0.0/24")
@@ -38,7 +38,7 @@ func TestStaticRouteRequestFromResourceData(t *testing.T) {
 }
 
 func TestStaticRouteRead(t *testing.T) {
-	resource := NewCloudRouterStaticRouteResource()
+	resource := NewDecixCloudRouterStaticRouteResource()
 	res := resource.Data(nil)
 	res.SetId("route-1")
 
@@ -81,7 +81,7 @@ func TestStaticRouteRead(t *testing.T) {
 }
 
 func TestStaticRouteCreate(t *testing.T) {
-	resource := NewCloudRouterStaticRouteResource()
+	resource := NewDecixCloudRouterStaticRouteResource()
 	res := resource.Data(nil)
 	res.Set("name", "my-route")
 	res.Set("prefix", "10.0.0.0/24")
@@ -120,7 +120,7 @@ func TestStaticRouteCreate(t *testing.T) {
 }
 
 func TestStaticRouteUpdate(t *testing.T) {
-	resource := NewCloudRouterStaticRouteResource()
+	resource := NewDecixCloudRouterStaticRouteResource()
 	res := resource.Data(nil)
 	res.SetId("route-42")
 	res.Set("name", "updated-route")
@@ -159,7 +159,7 @@ func TestStaticRouteUpdate(t *testing.T) {
 }
 
 func TestStaticRouteDelete_404Success(t *testing.T) {
-	resource := NewCloudRouterStaticRouteResource()
+	resource := NewDecixCloudRouterStaticRouteResource()
 	res := resource.Data(nil)
 	res.SetId("route-42")
 
