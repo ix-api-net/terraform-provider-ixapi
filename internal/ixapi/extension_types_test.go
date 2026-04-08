@@ -125,6 +125,36 @@ func TestAPITimestamp_MarshalJSON_Zero(t *testing.T) {
 	}
 }
 
+func TestAPITimestamp_UnmarshalJSON_SpaceSeparated(t *testing.T) {
+	SetFlexibleParsing(true)
+	t.Cleanup(func() { SetFlexibleParsing(false) })
+	var ft APITimestamp
+	err := json.Unmarshal([]byte(`"2024-08-01 14:30:00+00:00"`), &ft)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	expected := time.Date(2024, 8, 1, 14, 30, 0, 0, time.UTC)
+	if !ft.Time.Equal(expected) {
+		t.Errorf("expected %v, got %v", expected, ft.Time)
+	}
+}
+
+func TestAPITimestamp_UnmarshalJSON_InvalidWithoutFlexible(t *testing.T) {
+	var ft APITimestamp
+	err := json.Unmarshal([]byte(`"2024-08-01"`), &ft)
+	if err == nil {
+		t.Fatal("expected error for date-only string without flexible parsing")
+	}
+}
+
+func TestDetailString_UnmarshalJSON_ArrayWithoutFlexible(t *testing.T) {
+	var fs DetailString
+	err := json.Unmarshal([]byte(`["error one", "error two"]`), &fs)
+	if err == nil {
+		t.Fatal("expected error for array input without flexible parsing")
+	}
+}
+
 func TestProblemResponse_Error_WithDetailString(t *testing.T) {
 	pr := ProblemResponse{
 		Title:  "Validation Error",
