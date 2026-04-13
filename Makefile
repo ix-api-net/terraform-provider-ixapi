@@ -58,4 +58,9 @@ install: all
 test:
 	go test ./internal/...
 
-.PHONY: docs
+coverage:
+	go test -coverprofile=coverage.out ./internal/...
+	go tool cover -html=coverage.out -o coverage.html
+	rm -f coverage.out
+
+.PHONY: docs coverage
