@@ -29,14 +29,14 @@ func NewDecixCloudRouterPrefixListResource() *schema.Resource {
 
 func prefixListRequestFromResourceData(
 	r *schema.ResourceData,
-) (*ixapi.PrefixListRequest, error) {
+) (*ixapi.CloudRouterPrefixListRequest, error) {
 	res := schemas.ResourceDataFrom(r)
 
 	matchListRaw := r.Get("match_list").([]interface{})
-	matchList := make([]ixapi.PrefixMatch, len(matchListRaw))
+	matchList := make([]ixapi.CloudRouterPrefixMatch, len(matchListRaw))
 	for i, item := range matchListRaw {
 		matchMap := item.(map[string]interface{})
-		match := ixapi.PrefixMatch{
+		match := ixapi.CloudRouterPrefixMatch{
 			Prefix: matchMap["prefix"].(string),
 		}
 		if minLength, ok := matchMap["min_length"].(int); ok && minLength > 0 {
@@ -48,7 +48,7 @@ func prefixListRequestFromResourceData(
 		matchList[i] = match
 	}
 
-	req := &ixapi.PrefixListRequest{
+	req := &ixapi.CloudRouterPrefixListRequest{
 		Name:             res.GetString("name"),
 		ManagingAccount:  res.GetString("managing_account"),
 		ConsumingAccount: res.GetString("consuming_account"),

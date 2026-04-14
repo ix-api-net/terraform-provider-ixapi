@@ -63,12 +63,12 @@ func TestPrefixListRead(t *testing.T) {
 	res := resource.Data(nil)
 	res.SetId("1")
 
-	pl := &ixapi.PrefixList{
+	pl := &ixapi.CloudRouterPrefixList{
 		ID:               "1",
 		Name:             "rfc1918-private",
 		ManagingAccount:  "100",
 		ConsumingAccount: "200",
-		MatchList: []ixapi.PrefixMatch{
+		MatchList: []ixapi.CloudRouterPrefixMatch{
 			{
 				Prefix:    "192.168.0.0/16",
 				MaxLength: ptr.Of(24),
@@ -113,12 +113,12 @@ func TestPrefixListCreate(t *testing.T) {
 		},
 	})
 
-	created := &ixapi.PrefixList{
+	created := &ixapi.CloudRouterPrefixList{
 		ID:               "42",
 		Name:             "rfc1918-private",
 		ManagingAccount:  "100",
 		ConsumingAccount: "200",
-		MatchList: []ixapi.PrefixMatch{
+		MatchList: []ixapi.CloudRouterPrefixMatch{
 			{Prefix: "192.168.0.0/16"},
 		},
 	}
@@ -160,12 +160,12 @@ func TestPrefixListUpdate(t *testing.T) {
 		},
 	})
 
-	updated := &ixapi.PrefixList{
+	updated := &ixapi.CloudRouterPrefixList{
 		ID:               "42",
 		Name:             "updated-list",
 		ManagingAccount:  "100",
 		ConsumingAccount: "200",
-		MatchList: []ixapi.PrefixMatch{
+		MatchList: []ixapi.CloudRouterPrefixMatch{
 			{Prefix: "10.0.0.0/8"},
 		},
 	}

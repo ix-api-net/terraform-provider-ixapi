@@ -108,87 +108,87 @@ type CloudRouterProductOffering struct {
 	Type                        string `json:"type"`
 }
 
-// BGPStateResponse holds the BGP session state for a network service config.
-type BGPStateResponse struct {
+// CloudRouterBGPStateResponse holds the BGP session state for a network service config.
+type CloudRouterBGPStateResponse struct {
 	State string `json:"state"`
 }
 
-// BFDStateResponse holds the BFD session state for a network service config.
-type BFDStateResponse struct {
+// CloudRouterBFDStateResponse holds the BFD session state for a network service config.
+type CloudRouterBFDStateResponse struct {
 	State string `json:"state"`
 }
 
-// PrefixMatch represents a single prefix match entry in a prefix list.
-type PrefixMatch struct {
+// CloudRouterPrefixMatch represents a single prefix match entry in a prefix list.
+type CloudRouterPrefixMatch struct {
 	Prefix    string `json:"prefix"`
 	MinLength *int   `json:"min_length,omitempty"`
 	MaxLength *int   `json:"max_length,omitempty"`
 }
 
-// PrefixList represents a named list of IP prefixes used for BGP route filtering.
-type PrefixList struct {
+// CloudRouterPrefixList represents a named list of IP prefixes used for BGP route filtering.
+type CloudRouterPrefixList struct {
 	ID               string         `json:"id,omitempty"`
 	Name             string         `json:"name,omitempty"`
 	ManagingAccount  string         `json:"managing_account,omitempty"`
 	ConsumingAccount string         `json:"consuming_account,omitempty"`
-	MatchList        []PrefixMatch  `json:"match_list,omitempty"`
+	MatchList        []CloudRouterPrefixMatch  `json:"match_list,omitempty"`
 }
 
-// PrefixListRequest is the request body for creating or updating a prefix list.
-type PrefixListRequest struct {
+// CloudRouterPrefixListRequest is the request body for creating or updating a prefix list.
+type CloudRouterPrefixListRequest struct {
 	Name             string        `json:"name"`
 	ManagingAccount  string        `json:"managing_account"`
 	ConsumingAccount string        `json:"consuming_account"`
-	MatchList        []PrefixMatch `json:"match_list"`
+	MatchList        []CloudRouterPrefixMatch `json:"match_list"`
 }
 
-// ASPathPrepend configures BGP AS path prepending in a policy action.
-type ASPathPrepend struct {
+// CloudRouterASPathPrepend configures BGP AS path prepending in a policy action.
+type CloudRouterASPathPrepend struct {
 	Count int     `json:"count"`
 	ASN   *int    `json:"asn,omitempty"`
 }
 
-// PolicyAction defines the action to take when a policy entry matches.
-type PolicyAction struct {
+// CloudRouterPolicyAction defines the action to take when a policy entry matches.
+type CloudRouterPolicyAction struct {
 	Filter          *string        `json:"filter,omitempty"`
 	LocalPreference *int           `json:"local_preference,omitempty"`
-	ASPathPrepend   *ASPathPrepend `json:"as_path_prepend,omitempty"`
+	ASPathPrepend   *CloudRouterASPathPrepend `json:"as_path_prepend,omitempty"`
 }
 
-// PolicyEntry represents a single rule in a BGP routing policy.
-type PolicyEntry struct {
+// CloudRouterPolicyEntry represents a single rule in a BGP routing policy.
+type CloudRouterPolicyEntry struct {
 	SequenceNumber  int          `json:"sequence_number"`
 	MatchPrefixList *string      `json:"match_prefix_list,omitempty"`
-	Action          PolicyAction `json:"action"`
+	Action          CloudRouterPolicyAction `json:"action"`
 }
 
-// Policy represents a BGP routing policy consisting of ordered entries.
-type Policy struct {
+// CloudRouterPolicy represents a BGP routing policy consisting of ordered entries.
+type CloudRouterPolicy struct {
 	ID               string        `json:"id,omitempty"`
 	Name             string        `json:"name,omitempty"`
 	ManagingAccount  string        `json:"managing_account,omitempty"`
 	ConsumingAccount string        `json:"consuming_account,omitempty"`
-	Entries          []PolicyEntry `json:"entries,omitempty"`
+	Entries          []CloudRouterPolicyEntry `json:"entries,omitempty"`
 }
 
-// PolicyRequest is the request body for creating or updating a routing policy.
-type PolicyRequest struct {
+// CloudRouterPolicyRequest is the request body for creating or updating a routing policy.
+type CloudRouterPolicyRequest struct {
 	Name             string        `json:"name"`
 	ManagingAccount  string        `json:"managing_account"`
 	ConsumingAccount string        `json:"consuming_account"`
-	Entries          []PolicyEntry `json:"entries"`
+	Entries          []CloudRouterPolicyEntry `json:"entries"`
 }
 
-// BGPRoute represents a BGP route entry with prefix, next hop, and AS path information.
-type BGPRoute struct {
+// CloudRouterBGPRoute represents a BGP route entry with prefix, next hop, and AS path information.
+type CloudRouterBGPRoute struct {
 	Prefix     string   `json:"prefix,omitempty"`
 	NextHop    string   `json:"next_hop,omitempty"`
 	ReceivedAt string   `json:"received_at,omitempty"`
 	ASPath     []string `json:"as_path,omitempty"`
 }
 
-// ArpEntry represents a single ARP table entry for a Cloud Router VRF.
-type ArpEntry struct {
+// CloudRouterArpEntry represents a single ARP table entry for a Cloud Router VRF.
+type CloudRouterArpEntry struct {
 	VRF                  string `json:"vrf,omitempty"`
 	NetworkServiceConfig string `json:"network_service_config,omitempty"`
 	DeviceFQDN           string `json:"device_fqdn,omitempty"`
@@ -198,8 +198,8 @@ type ArpEntry struct {
 	ReceivedAt           string `json:"received_at,omitempty"`
 }
 
-// StaticRoute represents a static route attached to a Cloud Router VRF.
-type StaticRoute struct {
+// CloudRouterStaticRoute represents a static route attached to a Cloud Router VRF.
+type CloudRouterStaticRoute struct {
 	ID                   string   `json:"id,omitempty"`
 	Name                 string   `json:"name,omitempty"`
 	Prefix               string   `json:"prefix,omitempty"`
@@ -208,8 +208,8 @@ type StaticRoute struct {
 	VRF                  string   `json:"vrf,omitempty"`
 }
 
-// VrfRoute represents a route entry in a Cloud Router VRF routing table.
-type VrfRoute struct {
+// CloudRouterVrfRoute represents a route entry in a Cloud Router VRF routing table.
+type CloudRouterVrfRoute struct {
 	VRF                  string `json:"vrf,omitempty"`
 	ReceivedAt           string `json:"received_at,omitempty"`
 	Prefix               string `json:"prefix,omitempty"`
@@ -221,8 +221,8 @@ type VrfRoute struct {
 	NetworkServiceConfig string `json:"network_service_config,omitempty"`
 }
 
-// StaticRouteRequest is the request body for creating or updating a static route.
-type StaticRouteRequest struct {
+// CloudRouterStaticRouteRequest is the request body for creating or updating a static route.
+type CloudRouterStaticRouteRequest struct {
 	Name                 string   `json:"name"`
 	Prefix               string   `json:"prefix"`
 	NextHop              string   `json:"next_hop"`

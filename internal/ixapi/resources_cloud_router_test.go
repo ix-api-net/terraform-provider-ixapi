@@ -235,22 +235,22 @@ func TestCloudRoutersListWithQuery(t *testing.T) {
 }
 
 func TestPrefixListsCreate(t *testing.T) {
-	expectedReq := &PrefixListRequest{
+	expectedReq := &CloudRouterPrefixListRequest{
 		Name:             "test-prefix-list",
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
-		MatchList: []PrefixMatch{
+		MatchList: []CloudRouterPrefixMatch{
 			{Prefix: "192.168.0.0/16", MaxLength: ptr.Of(24)},
 			{Prefix: "10.0.0.0/8", MinLength: ptr.Of(16), MaxLength: ptr.Of(24)},
 		},
 	}
 
-	expectedResp := &PrefixList{
+	expectedResp := &CloudRouterPrefixList{
 		ID:               "pl-1",
 		Name:             "test-prefix-list",
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
-		MatchList: []PrefixMatch{
+		MatchList: []CloudRouterPrefixMatch{
 			{Prefix: "192.168.0.0/16", MaxLength: ptr.Of(24)},
 			{Prefix: "10.0.0.0/8", MinLength: ptr.Of(16), MaxLength: ptr.Of(24)},
 		},
@@ -264,7 +264,7 @@ func TestPrefixListsCreate(t *testing.T) {
 			t.Errorf("Expected /api/v3/decix-vrf-v1/prefix-lists path, got %s", r.URL.Path)
 		}
 
-		var req PrefixListRequest
+		var req CloudRouterPrefixListRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			t.Fatalf("Failed to decode request: %v", err)
 		}
@@ -298,12 +298,12 @@ func TestPrefixListsCreate(t *testing.T) {
 }
 
 func TestPrefixListsRead(t *testing.T) {
-	expectedResp := &PrefixList{
+	expectedResp := &CloudRouterPrefixList{
 		ID:               "pl-1",
 		Name:             "test-prefix-list",
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
-		MatchList: []PrefixMatch{
+		MatchList: []CloudRouterPrefixMatch{
 			{Prefix: "192.168.0.0/16", MaxLength: ptr.Of(24)},
 		},
 	}
@@ -344,7 +344,7 @@ func TestPrefixListsDelete(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusAccepted)
-		json.NewEncoder(w).Encode(&PrefixList{ID: "pl-1"})
+		json.NewEncoder(w).Encode(&CloudRouterPrefixList{ID: "pl-1"})
 	}))
 	defer server.Close()
 
@@ -360,18 +360,18 @@ func TestPrefixListsDelete(t *testing.T) {
 func TestPoliciesCreate(t *testing.T) {
 	localPref := 100
 	count := 3
-	expectedReq := &PolicyRequest{
+	expectedReq := &CloudRouterPolicyRequest{
 		Name:             "test-policy",
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
-		Entries: []PolicyEntry{
+		Entries: []CloudRouterPolicyEntry{
 			{
 				SequenceNumber:  10,
 				MatchPrefixList: ptr.Of("test-list"),
-				Action: PolicyAction{
+				Action: CloudRouterPolicyAction{
 					Filter:          ptr.Of("accept"),
 					LocalPreference: &localPref,
-					ASPathPrepend: &ASPathPrepend{
+					ASPathPrepend: &CloudRouterASPathPrepend{
 						Count: count,
 					},
 				},
@@ -379,19 +379,19 @@ func TestPoliciesCreate(t *testing.T) {
 		},
 	}
 
-	expectedResp := &Policy{
+	expectedResp := &CloudRouterPolicy{
 		ID:               "pol-1",
 		Name:             "test-policy",
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
-		Entries: []PolicyEntry{
+		Entries: []CloudRouterPolicyEntry{
 			{
 				SequenceNumber:  10,
 				MatchPrefixList: ptr.Of("test-list"),
-				Action: PolicyAction{
+				Action: CloudRouterPolicyAction{
 					Filter:          ptr.Of("accept"),
 					LocalPreference: &localPref,
-					ASPathPrepend: &ASPathPrepend{
+					ASPathPrepend: &CloudRouterASPathPrepend{
 						Count: count,
 					},
 				},
@@ -407,7 +407,7 @@ func TestPoliciesCreate(t *testing.T) {
 			t.Errorf("Expected /api/v3/decix-vrf-v1/policies path, got %s", r.URL.Path)
 		}
 
-		var req PolicyRequest
+		var req CloudRouterPolicyRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			t.Fatalf("Failed to decode request: %v", err)
 		}
@@ -442,16 +442,16 @@ func TestPoliciesCreate(t *testing.T) {
 
 func TestPoliciesRead(t *testing.T) {
 	localPref := 100
-	expectedResp := &Policy{
+	expectedResp := &CloudRouterPolicy{
 		ID:               "pol-1",
 		Name:             "test-policy",
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
-		Entries: []PolicyEntry{
+		Entries: []CloudRouterPolicyEntry{
 			{
 				SequenceNumber:  10,
 				MatchPrefixList: ptr.Of("test-list"),
-				Action: PolicyAction{
+				Action: CloudRouterPolicyAction{
 					Filter:          ptr.Of("accept"),
 					LocalPreference: &localPref,
 				},

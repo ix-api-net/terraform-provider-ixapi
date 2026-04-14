@@ -12,7 +12,7 @@ func TestCloudRouterBFDStateRead(t *testing.T) {
 	res := dataSource.TestResourceData()
 	res.Set("nsc_id", "123")
 
-	bfdState := &ixapi.BFDStateResponse{
+	bfdState := &ixapi.CloudRouterBFDStateResponse{
 		State: "Up",
 	}
 

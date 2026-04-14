@@ -86,7 +86,7 @@ func cloudRouterPolicyRead(
 		return diag.Errorf("either `id` or `name` is required")
 	}
 
-	var policy *ixapi.Policy
+	var policy *ixapi.CloudRouterPolicy
 	if hasID {
 		p, err := api.DecixCloudRouterPoliciesRead(ctx, id.(string))
 		if err != nil {
@@ -104,7 +104,7 @@ func cloudRouterPolicyRead(
 			return diag.FromErr(err)
 		}
 
-		var found *ixapi.Policy
+		var found *ixapi.CloudRouterPolicy
 		for _, p := range result {
 			if p.Name == name.(string) {
 				found = p

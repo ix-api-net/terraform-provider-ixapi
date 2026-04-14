@@ -12,24 +12,24 @@ func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
 	dataSource := NewDecixCloudRouterPoliciesDataSource()
 	res := dataSource.TestResourceData()
 
-	policies := []*ixapi.Policy{
+	policies := []*ixapi.CloudRouterPolicy{
 		{
 			ID:               "1",
 			Name:             "accept-rfc1918",
 			ManagingAccount:  "100",
 			ConsumingAccount: "100",
-			Entries: []ixapi.PolicyEntry{
+			Entries: []ixapi.CloudRouterPolicyEntry{
 				{
 					SequenceNumber:  10,
 					MatchPrefixList: ptr.Of("rfc1918-private"),
-					Action: ixapi.PolicyAction{
+					Action: ixapi.CloudRouterPolicyAction{
 						Filter:          ptr.Of("accept"),
 						LocalPreference: ptr.Of(100),
 					},
 				},
 				{
 					SequenceNumber: 20,
-					Action: ixapi.PolicyAction{
+					Action: ixapi.CloudRouterPolicyAction{
 						Filter: ptr.Of("reject"),
 					},
 				},
@@ -40,13 +40,13 @@ func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
 			Name:             "reject-customer",
 			ManagingAccount:  "100",
 			ConsumingAccount: "100",
-			Entries: []ixapi.PolicyEntry{
+			Entries: []ixapi.CloudRouterPolicyEntry{
 				{
 					SequenceNumber:  10,
 					MatchPrefixList: ptr.Of("customer-networks"),
-					Action: ixapi.PolicyAction{
+					Action: ixapi.CloudRouterPolicyAction{
 						Filter: ptr.Of("reject"),
-						ASPathPrepend: &ixapi.ASPathPrepend{
+						ASPathPrepend: &ixapi.CloudRouterASPathPrepend{
 							Count: 3,
 						},
 					},
@@ -77,16 +77,16 @@ func TestCloudRouterPoliciesDataSourceReadWithFilter(t *testing.T) {
 	res := dataSource.TestResourceData()
 	res.Set("managing_account", "100")
 
-	policies := []*ixapi.Policy{
+	policies := []*ixapi.CloudRouterPolicy{
 		{
 			ID:               "1",
 			Name:             "accept-rfc1918",
 			ManagingAccount:  "100",
 			ConsumingAccount: "100",
-			Entries: []ixapi.PolicyEntry{
+			Entries: []ixapi.CloudRouterPolicyEntry{
 				{
 					SequenceNumber: 10,
-					Action: ixapi.PolicyAction{
+					Action: ixapi.CloudRouterPolicyAction{
 						Filter:          ptr.Of("accept"),
 						LocalPreference: ptr.Of(100),
 					},
@@ -123,15 +123,15 @@ func TestCloudRouterPolicyDataSourceReadByID(t *testing.T) {
 	res := dataSource.TestResourceData()
 	res.Set("id", "1")
 
-	policy := &ixapi.Policy{
+	policy := &ixapi.CloudRouterPolicy{
 		ID:               "1",
 		Name:             "accept-rfc1918",
 		ManagingAccount:  "100",
 		ConsumingAccount: "100",
-		Entries: []ixapi.PolicyEntry{
+		Entries: []ixapi.CloudRouterPolicyEntry{
 			{
 				SequenceNumber: 10,
-				Action: ixapi.PolicyAction{
+				Action: ixapi.CloudRouterPolicyAction{
 					Filter:          ptr.Of("accept"),
 					LocalPreference: ptr.Of(100),
 				},
@@ -161,16 +161,16 @@ func TestCloudRouterPolicyDataSourceReadByName(t *testing.T) {
 	res.Set("name", "accept-rfc1918")
 	res.Set("managing_account", "100")
 
-	policies := []*ixapi.Policy{
+	policies := []*ixapi.CloudRouterPolicy{
 		{
 			ID:               "1",
 			Name:             "accept-rfc1918",
 			ManagingAccount:  "100",
 			ConsumingAccount: "100",
-			Entries: []ixapi.PolicyEntry{
+			Entries: []ixapi.CloudRouterPolicyEntry{
 				{
 					SequenceNumber: 10,
-					Action: ixapi.PolicyAction{
+					Action: ixapi.CloudRouterPolicyAction{
 						Filter:          ptr.Of("accept"),
 						LocalPreference: ptr.Of(100),
 					},

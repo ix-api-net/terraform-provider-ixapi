@@ -120,15 +120,15 @@ func TestPolicyRead(t *testing.T) {
 
 	filterStr := "accept"
 	localPref := 100
-	policy := &ixapi.Policy{
+	policy := &ixapi.CloudRouterPolicy{
 		ID:               "1",
 		Name:             "accept-rfc1918",
 		ManagingAccount:  "100",
 		ConsumingAccount: "200",
-		Entries: []ixapi.PolicyEntry{
+		Entries: []ixapi.CloudRouterPolicyEntry{
 			{
 				SequenceNumber: 10,
-				Action: ixapi.PolicyAction{
+				Action: ixapi.CloudRouterPolicyAction{
 					Filter:          &filterStr,
 					LocalPreference: &localPref,
 				},
@@ -177,15 +177,15 @@ func TestPolicyCreate(t *testing.T) {
 	})
 
 	filterStr := "accept"
-	created := &ixapi.Policy{
+	created := &ixapi.CloudRouterPolicy{
 		ID:               "55",
 		Name:             "accept-rfc1918",
 		ManagingAccount:  "100",
 		ConsumingAccount: "200",
-		Entries: []ixapi.PolicyEntry{
+		Entries: []ixapi.CloudRouterPolicyEntry{
 			{
 				SequenceNumber: 10,
-				Action:         ixapi.PolicyAction{Filter: &filterStr},
+				Action:         ixapi.CloudRouterPolicyAction{Filter: &filterStr},
 			},
 		},
 	}
@@ -234,15 +234,15 @@ func TestPolicyUpdate(t *testing.T) {
 	})
 
 	filterStr := "reject"
-	updated := &ixapi.Policy{
+	updated := &ixapi.CloudRouterPolicy{
 		ID:               "55",
 		Name:             "updated-policy",
 		ManagingAccount:  "100",
 		ConsumingAccount: "200",
-		Entries: []ixapi.PolicyEntry{
+		Entries: []ixapi.CloudRouterPolicyEntry{
 			{
 				SequenceNumber: 10,
-				Action:         ixapi.PolicyAction{Filter: &filterStr},
+				Action:         ixapi.CloudRouterPolicyAction{Filter: &filterStr},
 			},
 		},
 	}

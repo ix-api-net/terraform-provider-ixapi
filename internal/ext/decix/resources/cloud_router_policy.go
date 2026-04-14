@@ -29,14 +29,14 @@ func NewDecixCloudRouterPolicyResource() *schema.Resource {
 
 func policyRequestFromResourceData(
 	r *schema.ResourceData,
-) (*ixapi.PolicyRequest, error) {
+) (*ixapi.CloudRouterPolicyRequest, error) {
 	res := schemas.ResourceDataFrom(r)
 
 	entriesRaw := r.Get("entries").([]interface{})
-	entries := make([]ixapi.PolicyEntry, len(entriesRaw))
+	entries := make([]ixapi.CloudRouterPolicyEntry, len(entriesRaw))
 	for i, item := range entriesRaw {
 		entryMap := item.(map[string]interface{})
-		entry := ixapi.PolicyEntry{
+		entry := ixapi.CloudRouterPolicyEntry{
 			SequenceNumber: entryMap["sequence_number"].(int),
 		}
 
@@ -47,7 +47,7 @@ func policyRequestFromResourceData(
 		actionList := entryMap["action"].([]interface{})
 		if len(actionList) > 0 {
 			actionMap := actionList[0].(map[string]interface{})
-			action := ixapi.PolicyAction{}
+			action := ixapi.CloudRouterPolicyAction{}
 
 			if filter, ok := actionMap["filter"].(string); ok && filter != "" {
 				action.Filter = &filter
@@ -57,7 +57,7 @@ func policyRequestFromResourceData(
 			}
 			if asPrependList, ok := actionMap["as_path_prepend"].([]interface{}); ok && len(asPrependList) > 0 {
 				asPrependMap := asPrependList[0].(map[string]interface{})
-				asPrepend := &ixapi.ASPathPrepend{
+				asPrepend := &ixapi.CloudRouterASPathPrepend{
 					Count: asPrependMap["count"].(int),
 				}
 				if asn, ok := asPrependMap["asn"].(int); ok && asn > 0 {
@@ -72,7 +72,7 @@ func policyRequestFromResourceData(
 		entries[i] = entry
 	}
 
-	req := &ixapi.PolicyRequest{
+	req := &ixapi.CloudRouterPolicyRequest{
 		Name:             res.GetString("name"),
 		ManagingAccount:  res.GetString("managing_account"),
 		ConsumingAccount: res.GetString("consuming_account"),

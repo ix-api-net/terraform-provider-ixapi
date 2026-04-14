@@ -12,7 +12,7 @@ func TestCloudRouterNetworkServiceConfigAdvertisedRoutesDataSourceRead(t *testin
 	res := dataSource.TestResourceData()
 	res.Set("network_service_config_id", "123")
 
-	routes := []*ixapi.BGPRoute{
+	routes := []*ixapi.CloudRouterBGPRoute{
 		{
 			Prefix:     "2001:db8:10::/48",
 			NextHop:    "fe80::42:acff:fe11:2",
@@ -49,7 +49,7 @@ func TestCloudRouterNetworkServiceConfigAdvertisedRoutesDataSourceReadEmpty(t *t
 	res := dataSource.TestResourceData()
 	res.Set("network_service_config_id", "456")
 
-	routes := []*ixapi.BGPRoute{}
+	routes := []*ixapi.CloudRouterBGPRoute{}
 
 	api := ixapi.NewTestClient(map[string]any{
 		"/api/v3/decix-vrf-v1/network-service-configs/456/advertised-routes": routes,

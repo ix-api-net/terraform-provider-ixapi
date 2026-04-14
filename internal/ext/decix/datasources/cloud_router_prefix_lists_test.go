@@ -12,13 +12,13 @@ func TestCloudRouterPrefixListsDataSourceRead(t *testing.T) {
 	dataSource := NewDecixCloudRouterPrefixListsDataSource()
 	res := dataSource.TestResourceData()
 
-	prefixLists := []*ixapi.PrefixList{
+	prefixLists := []*ixapi.CloudRouterPrefixList{
 		{
 			ID:               "1",
 			Name:             "rfc1918-private",
 			ManagingAccount:  "100",
 			ConsumingAccount: "100",
-			MatchList: []ixapi.PrefixMatch{
+			MatchList: []ixapi.CloudRouterPrefixMatch{
 				{
 					Prefix:    "192.168.0.0/16",
 					MaxLength: ptr.Of(24),
@@ -35,7 +35,7 @@ func TestCloudRouterPrefixListsDataSourceRead(t *testing.T) {
 			Name:             "customer-networks",
 			ManagingAccount:  "100",
 			ConsumingAccount: "100",
-			MatchList: []ixapi.PrefixMatch{
+			MatchList: []ixapi.CloudRouterPrefixMatch{
 				{
 					Prefix:    "203.0.113.0/24",
 					MinLength: ptr.Of(24),
@@ -67,13 +67,13 @@ func TestCloudRouterPrefixListsDataSourceReadWithFilter(t *testing.T) {
 	res := dataSource.TestResourceData()
 	res.Set("managing_account", "100")
 
-	prefixLists := []*ixapi.PrefixList{
+	prefixLists := []*ixapi.CloudRouterPrefixList{
 		{
 			ID:               "1",
 			Name:             "rfc1918-private",
 			ManagingAccount:  "100",
 			ConsumingAccount: "100",
-			MatchList: []ixapi.PrefixMatch{
+			MatchList: []ixapi.CloudRouterPrefixMatch{
 				{
 					Prefix:    "192.168.0.0/16",
 					MaxLength: ptr.Of(24),
@@ -109,12 +109,12 @@ func TestCloudRouterPrefixListDataSourceReadByID(t *testing.T) {
 	res := dataSource.TestResourceData()
 	res.Set("id", "1")
 
-	prefixList := &ixapi.PrefixList{
+	prefixList := &ixapi.CloudRouterPrefixList{
 		ID:               "1",
 		Name:             "rfc1918-private",
 		ManagingAccount:  "100",
 		ConsumingAccount: "100",
-		MatchList: []ixapi.PrefixMatch{
+		MatchList: []ixapi.CloudRouterPrefixMatch{
 			{
 				Prefix:    "192.168.0.0/16",
 				MaxLength: ptr.Of(24),
@@ -144,13 +144,13 @@ func TestCloudRouterPrefixListDataSourceReadByName(t *testing.T) {
 	res.Set("name", "rfc1918-private")
 	res.Set("managing_account", "100")
 
-	prefixLists := []*ixapi.PrefixList{
+	prefixLists := []*ixapi.CloudRouterPrefixList{
 		{
 			ID:               "1",
 			Name:             "rfc1918-private",
 			ManagingAccount:  "100",
 			ConsumingAccount: "100",
-			MatchList: []ixapi.PrefixMatch{
+			MatchList: []ixapi.CloudRouterPrefixMatch{
 				{
 					Prefix:    "192.168.0.0/16",
 					MaxLength: ptr.Of(24),

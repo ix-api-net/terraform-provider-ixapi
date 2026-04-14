@@ -29,7 +29,7 @@ func NewDecixCloudRouterStaticRouteResource() *schema.Resource {
 
 func staticRouteRequestFromResourceData(
 	r *schema.ResourceData,
-) (*ixapi.StaticRouteRequest, error) {
+) (*ixapi.CloudRouterStaticRouteRequest, error) {
 	res := schemas.ResourceDataFrom(r)
 
 	nscRaw := r.Get("network_service_configs").([]interface{})
@@ -38,7 +38,7 @@ func staticRouteRequestFromResourceData(
 		nscs[i] = v.(string)
 	}
 
-	req := &ixapi.StaticRouteRequest{
+	req := &ixapi.CloudRouterStaticRouteRequest{
 		Name:                 res.GetString("name"),
 		Prefix:               res.GetString("prefix"),
 		NextHop:              res.GetString("next_hop"),

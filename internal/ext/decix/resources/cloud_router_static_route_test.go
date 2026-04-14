@@ -42,7 +42,7 @@ func TestStaticRouteRead(t *testing.T) {
 	res := resource.Data(nil)
 	res.SetId("route-1")
 
-	route := &ixapi.StaticRoute{
+	route := &ixapi.CloudRouterStaticRoute{
 		ID:                    "route-1",
 		Name:                  "my-route",
 		Prefix:                "10.0.0.0/24",
@@ -88,7 +88,7 @@ func TestStaticRouteCreate(t *testing.T) {
 	res.Set("next_hop", "aggregate")
 	res.Set("network_service_configs", []interface{}{"nsc-abc"})
 
-	created := &ixapi.StaticRoute{
+	created := &ixapi.CloudRouterStaticRoute{
 		ID:                    "route-42",
 		Name:                  "my-route",
 		Prefix:                "10.0.0.0/24",
@@ -128,7 +128,7 @@ func TestStaticRouteUpdate(t *testing.T) {
 	res.Set("next_hop", "10.0.0.1")
 	res.Set("network_service_configs", []interface{}{"nsc-abc"})
 
-	updated := &ixapi.StaticRoute{
+	updated := &ixapi.CloudRouterStaticRoute{
 		ID:                    "route-42",
 		Name:                  "updated-route",
 		Prefix:                "172.16.0.0/16",

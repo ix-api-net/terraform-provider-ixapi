@@ -12,7 +12,7 @@ func TestCloudRouterRoutesDataSourceRead(t *testing.T) {
 	res := dataSource.TestResourceData()
 	res.Set("vrf", "vrf-1")
 
-	routes := []*ixapi.VrfRoute{
+	routes := []*ixapi.CloudRouterVrfRoute{
 		{
 			VRF:                  "vrf-1",
 			ReceivedAt:           "2024-10-28T22:22:22Z",
@@ -58,7 +58,7 @@ func TestCloudRouterRoutesDataSourceReadEmpty(t *testing.T) {
 	res := dataSource.TestResourceData()
 
 	api := ixapi.NewTestClient(map[string]any{
-		"/api/v3/decix-vrf-v1/routes": []*ixapi.VrfRoute{},
+		"/api/v3/decix-vrf-v1/routes": []*ixapi.CloudRouterVrfRoute{},
 	})
 	api.CloudRouterEnabled = true
 

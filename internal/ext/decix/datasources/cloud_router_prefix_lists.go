@@ -86,7 +86,7 @@ func cloudRouterPrefixListRead(
 		return diag.Errorf("either `id` or `name` is required")
 	}
 
-	var prefixList *ixapi.PrefixList
+	var prefixList *ixapi.CloudRouterPrefixList
 	if hasID {
 		pl, err := api.DecixCloudRouterPrefixListsRead(ctx, id.(string))
 		if err != nil {
@@ -104,7 +104,7 @@ func cloudRouterPrefixListRead(
 			return diag.FromErr(err)
 		}
 
-		var found *ixapi.PrefixList
+		var found *ixapi.CloudRouterPrefixList
 		for _, pl := range result {
 			if pl.Name == name.(string) {
 				found = pl

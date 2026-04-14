@@ -12,7 +12,7 @@ func TestCloudRouterBGPStateRead(t *testing.T) {
 	res := dataSource.TestResourceData()
 	res.Set("nsc_id", "123")
 
-	bgpState := &ixapi.BGPStateResponse{
+	bgpState := &ixapi.CloudRouterBGPStateResponse{
 		State: "Established",
 	}
 
