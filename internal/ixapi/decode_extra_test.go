@@ -12,15 +12,6 @@ func TestDecodeVLANConfigUnknown(t *testing.T) {
 	}
 }
 
-func TestPreprocessDateFields(t *testing.T) {
-	input := []byte(`{"decommission_at": "2024-01-15"}`)
-	output := preprocessDateFields(input)
-	expected := `{"decommission_at": "2024-01-15T00:00:00Z"}`
-	if string(output) != expected {
-		t.Errorf("expected %s, got %s", expected, string(output))
-	}
-}
-
 func TestUnmarshalProductOffering(t *testing.T) {
 	type testPO struct {
 		AvailableUntil *APITimestamp `json:"available_until"`
