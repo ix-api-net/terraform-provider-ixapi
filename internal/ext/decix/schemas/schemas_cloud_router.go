@@ -178,6 +178,7 @@ func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 		"vlan_config": {
 			Type:        schema.TypeList,
 			Optional:    true,
+			ForceNew:    true,
 			MaxItems:    1,
 			Description: "VLAN configuration for the connection",
 			Elem: &schema.Resource{
