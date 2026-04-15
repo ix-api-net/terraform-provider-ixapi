@@ -1,6 +1,8 @@
 package schemas
 
 import (
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	coreschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
@@ -201,9 +203,12 @@ func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 			Computed: true,
 		},
 		"admin_status": {
-			Type:        schema.TypeString,
-			Optional:    true,
-			Computed:    true,
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+			DiffSuppressFunc: func(_, old, new string, _ *schema.ResourceData) bool {
+				return strings.EqualFold(old, new)
+			},
 			Description: "Administrative status (enabled/disabled)",
 		},
 		"bfd_enabled": {
