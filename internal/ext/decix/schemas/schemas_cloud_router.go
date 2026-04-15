@@ -215,6 +215,7 @@ func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 		"bfd_enabled": {
 			Type:        schema.TypeBool,
 			Optional:    true,
+			Computed:    true,
 			ForceNew:    true,
 			Description: "Enable Bidirectional Forwarding Detection (BFD)",
 		},
