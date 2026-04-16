@@ -1,5 +1,4 @@
 
-**This repository is work in progress and not an official release.**
 
 # IX-API Terraform Provider
 
@@ -142,6 +141,96 @@ terraform {
 ```
 
 Use a `ix-api-sandbox-v2` as local API server.
+
+
+## IX-API Resources and Data Sources
+
+### Available Resources
+
+| Resource | Description |
+|---|---|
+| `ixapi_account` | Manage an account |
+| `ixapi_contact` | Manage a contact with role assignments |
+| `ixapi_connection` | Create a connection and allocate ports |
+| `ixapi_port_reservation` | Manage port reservations for a connection |
+| `ixapi_mac` | Register a MAC address |
+| `ixapi_network_service_p2p_vc` | Point-to-point virtual circuit |
+| `ixapi_network_service_p2mp_vc` | Point-to-multipoint virtual circuit |
+| `ixapi_network_service_mp2mp_vc` | Multipoint-to-multipoint virtual circuit |
+| `ixapi_network_service_cloud_vc` | Cloud virtual circuit |
+| `ixapi_network_service_config_exchange_lan` | Exchange LAN access configuration |
+| `ixapi_network_service_config_p2p_vc` | P2P virtual circuit access configuration |
+| `ixapi_network_service_config_p2mp_vc` | P2MP virtual circuit access configuration |
+| `ixapi_network_service_config_mp2mp_vc` | MP2MP virtual circuit access configuration |
+| `ixapi_network_service_config_cloud_vc` | Cloud virtual circuit access configuration |
+| `ixapi_network_feature_config_route_server` | Route server configuration |
+| `ixapi_ip_allocation_network_service_config` | IP address allocation for a network service config |
+| `ixapi_member_joining_rule_allow` | Allow a consuming account to join a network service |
+| `ixapi_member_joining_rule_deny` | Deny a consuming account from joining a network service |
+
+### Available Data Sources
+
+**Account & Contact:**
+
+| Data Source | Description |
+|---|---|
+| `ixapi_accounts` / `_account` | Query accounts |
+| `ixapi_contacts` / `_contact` | Query contacts |
+
+**Connections & Ports:**
+
+| Data Source | Description |
+|---|---|
+| `ixapi_connections` | Query connections |
+| `ixapi_ports` / `_port` | Query ports |
+| `ixapi_port_reservations` / `_port_reservation` | Query port reservations |
+| `ixapi_macs` / `_mac` | Query MAC addresses |
+
+**Devices & Facilities:**
+
+| Data Source | Description |
+|---|---|
+| `ixapi_devices` / `_device` | Query devices |
+| `ixapi_facilities` / `_facility` | Query facilities |
+| `ixapi_pops` / `_pop` | Query points of presence |
+| `ixapi_metro_areas` / `_metro_area` | Query metro areas |
+| `ixapi_metro_area_networks` / `_metro_area_network` | Query metro area networks |
+
+**IP Addresses & Roles:**
+
+| Data Source | Description |
+|---|---|
+| `ixapi_ips` / `_ip` | Query IP addresses |
+| `ixapi_roles` / `_role` | Query roles |
+| `ixapi_role_assignments` / `_role_assignment` | Query role assignments |
+| `ixapi_member_joining_rules` / `_member_joining_rule` | Query member joining rules |
+
+**Network Services:**
+
+| Data Source | Description |
+|---|---|
+| `ixapi_network_services_exchange_lan` / `_exchange_lan` | Query exchange LAN services |
+| `ixapi_network_services_p2p_vc` / `_p2p_vc` | Query P2P virtual circuit services |
+| `ixapi_network_services_p2mp_vc` / `_p2mp_vc` | Query P2MP virtual circuit services |
+| `ixapi_network_services_mp2mp_vc` / `_mp2mp_vc` | Query MP2MP virtual circuit services |
+| `ixapi_network_services_cloud_vc` / `_cloud_vc` | Query cloud virtual circuit services |
+
+**Network Features:**
+
+| Data Source | Description |
+|---|---|
+| `ixapi_network_features_route_server` / `_route_server` | Query route server features |
+
+**Product Offerings:**
+
+| Data Source | Description |
+|---|---|
+| `ixapi_product_offerings_connection` / `_offering_connection` | Connection product offerings |
+| `ixapi_product_offerings_exchange_lan` / `_offering_exchange_lan` | Exchange LAN product offerings |
+| `ixapi_product_offerings_p2p_vc` / `_offering_p2p_vc` | P2P virtual circuit product offerings |
+| `ixapi_product_offerings_p2mp_vc` / `_offering_p2mp_vc` | P2MP virtual circuit product offerings |
+| `ixapi_product_offerings_mp2mp_vc` / `_offering_mp2mp_vc` | MP2MP virtual circuit product offerings |
+| `ixapi_product_offerings_cloud_vc` / `_offering_cloud_vc` | Cloud virtual circuit product offerings |
 
 
 ## DE-CIX Cloud ROUTER Extension
