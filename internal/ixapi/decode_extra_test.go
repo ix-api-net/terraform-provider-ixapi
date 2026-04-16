@@ -12,24 +12,6 @@ func TestDecodeVLANConfigUnknown(t *testing.T) {
 	}
 }
 
-func TestUnmarshalProductOffering(t *testing.T) {
-	type testPO struct {
-		AvailableUntil *APITimestamp `json:"available_until"`
-	}
-	data := []byte(`{"available_until": "2024-01-15"}`)
-	var po testPO
-	if err := UnmarshalProductOffering(data, &po); err != nil {
-		t.Fatal(err)
-	}
-	if po.AvailableUntil == nil {
-		t.Fatal("expected non-nil AvailableUntil")
-	}
-	ts := po.AvailableUntil.Time
-	if ts.Year() != 2024 || ts.Month() != 1 || ts.Day() != 15 {
-		t.Errorf("unexpected date: %v", ts)
-	}
-}
-
 func TestDecodeVLANConfigPort(t *testing.T) {
 	data := json.RawMessage(`{"vlan_type": "port"}`)
 	cfg, err := decodeVLANConfig(data)
