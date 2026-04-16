@@ -55,7 +55,7 @@ func fetchRoleByName(
 
 	for _, role := range roles {
 		// Match role by name (should be unique)
-		if strings.ToLower(role.Name) == strings.ToLower(name) {
+		if strings.EqualFold(role.Name, name) {
 			return role, nil
 		}
 	}
@@ -155,7 +155,7 @@ func roleAssignmentRead(
 		return diag.FromErr(err)
 	}
 
-	if schemas.SetResourceData(assignment, res); err != nil {
+	if err := schemas.SetResourceData(assignment, res); err != nil {
 		return diag.FromErr(err)
 	}
 	res.SetId(assignment.ID)

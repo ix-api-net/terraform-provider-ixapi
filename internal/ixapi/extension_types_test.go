@@ -60,7 +60,7 @@ func TestAPITimestamp_UnmarshalJSON_RFC3339(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	expected := time.Date(2024, 8, 1, 14, 30, 0, 0, time.UTC)
-	if !ft.Time.Equal(expected) {
+	if !ft.Equal(expected) {
 		t.Errorf("expected %v, got %v", expected, ft.Time)
 	}
 }
@@ -74,7 +74,7 @@ func TestAPITimestamp_UnmarshalJSON_DateOnly(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	expected := time.Date(2024, 8, 1, 0, 0, 0, 0, time.UTC)
-	if !ft.Time.Equal(expected) {
+	if !ft.Equal(expected) {
 		t.Errorf("expected %v, got %v", expected, ft.Time)
 	}
 }
@@ -85,7 +85,7 @@ func TestAPITimestamp_UnmarshalJSON_Null(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !ft.Time.IsZero() {
+	if !ft.IsZero() {
 		t.Errorf("expected zero time, got %v", ft.Time)
 	}
 }
@@ -96,7 +96,7 @@ func TestAPITimestamp_UnmarshalJSON_EmptyString(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !ft.Time.IsZero() {
+	if !ft.IsZero() {
 		t.Errorf("expected zero time, got %v", ft.Time)
 	}
 }
@@ -134,7 +134,7 @@ func TestAPITimestamp_UnmarshalJSON_SpaceSeparated(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	expected := time.Date(2024, 8, 1, 14, 30, 0, 0, time.UTC)
-	if !ft.Time.Equal(expected) {
+	if !ft.Equal(expected) {
 		t.Errorf("expected %v, got %v", expected, ft.Time)
 	}
 }

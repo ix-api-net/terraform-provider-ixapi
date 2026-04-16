@@ -10,17 +10,17 @@ import (
 func TestCloudRouterConfigP2PVCRequestFromResourceData(t *testing.T) {
 	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "100")
-	res.Set("billing_account", "200")
-	res.Set("consuming_account", "300")
-	res.Set("cloud_router", "274")
-	res.Set("network_service", "500")
-	res.Set("address", "192.0.2.1/30")
-	res.Set("bgp_neighbor", "192.0.2.2")
-	res.Set("bgp_neighbor_asn", 64512)
-	res.Set("admin_status", "enabled")
-	res.Set("bfd_enabled", false)
-	res.Set("network_connection", "conn-abc123")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("billing_account", "200")
+	_ = res.Set("consuming_account", "300")
+	_ = res.Set("cloud_router", "274")
+	_ = res.Set("network_service", "500")
+	_ = res.Set("address", "192.0.2.1/30")
+	_ = res.Set("bgp_neighbor", "192.0.2.2")
+	_ = res.Set("bgp_neighbor_asn", 64512)
+	_ = res.Set("admin_status", "enabled")
+	_ = res.Set("bfd_enabled", false)
+	_ = res.Set("network_connection", "conn-abc123")
 
 	req, err := cloudRouterConfigP2PVCRequestFromResourceData(res)
 	if err != nil {
@@ -92,16 +92,16 @@ func TestCloudRouterConfigP2PVCRead(t *testing.T) {
 func TestCloudRouterConfigP2PVCCreate(t *testing.T) {
 	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "100")
-	res.Set("billing_account", "200")
-	res.Set("consuming_account", "300")
-	res.Set("cloud_router", "274")
-	res.Set("network_service", "500")
-	res.Set("address", "192.0.2.1/30")
-	res.Set("bgp_neighbor", "192.0.2.2")
-	res.Set("bgp_neighbor_asn", 64512)
-	res.Set("admin_status", "enabled")
-	res.Set("network_connection", "conn-abc123")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("billing_account", "200")
+	_ = res.Set("consuming_account", "300")
+	_ = res.Set("cloud_router", "274")
+	_ = res.Set("network_service", "500")
+	_ = res.Set("address", "192.0.2.1/30")
+	_ = res.Set("bgp_neighbor", "192.0.2.2")
+	_ = res.Set("bgp_neighbor_asn", 64512)
+	_ = res.Set("admin_status", "enabled")
+	_ = res.Set("network_connection", "conn-abc123")
 
 	created := &ixapi.CloudRouterNetworkServiceConfig{
 		ID:               "20",
@@ -145,8 +145,8 @@ func TestCloudRouterConfigP2PVCPatchFromResourceData(t *testing.T) {
 
 	t.Run("set fields are included", func(t *testing.T) {
 		res := resource.Data(nil)
-		res.Set("admin_status", "enabled")
-		res.Set("policy_ingress", "my-ingress")
+		_ = res.Set("admin_status", "enabled")
+		_ = res.Set("policy_ingress", "my-ingress")
 
 		patch := cloudRouterConfigP2PVCPatchFromResourceData(res)
 
@@ -182,15 +182,15 @@ func TestCloudRouterConfigP2PVCUpdate(t *testing.T) {
 	resource := NewDecixCloudRouterNetworkServiceConfigP2PVCResource()
 	res := resource.Data(nil)
 	res.SetId("20")
-	res.Set("managing_account", "100")
-	res.Set("billing_account", "200")
-	res.Set("consuming_account", "300")
-	res.Set("cloud_router", "274")
-	res.Set("network_service", "500")
-	res.Set("address", "192.0.2.1/30")
-	res.Set("bgp_neighbor", "192.0.2.2")
-	res.Set("bgp_neighbor_asn", 64512)
-	res.Set("admin_status", "disabled")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("billing_account", "200")
+	_ = res.Set("consuming_account", "300")
+	_ = res.Set("cloud_router", "274")
+	_ = res.Set("network_service", "500")
+	_ = res.Set("address", "192.0.2.1/30")
+	_ = res.Set("bgp_neighbor", "192.0.2.2")
+	_ = res.Set("bgp_neighbor_asn", 64512)
+	_ = res.Set("admin_status", "disabled")
 
 	updated := &ixapi.CloudRouterNetworkServiceConfig{
 		ID:               "20",

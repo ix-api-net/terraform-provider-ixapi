@@ -100,6 +100,9 @@ func exchangeLanProductOfferingsRead(
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
 	elpos, err := fetchExchangeLanProductOfferings(ctx, res, api)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	flat, err := schemas.FlattenModels(elpos)
 	if err != nil {
 		return diag.FromErr(err)

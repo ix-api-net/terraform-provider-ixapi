@@ -10,10 +10,10 @@ import (
 func TestPolicyRequestFromResourceData(t *testing.T) {
 	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
-	res.Set("name", "accept-rfc1918")
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("entries", []interface{}{
+	_ = res.Set("name", "accept-rfc1918")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("entries", []interface{}{
 		map[string]interface{}{
 			"sequence_number":   10,
 			"match_prefix_list": "rfc1918-private",
@@ -72,10 +72,10 @@ func TestPolicyRequestFromResourceData(t *testing.T) {
 func TestPolicyRequestFromResourceData_WithASPathPrepend(t *testing.T) {
 	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
-	res.Set("name", "prepend-policy")
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("entries", []interface{}{
+	_ = res.Set("name", "prepend-policy")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("entries", []interface{}{
 		map[string]interface{}{
 			"sequence_number":   10,
 			"match_prefix_list": "",
@@ -159,10 +159,10 @@ func TestPolicyRead(t *testing.T) {
 func TestPolicyCreate(t *testing.T) {
 	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
-	res.Set("name", "accept-rfc1918")
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("entries", []interface{}{
+	_ = res.Set("name", "accept-rfc1918")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("entries", []interface{}{
 		map[string]interface{}{
 			"sequence_number":   10,
 			"match_prefix_list": "",
@@ -216,10 +216,10 @@ func TestPolicyUpdate(t *testing.T) {
 	resource := NewDecixCloudRouterPolicyResource()
 	res := resource.Data(nil)
 	res.SetId("55")
-	res.Set("name", "updated-policy")
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("entries", []interface{}{
+	_ = res.Set("name", "updated-policy")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("entries", []interface{}{
 		map[string]interface{}{
 			"sequence_number":   10,
 			"match_prefix_list": "",

@@ -48,7 +48,7 @@ func TestVlanConfigFromResourceDataPort(t *testing.T) {
 func TestNscExchangeLanRequestFromResourceData(t *testing.T) {
 	resource := NewNetworkServiceConfigExchangeLanResource()
 	data := resource.Data(nil)
-	data.Set("managing_account", "2342")
+	_ = data.Set("managing_account", "2342")
 
 	req, err := nscExchangeLanRequestFromResourceData(data)
 	if err != nil {
@@ -68,7 +68,7 @@ func TestNscExchangeLanRequestFromResourceData(t *testing.T) {
 func TestNscP2PVCRequestFromResourceData(t *testing.T) {
 	resource := NewNetworkServiceConfigP2PVCResource()
 	data := resource.Data(nil)
-	data.Set("managing_account", "2342")
+	_ = data.Set("managing_account", "2342")
 
 	req, err := nscP2PVCRequestFromResourceData(data)
 	if err != nil {
@@ -88,7 +88,7 @@ func TestNscP2PVCRequestFromResourceData(t *testing.T) {
 func TestNscCloudVCRequestFromResourceData(t *testing.T) {
 	resource := NewNetworkServiceConfigCloudVCResource()
 	data := resource.Data(nil)
-	data.Set("managing_account", "2342")
+	_ = data.Set("managing_account", "2342")
 
 	req, err := nscCloudVCRequestFromResourceData(data)
 	if err != nil {
@@ -108,7 +108,7 @@ func TestNscCloudVCRequestFromResourceData(t *testing.T) {
 func TestNscMP2MPVCRequestFromResourceData(t *testing.T) {
 	resource := NewNetworkServiceConfigMP2MPVCResource()
 	data := resource.Data(nil)
-	data.Set("managing_account", "2342")
+	_ = data.Set("managing_account", "2342")
 
 	req, err := nscMP2MPVCRequestFromResourceData(data)
 	if err != nil {
@@ -128,7 +128,7 @@ func TestNscMP2MPVCRequestFromResourceData(t *testing.T) {
 func TestNscP2MPVCRequestFromResourceData(t *testing.T) {
 	resource := NewNetworkServiceConfigP2MPVCResource()
 	data := resource.Data(nil)
-	data.Set("managing_account", "2342")
+	_ = data.Set("managing_account", "2342")
 
 	req, err := nscP2MPVCRequestFromResourceData(data)
 	if err != nil {

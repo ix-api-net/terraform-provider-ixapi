@@ -10,13 +10,13 @@ import (
 func TestCloudRouterRequestFromResourceData(t *testing.T) {
 	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("billing_account", "300")
-	res.Set("product_offering", "1")
-	res.Set("asn", 65001)
-	res.Set("capacity", 1000)
-	res.Set("external_ref", "test-ref")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("billing_account", "300")
+	_ = res.Set("product_offering", "1")
+	_ = res.Set("asn", 65001)
+	_ = res.Set("capacity", 1000)
+	_ = res.Set("external_ref", "test-ref")
 
 	req, err := cloudRouterRequestFromResourceData(res)
 	if err != nil {
@@ -140,12 +140,12 @@ func TestCloudRouterDelete_OtherErrorFails(t *testing.T) {
 func TestCloudRouterCreate(t *testing.T) {
 	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("billing_account", "300")
-	res.Set("product_offering", "1")
-	res.Set("asn", 65001)
-	res.Set("capacity", 1000)
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("billing_account", "300")
+	_ = res.Set("product_offering", "1")
+	_ = res.Set("asn", 65001)
+	_ = res.Set("capacity", 1000)
 
 	createdRouter := &ixapi.CloudRouter{
 		ID:               "274",
@@ -189,13 +189,13 @@ func TestCloudRouterCreate(t *testing.T) {
 func TestCloudRouterCreate_WithExternalRef(t *testing.T) {
 	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("billing_account", "300")
-	res.Set("product_offering", "1")
-	res.Set("asn", 65001)
-	res.Set("capacity", 1000)
-	res.Set("external_ref", "my-router-ref")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("billing_account", "300")
+	_ = res.Set("product_offering", "1")
+	_ = res.Set("asn", 65001)
+	_ = res.Set("capacity", 1000)
+	_ = res.Set("external_ref", "my-router-ref")
 
 	externalRef := "my-router-ref"
 	createdRouter := &ixapi.CloudRouter{
@@ -236,12 +236,12 @@ func TestCloudRouterCreate_WithExternalRef(t *testing.T) {
 func TestCloudRouterCreate_APIError(t *testing.T) {
 	resource := NewDecixCloudRouterResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("billing_account", "300")
-	res.Set("product_offering", "1")
-	res.Set("asn", 65001)
-	res.Set("capacity", 1000)
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("billing_account", "300")
+	_ = res.Set("product_offering", "1")
+	_ = res.Set("asn", 65001)
+	_ = res.Set("capacity", 1000)
 
 	api := ixapi.NewTestClient(map[string]any{
 		"/api/v3/decix-vrf-v1/vrfs": (ixapi.TestResponseFunc)(func(body []byte) (any, error) {

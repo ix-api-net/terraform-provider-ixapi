@@ -22,7 +22,7 @@ func NewNetworkFeatureConfigRouteServerResource() *schema.Resource {
 		DeleteContext: crud.Delete(nfcRouteServerDelete),
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: schemas.RouteServerNetworkFeatureConfigSchema(),

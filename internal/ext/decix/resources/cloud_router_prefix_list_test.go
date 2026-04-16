@@ -10,10 +10,10 @@ import (
 func TestPrefixListRequestFromResourceData(t *testing.T) {
 	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
-	res.Set("name", "test-list")
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("match_list", []interface{}{
+	_ = res.Set("name", "test-list")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("match_list", []interface{}{
 		map[string]interface{}{
 			"prefix":     "192.168.0.0/16",
 			"min_length": 0,
@@ -101,10 +101,10 @@ func TestPrefixListRead(t *testing.T) {
 func TestPrefixListCreate(t *testing.T) {
 	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
-	res.Set("name", "rfc1918-private")
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("match_list", []interface{}{
+	_ = res.Set("name", "rfc1918-private")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("match_list", []interface{}{
 		map[string]interface{}{
 			"prefix":     "192.168.0.0/16",
 			"min_length": 0,
@@ -148,10 +148,10 @@ func TestPrefixListUpdate(t *testing.T) {
 	resource := NewDecixCloudRouterPrefixListResource()
 	res := resource.Data(nil)
 	res.SetId("42")
-	res.Set("name", "updated-list")
-	res.Set("managing_account", "100")
-	res.Set("consuming_account", "200")
-	res.Set("match_list", []interface{}{
+	_ = res.Set("name", "updated-list")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("consuming_account", "200")
+	_ = res.Set("match_list", []interface{}{
 		map[string]interface{}{
 			"prefix":     "10.0.0.0/8",
 			"min_length": 0,

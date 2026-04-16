@@ -11,10 +11,10 @@ import (
 func TestCloudVCRequestFromResourceData(t *testing.T) {
 	resource := NewNetworkServiceCloudVCResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "managing:1")
-	res.Set("consuming_account", "consuming:2")
-	res.Set("cloud_key", "cloudkey")
-	res.Set("capacity", 42000)
+	_ = res.Set("managing_account", "managing:1")
+	_ = res.Set("consuming_account", "consuming:2")
+	_ = res.Set("cloud_key", "cloudkey")
+	_ = res.Set("capacity", 42000)
 
 	req, err := nsCloudVCRequestFromResourceData(res)
 	if err != nil {

@@ -16,7 +16,7 @@ func TestMissingFilter(t *testing.T) {
 	}
 
 	// Optional strings
-	var opt *string = &a
+	opt := &a
 	if Missing(opt, "foo", true) {
 		t.Error("should return true, because opt is foo")
 	}

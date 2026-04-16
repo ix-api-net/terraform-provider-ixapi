@@ -11,10 +11,10 @@ import (
 func TestP2PVCRequestFromResourceData(t *testing.T) {
 	resource := NewNetworkServiceP2PVCResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "managing:1")
-	res.Set("consuming_account", "consuming:2")
-	res.Set("joining_member_account", "joining:3")
-	res.Set("display_name", "p2p vc 1")
+	_ = res.Set("managing_account", "managing:1")
+	_ = res.Set("consuming_account", "consuming:2")
+	_ = res.Set("joining_member_account", "joining:3")
+	_ = res.Set("display_name", "p2p vc 1")
 
 	req, err := nsP2PVCRequestFromResourceData(res)
 	if err != nil {

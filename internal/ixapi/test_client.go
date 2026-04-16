@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 )
@@ -66,7 +66,7 @@ func (t *MockResponseTransport) RoundTrip(req *http.Request) (*http.Response, er
 	if ok {
 		var body []byte
 		if req.Body != nil {
-			body, _ = ioutil.ReadAll(req.Body)
+			body, _ = io.ReadAll(req.Body)
 		}
 		d, err := handlerFunc(body)
 		if err != nil {

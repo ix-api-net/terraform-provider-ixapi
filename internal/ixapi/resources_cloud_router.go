@@ -71,7 +71,7 @@ func (c *Client) DecixCloudRoutersList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -151,7 +151,7 @@ func (c *Client) DecixCloudRoutersCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -224,7 +224,7 @@ func (c *Client) DecixCloudRoutersRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -297,7 +297,7 @@ func (c *Client) DecixCloudRoutersDestroy(
 	if err != nil {
 		return err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return err
@@ -405,7 +405,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -492,7 +492,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -570,7 +570,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -656,7 +656,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigsPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -734,7 +734,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigsDestroy(
 	if err != nil {
 		return err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return err
@@ -787,14 +787,14 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigsDestroy(
 
 // CloudRouterProductOfferingsListQuery holds query parameters for listing Cloud Router product offerings.
 type CloudRouterProductOfferingsListQuery struct {
-	Limit                    int    `json:"limit,omitempty"`
-	Offset                   int    `json:"offset,omitempty"`
-	ID                       string `json:"id,omitempty"`
-	Bandwidth                int    `json:"bandwidth,omitempty"`
-	Name                     string `json:"name,omitempty"`
-	ServiceMetroArea         string `json:"service_metro_area,omitempty"`
-	ServiceMetroAreaNetwork  string `json:"service_metro_area_network,omitempty"`
-	ContractPeriod           string `json:"contract_period,omitempty"`
+	Limit                   int    `json:"limit,omitempty"`
+	Offset                  int    `json:"offset,omitempty"`
+	ID                      string `json:"id,omitempty"`
+	Bandwidth               int    `json:"bandwidth,omitempty"`
+	Name                    string `json:"name,omitempty"`
+	ServiceMetroArea        string `json:"service_metro_area,omitempty"`
+	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
+	ContractPeriod          string `json:"contract_period,omitempty"`
 }
 
 // RawQuery encodes the query parameters as a URL query string.
@@ -850,7 +850,7 @@ func (c *Client) DecixCloudRouterProductOfferingsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -923,7 +923,7 @@ func (c *Client) DecixCloudRouterProductOfferingsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -996,7 +996,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigGetBGPState(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1063,7 +1063,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigGetBFDState(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1137,7 +1137,7 @@ func (c *Client) DecixCloudRouterPrefixListsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1217,7 +1217,7 @@ func (c *Client) DecixCloudRouterPrefixListsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1290,7 +1290,7 @@ func (c *Client) DecixCloudRouterPrefixListsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1363,7 +1363,7 @@ func (c *Client) DecixCloudRouterPrefixListsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1436,7 +1436,7 @@ func (c *Client) DecixCloudRouterPrefixListsDelete(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1508,7 +1508,7 @@ func (c *Client) DecixCloudRouterPoliciesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1588,7 +1588,7 @@ func (c *Client) DecixCloudRouterPoliciesCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1661,7 +1661,7 @@ func (c *Client) DecixCloudRouterPoliciesRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1734,7 +1734,7 @@ func (c *Client) DecixCloudRouterPoliciesUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1807,7 +1807,7 @@ func (c *Client) DecixCloudRouterPoliciesDelete(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1882,7 +1882,7 @@ func (c *Client) DecixCloudRouterArpTableList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1953,7 +1953,7 @@ func (c *Client) DecixCloudRouterVrfRoutesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2028,7 +2028,7 @@ func (c *Client) DecixCloudRouterStaticRoutesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2108,7 +2108,7 @@ func (c *Client) DecixCloudRouterStaticRoutesCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2181,7 +2181,7 @@ func (c *Client) DecixCloudRouterStaticRoutesRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2254,7 +2254,7 @@ func (c *Client) DecixCloudRouterStaticRoutesUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2327,7 +2327,7 @@ func (c *Client) DecixCloudRouterStaticRoutesDelete(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2394,7 +2394,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigReceivedRoutesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2451,7 +2451,7 @@ func (c *Client) DecixCloudRouterNetworkServiceConfigAdvertisedRoutesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err

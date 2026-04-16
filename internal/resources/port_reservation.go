@@ -177,11 +177,11 @@ func portReservationUpdate(
 ) error {
 	if res.HasChange("port_num") {
 		return fmt.Errorf(
-			"The `port_num` property can not be updated, you need to create a new resource")
+			"the `port_num` property can not be updated, you need to create a new resource")
 	}
 	if res.HasChange("network_connection") {
 		return fmt.Errorf(
-			"The `network_connection` can not be changed, you need to create a new resource")
+			"the `network_connection` can not be changed, you need to create a new resource")
 	}
 
 	// Make patch from resource data

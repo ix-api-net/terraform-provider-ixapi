@@ -56,7 +56,7 @@ func (c *Client) AuthTokenCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -155,7 +155,7 @@ func (c *Client) AuthTokenRefresh(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -352,7 +352,7 @@ func (c *Client) FacilitiesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -444,7 +444,7 @@ func (c *Client) FacilitiesRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -627,7 +627,7 @@ func (c *Client) DevicesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -719,7 +719,7 @@ func (c *Client) DevicesRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -888,7 +888,7 @@ func (c *Client) PopsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -980,7 +980,7 @@ func (c *Client) PopsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1114,7 +1114,7 @@ func (c *Client) MetroAreaNetworksList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1206,7 +1206,7 @@ func (c *Client) MetroAreaNetworksRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1319,7 +1319,7 @@ func (c *Client) MetroAreasList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1411,7 +1411,7 @@ func (c *Client) MetroAreasRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1650,7 +1650,7 @@ func (c *Client) ProductOfferingsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -1803,7 +1803,7 @@ func (c *Client) ProductOfferingsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2032,7 +2032,7 @@ func (c *Client) PortsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2124,7 +2124,7 @@ func (c *Client) PortsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2272,7 +2272,7 @@ func (c *Client) PortReservationsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2380,7 +2380,7 @@ func (c *Client) PortReservationsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2472,7 +2472,7 @@ func (c *Client) PortReservationsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2569,7 +2569,7 @@ func (c *Client) PortReservationsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2666,7 +2666,7 @@ func (c *Client) PortReservationsPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2765,7 +2765,7 @@ func (c *Client) PortReservationsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2891,7 +2891,7 @@ func (c *Client) PortReservationCancellationPolicy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -2987,7 +2987,7 @@ func (c *Client) PortReservationsLoaDownload(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3074,7 +3074,7 @@ func (c *Client) PortReservationsLoaUpload(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3258,7 +3258,7 @@ func (c *Client) ConnectionsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3373,7 +3373,7 @@ func (c *Client) ConnectionsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3465,7 +3465,7 @@ func (c *Client) ConnectionsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3562,7 +3562,7 @@ func (c *Client) ConnectionsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3659,7 +3659,7 @@ func (c *Client) ConnectionsPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3771,7 +3771,7 @@ func (c *Client) ConnectionsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3865,7 +3865,7 @@ func (c *Client) ConnectionsLoaDownload(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -3955,7 +3955,7 @@ func (c *Client) ConnectionsLoaUpload(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -4075,7 +4075,7 @@ func (c *Client) ConnectionsCancellationPolicy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -4286,7 +4286,7 @@ func (c *Client) NetworkServiceConfigsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -4466,7 +4466,7 @@ func (c *Client) NetworkServiceConfigsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -4633,7 +4633,7 @@ func (c *Client) NetworkServiceConfigsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -4805,7 +4805,7 @@ func (c *Client) NetworkServiceConfigsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -4977,7 +4977,7 @@ func (c *Client) NetworkServiceConfigsPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -5154,7 +5154,7 @@ func (c *Client) NetworkServiceConfigsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -5355,7 +5355,7 @@ func (c *Client) NetworkServiceConfigCancellationPolicyRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -5538,7 +5538,7 @@ func (c *Client) NetworkFeatureConfigsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -5657,7 +5657,7 @@ func (c *Client) NetworkFeatureConfigsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -5762,7 +5762,7 @@ func (c *Client) NetworkFeatureConfigsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -5872,7 +5872,7 @@ func (c *Client) NetworkFeatureConfigsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -5982,7 +5982,7 @@ func (c *Client) NetworkFeatureConfigsPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6092,7 +6092,7 @@ func (c *Client) NetworkFeatureConfigsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6267,7 +6267,7 @@ func (c *Client) AccountsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6364,7 +6364,7 @@ func (c *Client) AccountsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6456,7 +6456,7 @@ func (c *Client) AccountsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6553,7 +6553,7 @@ func (c *Client) AccountsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6650,7 +6650,7 @@ func (c *Client) AccountsPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6750,7 +6750,7 @@ func (c *Client) AccountsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6877,7 +6877,7 @@ func (c *Client) RolesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -6969,7 +6969,7 @@ func (c *Client) RolesRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7103,7 +7103,7 @@ func (c *Client) ContactsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7200,7 +7200,7 @@ func (c *Client) ContactsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7292,7 +7292,7 @@ func (c *Client) ContactsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7389,7 +7389,7 @@ func (c *Client) ContactsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7486,7 +7486,7 @@ func (c *Client) ContactsPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7582,7 +7582,7 @@ func (c *Client) ContactsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7709,7 +7709,7 @@ func (c *Client) RoleAssignmentsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7810,7 +7810,7 @@ func (c *Client) RoleAssignmentsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7902,7 +7902,7 @@ func (c *Client) RoleAssignmentsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -7997,7 +7997,7 @@ func (c *Client) RoleAssignmentsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -8088,7 +8088,7 @@ func (c *Client) APIHealthRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -8179,7 +8179,7 @@ func (c *Client) APIImplementationRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -8270,7 +8270,7 @@ func (c *Client) APIExtensionsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -8467,7 +8467,7 @@ func (c *Client) IPsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -8564,7 +8564,7 @@ func (c *Client) IPsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -8656,7 +8656,7 @@ func (c *Client) IPsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -8760,7 +8760,7 @@ func (c *Client) IPsUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -8865,7 +8865,7 @@ func (c *Client) IPsPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -9027,7 +9027,7 @@ func (c *Client) MacsList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -9124,7 +9124,7 @@ func (c *Client) MacsCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -9216,7 +9216,7 @@ func (c *Client) MacsRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -9308,7 +9308,7 @@ func (c *Client) MacsDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -9477,7 +9477,7 @@ func (c *Client) NetworkServicesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -9627,7 +9627,7 @@ func (c *Client) NetworkServicesCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -9764,7 +9764,7 @@ func (c *Client) NetworkServicesRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -9906,7 +9906,7 @@ func (c *Client) NetworkServicesUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -10048,7 +10048,7 @@ func (c *Client) NetworkServicesPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -10208,7 +10208,7 @@ func (c *Client) NetworkServicesDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -10345,7 +10345,7 @@ func (c *Client) NetworkServiceChangeRequestRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -10470,7 +10470,7 @@ func (c *Client) NetworkServiceChangeRequestCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -10562,7 +10562,7 @@ func (c *Client) NetworkServiceChangeRequestDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -10688,7 +10688,7 @@ func (c *Client) NetworkServiceCancellationPolicyRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -10829,7 +10829,7 @@ func (c *Client) NetworkFeaturesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -10942,7 +10942,7 @@ func (c *Client) NetworkFeaturesRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -11075,7 +11075,7 @@ func (c *Client) MemberJoiningRulesList(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -11201,7 +11201,7 @@ func (c *Client) MemberJoiningRulesCreate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -11314,7 +11314,7 @@ func (c *Client) MemberJoiningRulesRead(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -11432,7 +11432,7 @@ func (c *Client) MemberJoiningRulesUpdate(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -11550,7 +11550,7 @@ func (c *Client) MemberJoiningRulesPatch(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err
@@ -11663,7 +11663,7 @@ func (c *Client) MemberJoiningRulesDestroy(
 	if err != nil {
 		return nil, err
 	}
-	defer ret.Body.Close()
+	defer ret.Body.Close() //nolint:errcheck
 	body, err := io.ReadAll(ret.Body)
 	if err != nil {
 		return nil, err

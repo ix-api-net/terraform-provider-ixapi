@@ -23,7 +23,7 @@ func NewContactResource() *schema.Resource {
 		DeleteContext: contactDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: schemas.Combine(
@@ -44,16 +44,7 @@ func NewContactResource() *schema.Resource {
 // helper
 func lookupRoleByName(name string, roles []*ixapi.Role) *ixapi.Role {
 	for _, r := range roles {
-		if strings.ToLower(r.Name) == strings.ToLower(name) {
-			return r
-		}
-	}
-	return nil
-}
-
-func lookupRoleByID(id string, roles []*ixapi.Role) *ixapi.Role {
-	for _, r := range roles {
-		if r.ID == id {
+		if strings.EqualFold(r.Name, name) {
 			return r
 		}
 	}

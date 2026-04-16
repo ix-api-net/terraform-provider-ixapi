@@ -64,7 +64,7 @@ func TestCloudRouterPrefixListsDataSourceRead(t *testing.T) {
 func TestCloudRouterPrefixListsDataSourceReadWithFilter(t *testing.T) {
 	dataSource := NewDecixCloudRouterPrefixListsDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("managing_account", "100")
+	_ = res.Set("managing_account", "100")
 
 	prefixLists := []*ixapi.CloudRouterPrefixList{
 		{
@@ -106,7 +106,7 @@ func TestCloudRouterPrefixListsDataSourceReadWithFilter(t *testing.T) {
 func TestCloudRouterPrefixListDataSourceReadByID(t *testing.T) {
 	dataSource := NewDecixCloudRouterPrefixListDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("id", "1")
+	_ = res.Set("id", "1")
 
 	prefixList := &ixapi.CloudRouterPrefixList{
 		ID:               "1",
@@ -140,8 +140,8 @@ func TestCloudRouterPrefixListDataSourceReadByID(t *testing.T) {
 func TestCloudRouterPrefixListDataSourceReadByName(t *testing.T) {
 	dataSource := NewDecixCloudRouterPrefixListDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("name", "rfc1918-private")
-	res.Set("managing_account", "100")
+	_ = res.Set("name", "rfc1918-private")
+	_ = res.Set("managing_account", "100")
 
 	prefixLists := []*ixapi.CloudRouterPrefixList{
 		{

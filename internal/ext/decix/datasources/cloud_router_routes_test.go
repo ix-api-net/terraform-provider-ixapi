@@ -10,7 +10,7 @@ import (
 func TestCloudRouterRoutesDataSourceRead(t *testing.T) {
 	dataSource := NewDecixCloudRouterRoutesDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("vrf", "vrf-1")
+	_ = res.Set("vrf", "vrf-1")
 
 	routes := []*ixapi.CloudRouterVrfRoute{
 		{

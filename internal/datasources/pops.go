@@ -122,10 +122,10 @@ func popRead(
 			return err
 		}
 		if len(results) == 0 {
-			return fmt.Errorf("No point of presence did match the query")
+			return fmt.Errorf("no point of presence did match the query")
 		}
 		if len(results) > 1 {
-			return fmt.Errorf("The API returned more than one point of presence")
+			return fmt.Errorf("the API returned more than one point of presence")
 		}
 		pop = results[0]
 	}

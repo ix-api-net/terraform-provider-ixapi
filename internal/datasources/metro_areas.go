@@ -43,7 +43,9 @@ func metroAreasRead(
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	res.Set("metro_areas", flatMetroAreas)
+	if err := res.Set("metro_areas", flatMetroAreas); err != nil {
+		return diag.FromErr(err)
+	}
 
 	// Assign pseudoID
 	res.SetId(strconv.FormatInt(time.Now().Unix(), 10))

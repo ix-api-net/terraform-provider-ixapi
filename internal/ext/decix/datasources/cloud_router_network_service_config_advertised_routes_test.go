@@ -10,7 +10,7 @@ import (
 func TestCloudRouterNetworkServiceConfigAdvertisedRoutesDataSourceRead(t *testing.T) {
 	dataSource := NewDecixCloudRouterNetworkServiceConfigAdvertisedRoutesDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("network_service_config_id", "123")
+	_ = res.Set("network_service_config_id", "123")
 
 	routes := []*ixapi.CloudRouterBGPRoute{
 		{
@@ -47,7 +47,7 @@ func TestCloudRouterNetworkServiceConfigAdvertisedRoutesDataSourceRead(t *testin
 func TestCloudRouterNetworkServiceConfigAdvertisedRoutesDataSourceReadEmpty(t *testing.T) {
 	dataSource := NewDecixCloudRouterNetworkServiceConfigAdvertisedRoutesDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("network_service_config_id", "456")
+	_ = res.Set("network_service_config_id", "456")
 
 	routes := []*ixapi.CloudRouterBGPRoute{}
 

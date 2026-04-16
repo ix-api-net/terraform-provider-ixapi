@@ -10,10 +10,10 @@ import (
 func TestStaticRouteRequestFromResourceData(t *testing.T) {
 	resource := NewDecixCloudRouterStaticRouteResource()
 	res := resource.Data(nil)
-	res.Set("name", "test-route")
-	res.Set("prefix", "10.0.0.0/24")
-	res.Set("next_hop", "192.168.1.1")
-	res.Set("network_service_configs", []interface{}{"nsc-1", "nsc-2"})
+	_ = res.Set("name", "test-route")
+	_ = res.Set("prefix", "10.0.0.0/24")
+	_ = res.Set("next_hop", "192.168.1.1")
+	_ = res.Set("network_service_configs", []interface{}{"nsc-1", "nsc-2"})
 
 	req, err := staticRouteRequestFromResourceData(res)
 	if err != nil {
@@ -83,10 +83,10 @@ func TestStaticRouteRead(t *testing.T) {
 func TestStaticRouteCreate(t *testing.T) {
 	resource := NewDecixCloudRouterStaticRouteResource()
 	res := resource.Data(nil)
-	res.Set("name", "my-route")
-	res.Set("prefix", "10.0.0.0/24")
-	res.Set("next_hop", "aggregate")
-	res.Set("network_service_configs", []interface{}{"nsc-abc"})
+	_ = res.Set("name", "my-route")
+	_ = res.Set("prefix", "10.0.0.0/24")
+	_ = res.Set("next_hop", "aggregate")
+	_ = res.Set("network_service_configs", []interface{}{"nsc-abc"})
 
 	created := &ixapi.CloudRouterStaticRoute{
 		ID:                    "route-42",
@@ -123,10 +123,10 @@ func TestStaticRouteUpdate(t *testing.T) {
 	resource := NewDecixCloudRouterStaticRouteResource()
 	res := resource.Data(nil)
 	res.SetId("route-42")
-	res.Set("name", "updated-route")
-	res.Set("prefix", "172.16.0.0/16")
-	res.Set("next_hop", "10.0.0.1")
-	res.Set("network_service_configs", []interface{}{"nsc-abc"})
+	_ = res.Set("name", "updated-route")
+	_ = res.Set("prefix", "172.16.0.0/16")
+	_ = res.Set("next_hop", "10.0.0.1")
+	_ = res.Set("network_service_configs", []interface{}{"nsc-abc"})
 
 	updated := &ixapi.CloudRouterStaticRoute{
 		ID:                    "route-42",

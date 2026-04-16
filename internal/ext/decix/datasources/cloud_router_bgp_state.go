@@ -58,7 +58,9 @@ func cloudRouterBGPStateRead(
 	}
 
 	d.SetId(nscID)
-	d.Set("state", bgpState.State)
+	if err := d.Set("state", bgpState.State); err != nil {
+		return diag.FromErr(err)
+	}
 
 	return nil
 }

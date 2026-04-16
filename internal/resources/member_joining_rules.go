@@ -22,7 +22,7 @@ func NewMemberJoiningRuleAllowResource() *schema.Resource {
 		DeleteContext: crud.Delete(mjrAllowDelete),
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: schemas.AllowMemberJoiningRuleSchema(),
@@ -181,7 +181,7 @@ func NewMemberJoiningRuleDenyResource() *schema.Resource {
 		DeleteContext: crud.Delete(mjrDenyDelete),
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: schemas.DenyMemberJoiningRuleSchema(),

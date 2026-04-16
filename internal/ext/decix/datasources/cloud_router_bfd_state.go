@@ -58,7 +58,9 @@ func cloudRouterBFDStateRead(
 	}
 
 	d.SetId(nscID)
-	d.Set("state", bfdState.State)
+	if err := d.Set("state", bfdState.State); err != nil {
+		return diag.FromErr(err)
+	}
 
 	return nil
 }

@@ -10,10 +10,10 @@ import (
 func TestConnectionRequestFromResourceData(t *testing.T) {
 	resource := NewConnectionResource()
 	data := resource.Data(nil)
-	data.Set("managing_account", "2342")
-	data.Set("consuming_account", "4242")
-	data.Set("mode", "standalone")
-	data.Set("port_quantity", 2)
+	_ = data.Set("managing_account", "2342")
+	_ = data.Set("consuming_account", "4242")
+	_ = data.Set("mode", "standalone")
+	_ = data.Set("port_quantity", 2)
 
 	req, err := connectionRequestFromResourceData(data)
 	if err != nil {
