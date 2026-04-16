@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
-	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 func TestPrefixListRequestFromResourceData(t *testing.T) {
@@ -71,7 +70,7 @@ func TestPrefixListRead(t *testing.T) {
 		MatchList: []ixapi.CloudRouterPrefixMatch{
 			{
 				Prefix:    "192.168.0.0/16",
-				MaxLength: ptr.Of(24),
+				MaxLength: new(24),
 			},
 		},
 	}

@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
-	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 func TestCloudRouterPrefixListsDataSourceRead(t *testing.T) {
@@ -21,12 +20,12 @@ func TestCloudRouterPrefixListsDataSourceRead(t *testing.T) {
 			MatchList: []ixapi.CloudRouterPrefixMatch{
 				{
 					Prefix:    "192.168.0.0/16",
-					MaxLength: ptr.Of(24),
+					MaxLength: new(24),
 				},
 				{
 					Prefix:    "10.0.0.0/8",
-					MinLength: ptr.Of(16),
-					MaxLength: ptr.Of(24),
+					MinLength: new(16),
+					MaxLength: new(24),
 				},
 			},
 		},
@@ -38,8 +37,8 @@ func TestCloudRouterPrefixListsDataSourceRead(t *testing.T) {
 			MatchList: []ixapi.CloudRouterPrefixMatch{
 				{
 					Prefix:    "203.0.113.0/24",
-					MinLength: ptr.Of(24),
-					MaxLength: ptr.Of(32),
+					MinLength: new(24),
+					MaxLength: new(32),
 				},
 			},
 		},
@@ -76,7 +75,7 @@ func TestCloudRouterPrefixListsDataSourceReadWithFilter(t *testing.T) {
 			MatchList: []ixapi.CloudRouterPrefixMatch{
 				{
 					Prefix:    "192.168.0.0/16",
-					MaxLength: ptr.Of(24),
+					MaxLength: new(24),
 				},
 			},
 		},
@@ -117,7 +116,7 @@ func TestCloudRouterPrefixListDataSourceReadByID(t *testing.T) {
 		MatchList: []ixapi.CloudRouterPrefixMatch{
 			{
 				Prefix:    "192.168.0.0/16",
-				MaxLength: ptr.Of(24),
+				MaxLength: new(24),
 			},
 		},
 	}
@@ -153,7 +152,7 @@ func TestCloudRouterPrefixListDataSourceReadByName(t *testing.T) {
 			MatchList: []ixapi.CloudRouterPrefixMatch{
 				{
 					Prefix:    "192.168.0.0/16",
-					MaxLength: ptr.Of(24),
+					MaxLength: new(24),
 				},
 			},
 		},

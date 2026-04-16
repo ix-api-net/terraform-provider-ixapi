@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
-	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
@@ -21,16 +20,16 @@ func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
 			Entries: []ixapi.CloudRouterPolicyEntry{
 				{
 					SequenceNumber:  10,
-					MatchPrefixList: ptr.Of("rfc1918-private"),
+					MatchPrefixList: new("rfc1918-private"),
 					Action: ixapi.CloudRouterPolicyAction{
-						Filter:          ptr.Of("accept"),
-						LocalPreference: ptr.Of(100),
+						Filter:          new("accept"),
+						LocalPreference: new(100),
 					},
 				},
 				{
 					SequenceNumber: 20,
 					Action: ixapi.CloudRouterPolicyAction{
-						Filter: ptr.Of("reject"),
+						Filter: new("reject"),
 					},
 				},
 			},
@@ -43,9 +42,9 @@ func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
 			Entries: []ixapi.CloudRouterPolicyEntry{
 				{
 					SequenceNumber:  10,
-					MatchPrefixList: ptr.Of("customer-networks"),
+					MatchPrefixList: new("customer-networks"),
 					Action: ixapi.CloudRouterPolicyAction{
-						Filter: ptr.Of("reject"),
+						Filter: new("reject"),
 						ASPathPrepend: &ixapi.CloudRouterASPathPrepend{
 							Count: 3,
 						},
@@ -87,8 +86,8 @@ func TestCloudRouterPoliciesDataSourceReadWithFilter(t *testing.T) {
 				{
 					SequenceNumber: 10,
 					Action: ixapi.CloudRouterPolicyAction{
-						Filter:          ptr.Of("accept"),
-						LocalPreference: ptr.Of(100),
+						Filter:          new("accept"),
+						LocalPreference: new(100),
 					},
 				},
 			},
@@ -132,8 +131,8 @@ func TestCloudRouterPolicyDataSourceReadByID(t *testing.T) {
 			{
 				SequenceNumber: 10,
 				Action: ixapi.CloudRouterPolicyAction{
-					Filter:          ptr.Of("accept"),
-					LocalPreference: ptr.Of(100),
+					Filter:          new("accept"),
+					LocalPreference: new(100),
 				},
 			},
 		},
@@ -171,8 +170,8 @@ func TestCloudRouterPolicyDataSourceReadByName(t *testing.T) {
 				{
 					SequenceNumber: 10,
 					Action: ixapi.CloudRouterPolicyAction{
-						Filter:          ptr.Of("accept"),
-						LocalPreference: ptr.Of(100),
+						Filter:          new("accept"),
+						LocalPreference: new(100),
 					},
 				},
 			},
