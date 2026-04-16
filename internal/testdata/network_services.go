@@ -2,7 +2,6 @@ package testdata
 
 import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
-	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 // NewP2PNetworkService makes a testing p2p network service
@@ -14,7 +13,7 @@ func NewP2PNetworkService() *ixapi.P2PNetworkService {
 		BillingAccount:       "billing:123",
 		ProductOffering:      "product:123",
 		JoiningMemberAccount: "joining:123",
-		DisplayName:          ptr.Of("p2p network service"),
+		DisplayName:          new("p2p network service"),
 	}
 }
 
@@ -26,8 +25,8 @@ func NewP2MPNetworkService() *ixapi.P2MPNetworkService {
 		ConsumingAccount: "consuming:123",
 		BillingAccount:   "billing:123",
 		ProductOffering:  "product:123",
-		Public:           ptr.Of(true),
-		DisplayName:      ptr.Of("p2mp network service"),
+		Public:           new(true),
+		DisplayName:      new("p2mp network service"),
 	}
 }
 
@@ -39,8 +38,8 @@ func NewMP2MPNetworkService() *ixapi.MP2MPNetworkService {
 		ConsumingAccount: "consuming:123",
 		BillingAccount:   "billing:123",
 		ProductOffering:  "product:123",
-		Public:           ptr.Of(true),
-		DisplayName:      ptr.Of("mp2mp network service"),
+		Public:           new(true),
+		DisplayName:      new("mp2mp network service"),
 	}
 }
 
@@ -53,6 +52,6 @@ func NewCloudNetworkService() *ixapi.CloudNetworkService {
 		BillingAccount:   "billing:123",
 		ProductOffering:  "product:123",
 		CloudKey:         "cloudkey",
-		Capacity:         ptr.Of(2300),
+		Capacity:         new(2300),
 	}
 }

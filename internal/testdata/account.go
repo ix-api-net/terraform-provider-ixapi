@@ -2,7 +2,6 @@ package testdata
 
 import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
-	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 // NewAddress creates a new test address
@@ -10,10 +9,10 @@ func NewAddress() *ixapi.Address {
 	return &ixapi.Address{
 		Country:             "Germany",
 		Locality:            "Berlin",
-		Region:              ptr.Of("Region"),
+		Region:              new("Region"),
 		PostalCode:          "10117",
 		StreetAddress:       "Straßenweg 9",
-		PostOfficeBoxNumber: ptr.Of("PO 123"),
+		PostOfficeBoxNumber: new("PO 123"),
 	}
 }
 
@@ -22,7 +21,7 @@ func NewBillingInformation() *ixapi.BillingInformation {
 	return &ixapi.BillingInformation{
 		Name:      "Billing LLC",
 		Address:   NewAddress(),
-		VatNumber: ptr.Of("NL1235890"),
+		VatNumber: new("NL1235890"),
 	}
 }
 
@@ -43,12 +42,12 @@ func NewAccount() *ixapi.Account {
 	return &ixapi.Account{
 		ID:                       "23",
 		Name:                     "account name",
-		State:                    ptr.Of("production"),
+		State:                    new("production"),
 		Status:                   NewStatus(),
-		ManagingAccount:          ptr.Of("MACCT-12345"),
-		LegalName:                ptr.Of("legal name"),
+		ManagingAccount:          new("MACCT-12345"),
+		LegalName:                new("legal name"),
 		BillingInformation:       NewBillingInformation(),
-		ExternalRef:              ptr.Of("ext ref"),
+		ExternalRef:              new("ext ref"),
 		Address:                  NewAddress(),
 		MetroAreaNetworkPresence: []string{"FRA", "AMS", "LON"},
 	}

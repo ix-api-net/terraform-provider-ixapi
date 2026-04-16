@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
 )
 
 func TestCloudRoutersCreate(t *testing.T) {
@@ -240,8 +239,8 @@ func TestPrefixListsCreate(t *testing.T) {
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
 		MatchList: []CloudRouterPrefixMatch{
-			{Prefix: "192.168.0.0/16", MaxLength: ptr.Of(24)},
-			{Prefix: "10.0.0.0/8", MinLength: ptr.Of(16), MaxLength: ptr.Of(24)},
+			{Prefix: "192.168.0.0/16", MaxLength: new(24)},
+			{Prefix: "10.0.0.0/8", MinLength: new(16), MaxLength: new(24)},
 		},
 	}
 
@@ -251,8 +250,8 @@ func TestPrefixListsCreate(t *testing.T) {
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
 		MatchList: []CloudRouterPrefixMatch{
-			{Prefix: "192.168.0.0/16", MaxLength: ptr.Of(24)},
-			{Prefix: "10.0.0.0/8", MinLength: ptr.Of(16), MaxLength: ptr.Of(24)},
+			{Prefix: "192.168.0.0/16", MaxLength: new(24)},
+			{Prefix: "10.0.0.0/8", MinLength: new(16), MaxLength: new(24)},
 		},
 	}
 
@@ -304,7 +303,7 @@ func TestPrefixListsRead(t *testing.T) {
 		ManagingAccount:  "acc-1",
 		ConsumingAccount: "acc-1",
 		MatchList: []CloudRouterPrefixMatch{
-			{Prefix: "192.168.0.0/16", MaxLength: ptr.Of(24)},
+			{Prefix: "192.168.0.0/16", MaxLength: new(24)},
 		},
 	}
 
@@ -367,9 +366,9 @@ func TestPoliciesCreate(t *testing.T) {
 		Entries: []CloudRouterPolicyEntry{
 			{
 				SequenceNumber:  10,
-				MatchPrefixList: ptr.Of("test-list"),
+				MatchPrefixList: new("test-list"),
 				Action: CloudRouterPolicyAction{
-					Filter:          ptr.Of("accept"),
+					Filter:          new("accept"),
 					LocalPreference: &localPref,
 					ASPathPrepend: &CloudRouterASPathPrepend{
 						Count: count,
@@ -387,9 +386,9 @@ func TestPoliciesCreate(t *testing.T) {
 		Entries: []CloudRouterPolicyEntry{
 			{
 				SequenceNumber:  10,
-				MatchPrefixList: ptr.Of("test-list"),
+				MatchPrefixList: new("test-list"),
 				Action: CloudRouterPolicyAction{
-					Filter:          ptr.Of("accept"),
+					Filter:          new("accept"),
 					LocalPreference: &localPref,
 					ASPathPrepend: &CloudRouterASPathPrepend{
 						Count: count,
@@ -450,9 +449,9 @@ func TestPoliciesRead(t *testing.T) {
 		Entries: []CloudRouterPolicyEntry{
 			{
 				SequenceNumber:  10,
-				MatchPrefixList: ptr.Of("test-list"),
+				MatchPrefixList: new("test-list"),
 				Action: CloudRouterPolicyAction{
-					Filter:          ptr.Of("accept"),
+					Filter:          new("accept"),
 					LocalPreference: &localPref,
 				},
 			},
