@@ -1,0 +1,2491 @@
+package ixapi
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"net/url"
+	"strings"
+)
+
+// cloudRouterURL builds an absolute URL for a DE-CIX extension API path.
+// It uses the host base of the configured API URL because the extension API is mounted
+// at the server root (e.g. /api/v3/decix-vrf-v1/...) rather than under the versioned IX-API prefix.
+// An optional id substitutes {id} in the path; an optional query string is appended if non-empty.
+func (c *Client) cloudRouterURL(path, query string, id ...string) string {
+	if len(id) > 0 {
+		path = strings.ReplaceAll(path, "{id}", id[0])
+	}
+	u := hostBase(c.APIURL) + path
+	if query != "" {
+		u += "?" + query
+	}
+	return u
+}
+
+// CloudRoutersListQuery holds query parameters for listing Cloud Router resources.
+type CloudRoutersListQuery struct {
+	ManagingAccount  string `json:"managing_account,omitempty"`
+	ConsumingAccount string `json:"consuming_account,omitempty"`
+	ExternalRef      string `json:"external_ref,omitempty"`
+}
+
+// RawQuery encodes the query parameters as a URL query string.
+func (q *CloudRoutersListQuery) RawQuery() string {
+	qry := url.Values{}
+	if q.ManagingAccount != "" {
+		qry.Add("managing_account", q.ManagingAccount)
+	}
+	if q.ConsumingAccount != "" {
+		qry.Add("consuming_account", q.ConsumingAccount)
+	}
+	if q.ExternalRef != "" {
+		qry.Add("external_ref", q.ExternalRef)
+	}
+	return qry.Encode()
+}
+
+// DecixCloudRoutersList fetches all Cloud Routers, optionally filtered by query parameters.
+func (c *Client) DecixCloudRoutersList(
+	ctx context.Context,
+	qry ...*CloudRoutersListQuery,
+) ([]*CloudRouter, error) {
+	params := ""
+	if len(qry) > 0 && qry[0] != nil {
+		params = qry[0].RawQuery()
+	}
+
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/vrfs", params)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouter{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRoutersCreate creates a new Cloud Router and returns the created resource.
+func (c *Client) DecixCloudRoutersCreate(
+	ctx context.Context,
+	req *CloudRouterRequest,
+) (*CloudRouter, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/vrfs", "")
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPost, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouter{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRoutersRead fetches a single Cloud Router by ID.
+func (c *Client) DecixCloudRoutersRead(
+	ctx context.Context,
+	id string,
+) (*CloudRouter, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/vrfs/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouter{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRoutersDestroy deletes a Cloud Router by ID.
+func (c *Client) DecixCloudRoutersDestroy(
+	ctx context.Context,
+	id string,
+) error {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/vrfs/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
+	if err != nil {
+		return err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		return nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return err
+		}
+		res.Status = ret.StatusCode
+		return res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return err
+		}
+		res.Status = ret.StatusCode
+		return res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return err
+		}
+		res.Status = ret.StatusCode
+		return res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return err
+		}
+		res.Status = ret.StatusCode
+		return res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return err
+	}
+	res.Status = ret.StatusCode
+	return res
+}
+
+// CloudRouterNetworkServiceConfigsListQuery holds query parameters for listing Cloud Router network service configs.
+type CloudRouterNetworkServiceConfigsListQuery struct {
+	Type        string `json:"type,omitempty"`
+	BGPPassword string `json:"bgp_password,omitempty"`
+	BFD         *bool  `json:"bfd,omitempty"`
+	Limit       int    `json:"limit,omitempty"`
+	Offset      int    `json:"offset,omitempty"`
+}
+
+// RawQuery encodes the query parameters as a URL query string.
+func (q *CloudRouterNetworkServiceConfigsListQuery) RawQuery() string {
+	qry := url.Values{}
+	if q.Type != "" {
+		qry.Add("type", q.Type)
+	}
+	if q.BGPPassword != "" {
+		qry.Add("bgp_password", q.BGPPassword)
+	}
+	if q.BFD != nil {
+		if *q.BFD {
+			qry.Add("bfd", "1")
+		} else {
+			qry.Add("bfd", "0")
+		}
+	}
+	if q.Limit > 0 {
+		qry.Add("limit", fmt.Sprintf("%d", q.Limit))
+	}
+	if q.Offset > 0 {
+		qry.Add("offset", fmt.Sprintf("%d", q.Offset))
+	}
+	return qry.Encode()
+}
+
+// DecixCloudRouterNetworkServiceConfigsList fetches all Cloud Router network service configs, optionally filtered by query parameters.
+func (c *Client) DecixCloudRouterNetworkServiceConfigsList(
+	ctx context.Context,
+	qry ...*CloudRouterNetworkServiceConfigsListQuery,
+) ([]*CloudRouterNetworkServiceConfig, error) {
+	params := ""
+	if len(qry) > 0 && qry[0] != nil {
+		params = qry[0].RawQuery()
+	}
+
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs", params)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterNetworkServiceConfig{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		for _, item := range res {
+			vlanConfig, err := decodeVLANConfig(item.VLANConfigRaw)
+			if err != nil {
+				return nil, err
+			}
+			item.VLANConfig = vlanConfig
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterNetworkServiceConfigsCreate creates a new Cloud Router network service config and returns the created resource.
+func (c *Client) DecixCloudRouterNetworkServiceConfigsCreate(
+	ctx context.Context,
+	req *CloudRouterNetworkServiceConfigRequest,
+) (*CloudRouterNetworkServiceConfig, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs", "")
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPost, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterNetworkServiceConfig{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+		if err != nil {
+			return nil, err
+		}
+		res.VLANConfig = vlanConfig
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterNetworkServiceConfigsRead fetches a single Cloud Router network service config by ID.
+func (c *Client) DecixCloudRouterNetworkServiceConfigsRead(
+	ctx context.Context,
+	id string,
+) (*CloudRouterNetworkServiceConfig, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterNetworkServiceConfig{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+		if err != nil {
+			return nil, err
+		}
+		res.VLANConfig = vlanConfig
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterNetworkServiceConfigsPatch partially updates a Cloud Router network service config by ID.
+func (c *Client) DecixCloudRouterNetworkServiceConfigsPatch(
+	ctx context.Context,
+	id string,
+	patch *CloudRouterNetworkServiceConfigPatch,
+) (*CloudRouterNetworkServiceConfig, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", "", id)
+	data, err := json.Marshal(patch)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPatch, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterNetworkServiceConfig{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		vlanConfig, err := decodeVLANConfig(res.VLANConfigRaw)
+		if err != nil {
+			return nil, err
+		}
+		res.VLANConfig = vlanConfig
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterNetworkServiceConfigsDestroy deletes a Cloud Router network service config by ID.
+func (c *Client) DecixCloudRouterNetworkServiceConfigsDestroy(
+	ctx context.Context,
+	id string,
+) error {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
+	if err != nil {
+		return err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		return nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return err
+		}
+		res.Status = ret.StatusCode
+		return res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return err
+		}
+		res.Status = ret.StatusCode
+		return res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return err
+		}
+		res.Status = ret.StatusCode
+		return res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return err
+		}
+		res.Status = ret.StatusCode
+		return res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return err
+	}
+	res.Status = ret.StatusCode
+	return res
+}
+
+// CloudRouterProductOfferingsListQuery holds query parameters for listing Cloud Router product offerings.
+type CloudRouterProductOfferingsListQuery struct {
+	Limit                    int    `json:"limit,omitempty"`
+	Offset                   int    `json:"offset,omitempty"`
+	ID                       string `json:"id,omitempty"`
+	Bandwidth                int    `json:"bandwidth,omitempty"`
+	Name                     string `json:"name,omitempty"`
+	ServiceMetroArea         string `json:"service_metro_area,omitempty"`
+	ServiceMetroAreaNetwork  string `json:"service_metro_area_network,omitempty"`
+	ContractPeriod           string `json:"contract_period,omitempty"`
+}
+
+// RawQuery encodes the query parameters as a URL query string.
+func (q *CloudRouterProductOfferingsListQuery) RawQuery() string {
+	qry := url.Values{}
+	if q.Limit > 0 {
+		qry.Add("limit", fmt.Sprintf("%d", q.Limit))
+	}
+	if q.Offset > 0 {
+		qry.Add("offset", fmt.Sprintf("%d", q.Offset))
+	}
+	if q.ID != "" {
+		qry.Add("id", q.ID)
+	}
+	if q.Bandwidth > 0 {
+		qry.Add("bandwidth", fmt.Sprintf("%d", q.Bandwidth))
+	}
+	if q.Name != "" {
+		qry.Add("name", q.Name)
+	}
+	if q.ServiceMetroArea != "" {
+		qry.Add("service_metro_area", q.ServiceMetroArea)
+	}
+	if q.ServiceMetroAreaNetwork != "" {
+		qry.Add("service_metro_area_network", q.ServiceMetroAreaNetwork)
+	}
+	if q.ContractPeriod != "" {
+		qry.Add("contract_period", q.ContractPeriod)
+	}
+	return qry.Encode()
+}
+
+// DecixCloudRouterProductOfferingsList fetches all Cloud Router product offerings, optionally filtered by query parameters.
+func (c *Client) DecixCloudRouterProductOfferingsList(
+	ctx context.Context,
+	qry ...*CloudRouterProductOfferingsListQuery,
+) ([]*CloudRouterProductOffering, error) {
+	params := ""
+	if len(qry) > 0 && qry[0] != nil {
+		params = qry[0].RawQuery()
+	}
+
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/product-offerings", params)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterProductOffering{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterProductOfferingsRead fetches a single Cloud Router product offering by ID.
+func (c *Client) DecixCloudRouterProductOfferingsRead(
+	ctx context.Context,
+	id string,
+) (*CloudRouterProductOffering, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/product-offerings/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterProductOffering{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterNetworkServiceConfigGetBGPState fetches the BGP session state for a given network service config ID.
+func (c *Client) DecixCloudRouterNetworkServiceConfigGetBGPState(
+	ctx context.Context,
+	id string,
+) (*CloudRouterBGPStateResponse, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/bgp-state", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterBGPStateResponse{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterNetworkServiceConfigGetBFDState fetches the BFD session state for a given network service config ID.
+func (c *Client) DecixCloudRouterNetworkServiceConfigGetBFDState(
+	ctx context.Context,
+	id string,
+) (*CloudRouterBFDStateResponse, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/bfd-state", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterBFDStateResponse{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// Prefix Lists
+
+// DecixCloudRouterPrefixListsList fetches all prefix lists, optionally filtered by managing account.
+func (c *Client) DecixCloudRouterPrefixListsList(
+	ctx context.Context,
+	managingAccount string,
+) ([]*CloudRouterPrefixList, error) {
+	params := ""
+	if managingAccount != "" {
+		params = "managing_account=" + url.QueryEscape(managingAccount)
+	}
+
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists", params)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterPrefixList{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterPrefixListsCreate creates a new prefix list and returns the created resource.
+func (c *Client) DecixCloudRouterPrefixListsCreate(
+	ctx context.Context,
+	req *CloudRouterPrefixListRequest,
+) (*CloudRouterPrefixList, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists", "")
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPost, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterPrefixList{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterPrefixListsRead fetches a single prefix list by ID.
+func (c *Client) DecixCloudRouterPrefixListsRead(
+	ctx context.Context,
+	id string,
+) (*CloudRouterPrefixList, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterPrefixList{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterPrefixListsUpdate replaces a prefix list by ID and returns the updated resource.
+func (c *Client) DecixCloudRouterPrefixListsUpdate(
+	ctx context.Context,
+	id string,
+	req *CloudRouterPrefixListRequest,
+) (*CloudRouterPrefixList, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", "", id)
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPut, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterPrefixList{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterPrefixListsDelete deletes a prefix list by ID and returns the deleted resource.
+func (c *Client) DecixCloudRouterPrefixListsDelete(
+	ctx context.Context,
+	id string,
+) (*CloudRouterPrefixList, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/prefix-lists/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterPrefixList{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// Policies
+
+// DecixCloudRouterPoliciesList fetches all routing policies, optionally filtered by managing account.
+func (c *Client) DecixCloudRouterPoliciesList(
+	ctx context.Context,
+	managingAccount string,
+) ([]*CloudRouterPolicy, error) {
+	params := ""
+	if managingAccount != "" {
+		params = "managing_account=" + url.QueryEscape(managingAccount)
+	}
+
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies", params)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterPolicy{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterPoliciesCreate creates a new routing policy and returns the created resource.
+func (c *Client) DecixCloudRouterPoliciesCreate(
+	ctx context.Context,
+	req *CloudRouterPolicyRequest,
+) (*CloudRouterPolicy, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies", "")
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPost, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterPolicy{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterPoliciesRead fetches a single routing policy by ID.
+func (c *Client) DecixCloudRouterPoliciesRead(
+	ctx context.Context,
+	id string,
+) (*CloudRouterPolicy, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterPolicy{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterPoliciesUpdate replaces a routing policy by ID and returns the updated resource.
+func (c *Client) DecixCloudRouterPoliciesUpdate(
+	ctx context.Context,
+	id string,
+	req *CloudRouterPolicyRequest,
+) (*CloudRouterPolicy, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies/{id}", "", id)
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPut, url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterPolicy{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterPoliciesDelete deletes a routing policy by ID and returns the deleted resource.
+func (c *Client) DecixCloudRouterPoliciesDelete(
+	ctx context.Context,
+	id string,
+) (*CloudRouterPolicy, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/policies/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterPolicy{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// VRF ARP Table
+
+// DecixCloudRouterArpTableList fetches ARP table entries, optionally filtered by VRF ID and network service config ID.
+func (c *Client) DecixCloudRouterArpTableList(
+	ctx context.Context,
+	vrfID string,
+	nscID string,
+) ([]*CloudRouterArpEntry, error) {
+	params := url.Values{}
+	if vrfID != "" {
+		params.Set("vrf", vrfID)
+	}
+	if nscID != "" {
+		params.Set("network_service_config", nscID)
+	}
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/arp-table", params.Encode())
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterArpEntry{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// VRF Routes
+
+// DecixCloudRouterVrfRoutesList fetches routes from a VRF routing table, optionally filtered by VRF ID.
+func (c *Client) DecixCloudRouterVrfRoutesList(
+	ctx context.Context,
+	vrfID string,
+) ([]*CloudRouterVrfRoute, error) {
+	params := url.Values{}
+	if vrfID != "" {
+		params.Set("vrf", vrfID)
+	}
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/routes", params.Encode())
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterVrfRoute{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// Static Routes
+
+// DecixCloudRouterStaticRoutesList fetches static routes, optionally filtered by VRF ID and network service config ID.
+func (c *Client) DecixCloudRouterStaticRoutesList(
+	ctx context.Context,
+	vrfID string,
+	nscID string,
+) ([]*CloudRouterStaticRoute, error) {
+	params := url.Values{}
+	if vrfID != "" {
+		params.Set("vrf", vrfID)
+	}
+	if nscID != "" {
+		params.Set("network_service_config", nscID)
+	}
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes", params.Encode())
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterStaticRoute{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterStaticRoutesCreate creates a new static route and returns the created resource.
+func (c *Client) DecixCloudRouterStaticRoutesCreate(
+	ctx context.Context,
+	req *CloudRouterStaticRouteRequest,
+) (*CloudRouterStaticRoute, error) {
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes", "")
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPost, u, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterStaticRoute{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterStaticRoutesRead fetches a single static route by ID.
+func (c *Client) DecixCloudRouterStaticRoutesRead(
+	ctx context.Context,
+	id string,
+) (*CloudRouterStaticRoute, error) {
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterStaticRoute{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterStaticRoutesUpdate replaces a static route by ID and returns the updated resource.
+func (c *Client) DecixCloudRouterStaticRoutesUpdate(
+	ctx context.Context,
+	id string,
+	req *CloudRouterStaticRouteRequest,
+) (*CloudRouterStaticRoute, error) {
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes/{id}", "", id)
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	hreq, err := http.NewRequestWithContext(
+		ctx, http.MethodPut, u, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterStaticRoute{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusBadRequest {
+		res := &ValidationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterStaticRoutesDelete deletes a static route by ID and returns the deleted resource.
+func (c *Client) DecixCloudRouterStaticRoutesDelete(
+	ctx context.Context,
+	id string,
+) (*CloudRouterStaticRoute, error) {
+	u := c.cloudRouterURL("/api/v3/decix-vrf-v1/static-routes/{id}", "", id)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodDelete, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := &CloudRouterStaticRoute{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusForbidden {
+		res := &PermissionError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// NSC Routes
+
+// DecixCloudRouterNetworkServiceConfigReceivedRoutesList fetches BGP routes received from peers on a given network service config.
+func (c *Client) DecixCloudRouterNetworkServiceConfigReceivedRoutesList(
+	ctx context.Context,
+	nscID string,
+) ([]*CloudRouterBGPRoute, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/received-routes", "", nscID)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterBGPRoute{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}
+
+// DecixCloudRouterNetworkServiceConfigAdvertisedRoutesList fetches BGP routes advertised to peers on a given network service config.
+func (c *Client) DecixCloudRouterNetworkServiceConfigAdvertisedRoutesList(
+	ctx context.Context,
+	nscID string,
+) ([]*CloudRouterBGPRoute, error) {
+	url := c.cloudRouterURL("/api/v3/decix-vrf-v1/network-service-configs/{id}/advertised-routes", "", nscID)
+	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range c.header {
+		hreq.Header.Set(k, v[0])
+	}
+	ret, err := c.Do(hreq)
+	if err != nil {
+		return nil, err
+	}
+	defer ret.Body.Close()
+	body, err := io.ReadAll(ret.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret.StatusCode <= http.StatusAccepted {
+		res := []*CloudRouterBGPRoute{}
+		if err := json.Unmarshal(body, &res); err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	if ret.StatusCode == http.StatusNotFound {
+		res := &NotFoundError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+	if ret.StatusCode == http.StatusUnauthorized {
+		res := &AuthenticationError{}
+		if err := json.Unmarshal(body, res); err != nil {
+			return nil, err
+		}
+		res.Status = ret.StatusCode
+		return nil, res
+	}
+
+	res := &APIError{}
+	if err := json.Unmarshal(body, res); err != nil {
+		return nil, err
+	}
+	res.Status = ret.StatusCode
+	return nil, res
+}

@@ -2,7 +2,9 @@ package ixapi
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"golang.org/x/oauth2/clientcredentials"
@@ -70,8 +72,9 @@ func (flow *OAuth2ClientCredentials) authenticate(
 type Client struct {
 	http.Client
 
-	APIURL string
-	header http.Header
+	APIURL             string
+	header             http.Header
+	CloudRouterEnabled bool
 }
 
 // NewClient creates a new client instance
@@ -82,13 +85,19 @@ func NewClient(server string) *Client {
 	}
 }
 
-// Private resourceURL concatinates the api base with the resource
-func (c *Client) resourceURL(res string, params ...string) string {
-	base := c.APIURL
-	if strings.HasSuffix(base, "/") {
-		base = base[:len(base)-1]
+// hostBase extracts only the scheme and host from a URL, stripping any path component.
+// This is needed because DE-CIX extension API paths are absolute from the server root (e.g. /api/v3/decix-vrf-v1/...),
+// while the configured APIURL may include a versioned path suffix (e.g. https://host/v2).
+func hostBase(apiURL string) string {
+	if u, err := url.Parse(apiURL); err == nil && u.Scheme != "" {
+		return u.Scheme + "://" + u.Host
 	}
-	p := base + res
+	return strings.TrimSuffix(apiURL, "/")
+}
+
+// resourceURL concatenates the API base with the resource path, substituting {id} if provided.
+func (c *Client) resourceURL(res string, params ...string) string {
+	p := strings.TrimSuffix(c.APIURL, "/") + res
 	if len(params) > 0 {
 		p = strings.ReplaceAll(p, "{id}", params[0])
 	}
@@ -107,4 +116,15 @@ func (c *Client) Authenticate(
 	auth AuthenticationProvider,
 ) error {
 	return auth.authenticate(ctx, c)
+}
+
+// RequireCloudRouterExtension returns an error if the DE-CIX Cloud Router extension is not enabled in the provider configuration.
+func (c *Client) RequireCloudRouterExtension() error {
+	if !c.CloudRouterEnabled {
+		return fmt.Errorf(
+			"CloudRouter extension is not enabled. " +
+				"Add 'extension_de_cix_cloud_router_enabled = true' to your provider configuration to use CloudRouter features",
+		)
+	}
+	return nil
 }

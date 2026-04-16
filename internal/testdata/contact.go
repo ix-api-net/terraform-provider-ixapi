@@ -1,6 +1,9 @@
 package testdata
 
-import "github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
+import (
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ptr"
+)
 
 // NewContact builds an IX-API contact with test data
 func NewContact() *ixapi.Contact {
@@ -8,9 +11,9 @@ func NewContact() *ixapi.Contact {
 		ID:               "2342",
 		ManagingAccount:  "23",
 		ConsumingAccount: "42",
-		Name:             NewOptString("contact name"),
-		Telephone:        NewOptString("+23 42 1235"),
-		Email:            NewOptString("support@customer"),
+		Name:             ptr.Of("contact name"),
+		Telephone:        ptr.Of("+23 42 1235"),
+		Email:            ptr.Of("support@customer"),
 	}
 }
 

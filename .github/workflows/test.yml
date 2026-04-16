@@ -87,10 +87,21 @@ jobs:
     - name: Get dependencies
       run: |
         go mod download
-        
+
     - name: Tests
       timeout-minutes: 10
       env:
         TF_ACC: "1"
       run: |
         go test -v -cover ./internal/...
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - run: go install golang.org/x/lint/golint@latest
+      - run: golint ./internal/...

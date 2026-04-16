@@ -8,10 +8,13 @@ import (
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
 )
 
-// Create polymorphic VLanConfig from resource data
-func vlanConfigFromResourceData(r *schema.ResourceData) (ixapi.VLANConfig, error) {
+// VlanConfigFromResourceData creates a polymorphic VLANConfig from resource data.
+func VlanConfigFromResourceData(r *schema.ResourceData) (ixapi.VLANConfig, error) {
 	res := schemas.ResourceData{ResourceData: r}
 	c := res.GetResource("vlan_config")
+	if c == nil {
+		return nil, nil
+	}
 	vType := c["vlan_type"].(string)
 
 	if vType == "port" {

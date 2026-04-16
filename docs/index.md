@@ -32,5 +32,6 @@ provider "ixapi" {
 - `api_key` (String) API key, can be used as OAuth2 client_id
 - `api_secret` (String) API secret, can be used as OAuth2 client_secret
 - `auth` (String) Authentication schema used to log in to the API
+- `extension_de_cix_cloud_router_enabled` (Boolean) Enable DE-CIX CloudRouter extension features Defaults to `false`.
 - `oauth2_scopes` (String) The OAuth2 scopes to request.
 - `oauth2_token_url` (String) The URL of the token endpoint.

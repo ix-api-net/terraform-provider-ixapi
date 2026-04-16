@@ -31,7 +31,7 @@ func NewNetworkServiceConfigP2MPVCResource() *schema.Resource {
 func nscP2MPVCRequestFromResourceData(
 	r *schema.ResourceData,
 ) (*ixapi.P2MPNetworkServiceConfigRequest, error) {
-	vlanConfig, err := vlanConfigFromResourceData(r)
+	vlanConfig, err := VlanConfigFromResourceData(r)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func nscP2MPVCPatchFromResourceData(
 		Type: ixapi.P2MPNetworkServiceConfigType,
 	}
 	if res.HasChange("vlan_config") {
-		vlanConfig, err := vlanConfigFromResourceData(r)
+		vlanConfig, err := VlanConfigFromResourceData(r)
 		if err != nil {
 			return nil, err
 		}

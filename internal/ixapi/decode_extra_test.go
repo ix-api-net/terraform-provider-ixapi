@@ -5,6 +5,13 @@ import (
 	"testing"
 )
 
+func TestDecodeVLANConfigUnknown(t *testing.T) {
+	_, err := decodeVLANConfig([]byte(`{"vlan_type": "unknown"}`))
+	if err == nil {
+		t.Fatal("expected error for unknown vlan_type")
+	}
+}
+
 func TestDecodeVLANConfigPort(t *testing.T) {
 	data := json.RawMessage(`{"vlan_type": "port"}`)
 	cfg, err := decodeVLANConfig(data)

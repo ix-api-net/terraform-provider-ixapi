@@ -31,7 +31,7 @@ func NewNetworkServiceConfigCloudVCResource() *schema.Resource {
 func nscCloudVCRequestFromResourceData(
 	r *schema.ResourceData,
 ) (*ixapi.CloudNetworkServiceConfigRequest, error) {
-	vlanConfig, err := vlanConfigFromResourceData(r)
+	vlanConfig, err := VlanConfigFromResourceData(r)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func nscCloudVCPatchFromResourceData(
 		Type: ixapi.CloudNetworkServiceConfigType,
 	}
 	if res.HasChange("vlan_config") {
-		vlanConfig, err := vlanConfigFromResourceData(r)
+		vlanConfig, err := VlanConfigFromResourceData(r)
 		if err != nil {
 			return nil, err
 		}

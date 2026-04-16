@@ -46,8 +46,8 @@ func macRequestFromResourceData(
 		ConsumingAccount: res.GetString("consuming_account"),
 		ExternalRef:      res.GetStringOpt("external_ref"),
 		Address:          res.GetString("address"),
-		ValidNotBefore:   vnb,
-		ValidNotAfter:    vna,
+		ValidNotBefore:   ixapi.NewAPITimestamp(vnb),
+		ValidNotAfter:    ixapi.NewAPITimestamp(vna),
 	}
 	return req, nil
 }

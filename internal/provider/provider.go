@@ -8,6 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/datasources"
+	decixds "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/datasources"
+	decixrs "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/resources"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/resources"
 )
@@ -98,11 +100,35 @@ func New(version string) func() *schema.Provider {
 					DefaultFunc: schema.EnvDefaultFunc(EnvOAuth2Scopes, "ix-api"),
 					Description: "The OAuth2 scopes to request.",
 				},
+				"extension_de_cix_cloud_router_enabled": &schema.Schema{
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Default:     false,
+					Description: "Enable DE-CIX CloudRouter extension features",
+				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
 				"ixapi_accounts":             datasources.NewAccountsDataSource(),
 				"ixapi_account":              datasources.NewAccountDataSource(),
-				"ixapi_connections":          datasources.NewConnectionsDataSource(),
+				"ixapi_de_cix_cloud_routers":        decixds.NewDecixCloudRoutersDataSource(),
+				"ixapi_de_cix_cloud_router":         decixds.NewDecixCloudRouterDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_configs_cloud_vc": decixds.NewDecixCloudRouterNetworkServiceConfigsCloudVCDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_config_cloud_vc":  decixds.NewDecixCloudRouterNetworkServiceConfigCloudVCDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_configs_p2p_vc":   decixds.NewDecixCloudRouterNetworkServiceConfigsP2PVCDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_config_p2p_vc":    decixds.NewDecixCloudRouterNetworkServiceConfigP2PVCDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_config_advertised_routes": decixds.NewDecixCloudRouterNetworkServiceConfigAdvertisedRoutesDataSource(),
+				"ixapi_de_cix_cloud_router_network_service_config_received_routes":  decixds.NewDecixCloudRouterNetworkServiceConfigReceivedRoutesDataSource(),
+				"ixapi_de_cix_cloud_router_routes":                                    decixds.NewDecixCloudRouterRoutesDataSource(),
+				"ixapi_de_cix_cloud_router_bgp_state":                                 decixds.NewDecixCloudRouterBGPStateDataSource(),
+				"ixapi_de_cix_cloud_router_bfd_state":                        decixds.NewDecixCloudRouterBFDStateDataSource(),
+				"ixapi_de_cix_cloud_router_prefix_lists":                     decixds.NewDecixCloudRouterPrefixListsDataSource(),
+				"ixapi_de_cix_cloud_router_prefix_list":                      decixds.NewDecixCloudRouterPrefixListDataSource(),
+				"ixapi_de_cix_cloud_router_policies":                         decixds.NewDecixCloudRouterPoliciesDataSource(),
+				"ixapi_de_cix_cloud_router_policy":                           decixds.NewDecixCloudRouterPolicyDataSource(),
+				"ixapi_de_cix_cloud_router_static_routes":                    decixds.NewDecixCloudRouterStaticRoutesDataSource(),
+				"ixapi_de_cix_cloud_router_static_route":                     decixds.NewDecixCloudRouterStaticRouteDataSource(),
+				"ixapi_de_cix_cloud_router_arp_table":                        decixds.NewDecixCloudRouterArpTableDataSource(),
+				"ixapi_connections":                                   datasources.NewConnectionsDataSource(),
 				"ixapi_connection":           datasources.NewConnectionDataSource(),
 				"ixapi_contacts":             datasources.NewContactsDataSource(),
 				"ixapi_contact":              datasources.NewContactDataSource(),
@@ -157,10 +183,18 @@ func New(version string) func() *schema.Provider {
 				"ixapi_product_offering_mp2mp_vc":      datasources.NewProductOfferingMP2MPVCDataSource(),
 				"ixapi_product_offerings_cloud_vc":     datasources.NewProductOfferingsCloudVCDataSource(),
 				"ixapi_product_offering_cloud_vc":      datasources.NewProductOfferingCloudVCDataSource(),
+				"ixapi_de_cix_product_offerings_cloud_vrf": decixds.NewDecixCloudRouterProductOfferingsCloudVRFDataSource(),
+				"ixapi_de_cix_product_offering_cloud_vrf":  decixds.NewDecixCloudRouterProductOfferingCloudVRFDataSource(),
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"ixapi_contact":          resources.NewContactResource(),
 				"ixapi_account":          resources.NewAccountResource(),
+				"ixapi_de_cix_cloud_router":     decixrs.NewDecixCloudRouterResource(),
+				"ixapi_de_cix_cloud_router_network_service_config_cloud_vc": decixrs.NewDecixCloudRouterNetworkServiceConfigCloudVCResource(),
+				"ixapi_de_cix_cloud_router_network_service_config_p2p_vc":   decixrs.NewDecixCloudRouterNetworkServiceConfigP2PVCResource(),
+				"ixapi_de_cix_cloud_router_prefix_list":            decixrs.NewDecixCloudRouterPrefixListResource(),
+				"ixapi_de_cix_cloud_router_policy":                 decixrs.NewDecixCloudRouterPolicyResource(),
+				"ixapi_de_cix_cloud_router_static_route":           decixrs.NewDecixCloudRouterStaticRouteResource(),
 				"ixapi_mac":              resources.NewMACResource(),
 				"ixapi_connection":       resources.NewConnectionResource(),
 				"ixapi_port_reservation": resources.NewPortReservationResource(),
@@ -250,6 +284,10 @@ func configure(
 	if err := checkAuthenticated(ctx, client); err != nil {
 		return nil, diag.FromErr(err)
 	}
+
+	cloudRouterEnabled := res.Get("extension_de_cix_cloud_router_enabled").(bool)
+	client.CloudRouterEnabled = cloudRouterEnabled
+	ixapi.SetFlexibleParsing(cloudRouterEnabled)
 
 	return client, nil
 }

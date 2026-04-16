@@ -1,0 +1,60 @@
+package datasources
+
+import (
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/schemas"
+	decixschemas "github.com/ix-api-net/terraform-provider-ixapi/internal/ext/decix/schemas"
+)
+
+// NewDecixCloudRouterRoutesDataSource returns the schema.Resource for listing routes in a Cloud Router VRF routing table.
+func NewDecixCloudRouterRoutesDataSource() *schema.Resource {
+	return &schema.Resource{
+		Description: "Use the `cloud_router_routes` data source to list routes in the VRF routing table",
+		ReadContext: cloudRouterRoutesRead,
+		Schema: map[string]*schema.Schema{
+			"vrf": schemas.DataSourceQuery(
+				"Filter by VRF ID"),
+			"routes": schemas.IntoDataSourceResultsSchema(
+				decixschemas.VrfRouteSchema(),
+			),
+		},
+	}
+}
+
+func cloudRouterRoutesRead(
+	ctx context.Context,
+	res *schema.ResourceData,
+	meta any,
+) diag.Diagnostics {
+	api := meta.(*ixapi.Client)
+
+	if err := api.RequireCloudRouterExtension(); err != nil {
+		return diag.FromErr(err)
+	}
+
+	vrfID := ""
+	if v, ok := res.GetOk("vrf"); ok {
+		vrfID = v.(string)
+	}
+
+	all, err := api.DecixCloudRouterVrfRoutesList(ctx, vrfID)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	flat, err := schemas.FlattenModels(all)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := res.Set("routes", flat); err != nil {
+		return diag.FromErr(err)
+	}
+	res.SetId(schemas.Timestamp())
+
+	return nil
+}

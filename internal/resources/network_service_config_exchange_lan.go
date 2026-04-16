@@ -32,7 +32,7 @@ func NewNetworkServiceConfigExchangeLanResource() *schema.Resource {
 func nscExchangeLanRequestFromResourceData(
 	r *schema.ResourceData,
 ) (*ixapi.ExchangeLanNetworkServiceConfigRequest, error) {
-	vlanConfig, err := vlanConfigFromResourceData(r)
+	vlanConfig, err := VlanConfigFromResourceData(r)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func nscExchangeLanPatchFromResourceData(
 		Type: ixapi.ExchangeLanNetworkServiceConfigType,
 	}
 	if res.HasChange("vlan_config") {
-		vlanConfig, err := vlanConfigFromResourceData(r)
+		vlanConfig, err := VlanConfigFromResourceData(r)
 		if err != nil {
 			return nil, err
 		}

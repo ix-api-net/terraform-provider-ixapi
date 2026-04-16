@@ -45,10 +45,9 @@ docs:
 
 build:
 	CGO_ENABLED=0 go build $(CFLAGS) -o ./bin/$(BINARY) -ldflags '$(LDFLAGS)' $(PROVIDER)
-	
-	mkdir -p bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH} 
-	cp bin/${BINARY} bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
+	mkdir -p bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
+	cp bin/${BINARY} bin/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 all: build docs
 
@@ -59,4 +58,9 @@ install: all
 test:
 	go test ./internal/...
 
-.PHONY: docs
+coverage:
+	go test -coverprofile=coverage.out ./internal/...
+	go tool cover -html=coverage.out -o coverage.html
+	rm -f coverage.out
+
+.PHONY: docs coverage
