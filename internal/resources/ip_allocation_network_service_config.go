@@ -21,7 +21,7 @@ func NewIPAllocationNetworkServiceConfigResource() *schema.Resource {
 		DeleteContext: crud.Delete(ipAllocationDelete),
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -170,6 +170,9 @@ func ipAllocationRead(
 	ips, err := api.IPsList(ctx, &ixapi.IPsListQuery{
 		NetworkServiceConfig: nscID,
 	})
+	if err != nil {
+		return err
+	}
 
 	if len(ips) == 0 {
 		// This is gone

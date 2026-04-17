@@ -248,12 +248,13 @@ func configure(
 
 	var provider ixapi.AuthenticationProvider
 	auth := res.Get("auth").(string)
-	if auth == AuthLegacy {
+	switch auth {
+	case AuthLegacy:
 		provider = &ixapi.AuthAPIKeySecret{
 			Key:    key,
 			Secret: secret,
 		}
-	} else if auth == AuthOAuth2 {
+	case AuthOAuth2:
 		tokenURL := res.Get("oauth2_token_url").(string)
 		if err := checkEnvConfig("oauth2_token_url", tokenURL, EnvOAuth2TokenURL); err != nil {
 			diags = append(diags, diag.FromErr(err)...)
@@ -265,9 +266,9 @@ func configure(
 			Scopes:   scopes,
 			TokenURL: tokenURL,
 		}
-	} else {
-		diags = append(diag.FromErr(
-			fmt.Errorf("invalid authentication workflow: %s", auth)))
+	default:
+		diags = append(diags, diag.FromErr(
+			fmt.Errorf("invalid authentication workflow: %s", auth))...)
 	}
 
 	if diags.HasError() {

@@ -10,7 +10,7 @@ import (
 func TestMaybeSetFQDN(t *testing.T) {
 	resource := NewIPAllocationNetworkServiceConfigResource()
 	res := resource.Data(nil)
-	res.Set("fqdn", "gw1.example.ixp")
+	_ = res.Set("fqdn", "gw1.example.ixp")
 
 	ip := &ixapi.IPAddress{
 		ID: "42",

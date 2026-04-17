@@ -188,10 +188,10 @@ func productOfferingConnectionRead(
 			return err
 		}
 		if len(offerings) == 0 {
-			return fmt.Errorf("No connection product offering did match")
+			return fmt.Errorf("no connection product offering did match")
 		}
 		if len(offerings) > 1 {
-			return fmt.Errorf("The query did not return an unique connection product offering")
+			return fmt.Errorf("the query did not return a unique connection product offering")
 		}
 		offering = offerings[0]
 	}

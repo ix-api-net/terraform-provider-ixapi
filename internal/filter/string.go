@@ -29,5 +29,5 @@ func Missing(a any, b any, apply bool) bool {
 		}
 		v2 = *v
 	}
-	return strings.ToLower(v1) != strings.ToLower(v2)
+	return !strings.EqualFold(v1, v2)
 }

@@ -22,7 +22,7 @@ func NewMACResource() *schema.Resource {
 		DeleteContext: crud.Delete(macDelete),
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: schemas.MacAddressSchema(),

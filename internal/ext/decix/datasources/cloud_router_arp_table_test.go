@@ -52,7 +52,7 @@ func TestCloudRouterArpTableDataSourceRead(t *testing.T) {
 func TestCloudRouterArpTableDataSourceReadEmpty(t *testing.T) {
 	dataSource := NewDecixCloudRouterArpTableDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("vrf", "vrf-1")
+	_ = res.Set("vrf", "vrf-1")
 
 	api := ixapi.NewTestClient(map[string]any{
 		"/api/v3/decix-vrf-v1/arp-table": []*ixapi.CloudRouterArpEntry{},

@@ -13,8 +13,8 @@ func TestContactCreate(t *testing.T) {
 	res := resource.Data(nil)
 
 	// Set request
-	res.Set("roles", []string{"noc"})
-	res.Set("email", "email@addr")
+	_ = res.Set("roles", []string{"noc"})
+	_ = res.Set("email", "email@addr")
 
 	contact := testdata.NewContact()
 	roles := []*ixapi.Role{testdata.NewRoleNOC()}

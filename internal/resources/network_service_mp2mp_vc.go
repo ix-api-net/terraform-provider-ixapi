@@ -22,7 +22,7 @@ func NewNetworkServiceMP2MPVCResource() *schema.Resource {
 		Schema: schemas.MP2MPNetworkServiceSchema(),
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }

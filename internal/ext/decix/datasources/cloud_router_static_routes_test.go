@@ -50,7 +50,7 @@ func TestCloudRouterStaticRoutesDataSourceRead(t *testing.T) {
 func TestCloudRouterStaticRouteDataSourceReadByID(t *testing.T) {
 	dataSource := NewDecixCloudRouterStaticRouteDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("id", "route-1")
+	_ = res.Set("id", "route-1")
 
 	route := &ixapi.CloudRouterStaticRoute{
 		ID:                    "route-1",

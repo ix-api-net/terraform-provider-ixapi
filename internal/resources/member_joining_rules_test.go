@@ -11,10 +11,10 @@ import (
 func TestMJRAllowRequestFromResourceData(t *testing.T) {
 	resource := NewMemberJoiningRuleAllowResource()
 	res := resource.Data(nil)
-	res.Set("network_service", "ns:42")
-	res.Set("managing_account", "acc:23")
-	res.Set("consuming_account", "acc:42")
-	res.Set("capacity_max", 42000)
+	_ = res.Set("network_service", "ns:42")
+	_ = res.Set("managing_account", "acc:23")
+	_ = res.Set("consuming_account", "acc:42")
+	_ = res.Set("capacity_max", 42000)
 
 	req, err := mjrAllowRequestFromResourceData(res)
 	if err != nil {
@@ -56,9 +56,9 @@ func TestMJRAllowRead(t *testing.T) {
 func TestMJRDenyRequestFromResourceData(t *testing.T) {
 	resource := NewMemberJoiningRuleDenyResource()
 	res := resource.Data(nil)
-	res.Set("network_service", "ns:42")
-	res.Set("managing_account", "acc:23")
-	res.Set("consuming_account", "acc:42")
+	_ = res.Set("network_service", "ns:42")
+	_ = res.Set("managing_account", "acc:23")
+	_ = res.Set("consuming_account", "acc:42")
 
 	req, err := mjrDenyRequestFromResourceData(res)
 	if err != nil {

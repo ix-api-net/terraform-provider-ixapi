@@ -65,7 +65,7 @@ func accountsRead(
 		if managing != "" && acc.ManagingAccount != nil && *acc.ManagingAccount != managing {
 			continue
 		}
-		if name != "" && strings.ToLower(acc.Name) != strings.ToLower(name) {
+		if name != "" && !strings.EqualFold(acc.Name, name) {
 			continue
 		}
 		if ref != "" && acc.ExternalRef != nil && *acc.ExternalRef != ref {
@@ -83,7 +83,9 @@ func accountsRead(
 		state[i] = flat
 	}
 
-	res.Set("accounts", state)
+	if err := res.Set("accounts", state); err != nil {
+		return diag.FromErr(err)
+	}
 	res.SetId(schemas.Timestamp())
 
 	return nil
@@ -127,7 +129,7 @@ func accountRead(
 		if hasID && acc.ID != id.(string) {
 			continue
 		}
-		if hasName && strings.ToLower(acc.Name) != strings.ToLower(name.(string)) {
+		if hasName && !strings.EqualFold(acc.Name, name.(string)) {
 			continue
 		}
 		if hasRef && (acc.ExternalRef == nil || (acc.ExternalRef != nil && *acc.ExternalRef != ref.(string))) {

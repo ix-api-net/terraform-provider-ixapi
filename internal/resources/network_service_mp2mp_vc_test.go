@@ -11,10 +11,10 @@ import (
 func TestMP2MPVCRequestFromResourceData(t *testing.T) {
 	resource := NewNetworkServiceMP2MPVCResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "managing:1")
-	res.Set("consuming_account", "consuming:2")
-	res.Set("display_name", "vc 1")
-	res.Set("public", true)
+	_ = res.Set("managing_account", "managing:1")
+	_ = res.Set("consuming_account", "consuming:2")
+	_ = res.Set("display_name", "vc 1")
+	_ = res.Set("public", true)
 
 	req, err := nsMP2MPVCRequestFromResourceData(res)
 	if err != nil {

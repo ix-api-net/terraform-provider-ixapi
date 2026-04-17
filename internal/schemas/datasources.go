@@ -2,13 +2,6 @@ package schemas
 
 import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-func boolFromOption(b []bool) bool {
-	if len(b) > 0 {
-		return b[0]
-	}
-	return false
-}
-
 // DataSourceQuery creates a string data source schema
 // used for querying.
 // We assume string as the type, as this is the case for

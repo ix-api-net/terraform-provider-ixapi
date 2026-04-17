@@ -38,7 +38,7 @@ func VlanConfigFromResourceData(r *schema.ResourceData) (ixapi.VLANConfig, error
 		outerVlan := c.GetIntOpt("outer_vlan")
 		innerVlan := c.GetIntOpt("inner_vlan")
 		if innerVlan == nil {
-			return nil, fmt.Errorf("The `inner_vlan` property is required for qinq vlan configs")
+			return nil, fmt.Errorf("the `inner_vlan` property is required for qinq vlan configs")
 		}
 		cfg := &ixapi.VLANConfigQinQ{
 			VLANType:           "qinq",

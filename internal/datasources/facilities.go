@@ -102,7 +102,7 @@ func fetchFacilities(
 		if hasPdbFacilityID && *fac.PeeringdbFacilityID != pdbFacilityID.(int) {
 			continue
 		}
-		if hasName && strings.ToLower(fac.Name) != strings.ToLower(name.(string)) {
+		if hasName && !strings.EqualFold(fac.Name, name.(string)) {
 			continue
 		}
 		filtered = append(filtered, fac)
@@ -157,10 +157,10 @@ func facilityRead(
 		return err
 	}
 	if len(results) == 0 {
-		return fmt.Errorf("A facility could not be found")
+		return fmt.Errorf("a facility could not be found")
 	}
 	if len(results) > 1 {
-		return fmt.Errorf("Multiple facilities were returned")
+		return fmt.Errorf("multiple facilities were returned")
 	}
 
 	facility := results[0]

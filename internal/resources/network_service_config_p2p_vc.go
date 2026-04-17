@@ -23,7 +23,7 @@ func NewNetworkServiceConfigP2PVCResource() *schema.Resource {
 		Schema: schemas.P2PNetworkServiceConfigSchema(),
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }

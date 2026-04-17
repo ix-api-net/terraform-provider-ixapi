@@ -74,7 +74,7 @@ func TestCloudRouterPoliciesDataSourceRead(t *testing.T) {
 func TestCloudRouterPoliciesDataSourceReadWithFilter(t *testing.T) {
 	dataSource := NewDecixCloudRouterPoliciesDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("managing_account", "100")
+	_ = res.Set("managing_account", "100")
 
 	policies := []*ixapi.CloudRouterPolicy{
 		{
@@ -120,7 +120,7 @@ func TestCloudRouterPoliciesDataSourceReadWithFilter(t *testing.T) {
 func TestCloudRouterPolicyDataSourceReadByID(t *testing.T) {
 	dataSource := NewDecixCloudRouterPolicyDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("id", "1")
+	_ = res.Set("id", "1")
 
 	policy := &ixapi.CloudRouterPolicy{
 		ID:               "1",
@@ -157,8 +157,8 @@ func TestCloudRouterPolicyDataSourceReadByID(t *testing.T) {
 func TestCloudRouterPolicyDataSourceReadByName(t *testing.T) {
 	dataSource := NewDecixCloudRouterPolicyDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("name", "accept-rfc1918")
-	res.Set("managing_account", "100")
+	_ = res.Set("name", "accept-rfc1918")
+	_ = res.Set("managing_account", "100")
 
 	policies := []*ixapi.CloudRouterPolicy{
 		{

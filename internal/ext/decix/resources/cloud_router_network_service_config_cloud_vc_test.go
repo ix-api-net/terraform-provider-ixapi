@@ -10,17 +10,17 @@ import (
 func TestCloudRouterConfigCloudVCRequestFromResourceData(t *testing.T) {
 	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "100")
-	res.Set("billing_account", "200")
-	res.Set("consuming_account", "300")
-	res.Set("cloud_router", "274")
-	res.Set("network_service", "500")
-	res.Set("address", "192.0.2.1/30")
-	res.Set("bgp_neighbor", "192.0.2.2")
-	res.Set("bgp_neighbor_asn", 64512)
-	res.Set("admin_status", "enabled")
-	res.Set("bfd_enabled", true)
-	res.Set("cloud_vlan", 100)
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("billing_account", "200")
+	_ = res.Set("consuming_account", "300")
+	_ = res.Set("cloud_router", "274")
+	_ = res.Set("network_service", "500")
+	_ = res.Set("address", "192.0.2.1/30")
+	_ = res.Set("bgp_neighbor", "192.0.2.2")
+	_ = res.Set("bgp_neighbor_asn", 64512)
+	_ = res.Set("admin_status", "enabled")
+	_ = res.Set("bfd_enabled", true)
+	_ = res.Set("cloud_vlan", 100)
 
 	req, err := cloudRouterConfigCloudVCRequestFromResourceData(res)
 	if err != nil {
@@ -106,15 +106,15 @@ func TestCloudRouterConfigCloudVCRead(t *testing.T) {
 func TestCloudRouterConfigCloudVCCreate(t *testing.T) {
 	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 	res := resource.Data(nil)
-	res.Set("managing_account", "100")
-	res.Set("billing_account", "200")
-	res.Set("consuming_account", "300")
-	res.Set("cloud_router", "274")
-	res.Set("network_service", "500")
-	res.Set("address", "192.0.2.1/30")
-	res.Set("bgp_neighbor", "192.0.2.2")
-	res.Set("bgp_neighbor_asn", 64512)
-	res.Set("admin_status", "enabled")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("billing_account", "200")
+	_ = res.Set("consuming_account", "300")
+	_ = res.Set("cloud_router", "274")
+	_ = res.Set("network_service", "500")
+	_ = res.Set("address", "192.0.2.1/30")
+	_ = res.Set("bgp_neighbor", "192.0.2.2")
+	_ = res.Set("bgp_neighbor_asn", 64512)
+	_ = res.Set("admin_status", "enabled")
 
 	created := &ixapi.CloudRouterNetworkServiceConfig{
 		ID:               "10",
@@ -157,8 +157,8 @@ func TestCloudRouterConfigCloudVCPatchFromResourceData(t *testing.T) {
 
 	t.Run("set fields are included", func(t *testing.T) {
 		res := resource.Data(nil)
-		res.Set("admin_status", "enabled")
-		res.Set("policy_egress", "my-egress")
+		_ = res.Set("admin_status", "enabled")
+		_ = res.Set("policy_egress", "my-egress")
 
 		patch := cloudRouterConfigCloudVCPatchFromResourceData(res)
 
@@ -194,15 +194,15 @@ func TestCloudRouterConfigCloudVCUpdate(t *testing.T) {
 	resource := NewDecixCloudRouterNetworkServiceConfigCloudVCResource()
 	res := resource.Data(nil)
 	res.SetId("10")
-	res.Set("managing_account", "100")
-	res.Set("billing_account", "200")
-	res.Set("consuming_account", "300")
-	res.Set("cloud_router", "274")
-	res.Set("network_service", "500")
-	res.Set("address", "192.0.2.1/30")
-	res.Set("bgp_neighbor", "192.0.2.2")
-	res.Set("bgp_neighbor_asn", 64512)
-	res.Set("admin_status", "disabled")
+	_ = res.Set("managing_account", "100")
+	_ = res.Set("billing_account", "200")
+	_ = res.Set("consuming_account", "300")
+	_ = res.Set("cloud_router", "274")
+	_ = res.Set("network_service", "500")
+	_ = res.Set("address", "192.0.2.1/30")
+	_ = res.Set("bgp_neighbor", "192.0.2.2")
+	_ = res.Set("bgp_neighbor_asn", 64512)
+	_ = res.Set("admin_status", "disabled")
 
 	updated := &ixapi.CloudRouterNetworkServiceConfig{
 		ID:               "10",

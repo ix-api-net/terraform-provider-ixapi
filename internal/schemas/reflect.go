@@ -77,23 +77,33 @@ func SetResourceData(model any, res ResourceSetter) error {
 		}
 
 		if fType.String() == "*ixapi.Date" {
-			res.Set(propName, val.Interface().(*ixapi.Date).String())
+			if err := res.Set(propName, val.Interface().(*ixapi.Date).String()); err != nil {
+				return err
+			}
 			continue
 		}
 		if fType.String() == "*ixapi.APITimestamp" {
-			res.Set(propName, val.Interface().(*ixapi.APITimestamp).Time.Format(time.RFC3339))
+			if err := res.Set(propName, val.Interface().(*ixapi.APITimestamp).Format(time.RFC3339)); err != nil {
+				return err
+			}
 			continue
 		}
 		if fType.String() == "ixapi.APITimestamp" {
-			res.Set(propName, val.Interface().(ixapi.APITimestamp).Time.Format(time.RFC3339))
+			if err := res.Set(propName, val.Interface().(ixapi.APITimestamp).Format(time.RFC3339)); err != nil {
+				return err
+			}
 			continue
 		}
 		if fType.String() == "*time.Time" {
-			res.Set(propName, val.Interface().(*time.Time).Format(time.RFC3339))
+			if err := res.Set(propName, val.Interface().(*time.Time).Format(time.RFC3339)); err != nil {
+				return err
+			}
 			continue
 		}
 		if valT.PkgPath() == "time" && valT.Name() == "Time" {
-			res.Set(propName, val.Interface().(time.Time).Format(time.RFC3339))
+			if err := res.Set(propName, val.Interface().(time.Time).Format(time.RFC3339)); err != nil {
+				return err
+			}
 			continue
 		}
 

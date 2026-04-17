@@ -10,10 +10,7 @@ import (
 
 // Run the docs generation tool:
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
-var (
-	version string = "dev"
-	commit  string = "head"
-)
+var version string = "dev"
 
 // Flags
 var (

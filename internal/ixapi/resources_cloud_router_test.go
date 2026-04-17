@@ -54,7 +54,9 @@ func TestCloudRoutersCreate(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(expectedResp)
+		if err := json.NewEncoder(w).Encode(expectedResp); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
@@ -97,7 +99,9 @@ func TestCloudRoutersRead(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expectedResp)
+		if err := json.NewEncoder(w).Encode(expectedResp); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
@@ -168,7 +172,9 @@ func TestCloudRoutersList(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expectedResp)
+		if err := json.NewEncoder(w).Encode(expectedResp); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
@@ -213,7 +219,9 @@ func TestCloudRoutersListWithQuery(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expectedResp)
+		if err := json.NewEncoder(w).Encode(expectedResp); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
@@ -276,7 +284,9 @@ func TestPrefixListsCreate(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(expectedResp)
+		if err := json.NewEncoder(w).Encode(expectedResp); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
@@ -316,7 +326,9 @@ func TestPrefixListsRead(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expectedResp)
+		if err := json.NewEncoder(w).Encode(expectedResp); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
@@ -343,7 +355,9 @@ func TestPrefixListsDelete(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusAccepted)
-		json.NewEncoder(w).Encode(&CloudRouterPrefixList{ID: "pl-1"})
+		if err := json.NewEncoder(w).Encode(&CloudRouterPrefixList{ID: "pl-1"}); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
@@ -419,7 +433,9 @@ func TestPoliciesCreate(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(expectedResp)
+		if err := json.NewEncoder(w).Encode(expectedResp); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
@@ -467,7 +483,9 @@ func TestPoliciesRead(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(expectedResp)
+		if err := json.NewEncoder(w).Encode(expectedResp); err != nil {
+			t.Fatalf("Failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 

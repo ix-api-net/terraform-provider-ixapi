@@ -103,10 +103,10 @@ func (ft *APITimestamp) UnmarshalJSON(data []byte) error {
 
 // MarshalJSON implements json.Marshaler, serializing to RFC3339 or null if zero.
 func (ft APITimestamp) MarshalJSON() ([]byte, error) {
-	if ft.Time.IsZero() {
+	if ft.IsZero() {
 		return []byte("null"), nil
 	}
-	return []byte(`"` + ft.Time.Format(time.RFC3339) + `"`), nil
+	return []byte(`"` + ft.Format(time.RFC3339) + `"`), nil
 }
 
 // NewAPITimestamp wraps a *time.Time in a APITimestamp, returning nil if the input is nil.
@@ -124,7 +124,7 @@ func APITimestampNowUTC() APITimestamp {
 
 // ToTime returns the underlying *time.Time, or nil if the receiver is nil or zero.
 func (ft *APITimestamp) ToTime() *time.Time {
-	if ft == nil || ft.Time.IsZero() {
+	if ft == nil || ft.IsZero() {
 		return nil
 	}
 	t := ft.Time

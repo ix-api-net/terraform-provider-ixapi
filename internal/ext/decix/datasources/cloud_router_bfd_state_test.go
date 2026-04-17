@@ -10,7 +10,7 @@ import (
 func TestCloudRouterBFDStateRead(t *testing.T) {
 	dataSource := NewDecixCloudRouterBFDStateDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("nsc_id", "123")
+	_ = res.Set("nsc_id", "123")
 
 	bfdState := &ixapi.CloudRouterBFDStateResponse{
 		State: "Up",
@@ -38,7 +38,7 @@ func TestCloudRouterBFDStateRead(t *testing.T) {
 func TestCloudRouterBFDStateRead_NotFound(t *testing.T) {
 	dataSource := NewDecixCloudRouterBFDStateDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("nsc_id", "456")
+	_ = res.Set("nsc_id", "456")
 
 	api := ixapi.NewTestClient(map[string]any{})
 	api.CloudRouterEnabled = true

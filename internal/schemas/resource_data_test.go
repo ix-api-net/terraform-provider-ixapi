@@ -18,7 +18,7 @@ func TestGetTimeOpt_RFC3339(t *testing.T) {
 	}
 
 	rd := s.Data(nil)
-	rd.Set("timestamp", "2024-08-01T14:30:00Z")
+	_ = rd.Set("timestamp", "2024-08-01T14:30:00Z")
 
 	res := ResourceData{ResourceData: rd}
 	ts, err := res.GetTimeOpt("timestamp")
@@ -46,7 +46,7 @@ func TestGetTimeOpt_DateOnly(t *testing.T) {
 	}
 
 	rd := s.Data(nil)
-	rd.Set("date", "2024-08-01")
+	_ = rd.Set("date", "2024-08-01")
 
 	res := ResourceData{ResourceData: rd}
 	ts, err := res.GetTimeOpt("date")
@@ -96,7 +96,7 @@ func TestGetTimeOpt_InvalidFormat(t *testing.T) {
 	}
 
 	rd := s.Data(nil)
-	rd.Set("timestamp", "not-a-date")
+	_ = rd.Set("timestamp", "not-a-date")
 
 	res := ResourceData{ResourceData: rd}
 	_, err := res.GetTimeOpt("timestamp")

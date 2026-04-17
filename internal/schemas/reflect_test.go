@@ -42,7 +42,9 @@ const CreateMacResponse = `{"managing_account":"17","consuming_account":"26","ex
 
 func TestSetResourceMac(t *testing.T) {
 	mac := &ixapi.MacAddress{}
-	json.Unmarshal([]byte(CreateMacResponse), mac)
+	if err := json.Unmarshal([]byte(CreateMacResponse), mac); err != nil {
+		t.Fatal(err)
+	}
 
 	res := NewFlatResource()
 	err := SetResourceData(mac, res)

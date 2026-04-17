@@ -23,7 +23,7 @@ func NewNetworkServiceConfigCloudVCResource() *schema.Resource {
 		Schema: schemas.CloudNetworkServiceConfigSchema(),
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }

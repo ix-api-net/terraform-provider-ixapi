@@ -10,7 +10,7 @@ import (
 func TestCloudRouterBGPStateRead(t *testing.T) {
 	dataSource := NewDecixCloudRouterBGPStateDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("nsc_id", "123")
+	_ = res.Set("nsc_id", "123")
 
 	bgpState := &ixapi.CloudRouterBGPStateResponse{
 		State: "Established",
@@ -38,7 +38,7 @@ func TestCloudRouterBGPStateRead(t *testing.T) {
 func TestCloudRouterBGPStateRead_NotFound(t *testing.T) {
 	dataSource := NewDecixCloudRouterBGPStateDataSource()
 	res := dataSource.TestResourceData()
-	res.Set("nsc_id", "456")
+	_ = res.Set("nsc_id", "456")
 
 	api := ixapi.NewTestClient(map[string]any{})
 	api.CloudRouterEnabled = true

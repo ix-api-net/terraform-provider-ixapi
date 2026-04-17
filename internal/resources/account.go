@@ -22,7 +22,7 @@ func NewAccountResource() *schema.Resource {
 		DeleteContext: accountDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: schemas.AccountSchema(),
@@ -155,7 +155,9 @@ func accountRead(
 	}
 
 	// Update resource
-	schemas.SetResourceData(acc, res)
+	if err := schemas.SetResourceData(acc, res); err != nil {
+		return diag.FromErr(err)
+	}
 
 	return nil
 }
