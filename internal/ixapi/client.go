@@ -110,6 +110,11 @@ func (c *Client) SetBearer(token string) {
 	c.header.Set("Authorization", "Bearer "+token)
 }
 
+// SetUserAgent sets the User-Agent header sent with every request.
+func (c *Client) SetUserAgent(ua string) {
+	c.header.Set("User-Agent", ua)
+}
+
 // Authenticate using a authentication provider
 func (c *Client) Authenticate(
 	ctx context.Context,
