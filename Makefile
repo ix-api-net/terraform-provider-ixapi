@@ -58,9 +58,12 @@ install: all
 test:
 	go test ./internal/...
 
+acceptance:
+	TF_ACC=1 go test -p 1 ./acceptance/... -v -count=1
+
 coverage:
 	go test -coverprofile=coverage.out ./internal/...
 	go tool cover -html=coverage.out -o coverage.html
 	rm -f coverage.out
 
-.PHONY: docs coverage
+.PHONY: docs coverage acceptance
