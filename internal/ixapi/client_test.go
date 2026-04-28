@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestSetUserAgent(t *testing.T) {
+func TestNewClientSetsUserAgent(t *testing.T) {
 	var capturedUA string
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -20,8 +20,7 @@ func TestSetUserAgent(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
-	client.SetUserAgent("terraform-provider-ixapi/1.2.3")
+	client := NewClient(server.URL, "1.2.3")
 
 	_, err := client.DecixCloudRoutersList(context.Background())
 	if err != nil {

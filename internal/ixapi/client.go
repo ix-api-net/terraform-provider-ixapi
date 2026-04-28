@@ -78,11 +78,15 @@ type Client struct {
 }
 
 // NewClient creates a new client instance
-func NewClient(server string) *Client {
-	return &Client{
+func NewClient(server, version string) *Client {
+	c := &Client{
 		APIURL: server,
 		header: http.Header{},
 	}
+	if version != "" {
+		c.header.Set("User-Agent", "terraform-provider-ixapi/"+version)
+	}
+	return c
 }
 
 // hostBase extracts only the scheme and host from a URL, stripping any path component.
@@ -108,11 +112,6 @@ func (c *Client) resourceURL(res string, params ...string) string {
 // This can be used to implement custom authentication.
 func (c *Client) SetBearer(token string) {
 	c.header.Set("Authorization", "Bearer "+token)
-}
-
-// SetUserAgent sets the User-Agent header sent with every request.
-func (c *Client) SetUserAgent(ua string) {
-	c.header.Set("User-Agent", ua)
 }
 
 // Authenticate using a authentication provider

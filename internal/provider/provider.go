@@ -279,8 +279,7 @@ func configure(
 	}
 
 	// Create client and authenticate with legacy strategy
-	client := ixapi.NewClient(host)
-	client.SetUserAgent("terraform-provider-ixapi/" + version)
+	client := ixapi.NewClient(host, version)
 	if err := client.Authenticate(ctx, provider); err != nil {
 		return nil, diag.FromErr(err)
 	}

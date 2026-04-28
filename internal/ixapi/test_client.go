@@ -32,7 +32,7 @@ type TestResponseFunc func(body []byte) (any, error)
 // with a custom response for a request endpoint.
 // The response will be encoded as json.
 func NewTestClient(responses map[string]any) *Client {
-	c := NewClient("") // plain http client
+	c := NewClient("", "")
 	c.Transport = NewMockResponseTransport(responses)
 	return c
 }

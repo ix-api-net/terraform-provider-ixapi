@@ -60,7 +60,7 @@ func TestCloudRoutersCreate(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	result, err := client.DecixCloudRoutersCreate(ctx, expectedReq)
@@ -105,7 +105,7 @@ func TestCloudRoutersRead(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	result, err := client.DecixCloudRoutersRead(ctx, "vrf-1")
@@ -134,7 +134,7 @@ func TestCloudRoutersDestroy(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	err := client.DecixCloudRoutersDestroy(ctx, "vrf-1")
@@ -178,7 +178,7 @@ func TestCloudRoutersList(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	result, err := client.DecixCloudRoutersList(ctx)
@@ -225,7 +225,7 @@ func TestCloudRoutersListWithQuery(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	qry := &CloudRoutersListQuery{
@@ -290,7 +290,7 @@ func TestPrefixListsCreate(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	result, err := client.DecixCloudRouterPrefixListsCreate(ctx, expectedReq)
@@ -332,7 +332,7 @@ func TestPrefixListsRead(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	result, err := client.DecixCloudRouterPrefixListsRead(ctx, "pl-1")
@@ -361,7 +361,7 @@ func TestPrefixListsDelete(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	_, err := client.DecixCloudRouterPrefixListsDelete(ctx, "pl-1")
@@ -439,7 +439,7 @@ func TestPoliciesCreate(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	result, err := client.DecixCloudRouterPoliciesCreate(ctx, expectedReq)
@@ -489,7 +489,7 @@ func TestPoliciesRead(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL)
+	client := NewClient(server.URL, "")
 	ctx := context.Background()
 
 	result, err := client.DecixCloudRouterPoliciesRead(ctx, "pol-1")
