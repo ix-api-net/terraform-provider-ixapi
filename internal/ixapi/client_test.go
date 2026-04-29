@@ -20,7 +20,10 @@ func TestNewClientSetsUserAgent(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient(server.URL, "1.2.3")
+	client := NewClient(ClientConfig{
+		Host:      server.URL,
+		UserAgent: "terraform-provider-ixapi/1.2.3",
+	})
 
 	_, err := client.DecixCloudRoutersList(context.Background())
 	if err != nil {
