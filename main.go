@@ -10,7 +10,6 @@ import (
 
 // Run the docs generation tool:
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
-var version string = "dev"
 
 // Flags
 var (
@@ -32,7 +31,7 @@ func main() {
 	opts := &plugin.ServeOpts{
 		Debug:        debug,
 		ProviderAddr: "registry.terraform.io/ix-api-net/terraform-provider-ixapi",
-		ProviderFunc: provider.New(version),
+		ProviderFunc: provider.New(),
 	}
 
 	plugin.Serve(opts)

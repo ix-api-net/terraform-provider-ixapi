@@ -10,6 +10,7 @@ VENDOR := false
 HOSTNAME=ix-api.net
 NAMESPACE=ix-api
 NAME=ixapi
+PACKAGE=github.com/ix-api-net/terraform-provider-ixapi
 BINARY=terraform-provider-${NAME}
 RELEASE_VERSION=0.1.0
 
@@ -36,7 +37,7 @@ ifneq ($(VENDOR), false)
   CFLAGS += -mod=vendor
 endif
 
-LDFLAGS := -s -w -X main.version=$(VERSION) -X main.commit=$(BUILD)
+LDFLAGS := -s -w -X $(PACKAGE)/internal/build.Version=$(VERSION) -X $(PACKAGE)/internal/build.Commit=$(BUILD)
 
 default: install
 

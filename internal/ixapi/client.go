@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/build"
+
 	"golang.org/x/oauth2/clientcredentials"
 )
 
@@ -79,10 +81,12 @@ type Client struct {
 
 // NewClient creates a new client instance
 func NewClient(server string) *Client {
-	return &Client{
+	c := &Client{
 		APIURL: server,
 		header: http.Header{},
 	}
+	c.header.Set("User-Agent", "terraform-provider-ixapi/"+build.Version)
+	return c
 }
 
 // hostBase extracts only the scheme and host from a URL, stripping any path component.
