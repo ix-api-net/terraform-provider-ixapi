@@ -68,10 +68,11 @@ func (flow *OAuth2ClientCredentials) authenticate(
 	return nil
 }
 
-// ClientConfig holds the configuration for a new Client.
-type ClientConfig struct {
-	Host      string
-	UserAgent string
+var version string
+
+// SetVersion sets the provider version used in the User-Agent header.
+func SetVersion(v string) {
+	version = v
 }
 
 // Client is an IX-API http client
@@ -84,13 +85,13 @@ type Client struct {
 }
 
 // NewClient creates a new client instance
-func NewClient(cfg ClientConfig) *Client {
+func NewClient(server string) *Client {
 	c := &Client{
-		APIURL: cfg.Host,
+		APIURL: server,
 		header: http.Header{},
 	}
-	if cfg.UserAgent != "" {
-		c.header.Set("User-Agent", cfg.UserAgent)
+	if version != "" {
+		c.header.Set("User-Agent", "terraform-provider-ixapi/"+version)
 	}
 	return c
 }

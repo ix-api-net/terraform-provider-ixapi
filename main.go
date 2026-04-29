@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 
+	"github.com/ix-api-net/terraform-provider-ixapi/internal/ixapi"
 	"github.com/ix-api-net/terraform-provider-ixapi/internal/provider"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
@@ -28,11 +29,12 @@ func init() {
 
 func main() {
 	flag.Parse()
+	ixapi.SetVersion(version)
 
 	opts := &plugin.ServeOpts{
 		Debug:        debug,
 		ProviderAddr: "registry.terraform.io/ix-api-net/terraform-provider-ixapi",
-		ProviderFunc: provider.New(version),
+		ProviderFunc: provider.New(),
 	}
 
 	plugin.Serve(opts)

@@ -60,7 +60,7 @@ func init() {
 }
 
 // New creates a new provider function
-func New(version string) func() *schema.Provider {
+func New() func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			Schema: map[string]*schema.Schema{
@@ -218,7 +218,7 @@ func New(version string) func() *schema.Provider {
 				"ixapi_ip_allocation_network_service_config": resources.NewIPAllocationNetworkServiceConfigResource(),
 			},
 			ConfigureContextFunc: func(ctx context.Context, res *schema.ResourceData) (any, diag.Diagnostics) {
-				return configure(ctx, res, version)
+				return configure(ctx, res)
 			},
 		}
 		return p
@@ -229,7 +229,6 @@ func New(version string) func() *schema.Provider {
 func configure(
 	ctx context.Context,
 	res *schema.ResourceData,
-	version string,
 ) (any, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -279,10 +278,7 @@ func configure(
 	}
 
 	// Create client and authenticate with legacy strategy
-	client := ixapi.NewClient(ixapi.ClientConfig{
-		Host:      host,
-		UserAgent: "terraform-provider-ixapi/" + version,
-	})
+	client := ixapi.NewClient(host)
 	if err := client.Authenticate(ctx, provider); err != nil {
 		return nil, diag.FromErr(err)
 	}

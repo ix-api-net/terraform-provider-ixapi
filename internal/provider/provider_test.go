@@ -8,7 +8,7 @@ import (
 )
 
 func TestProvider(t *testing.T) {
-	p := New("dev")
+	p := New()
 	if err := p().InternalValidate(); err != nil {
 		t.Fatal(err)
 	}
