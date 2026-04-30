@@ -15,7 +15,10 @@ builds:
   flags:
     - -trimpath
   ldflags:
-    - '-s -w -X main.version={{.Version}} -X main.commit={{.Commit}}'
+    - -s
+    - -w
+    - -X {{.ModulePath}}/internal/build.Version={{.Version}}
+    - -X {{.ModulePath}}/internal/build.Commit={{.Commit}}
   goos:
     - freebsd
     - windows
