@@ -14,7 +14,7 @@ import (
 func ProviderFactories() map[string]func() (*schema.Provider, error) {
 	return map[string]func() (*schema.Provider, error){
 		"ixapi": func() (*schema.Provider, error) {
-			return provider.New("dev")(), nil
+			return provider.New()(), nil
 		},
 	}
 }
