@@ -28,7 +28,7 @@ provider "ixapi" {
 
 You can also use the environment variables:
 
- * `$IX_API_AUTH`: Choose the authentication strategy. 
+ * `$IX_API_AUTH`: Choose the authentication strategy.
    Defaults to `legacy`. Can be set to `oauth2`.
  * `$IX_API_HOST`: The IX-API endpoint in the format: `https://<server>/api/v2`
  * `$IX_API_KEY`: The key provided by the exchange.
@@ -103,14 +103,32 @@ locals {
 }
 
 resource "ixapi_contact" "hajnet_support" {
-  managing_account = local.reseller_id 
+  managing_account = local.reseller_id
   consuming_account = local.hajnet_id
   roles = ["noc", "implementation" ]
-  email = "mail@example.com" 
+  email = "mail@example.com"
   telephone = "+0 42 1234567890"
 }
 ```
 
+
+## Running Acceptance Tests
+
+Acceptance tests run against a real IX-API backend.
+
+```bash
+TF_VAR_API_URL=https://ixapi.example.com/api/v2 \
+TF_VAR_API_KEY=your-api-key \
+TF_VAR_API_SECRET=your-api-secret \
+ACCOUNT_ID=your-account-id \
+make acceptance
+```
+
+To target a specific file:
+
+```bash
+TF_ACC=1 go test ./acceptance/decix/vrf/ -v -count=1
+```
 
 ## Development
 
