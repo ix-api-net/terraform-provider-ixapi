@@ -140,7 +140,7 @@ func SetResourceData(model any, res ResourceSetter) error {
 			if val.Kind() == reflect.Interface {
 				interfaceValue := reflect.ValueOf(propValue)
 				kind := interfaceValue.Kind()
-				if kind == reflect.Struct || kind == reflect.Ptr {
+				if kind == reflect.Struct || kind == reflect.Pointer {
 					var err error
 					propValue, err = flattenStructValue(propValue)
 					if err != nil {
