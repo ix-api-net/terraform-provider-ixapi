@@ -23,8 +23,10 @@ data "ixapi_product_offering_cloud_vc" "instant_lon1" {
 
 ### Optional
 
+- `bandwidth` (Number) Find product offerings where bandwidth is within the range of bandwidth_min and bandwidth_max.
 - `bandwidth_max` (Number) When not `null`, this value enforces a mandatory rate limit for all network service configs.
 - `bandwidth_min` (Number) When configuring access to the network service, at least this `capacity` must be provided.
+- `contract_period` (String) The contract period as an ISO 8601 duration (e.g. P1M, P1Y).
 - `contract_terms` (String) The contract terms informally describe the contract period and renewals.
 - `delivery_method` (String) The exchange delivers the service over a `shared` or `dedicated` NNI.
 - `display_name` (String)
@@ -32,7 +34,9 @@ data "ixapi_product_offering_cloud_vc" "instant_lon1" {
 - `downgrade_allowed` (Boolean) Indicates if the service can be migrated to a lower bandwidth.
 - `exchange_logo` (String) An URI referencing the logo of the internet exchange.
 - `handover_metro_area` (String) Id of the `MetroArea`. The network service will be accessed from this metro area.  In case of a `p2p_vc`, the `handover_metro_area` refers to the A-side of the point-to-point connection. The A-side is the entity which initiates the network service creation.
+- `handover_metro_area_name` (String) Name of the handover metro area.
 - `handover_metro_area_network` (String) Id of the `MetroAreaNetwork`. The service will be accessed through the handover metro area network.  In case of a `p2p_vc`, the `handover_metro_area_network` refers to the A-side of the point-to-point connection. The A-side is the entity which initiates the network service creation.
+- `handover_metro_area_network_name` (String) Name of the handover metro area network.
 - `name` (String) Name of the product
 - `notice_period` (String) The notice period informally states constraints which define when the client needs to inform the IXP in order to prevent renewal of the contract.
 - `orderable_not_after` (String) This product offering will become unavailable for ordering after this point in time.
@@ -42,7 +46,9 @@ data "ixapi_product_offering_cloud_vc" "instant_lon1" {
 - `provider_vlans` (String) The `NetworkService` provides `single` or `multi`ple vlans.
 - `resource_type` (String) The resource type refers to an ix-api resource.
 - `service_metro_area` (String) Id of the `MetroArea`. The service is delivered in this metro area.  In case of a `p2p_vc`, the `service_metro_area` refers to the B-side of the point-to-point connection. The B-side is the accepting party.
+- `service_metro_area_name` (String) Name of the service metro area.
 - `service_metro_area_network` (String) Id of the `MetroAreaNetwork`. The service is directly provided on the metro area network.  In case of a `p2p_vc`, the `service_metro_area_network` refers to the B-side of the point-to-point connection. The B-side is the accepting party.
+- `service_metro_area_network_name` (String) Name of the service metro area network.
 - `service_provider` (String) The name of the provider providing the service.
 - `service_provider_logo` (String) An URI referencing the logo of the service provider.
 - `service_provider_pop` (String) The datacenter id of the partner NNI to the service provider. It supposed to be used when identifying a location via the cloud provider's APIs.
