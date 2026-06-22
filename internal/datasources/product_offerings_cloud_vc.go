@@ -115,11 +115,13 @@ func productOfferingsCloudVCRead(
 // NewProductOfferingCloudVCDataSource creates a new data source
 // for a single cloud product offering
 func NewProductOfferingCloudVCDataSource() *schema.Resource {
+	s := schemas.IntoDataSourceSchema(schemas.CloudNetworkProductOfferingSchema())
+	s["bandwidth"] = schemas.DataSourceQueryInt(
+		"Find product offerings where bandwidth is within the range of bandwidth_min and bandwidth_max.")
 	return &schema.Resource{
 		Description: "Use this data source to reference a single cloud virtual circuit product offering.",
 		ReadContext: crud.Read(productOfferingCloudCVRead),
-		Schema: schemas.IntoDataSourceSchema(
-			schemas.CloudNetworkProductOfferingSchema()),
+		Schema:      s,
 	}
 }
 
