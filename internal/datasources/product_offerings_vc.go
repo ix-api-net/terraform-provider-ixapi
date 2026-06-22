@@ -30,6 +30,8 @@ func productOfferingsVCSchema(
 			"Find connection product offerings where downgrade is allowed"),
 		"upgrade_allowed": schemas.DataSourceQueryBool(
 			"Find connection product offerings where upgrade is allowed"),
+		"contract_period": schemas.DataSourceQuery(
+			"Filter by contract period (ISO 8601 duration, e.g. P1M, P1Y)."),
 		"product_offerings": results,
 	}
 }
@@ -52,6 +54,7 @@ func productOfferingsVCQuery(
 	upgradeAllowed, hasUpgradeAllowed := res.GetOk("upgrade_allowed")
 	physicalPortSpeed, hasPhysicalPortSpeed := res.GetOk("physical_port_speed")
 	bandwidth, hasBandwidth := res.GetOk("bandwidth")
+	contractPeriod, hasContractPeriod := res.GetOk("contract_period")
 
 	// Query
 	if hasName {
@@ -91,6 +94,9 @@ func productOfferingsVCQuery(
 	}
 	if hasBandwidth {
 		qry.Bandwidth = bandwidth.(int)
+	}
+	if hasContractPeriod {
+		qry.ContractPeriod = contractPeriod.(string)
 	}
 
 	return qry

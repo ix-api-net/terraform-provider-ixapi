@@ -1495,6 +1495,9 @@ type ProductOfferingsListQuery struct {
 	// HandoverMetroAreaNetwork is a handover_metro_area_network
 	HandoverMetroAreaNetwork string `json:"handover_metro_area_network,omitempty"`
 
+	// HandoverMetroAreaNetworkName is a handover_metro_area_network_name
+	HandoverMetroAreaNetworkName string `json:"handover_metro_area_network_name,omitempty"`
+
 	// HandoverPop is a handover_pop
 	HandoverPop string `json:"handover_pop,omitempty"`
 
@@ -1503,6 +1506,9 @@ type ProductOfferingsListQuery struct {
 
 	// ServiceMetroAreaNetwork is a service_metro_area_network
 	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
+
+	// ServiceMetroAreaNetworkName is a service_metro_area_network_name
+	ServiceMetroAreaNetworkName string `json:"service_metro_area_network_name,omitempty"`
 
 	// ServiceProvider is a service_provider
 	ServiceProvider string `json:"service_provider,omitempty"`
@@ -1530,6 +1536,9 @@ type ProductOfferingsListQuery struct {
 
 	// CloudKey is a cloud_key
 	CloudKey string `json:"cloud_key,omitempty"`
+
+	// ContractPeriod is a contract_period (ISO 8601 duration, e.g. P1M)
+	ContractPeriod string `json:"contract_period,omitempty"`
 
 	// Fields is a fields
 	Fields string `json:"fields,omitempty"`
@@ -1563,6 +1572,10 @@ func (p *ProductOfferingsListQuery) RawQuery() string {
 	if val != "" {
 		qry.Add("handover_metro_area_network", val)
 	}
+	val = p.HandoverMetroAreaNetworkName
+	if val != "" {
+		qry.Add("handover_metro_area_network_name", val)
+	}
 	val = p.HandoverPop
 	if val != "" {
 		qry.Add("handover_pop", val)
@@ -1574,6 +1587,10 @@ func (p *ProductOfferingsListQuery) RawQuery() string {
 	val = p.ServiceMetroAreaNetwork
 	if val != "" {
 		qry.Add("service_metro_area_network", val)
+	}
+	val = p.ServiceMetroAreaNetworkName
+	if val != "" {
+		qry.Add("service_metro_area_network_name", val)
 	}
 	val = p.ServiceProvider
 	if val != "" {
@@ -1610,6 +1627,10 @@ func (p *ProductOfferingsListQuery) RawQuery() string {
 	val = p.CloudKey
 	if val != "" {
 		qry.Add("cloud_key", val)
+	}
+	val = p.ContractPeriod
+	if val != "" {
+		qry.Add("contract_period", val)
 	}
 	val = p.Fields
 	if val != "" {

@@ -191,6 +191,9 @@ type CloudNetworkProductOffering struct {
 	//
 	ContractTerms *string `json:"contract_terms,omitempty"`
 
+	// ContractPeriod The contract period as an ISO 8601 duration (e.g. P1M, P1Y).
+	ContractPeriod string `json:"contract_period,omitempty"`
+
 	// NoticePeriod The notice period informally states constraints
 	// which define when the client needs to inform the
 	// IXP in order to prevent renewal of the contract.
@@ -199,6 +202,12 @@ type CloudNetworkProductOffering struct {
 
 	// ProviderVLANs The `NetworkService` provides `single` or `multi`ple vlans.
 	ProviderVLANs string `json:"provider_vlans,omitempty"`
+
+	// HandoverMetroAreaNetworkName Name of the handover metro area network.
+	HandoverMetroAreaNetworkName string `json:"handover_metro_area_network_name,omitempty"`
+
+	// HandoverMetroAreaName Name of the handover metro area.
+	HandoverMetroAreaName string `json:"handover_metro_area_name,omitempty"`
 
 	// ServiceMetroAreaNetwork Id of the `MetroAreaNetwork`.
 	// The service is directly provided on the metro area network.
@@ -209,6 +218,9 @@ type CloudNetworkProductOffering struct {
 	//
 	ServiceMetroAreaNetwork string `json:"service_metro_area_network,omitempty"`
 
+	// ServiceMetroAreaNetworkName Name of the service metro area network.
+	ServiceMetroAreaNetworkName string `json:"service_metro_area_network_name,omitempty"`
+
 	// ServiceMetroArea Id of the `MetroArea`. The service is delivered
 	// in this metro area.
 	//
@@ -217,6 +229,9 @@ type CloudNetworkProductOffering struct {
 	// The B-side is the accepting party.
 	//
 	ServiceMetroArea string `json:"service_metro_area,omitempty"`
+
+	// ServiceMetroAreaName Name of the service metro area.
+	ServiceMetroAreaName string `json:"service_metro_area_name,omitempty"`
 
 	// BandwidthMin When configuring access to the network service, at least
 	// this `capacity` must be provided.
