@@ -2100,7 +2100,7 @@ type CloudNetworkServiceConfigRequest struct {
 	// The presence of at least one of each required contact roles
 	// is necessary.
 	//
-	RoleAssignments []string `json:"role_assignments,omitempty"`
+	RoleAssignments []string `json:"role_assignments"`
 
 	// Connection The id of the connection to use for this `NetworkServiceConfig`.
 	Connection string `json:"connection,omitempty"`

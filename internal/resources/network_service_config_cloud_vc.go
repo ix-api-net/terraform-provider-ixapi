@@ -37,6 +37,12 @@ func nscCloudVCRequestFromResourceData(
 	}
 
 	res := schemas.ResourceData{ResourceData: r}
+
+	roleAssignments := res.GetStringList("role_assignments")
+	if roleAssignments == nil {
+		roleAssignments = []string{}
+	}
+
 	req := &ixapi.CloudNetworkServiceConfigRequest{
 		Type:             ixapi.CloudNetworkServiceConfigType,
 		ManagingAccount:  res.GetString("managing_account"),
@@ -46,7 +52,7 @@ func nscCloudVCRequestFromResourceData(
 		NetworkService:   res.GetString("network_service"),
 		PurchaseOrder:    res.GetStringOpt("purchase_order"),
 		ContractRef:      res.GetStringOpt("contract_ref"),
-		RoleAssignments:  res.GetStringList("role_assignments"),
+		RoleAssignments:  roleAssignments,
 		Connection:       res.GetString("network_connection"),
 		VLANConfig:       vlanConfig,
 		Handover:         res.GetInt("handover"),
