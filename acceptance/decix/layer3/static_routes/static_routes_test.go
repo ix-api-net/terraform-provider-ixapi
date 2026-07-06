@@ -24,7 +24,7 @@ locals {
 `
 
 func staticRoutesConfig(nextHop string) string {
-	return testhelpers.ProviderConfig() + nscDiscovery + fmt.Sprintf(`
+	return testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true}) + nscDiscovery + fmt.Sprintf(`
 resource "ixapi_de_cix_cloud_router_static_route" "specific_route" {
   name                    = "cr-tf-acceptance-specific-route"
   prefix                  = "198.51.100.0/24"
@@ -69,8 +69,7 @@ func TestAccStaticRoutes(t *testing.T) {
 					resource.TestCheckResourceAttr("ixapi_de_cix_cloud_router_static_route.aggregate_route", "next_hop", "aggregate"),
 				),
 			},
-			{Config: testhelpers.ProviderConfig() + nscDiscovery},
+			{Config: testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true}) + nscDiscovery},
 		},
 	})
 }
-

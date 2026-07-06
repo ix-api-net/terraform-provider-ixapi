@@ -1579,6 +1579,13 @@ func ConnectionSchema() map[string]*schema.Schema {
 			Description: "The product offering must match the type `connection`.",
 		},
 
+		"discoverable": &schema.Schema{
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			Description: "Makes this connection's product offering visible to other members, e.g. for a VirtualPNI to a foreign port.",
+		},
+
 		"port_quantity": &schema.Schema{
 			Type:        schema.TypeInt,
 			Required:    true,

@@ -41,15 +41,66 @@ func NotExists(resourceName string) func(*terraform.State) error {
 	}
 }
 
-// ProviderConfig returns a Terraform provider block string configured from
-// the standard TF_VAR_API_* environment variables.
-func ProviderConfig() string {
+// ProviderConfigOptions configures the provider block returned by
+// ProviderConfig.
+type ProviderConfigOptions struct {
+	Alias            string
+	Foreign          bool
+	ExtensionEnabled bool
+}
+
+// ProviderConfig returns a Terraform provider block string for the ixapi
+// provider, configured per opts.
+func ProviderConfig(opts ProviderConfigOptions) string {
+	apiKey, apiSecret := os.Getenv("TF_VAR_API_KEY"), os.Getenv("TF_VAR_API_SECRET")
+	if opts.Foreign {
+		apiKey, apiSecret = os.Getenv("FOREIGN_API_KEY"), os.Getenv("FOREIGN_API_SECRET")
+	}
+
+	aliasLine := ""
+	if opts.Alias != "" {
+		aliasLine = fmt.Sprintf("  alias      = %q\n", opts.Alias)
+	}
+	extensionLine := ""
+	if opts.ExtensionEnabled {
+		extensionLine = "  extension_de_cix_cloud_router_enabled = true\n"
+	}
+
 	return fmt.Sprintf(`
 provider "ixapi" {
-  api                                   = %q
-  api_key                               = %q
-  api_secret                            = %q
-  extension_de_cix_cloud_router_enabled = true
+%[1]s  api        = %[2]q
+  api_key    = %[3]q
+  api_secret = %[4]q
+%[5]s}
+`, aliasLine, os.Getenv("TF_VAR_API_URL"), apiKey, apiSecret, extensionLine)
 }
-`, os.Getenv("TF_VAR_API_URL"), os.Getenv("TF_VAR_API_KEY"), os.Getenv("TF_VAR_API_SECRET"))
+
+// FreeDot1QVlanConfig returns HCL computing local.free_vlan<_label>, a
+// dot1q VLAN ID not already used by an existing
+// ixapi_network_service_configs_<dsType> ("p2p_vc" or "cloud_vc"). label
+// disambiguates multiple lookups in one config; providerAlias, if set,
+// queries a second provider configuration (e.g. "foreign").
+func FreeDot1QVlanConfig(dsType, label, connectionExpr, providerAlias string) string {
+	suffix := ""
+	if label != "" {
+		suffix = "_" + label
+	}
+	providerLine := ""
+	if providerAlias != "" {
+		providerLine = fmt.Sprintf("  provider           = ixapi.%s\n", providerAlias)
+	}
+	return fmt.Sprintf(`
+data "ixapi_network_service_configs_%[1]s" "existing%[2]s" {
+%[3]s  network_connection = %[4]s
+}
+
+locals {
+  used_vlans%[2]s = concat([1], [
+    for nsc in data.ixapi_network_service_configs_%[1]s.existing%[2]s.network_service_configs :
+    nsc.vlan_config[0].vlan
+    if length(nsc.vlan_config) > 0 && nsc.vlan_config[0].vlan_type == "dot1q" && nsc.vlan_config[0].vlan != 0
+  ])
+  free_vlan%[2]s = max(local.used_vlans%[2]s...) + 1
+}
+`, dsType, suffix, providerLine, connectionExpr)
 }

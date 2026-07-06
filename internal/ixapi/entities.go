@@ -2314,6 +2314,10 @@ type Connection struct {
 	// ProductOffering The product offering must match the type `connection`.
 	ProductOffering string `json:"product_offering,omitempty"`
 
+	// Discoverable Makes this connection's product offering visible to other
+	// members, e.g. for a VirtualPNI to a foreign port.
+	Discoverable *bool `json:"discoverable,omitempty"`
+
 	// ID is a id
 	ID string `json:"id,omitempty"`
 
@@ -2448,6 +2452,10 @@ type ConnectionPatch struct {
 	//
 	LacpTimeout *string `json:"lacp_timeout,omitempty"`
 
+	// Discoverable Makes this connection's product offering visible to other
+	// members, e.g. for a VirtualPNI to a foreign port.
+	Discoverable *bool `json:"discoverable,omitempty"`
+
 	// ProductOffering The product offering must match the type `connection`.
 	ProductOffering *string `json:"product_offering,omitempty"`
 }
@@ -2513,6 +2521,10 @@ type ConnectionRequest struct {
 
 	// ProductOffering The product offering must match the type `connection`.
 	ProductOffering string `json:"product_offering,omitempty"`
+
+	// Discoverable Makes this connection's product offering visible to other
+	// members, e.g. for a VirtualPNI to a foreign port.
+	Discoverable *bool `json:"discoverable,omitempty"`
 
 	// PortQuantity The number of `PortReservation`s that will be
 	// created for this connection.

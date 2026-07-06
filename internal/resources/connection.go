@@ -19,6 +19,10 @@ func NewConnectionResource() *schema.Resource {
 		ReadContext:   crud.Read(connectionRead),
 		UpdateContext: crud.Update(connectionUpdate),
 		DeleteContext: crud.Delete(connectionDelete),
+
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
@@ -38,6 +42,7 @@ func connectionRequestFromResourceData(
 		Mode:                  res.GetString("mode"),
 		LacpTimeout:           res.GetStringOpt("lacp_timeout"),
 		ProductOffering:       res.GetString("product_offering"),
+		Discoverable:          res.GetBoolOpt("discoverable"),
 		PortQuantity:          res.GetInt("port_quantity"),
 		SubscriberSideDemarcs: res.GetStringList("subscriber_side_demarcs"),
 		ConnectingParty:       res.GetStringOpt("connecting_party"),
@@ -91,6 +96,11 @@ func connectionPatchFromResourceData(
 	}
 	if res.HasChange("product_offering") {
 		req.ProductOffering = res.GetStringOpt("product_offering")
+		hasChange = true
+	}
+	if res.HasChange("discoverable") {
+		discoverable := res.GetBool("discoverable")
+		req.Discoverable = &discoverable
 		hasChange = true
 	}
 

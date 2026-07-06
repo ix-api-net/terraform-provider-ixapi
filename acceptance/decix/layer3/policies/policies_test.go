@@ -12,7 +12,7 @@ import (
 )
 
 func policiesConfig(accountID string, localPref, asPrependCount int) string {
-	return testhelpers.ProviderConfig() + fmt.Sprintf(`
+	return testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true}) + fmt.Sprintf(`
 resource "ixapi_de_cix_cloud_router_prefix_list" "rfc1918" {
   name              = "cr-tf-acceptance-test-rfc1918"
   managing_account  = %[1]q
@@ -141,8 +141,7 @@ func TestAccPolicies(t *testing.T) {
 					),
 				),
 			},
-			{Config: testhelpers.ProviderConfig()},
+			{Config: testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true})},
 		},
 	})
 }
-
