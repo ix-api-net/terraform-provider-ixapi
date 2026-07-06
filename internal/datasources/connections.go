@@ -42,16 +42,23 @@ func connectionsRead(
 	meta any,
 ) diag.Diagnostics {
 	api := meta.(*ixapi.Client)
-	all, err := api.ConnectionsList(ctx)
-	if err != nil {
-		return diag.FromErr(err)
-	}
 
 	// Filters
 	managingAccount, hasManagingAccount := res.GetOk("managing_account")
 	consumingAccount, hasConsumingAccount := res.GetOk("consuming_account")
 	name, hasName := res.GetOk("name")
 	pop, hasPop := res.GetOk("pop")
+	metroAreaNetwork, hasMetroAreaNetwork := res.GetOk("metro_area_network")
+
+	qry := &ixapi.ConnectionsListQuery{}
+	if hasMetroAreaNetwork {
+		qry.MetroAreaNetwork = metroAreaNetwork.(string)
+	}
+
+	all, err := api.ConnectionsList(ctx, qry)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	filtered := make([]*ixapi.Connection, 0, len(all))
 	for _, conn := range all {
