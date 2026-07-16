@@ -30,6 +30,7 @@ data "ixapi_product_offerings_p2p_vc" "all" {
 ### Optional
 
 - `bandwidth` (Number) Find product offerings where bandwidth is within the range of bandwidth_min and bandwidth_max.
+- `contract_period` (String) Filter by contract period (ISO 8601 duration, e.g. P1M, P1Y).
 - `downgrade_allowed` (Boolean) Find connection product offerings where downgrade is allowed
 - `handover_metro_area` (String) Filter by metro area id, see related data source. The service will be accessed from this metro area
 - `handover_metro_area_network` (String) Filter by metro area network id, see related data source. The service will be accessed through the handover metro area network.

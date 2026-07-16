@@ -24,6 +24,10 @@ func NewProductOfferingsCloudVCDataSource() *schema.Resource {
 		"Filter by cloud service provider region.")
 	s["service_provider_pop"] = schemas.DataSourceQuery(
 		"Filter by id of the service provider pop. See `ixapi_pops` data source.")
+	s["handover_metro_area_network_name"] = schemas.DataSourceQuery(
+		"Filter by name of the handover metro area network (e.g. FRA).")
+	s["service_metro_area_network_name"] = schemas.DataSourceQuery(
+		"Filter by name of the service metro area network (e.g. FRA).")
 
 	return &schema.Resource{
 		Description: "This data source can be used to find product offerings for cloud virtual circuits.",
@@ -66,6 +70,8 @@ func productOfferingsCloudVCRead(
 	deliveryMethod, hasDeliveryMethod := res.GetOk("delivery_method")
 	serviceProviderRegion, hasServiceProviderRegion := res.GetOk("service_provider_region")
 	serviceProviderPop, hasServiceProviderPop := res.GetOk("service_provider_pop")
+	handoverMetroAreaNetworkName, hasHandoverMetroAreaNetworkName := res.GetOk("handover_metro_area_network_name")
+	serviceMetroAreaNetworkName, hasServiceMetroAreaNetworkName := res.GetOk("service_metro_area_network_name")
 
 	if hasCloudKey {
 		qry.CloudKey = cloudKey.(string)
@@ -82,6 +88,12 @@ func productOfferingsCloudVCRead(
 	}
 	if hasServiceProviderPop {
 		qry.ServiceProviderPop = serviceProviderPop.(string)
+	}
+	if hasHandoverMetroAreaNetworkName {
+		qry.HandoverMetroAreaNetworkName = handoverMetroAreaNetworkName.(string)
+	}
+	if hasServiceMetroAreaNetworkName {
+		qry.ServiceMetroAreaNetworkName = serviceMetroAreaNetworkName.(string)
 	}
 
 	// API request
@@ -103,11 +115,13 @@ func productOfferingsCloudVCRead(
 // NewProductOfferingCloudVCDataSource creates a new data source
 // for a single cloud product offering
 func NewProductOfferingCloudVCDataSource() *schema.Resource {
+	s := schemas.IntoDataSourceSchema(schemas.CloudNetworkProductOfferingSchema())
+	s["bandwidth"] = schemas.DataSourceQueryInt(
+		"Find product offerings where bandwidth is within the range of bandwidth_min and bandwidth_max.")
 	return &schema.Resource{
 		Description: "Use this data source to reference a single cloud virtual circuit product offering.",
 		ReadContext: crud.Read(productOfferingCloudCVRead),
-		Schema: schemas.IntoDataSourceSchema(
-			schemas.CloudNetworkProductOfferingSchema()),
+		Schema:      s,
 	}
 }
 
@@ -134,6 +148,21 @@ func productOfferingCloudCVRead(
 		offering = po
 	} else {
 		qry := productOfferingsVCQuery(ixapi.CloudNetworkProductOfferingType, res)
+		if deliveryMethod, ok := res.GetOk("delivery_method"); ok {
+			qry.DeliveryMethod = deliveryMethod.(string)
+		}
+		if serviceProviderRegion, ok := res.GetOk("service_provider_region"); ok {
+			qry.ServiceProviderRegion = serviceProviderRegion.(string)
+		}
+		if serviceProviderPop, ok := res.GetOk("service_provider_pop"); ok {
+			qry.ServiceProviderPop = serviceProviderPop.(string)
+		}
+		if handoverMetroAreaNetworkName, ok := res.GetOk("handover_metro_area_network_name"); ok {
+			qry.HandoverMetroAreaNetworkName = handoverMetroAreaNetworkName.(string)
+		}
+		if serviceMetroAreaNetworkName, ok := res.GetOk("service_metro_area_network_name"); ok {
+			qry.ServiceMetroAreaNetworkName = serviceMetroAreaNetworkName.(string)
+		}
 		offerings, err := fetchProductOfferingsCloudVC(ctx, api, qry)
 		if err != nil {
 			return err

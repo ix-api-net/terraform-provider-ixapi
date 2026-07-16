@@ -145,6 +145,13 @@ func CloudNetworkProductOfferingSchema() map[string]*schema.Schema {
 			Description: "The contract terms informally describe the contract period and renewals. ",
 		},
 
+		"contract_period": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "The contract period as an ISO 8601 duration (e.g. P1M, P1Y).",
+		},
+
 		"notice_period": &schema.Schema{
 			Type:        schema.TypeString,
 			Optional:    true,
@@ -159,6 +166,20 @@ func CloudNetworkProductOfferingSchema() map[string]*schema.Schema {
 			Description: "The `NetworkService` provides `single` or `multi`ple vlans.",
 		},
 
+		"handover_metro_area_network_name": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Name of the handover metro area network.",
+		},
+
+		"handover_metro_area_name": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Name of the handover metro area.",
+		},
+
 		"service_metro_area_network": &schema.Schema{
 			Type:        schema.TypeString,
 			Optional:    true,
@@ -166,11 +187,25 @@ func CloudNetworkProductOfferingSchema() map[string]*schema.Schema {
 			Description: "Id of the `MetroAreaNetwork`. The service is directly provided on the metro area network.  In case of a `p2p_vc`, the `service_metro_area_network` refers to the B-side of the point-to-point connection. The B-side is the accepting party. ",
 		},
 
+		"service_metro_area_network_name": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Name of the service metro area network.",
+		},
+
 		"service_metro_area": &schema.Schema{
 			Type:        schema.TypeString,
 			Optional:    true,
 			Computed:    true,
 			Description: "Id of the `MetroArea`. The service is delivered in this metro area.  In case of a `p2p_vc`, the `service_metro_area` refers to the B-side of the point-to-point connection. The B-side is the accepting party. ",
+		},
+
+		"service_metro_area_name": &schema.Schema{
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Name of the service metro area.",
 		},
 
 		"bandwidth_min": &schema.Schema{
