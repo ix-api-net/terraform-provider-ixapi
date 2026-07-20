@@ -7,7 +7,6 @@ package virtual_pni_foreign_test
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -143,14 +142,11 @@ func TestAccVirtualPNIForeign(t *testing.T) {
 	testhelpers.RequireTestEnv(t, "TF_VAR_API_URL")
 	accountID := testhelpers.RequireTestEnv(t, "ACCOUNT_ID")
 
-	foreignAccountID := os.Getenv("FOREIGN_ACCOUNT_ID")
-	foreignAPIKey := os.Getenv("FOREIGN_API_KEY")
-	foreignAPISecret := os.Getenv("FOREIGN_API_SECRET")
-	aSideConnectionID := os.Getenv("A_SIDE_CONNECTION_ID")
-	bSideConnectionID := os.Getenv("B_SIDE_CONNECTION_ID")
-	if foreignAccountID == "" || foreignAPIKey == "" || foreignAPISecret == "" || aSideConnectionID == "" || bSideConnectionID == "" {
-		t.Skip("FOREIGN_ACCOUNT_ID, FOREIGN_API_KEY, FOREIGN_API_SECRET, A_SIDE_CONNECTION_ID and B_SIDE_CONNECTION_ID must all be set; skipping foreign-port VirtualPNI test")
-	}
+	foreignAccountID := testhelpers.RequireTestEnv(t, "FOREIGN_ACCOUNT_ID")
+	testhelpers.RequireTestEnv(t, "FOREIGN_API_KEY")
+	testhelpers.RequireTestEnv(t, "FOREIGN_API_SECRET")
+	aSideConnectionID := testhelpers.RequireTestEnv(t, "A_SIDE_CONNECTION_ID")
+	bSideConnectionID := testhelpers.RequireTestEnv(t, "B_SIDE_CONNECTION_ID")
 
 	resource.Test(t, resource.TestCase{
 		ProviderFactories: testhelpers.ProviderFactories(),
