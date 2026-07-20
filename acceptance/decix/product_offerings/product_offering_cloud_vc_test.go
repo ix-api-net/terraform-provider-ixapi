@@ -40,7 +40,7 @@ func TestAccProductOfferingCloudVC(t *testing.T) {
 		ProviderFactories: testhelpers.ProviderFactories(),
 		Steps: []resource.TestStep{
 			{
-				Config: testhelpers.ProviderConfig() + cloudVCOfferingsConfig,
+				Config: testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{}) + cloudVCOfferingsConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("data.ixapi_product_offerings_cloud_vc.filtered", "product_offerings.#", "1"),
 					resource.TestCheckResourceAttrSet("data.ixapi_product_offerings_cloud_vc.filtered", "product_offerings.0.id"),
@@ -50,7 +50,7 @@ func TestAccProductOfferingCloudVC(t *testing.T) {
 				),
 			},
 			{
-				Config: testhelpers.ProviderConfig() + cloudVCOfferingConfig,
+				Config: testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{}) + cloudVCOfferingConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.ixapi_product_offering_cloud_vc.aws_euc1_50_2", "id"),
 					resource.TestCheckResourceAttr("data.ixapi_product_offering_cloud_vc.aws_euc1_50_2", "contract_period", "P1M"),

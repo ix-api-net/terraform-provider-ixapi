@@ -20,10 +20,44 @@ func NewConnectionResource() *schema.Resource {
 		UpdateContext: crud.Update(connectionUpdate),
 		DeleteContext: crud.Delete(connectionDelete),
 
+		CustomizeDiff: connectionCustomizeDiff,
+
 		Importer: &schema.ResourceImporter{
-			StateContext: schema.ImportStatePassthroughContext,
+			StateContext: connectionImport,
 		},
 	}
+}
+
+// connectionCustomizeDiff rejects a config that sets "discoverable" while
+// the CloudRouter extension is disabled, since the field is only meaningful
+// for CloudRouter foreign-port connections.
+func connectionCustomizeDiff(
+	ctx context.Context,
+	diff *schema.ResourceDiff,
+	meta any,
+) error {
+	api := meta.(*ixapi.Client)
+	if api.CloudRouterEnabled {
+		return nil
+	}
+	if !diff.GetRawConfig().GetAttr("discoverable").IsNull() {
+		return api.RequireCloudRouterExtension()
+	}
+	return nil
+}
+
+// connectionImport requires the CloudRouter extension to be enabled, since
+// imported state includes the extension-only "discoverable" attribute.
+func connectionImport(
+	ctx context.Context,
+	res *schema.ResourceData,
+	meta any,
+) ([]*schema.ResourceData, error) {
+	api := meta.(*ixapi.Client)
+	if err := api.RequireCloudRouterExtension(); err != nil {
+		return nil, err
+	}
+	return schema.ImportStatePassthroughContext(ctx, res, meta)
 }
 
 // Connection Request
