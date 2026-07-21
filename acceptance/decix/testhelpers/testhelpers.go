@@ -19,6 +19,20 @@ func ProviderFactories() map[string]func() (*schema.Provider, error) {
 	}
 }
 
+// ForeignProviderFactories serves the provider under two names, "ixapi" and
+// "ixapiforeign", so a single test can configure two accounts on separately
+// configured instances.
+func ForeignProviderFactories() map[string]func() (*schema.Provider, error) {
+	return map[string]func() (*schema.Provider, error){
+		"ixapi": func() (*schema.Provider, error) {
+			return provider.New()(), nil
+		},
+		"ixapiforeign": func() (*schema.Provider, error) {
+			return provider.New()(), nil
+		},
+	}
+}
+
 // RequireTestEnv returns the value of the named environment variable, or
 // fatals the test immediately if it is not set.
 func RequireTestEnv(t *testing.T, name string) string {
@@ -44,6 +58,7 @@ func NotExists(resourceName string) func(*terraform.State) error {
 // ProviderConfigOptions configures the provider block returned by
 // ProviderConfig.
 type ProviderConfigOptions struct {
+	Name             string
 	Alias            string
 	Foreign          bool
 	ExtensionEnabled bool
@@ -57,6 +72,10 @@ func ProviderConfig(opts ProviderConfigOptions) string {
 		apiKey, apiSecret = os.Getenv("FOREIGN_API_KEY"), os.Getenv("FOREIGN_API_SECRET")
 	}
 
+	name := opts.Name
+	if name == "" {
+		name = "ixapi"
+	}
 	aliasLine := ""
 	if opts.Alias != "" {
 		aliasLine = fmt.Sprintf("  alias      = %q\n", opts.Alias)
@@ -67,27 +86,27 @@ func ProviderConfig(opts ProviderConfigOptions) string {
 	}
 
 	return fmt.Sprintf(`
-provider "ixapi" {
-%[1]s  api        = %[2]q
-  api_key    = %[3]q
-  api_secret = %[4]q
-%[5]s}
-`, aliasLine, os.Getenv("TF_VAR_API_URL"), apiKey, apiSecret, extensionLine)
+provider %[1]q {
+%[2]s  api        = %[3]q
+  api_key    = %[4]q
+  api_secret = %[5]q
+%[6]s}
+`, name, aliasLine, os.Getenv("TF_VAR_API_URL"), apiKey, apiSecret, extensionLine)
 }
 
 // FreeDot1QVlanConfig returns HCL computing local.free_vlan<_label>, a
 // dot1q VLAN ID not already used by an existing
 // ixapi_network_service_configs_<dsType> ("p2p_vc" or "cloud_vc"). label
-// disambiguates multiple lookups in one config; providerAlias, if set,
-// queries a second provider configuration (e.g. "foreign").
-func FreeDot1QVlanConfig(dsType, label, connectionExpr, providerAlias string) string {
+// disambiguates multiple lookups in one config; providerRef, if set,
+// queries a specific provider configuration (e.g. "ixapiforeign.b_side").
+func FreeDot1QVlanConfig(dsType, label, connectionExpr, providerRef string) string {
 	suffix := ""
 	if label != "" {
 		suffix = "_" + label
 	}
 	providerLine := ""
-	if providerAlias != "" {
-		providerLine = fmt.Sprintf("  provider           = ixapi.%s\n", providerAlias)
+	if providerRef != "" {
+		providerLine = fmt.Sprintf("  provider           = %s\n", providerRef)
 	}
 	return fmt.Sprintf(`
 data "ixapi_network_service_configs_%[1]s" "existing%[2]s" {
