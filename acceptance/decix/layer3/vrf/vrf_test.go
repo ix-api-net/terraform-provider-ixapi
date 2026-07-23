@@ -51,7 +51,7 @@ locals {
 `
 
 func fullVRFConfig(accountID, p2pAdminStatus string) string {
-	return testhelpers.ProviderConfig() + discoveryLocals + fmt.Sprintf(`
+	return testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true}) + discoveryLocals + fmt.Sprintf(`
 resource "ixapi_de_cix_cloud_router" "test_vrf" {
   managing_account  = %[1]q
   consuming_account = %[1]q
@@ -127,7 +127,7 @@ resource "ixapi_de_cix_cloud_router_network_service_config_p2p_vc" "partner_conn
 }
 
 func vrfOnlyConfig(accountID string) string {
-	return testhelpers.ProviderConfig() + fmt.Sprintf(`
+	return testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true}) + fmt.Sprintf(`
 data "ixapi_de_cix_product_offerings_cloud_vrf" "all" {}
 
 locals {
@@ -190,8 +190,7 @@ func TestAccVRF(t *testing.T) {
 				),
 			},
 			{Config: vrfOnlyConfig(accountID)},
-			{Config: testhelpers.ProviderConfig()},
+			{Config: testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true})},
 		},
 	})
 }
-

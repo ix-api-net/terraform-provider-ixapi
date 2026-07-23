@@ -60,6 +60,7 @@ Optional:
 - `contract_ref` (String) A reference to a contract. If no specific contract is used, a default MAY be chosen by the implementer. *(Sensitive Property)*
 - `current_billing_start_date` (String) Your obligation to pay for the service will start on this date.  However, this date may change after an upgrade and not reflect the inital start date of the service.  *(Sensitive Property)*
 - `decommission_at` (String) The service will be decommissioned on this date.  This field is only used when the state is `DECOMMISSION_REQUESTED` or `DECOMMISSIONED`.
+- `discoverable` (Boolean) Makes this connection's product offering visible to other members, e.g. for a VirtualPNI to a foreign port.
 - `external_ref` (String) Reference field, free to use for the API user. *(Sensitive Property)*
 - `lacp_timeout` (String) This sets the LACP Timeout mode. Both ends of the connections need to be configured the same.
 - `managing_account` (String) The `id` of the account responsible for managing the service via the API. A manager can read and update the state of entities.

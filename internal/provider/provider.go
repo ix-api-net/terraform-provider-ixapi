@@ -171,6 +171,10 @@ func New() func() *schema.Provider {
 				"ixapi_network_services_cloud_vc":     datasources.NewNetworkServicesCloudDataSource(),
 				"ixapi_network_service_cloud_vc":      datasources.NewNetworkServiceCloudDataSource(),
 
+				"ixapi_network_service_configs_p2p_vc":       datasources.NewNetworkServiceConfigsP2PVCDataSource(),
+				"ixapi_network_service_configs_cloud_vc":     datasources.NewNetworkServiceConfigsCloudVCDataSource(),
+				"ixapi_network_service_configs_exchange_lan": datasources.NewNetworkServiceConfigsExchangeLanDataSource(),
+
 				"ixapi_product_offerings_connection":       datasources.NewProductOfferingsConnectionDataSource(),
 				"ixapi_product_offering_connection":        datasources.NewProductOfferingConnectionDataSource(),
 				"ixapi_product_offerings_exchange_lan":     datasources.NewProductOfferingsExchangeLanDataSource(),

@@ -19,7 +19,45 @@ func NewConnectionResource() *schema.Resource {
 		ReadContext:   crud.Read(connectionRead),
 		UpdateContext: crud.Update(connectionUpdate),
 		DeleteContext: crud.Delete(connectionDelete),
+
+		CustomizeDiff: connectionCustomizeDiff,
+
+		Importer: &schema.ResourceImporter{
+			StateContext: connectionImport,
+		},
 	}
+}
+
+// connectionCustomizeDiff rejects a config that sets "discoverable" while
+// the CloudRouter extension is disabled, since the field is only meaningful
+// for CloudRouter foreign-port connections.
+func connectionCustomizeDiff(
+	ctx context.Context,
+	diff *schema.ResourceDiff,
+	meta any,
+) error {
+	api := meta.(*ixapi.Client)
+	if api.CloudRouterEnabled {
+		return nil
+	}
+	if !diff.GetRawConfig().GetAttr("discoverable").IsNull() {
+		return api.RequireCloudRouterExtension()
+	}
+	return nil
+}
+
+// connectionImport requires the CloudRouter extension to be enabled, since
+// imported state includes the extension-only "discoverable" attribute.
+func connectionImport(
+	ctx context.Context,
+	res *schema.ResourceData,
+	meta any,
+) ([]*schema.ResourceData, error) {
+	api := meta.(*ixapi.Client)
+	if err := api.RequireCloudRouterExtension(); err != nil {
+		return nil, err
+	}
+	return schema.ImportStatePassthroughContext(ctx, res, meta)
 }
 
 // Connection Request
@@ -38,6 +76,7 @@ func connectionRequestFromResourceData(
 		Mode:                  res.GetString("mode"),
 		LacpTimeout:           res.GetStringOpt("lacp_timeout"),
 		ProductOffering:       res.GetString("product_offering"),
+		Discoverable:          res.GetBoolOpt("discoverable"),
 		PortQuantity:          res.GetInt("port_quantity"),
 		SubscriberSideDemarcs: res.GetStringList("subscriber_side_demarcs"),
 		ConnectingParty:       res.GetStringOpt("connecting_party"),
@@ -91,6 +130,11 @@ func connectionPatchFromResourceData(
 	}
 	if res.HasChange("product_offering") {
 		req.ProductOffering = res.GetStringOpt("product_offering")
+		hasChange = true
+	}
+	if res.HasChange("discoverable") {
+		discoverable := res.GetBool("discoverable")
+		req.Discoverable = &discoverable
 		hasChange = true
 	}
 

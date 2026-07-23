@@ -127,7 +127,7 @@ make acceptance
 To target a specific file:
 
 ```bash
-TF_ACC=1 go test ./acceptance/decix/vrf/ -v -count=1
+TF_ACC=1 go test ./acceptance/decix/layer3/vrf/ -v -count=1
 ```
 
 ## Development

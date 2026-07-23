@@ -135,7 +135,7 @@ resource "ixapi_de_cix_cloud_router_policy" "nsc_policy" {
 }
 
 func vrfOnlyConfig(accountID string) string {
-	return testhelpers.ProviderConfig() + fmt.Sprintf(`
+	return testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true}) + fmt.Sprintf(`
 data "ixapi_de_cix_product_offerings_cloud_vrf" "all" {}
 
 locals {
@@ -161,7 +161,7 @@ func TestAccNSCPolicies(t *testing.T) {
 	testhelpers.RequireTestEnv(t, "TF_VAR_API_URL")
 	accountID := testhelpers.RequireTestEnv(t, "ACCOUNT_ID")
 
-	base := testhelpers.ProviderConfig() + discoveryLocals + vrfAndP2PResources(accountID)
+	base := testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true}) + discoveryLocals + vrfAndP2PResources(accountID)
 	withNSC := base + partnerConnectionResource(accountID, "null")
 	withPolicy := base + nscPolicyResources(accountID) + partnerConnectionResource(accountID, "ixapi_de_cix_cloud_router_policy.nsc_policy.name")
 	vrfWithPolicyNoNSC := base + nscPolicyResources(accountID)
@@ -201,8 +201,7 @@ func TestAccNSCPolicies(t *testing.T) {
 				),
 			},
 			{Config: vrfOnlyConfig(accountID)},
-			{Config: testhelpers.ProviderConfig()},
+			{Config: testhelpers.ProviderConfig(testhelpers.ProviderConfigOptions{ExtensionEnabled: true})},
 		},
 	})
 }
-
