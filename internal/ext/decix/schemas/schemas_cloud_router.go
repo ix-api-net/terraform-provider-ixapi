@@ -219,6 +219,13 @@ func CloudRouterNetworkServiceConfigCommonSchema() map[string]*schema.Schema {
 			ForceNew:    true,
 			Description: "Enable Bidirectional Forwarding Detection (BFD)",
 		},
+		"as_override": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			ForceNew:    true,
+			Description: "Rewrite the neighbor's own ASN with the Cloud ROUTER's ASN in outbound route advertisements to this BGP session. Required when two connections in the same VRF share the same peer ASN (e.g. the same cloud provider used across multiple regions with one shared ASN), otherwise the receiving side drops the routes as a loop.",
+		},
 		"purchase_order": {
 			Type:        schema.TypeString,
 			Optional:    true,

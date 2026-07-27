@@ -54,6 +54,7 @@ type CloudRouterNetworkServiceConfig struct {
 	PolicyEgressID        *string         `json:"policy_egress_id,omitempty"`
 	AdminStatus           string      `json:"admin_status,omitempty"`
 	BFDEnabled            bool        `json:"bfd,omitempty" tf:"bfd_enabled"`
+	ASOverride            bool        `json:"as_override,omitempty" tf:"as_override"`
 	CloudVLAN             *int        `json:"cloud_vlan,omitempty"`
 	Handover              *int        `json:"handover,omitempty"`
 	PurchaseOrder         *string     `json:"purchase_order,omitempty"`
@@ -79,6 +80,7 @@ type CloudRouterNetworkServiceConfigRequest struct{
 	PolicyEgress          *string     `json:"policy_egress,omitempty"`
 	AdminStatus           string      `json:"admin_status,omitempty"`
 	BFDEnabled            bool        `json:"bfd,omitempty"`
+	ASOverride            bool        `json:"as_override,omitempty"`
 	CloudVLAN             *int        `json:"cloud_vlan,omitempty"`
 	Handover              *int        `json:"handover,omitempty"`
 	Connection            *string     `json:"connection,omitempty"`

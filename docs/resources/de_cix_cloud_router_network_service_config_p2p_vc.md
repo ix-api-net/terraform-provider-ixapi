@@ -67,6 +67,7 @@ output "config_state" {
 ### Optional
 
 - `admin_status` (String) Administrative status (enabled/disabled)
+- `as_override` (Boolean) Rewrite the neighbor's own ASN with the Cloud ROUTER's ASN in outbound route advertisements to this BGP session. Required when two connections in the same VRF share the same peer ASN (e.g. the same cloud provider used across multiple regions with one shared ASN), otherwise the receiving side drops the routes as a loop.
 - `bfd_enabled` (Boolean) Enable Bidirectional Forwarding Detection (BFD)
 - `bgp_password` (String, Sensitive) BGP session password
 - `external_ref` (String) External reference

@@ -20,6 +20,7 @@ func TestCloudRouterConfigCloudVCRequestFromResourceData(t *testing.T) {
 	_ = res.Set("bgp_neighbor_asn", 64512)
 	_ = res.Set("admin_status", "enabled")
 	_ = res.Set("bfd_enabled", true)
+	_ = res.Set("as_override", true)
 	_ = res.Set("cloud_vlan", 100)
 
 	req, err := cloudRouterConfigCloudVCRequestFromResourceData(res)
@@ -48,6 +49,9 @@ func TestCloudRouterConfigCloudVCRequestFromResourceData(t *testing.T) {
 	if !req.BFDEnabled {
 		t.Error("expected bfd_enabled to be true")
 	}
+	if !req.ASOverride {
+		t.Error("expected as_override to be true")
+	}
 	if req.CloudVLAN == nil || *req.CloudVLAN != 100 {
 		t.Error("unexpected cloud_vlan:", req.CloudVLAN)
 	}
@@ -75,6 +79,7 @@ func TestCloudRouterConfigCloudVCRead(t *testing.T) {
 		BGPNeighborASN:   64512,
 		AdminStatus:      "enabled",
 		BFDEnabled:       true,
+		ASOverride:       true,
 		CloudVLAN:        &cloudVLAN,
 	}
 
@@ -97,6 +102,9 @@ func TestCloudRouterConfigCloudVCRead(t *testing.T) {
 	}
 	if res.Get("bfd_enabled").(bool) != true {
 		t.Error("unexpected bfd_enabled:", res.Get("bfd_enabled"))
+	}
+	if res.Get("as_override").(bool) != true {
+		t.Error("unexpected as_override:", res.Get("as_override"))
 	}
 	if res.Get("cloud_vlan").(int) != 100 {
 		t.Error("unexpected cloud_vlan:", res.Get("cloud_vlan"))

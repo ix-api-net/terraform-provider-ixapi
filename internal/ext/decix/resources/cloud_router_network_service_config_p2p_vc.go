@@ -54,6 +54,7 @@ func cloudRouterConfigP2PVCRequestFromResourceData(
 		PolicyEgress:          res.GetStringOpt("policy_egress"),
 		AdminStatus:           res.GetString("admin_status"),
 		BFDEnabled:            res.GetBool("bfd_enabled"),
+		ASOverride:            res.GetBool("as_override"),
 		CloudVLAN:             nil,
 		Handover:              nil,
 		Connection:            res.GetStringOpt("network_connection"),
