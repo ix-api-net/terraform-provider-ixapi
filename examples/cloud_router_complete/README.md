@@ -41,6 +41,24 @@ This example demonstrates a complete DE-CIX Cloud ROUTER setup with multiple clo
 - Using data sources to query configurations
 - Managing sensitive values with variables
 
+## AS Override for OCI Multi-Region Connections
+
+Oracle Cloud Infrastructure (OCI) uses the same ASN, `31898`, across its regions. When connecting multiple OCI regions to the same Cloud ROUTER, enable `as_override` on every affected connection so OCI does not reject routes from another region as an AS loop:
+
+```hcl
+resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "oci_frankfurt" {
+  # ...
+  bgp_neighbor_asn = 31898
+  as_override      = true
+}
+
+resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "oci_amsterdam" {
+  # ...
+  bgp_neighbor_asn = 31898
+  as_override      = true
+}
+```
+
 ## Prerequisites
 
 - IX-API credentials configured
