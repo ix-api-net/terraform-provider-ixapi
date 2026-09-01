@@ -54,6 +54,7 @@ func cloudRouterConfigCloudVCRequestFromResourceData(
 		PolicyEgress:          res.GetStringOpt("policy_egress"),
 		AdminStatus:           res.GetString("admin_status"),
 		BFDEnabled:            res.GetBool("bfd_enabled"),
+		ASOverride:            res.GetBool("as_override"),
 		CloudVLAN:             res.GetIntOpt("cloud_vlan"),
 		Handover:              res.GetIntOpt("handover"),
 		Connection:            nil,

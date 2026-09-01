@@ -84,6 +84,7 @@ resource "ixapi_de_cix_cloud_router_network_service_config_cloud_vc" "cloud_conn
   bgp_password      = "test-cloud-bgp-password"
   admin_status      = "enabled"
   bfd_enabled       = true
+  as_override       = true
   handover          = 1
   external_ref      = "cr-tf-acceptance-test-cloud-vc"
 }
@@ -175,8 +176,16 @@ func TestAccVRF(t *testing.T) {
 						"bfd_enabled", "true",
 					),
 					resource.TestCheckResourceAttr(
+						"ixapi_de_cix_cloud_router_network_service_config_cloud_vc.cloud_connection",
+						"as_override", "true",
+					),
+					resource.TestCheckResourceAttr(
 						"ixapi_de_cix_cloud_router_network_service_config_p2p_vc.partner_connection",
 						"external_ref", "cr-tf-acceptance-test-p2p-vc",
+					),
+					resource.TestCheckResourceAttr(
+						"ixapi_de_cix_cloud_router_network_service_config_p2p_vc.partner_connection",
+						"as_override", "false",
 					),
 				),
 			},
@@ -186,6 +195,10 @@ func TestAccVRF(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"ixapi_de_cix_cloud_router_network_service_config_p2p_vc.partner_connection",
 						"admin_status", "DISABLED",
+					),
+					resource.TestCheckResourceAttr(
+						"ixapi_de_cix_cloud_router_network_service_config_cloud_vc.cloud_connection",
+						"as_override", "true",
 					),
 				),
 			},

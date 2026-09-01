@@ -20,6 +20,7 @@ func TestCloudRouterConfigP2PVCRequestFromResourceData(t *testing.T) {
 	_ = res.Set("bgp_neighbor_asn", 64512)
 	_ = res.Set("admin_status", "enabled")
 	_ = res.Set("bfd_enabled", false)
+	_ = res.Set("as_override", true)
 	_ = res.Set("network_connection", "conn-abc123")
 
 	req, err := cloudRouterConfigP2PVCRequestFromResourceData(res)
@@ -38,6 +39,9 @@ func TestCloudRouterConfigP2PVCRequestFromResourceData(t *testing.T) {
 	}
 	if req.Connection == nil || *req.Connection != "conn-abc123" {
 		t.Error("unexpected connection:", req.Connection)
+	}
+	if !req.ASOverride {
+		t.Error("expected as_override to be true")
 	}
 	if req.CloudVLAN != nil {
 		t.Error("cloud_vlan should be nil for p2p_vc type")
@@ -64,6 +68,7 @@ func TestCloudRouterConfigP2PVCRead(t *testing.T) {
 		BGPNeighbor:      "192.0.2.2",
 		BGPNeighborASN:   64512,
 		AdminStatus:      "enabled",
+		ASOverride:       true,
 		ConnectionID:     "conn-abc123",
 	}
 
@@ -86,6 +91,9 @@ func TestCloudRouterConfigP2PVCRead(t *testing.T) {
 	}
 	if res.Get("bgp_neighbor_asn").(int) != 64512 {
 		t.Error("unexpected bgp_neighbor_asn:", res.Get("bgp_neighbor_asn"))
+	}
+	if res.Get("as_override").(bool) != true {
+		t.Error("unexpected as_override:", res.Get("as_override"))
 	}
 }
 
